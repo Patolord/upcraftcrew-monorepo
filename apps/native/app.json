@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "scheme": "up-craft-crew-app",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "up-craft-crew-app",
+    "slug": "up-craft-crew-app",
+    "plugins": ["expo-font"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
