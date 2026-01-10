@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./_lib/auth";
+import { requireMember } from "./users";
 
 // Query: Get all transactions
 export const getTransactions = query({

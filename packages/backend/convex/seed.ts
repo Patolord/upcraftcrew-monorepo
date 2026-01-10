@@ -17,9 +17,11 @@ export const seedDatabase = mutation({
     // DO NOT use real email addresses or PII in seed data
     const users = [
       {
-        name: "Alice Admin",
+        clerkUserId: "demo_user_alice_admin",
+        firstName: "Alice",
+        lastName: "Admin",
         email: "alice.admin@example.com",
-        avatar: "/images/avatars/1.png",
+        imageUrl: "/images/avatars/1.png",
         role: "admin" as const,
         department: "Leadership",
         status: "online" as const,
@@ -27,11 +29,14 @@ export const seedDatabase = mutation({
         lastActive: Date.now(),
         skills: ["Leadership", "Strategy", "Business Development"],
         projectIds: [],
+        onboardingCompleted: true,
       },
       {
-        name: "Mike Chen",
+        clerkUserId: "demo_user_mike_chen",
+        firstName: "Mike",
+        lastName: "Chen",
         email: "mike.chen@example.com",
-        avatar: "/images/avatars/2.png",
+        imageUrl: "/images/avatars/2.png",
         role: "admin" as const,
         department: "Engineering",
         status: "online" as const,
@@ -39,11 +44,14 @@ export const seedDatabase = mutation({
         lastActive: Date.now(),
         skills: ["Full-Stack", "Architecture", "DevOps", "React", "Node.js"],
         projectIds: [],
+        onboardingCompleted: true,
       },
       {
-        name: "Emma Wilson",
+        clerkUserId: "demo_user_emma_wilson",
+        firstName: "Emma",
+        lastName: "Wilson",
         email: "emma.wilson@example.com",
-        avatar: "/images/avatars/3.png",
+        imageUrl: "/images/avatars/3.png",
         role: "member" as const,
         department: "Product",
         status: "busy" as const,
@@ -51,6 +59,7 @@ export const seedDatabase = mutation({
         lastActive: Date.now(),
         skills: ["Product Strategy", "Agile", "User Research", "Analytics"],
         projectIds: [],
+        onboardingCompleted: true,
       },
     ];
 

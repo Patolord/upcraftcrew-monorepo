@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { Image } from "../ui/image";
-import { ProfileMenu } from "./profile-menu";
 import { CurrencySelector } from "@/components/CurrencySelector";
 
 export const NavBar = () => {

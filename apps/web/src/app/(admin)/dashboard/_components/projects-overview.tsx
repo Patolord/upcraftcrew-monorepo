@@ -1,4 +1,4 @@
-import { Image } from "@/components/ui/image";
+import Image from "next/image";
 
 export interface ProjectOverview {
   id: string;

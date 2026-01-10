@@ -1,6 +1,11 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireAuth, requireWrite } from "./_lib/auth";
+import { getCurrentUserOrThrow, requireWrite } from "./users";
+
+// Helper to require auth and return user (for backwards compatibility)
+async function requireAuth(ctx: any) {
+  return await getCurrentUserOrThrow(ctx);
+}
 
 // Query: Get all team members
 export const getTeamMembers = query({
@@ -86,18 +91,13 @@ export const getTeamMembersByDepartment = query({
 // Mutation: Create team member
 export const createTeamMember = mutation({
   args: {
-    name: v.string(),
+    firstName: v.string(),
+    lastName: v.string(),
     email: v.string(),
-    avatar: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
     role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
-    department: v.string(),
-    status: v.union(
-      v.literal("online"),
-      v.literal("offline"),
-      v.literal("away"),
-      v.literal("busy"),
-    ),
-    skills: v.array(v.string()),
+    department: v.optional(v.string()),
+    skills: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     await requireWrite(ctx);
@@ -111,11 +111,23 @@ export const createTeamMember = mutation({
       throw new Error("User with this email already exists");
     }
 
+    // Generate a temporary clerkUserId until they actually sign up
+    const tempClerkUserId = `temp_${Date.now()}_${args.email}`;
+
     const userId = await ctx.db.insert("users", {
-      ...args,
+      clerkUserId: tempClerkUserId,
+      firstName: args.firstName,
+      lastName: args.lastName,
+      email: args.email,
+      imageUrl: args.imageUrl,
+      role: args.role,
+      department: args.department,
+      skills: args.skills,
+      status: "offline",
       joinedAt: Date.now(),
       lastActive: Date.now(),
       projectIds: [],
+      onboardingCompleted: false,
     });
 
     return userId;
@@ -126,9 +138,10 @@ export const createTeamMember = mutation({
 export const updateTeamMember = mutation({
   args: {
     id: v.id("users"),
-    name: v.optional(v.string()),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
     email: v.optional(v.string()),
-    avatar: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
     role: v.optional(v.union(v.literal("admin"), v.literal("member"), v.literal("viewer"))),
     department: v.optional(v.string()),
     status: v.optional(

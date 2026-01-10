@@ -1,13 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { preloadQuery } from "convex/nextjs";
-import { api } from "../../convex/_generated/api";
 
 /**
  * Server-side authorization utilities
  * Use these in Server Components, Server Actions, and middleware
  */
 
-export type UserRole = "user" | "admin";
+export type UserRole = "admin" | "member" | "viewer";
 
 export interface AuthUser {
   clerkUserId: string;
@@ -16,8 +16,13 @@ export interface AuthUser {
   lastName: string;
   role: UserRole;
   imageUrl?: string;
-  hasActiveYearAccess: boolean;
-  paid: boolean;
+  department?: string;
+  skills?: string[];
+  status: "online" | "offline" | "away" | "busy";
+  joinedAt: number;
+  lastActive: number;
+  projectIds: string[];
+  onboardingCompleted: boolean;
 }
 
 /**

@@ -90,7 +90,7 @@ export function NewProjectModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button className="btn btn-primary gap-2">
           <span className="iconify lucide--plus size-5" />
           New Project

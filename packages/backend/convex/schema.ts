@@ -3,30 +3,39 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
+    // Clerk authentication
     clerkUserId: v.string(),
     email: v.string(),
     firstName: v.string(),
     lastName: v.string(),
     imageUrl: v.optional(v.string()),
-    onboardingCompleted: v.boolean(),
-    role: v.union(v.literal("user"), v.literal("admin")),
-    status: v.union(v.literal("active"), v.literal("inactive"), v.literal("suspended")),
-    hasActiveYearAccess: v.boolean(),
-    paid: v.boolean(),
-    paymentDate: v.optional(v.number()),
-    paymentId: v.optional(v.string()),
-    paymentStatus: v.union(
-      v.literal("pending"),
-      v.literal("completed"),
-      v.literal("failed"),
-      v.literal("refunded"),
+
+    // Team member info
+    role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
+    department: v.optional(v.string()),
+    skills: v.optional(v.array(v.string())),
+
+    // Status tracking
+    status: v.union(
+      v.literal("online"),
+      v.literal("offline"),
+      v.literal("away"),
+      v.literal("busy"),
     ),
-    testeId: v.optional(v.string()),
+    joinedAt: v.number(),
+    lastActive: v.number(),
+
+    // Projects relationship
+    projectIds: v.array(v.id("projects")),
+
+    // Onboarding
+    onboardingCompleted: v.boolean(),
   })
     .index("by_clerkUserId", ["clerkUserId"])
     .index("by_email", ["email"])
-    .index("by_status", ["status"])
-    .index("by_hasActiveYearAccess", ["hasActiveYearAccess"]),
+    .index("by_role", ["role"])
+    .index("by_department", ["department"])
+    .index("by_status", ["status"]),
 
   projects: defineTable({
     name: v.string(),

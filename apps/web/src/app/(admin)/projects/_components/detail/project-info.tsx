@@ -1,13 +1,13 @@
 "use client";
 
-import { api } from "@workspace/backend/_generated/api";
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
+import Image from "next/image";
 import type { Project, ProjectPriority, ProjectStatus, TeamMember } from "@/types/project";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 
 interface ProjectInfoProps {
   project: Project;

@@ -4,175 +4,245 @@ import { getCurrentUser, requireAdmin } from "./users";
 
 /**
  * ============================================================================
- * ACCESS MODEL (VIDEO APP)
+ * TEAM ACCESS MODEL
  *
- * Convex is the SOURCE OF TRUTH for paid access.
- * Clerk is used ONLY for authentication (identity).
- *
- * Rules for VIDEO app access:
- * - user.status === "active"
- * - user.paid === true
- * - user.hasActiveYearAccess === true
+ * Simple role-based access control:
+ * - admin: Full access to everything
+ * - member: Can read and write (create/edit/delete)
+ * - viewer: Can only read (no create/edit/delete)
  * ============================================================================
  */
 
-/**
- * Centralized access rule (DO NOT DUPLICATE LOGIC)
- */
-function hasVideoAccess(user: {
-  status: string;
-  paid: boolean;
-  hasActiveYearAccess: boolean;
-}): boolean {
-  return user.status === "active" && user.paid === true && user.hasActiveYearAccess === true;
-}
-
 // ============================================================================
-// PUBLIC ACCESS CHECKS (used by UI, Server Components, API routes)
+// ACCESS CHECKS
 // ============================================================================
 
 /**
- * Check if CURRENT authenticated user has access to VIDEO app
- * (Used in Server Components / client queries)
+ * Check if current user has access to the app
+ * All authenticated users with a role have access
  */
-export const checkUserHasVideoAccess = query({
+export const checkUserHasAccess = query({
   args: {},
   async handler(ctx) {
     const user = await getCurrentUser(ctx);
     if (!user) return false;
-    return hasVideoAccess(user);
+
+    // All users with a role have basic access
+    return true;
   },
 });
 
 /**
- * Check access by Clerk user ID
- * IMPORTANT: This is the function you should call from:
- * - Server Components
- * - API Routes
- * - Server Actions
+ * Check if current user can write (create/edit/delete)
  */
-export const checkUserHasVideoAccessByClerkId = query({
-  args: { clerkUserId: v.string() },
-  async handler(ctx, args) {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerkUserId", (q) => q.eq("clerkUserId", args.clerkUserId))
-      .unique();
-
+export const checkUserCanWrite = query({
+  args: {},
+  async handler(ctx) {
+    const user = await getCurrentUser(ctx);
     if (!user) return false;
 
-    return hasVideoAccess(user);
+    // Admin and member can write, viewer cannot
+    return user.role === "admin" || user.role === "member";
   },
 });
 
-// ============================================================================
-// ACCESS DETAILS (UI / ACCOUNT / BILLING)
-// ============================================================================
+/**
+ * Check if current user is admin
+ */
+export const checkUserIsAdmin = query({
+  args: {},
+  async handler(ctx) {
+    const user = await getCurrentUser(ctx);
+    if (!user) return false;
+
+    return user.role === "admin";
+  },
+});
 
 /**
- * Full access + billing info for current user
+ * Get current user's role and permissions
  */
-export const getVideoAccessDetails = query({
+export const getUserRole = query({
   args: {},
-  async handler(ctx): Promise<{
-    hasAccess: boolean;
-    paid: boolean;
-    hasActiveYearAccess: boolean;
-    status: "active" | "inactive" | "suspended";
-    paymentStatus: "pending" | "completed" | "failed" | "refunded";
-    paymentDate?: number | undefined;
-    daysUntilExpiration?: number | undefined;
-  }> {
+  async handler(ctx) {
     const user = await getCurrentUser(ctx);
-
     if (!user) {
       return {
-        hasAccess: false,
-        paid: false,
-        hasActiveYearAccess: false,
-        status: "inactive",
-        paymentStatus: "pending",
+        role: null,
+        canWrite: false,
+        isAdmin: false,
       };
     }
 
-    let daysUntilExpiration: number | undefined;
-
-    if (user.paymentDate && user.hasActiveYearAccess) {
-      const expiration = user.paymentDate + 365 * 24 * 60 * 60 * 1000;
-      const now = Date.now();
-
-      if (expiration > now) {
-        daysUntilExpiration = Math.ceil((expiration - now) / (24 * 60 * 60 * 1000));
-      }
-    }
-
     return {
-      hasAccess: hasVideoAccess(user),
-      paid: user.paid,
-      hasActiveYearAccess: user.hasActiveYearAccess,
-      status: user.status,
-      paymentDate: user.paymentDate,
-      paymentStatus: user.paymentStatus,
-      daysUntilExpiration,
+      role: user.role,
+      canWrite: user.role === "admin" || user.role === "member",
+      isAdmin: user.role === "admin",
     };
   },
 });
 
 // ============================================================================
-// PAYMENT / WEBHOOK / ADMIN MUTATIONS
+// PROJECT-SPECIFIC ACCESS
 // ============================================================================
 
 /**
- * Update payment info
- * Used by:
- * - Payment webhooks
- * - Admin tools
+ * Check if current user has access to a specific project
+ * Users have access if they're assigned to the project OR if they're admin
  */
-export const updatePayment = mutation({
+export const checkProjectAccess = query({
+  args: { projectId: v.id("projects") },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx);
+    if (!user) return false;
+
+    // Admins have access to all projects
+    if (user.role === "admin") return true;
+
+    // Check if user is assigned to this project
+    const project = await ctx.db.get(args.projectId);
+    if (!project) return false;
+
+    return project.teamIds.includes(user._id);
+  },
+});
+
+/**
+ * Check if current user can edit a specific project
+ * Users can edit if they're assigned AND have write permissions
+ */
+export const checkProjectWriteAccess = query({
+  args: { projectId: v.id("projects") },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx);
+    if (!user) return false;
+
+    // Admins can edit all projects
+    if (user.role === "admin") return true;
+
+    // Viewers cannot edit
+    if (user.role === "viewer") return false;
+
+    // Members can edit if they're assigned to the project
+    const project = await ctx.db.get(args.projectId);
+    if (!project) return false;
+
+    return project.teamIds.includes(user._id);
+  },
+});
+
+// ============================================================================
+// TASK-SPECIFIC ACCESS
+// ============================================================================
+
+/**
+ * Check if current user can view a specific task
+ * Private tasks can only be viewed by owner or admin
+ */
+export const checkTaskAccess = query({
+  args: { taskId: v.id("tasks") },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx);
+    if (!user) return false;
+
+    const task = await ctx.db.get(args.taskId);
+    if (!task) return false;
+
+    // Admins can view all tasks
+    if (user.role === "admin") return true;
+
+    // Private tasks only visible to owner
+    if (task.isPrivate && task.ownerId !== user._id) {
+      return false;
+    }
+
+    // If task belongs to a project, check project access
+    if (task.projectId) {
+      const project = await ctx.db.get(task.projectId);
+      if (project && !project.teamIds.includes(user._id)) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+});
+
+/**
+ * Check if current user can edit a specific task
+ */
+export const checkTaskWriteAccess = query({
+  args: { taskId: v.id("tasks") },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx);
+    if (!user) return false;
+
+    // Viewers cannot edit
+    if (user.role === "viewer") return false;
+
+    const task = await ctx.db.get(args.taskId);
+    if (!task) return false;
+
+    // Admins can edit all tasks
+    if (user.role === "admin") return true;
+
+    // Task owner can edit their own tasks
+    if (task.ownerId === user._id) return true;
+
+    // If task is assigned to user, they can edit it
+    if (task.assignedTo === user._id) return true;
+
+    // If task belongs to a project the user is on, they can edit it
+    if (task.projectId) {
+      const project = await ctx.db.get(task.projectId);
+      if (project && project.teamIds.includes(user._id)) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+});
+
+// ============================================================================
+// ADMIN MUTATIONS
+// ============================================================================
+
+/**
+ * Update user role (admin only)
+ */
+export const updateUserRole = mutation({
   args: {
     userId: v.id("users"),
-    paid: v.boolean(),
-    hasActiveYearAccess: v.boolean(),
-    paymentStatus: v.union(
-      v.literal("pending"),
-      v.literal("completed"),
-      v.literal("failed"),
-      v.literal("refunded"),
-    ),
-    paymentDate: v.optional(v.number()),
-    paymentId: v.optional(v.string()),
+    role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
   },
   async handler(ctx, args) {
     await requireAdmin(ctx);
 
     await ctx.db.patch(args.userId, {
-      paid: args.paid,
-      hasActiveYearAccess: args.hasActiveYearAccess,
-      paymentStatus: args.paymentStatus,
-      paymentDate: args.paymentDate,
-      paymentId: args.paymentId,
+      role: args.role,
     });
 
-    return null;
+    return { success: true };
   },
 });
 
-// ============================================================================
-// ADMIN QUERIES
-// ============================================================================
-
 /**
- * Admin-only: check access by internal Convex user ID
+ * Update user department (admin only)
  */
-export const checkUserHasVideoAccessById = query({
-  args: { userId: v.id("users") },
+export const updateUserDepartment = mutation({
+  args: {
+    userId: v.id("users"),
+    department: v.optional(v.string()),
+  },
   async handler(ctx, args) {
     await requireAdmin(ctx);
 
-    const user = await ctx.db.get(args.userId);
-    if (!user) return false;
+    await ctx.db.patch(args.userId, {
+      department: args.department,
+    });
 
-    return hasVideoAccess(user);
+    return { success: true };
   },
 });
 

@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
-import type { Doc } from "@workspace/backend/_generated/dataModel";
+import Image from "next/image";
+
 import { roleConfig, statusConfig } from "./team-config";
+import { Doc } from "zod/v4/core";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];

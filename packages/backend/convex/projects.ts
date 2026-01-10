@@ -1,6 +1,16 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireAuth, requireWrite } from "./_lib/auth";
+import { getCurrentUserOrThrow, requireMember } from "./users";
+
+// Helper to require auth and return user (for backwards compatibility)
+async function requireAuth(ctx: any) {
+  return await getCurrentUserOrThrow(ctx);
+}
+
+// Helper for write access
+async function requireWrite(ctx: any) {
+  return await requireMember(ctx);
+}
 
 // Query: Get all projects
 export const getProjects = query({

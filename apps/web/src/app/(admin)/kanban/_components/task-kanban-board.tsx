@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useMutation } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
 import Sortable from "sortablejs";
 import { TaskCard } from "./task-card";
 import { toast } from "sonner";
-import type { Id } from "@workspace/backend/_generated/dataModel";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 

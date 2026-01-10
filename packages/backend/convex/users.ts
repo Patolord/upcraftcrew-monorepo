@@ -39,7 +39,7 @@ export const ensureCurrentUser = mutation({
       return existingUser._id;
     }
 
-    // Create user from Clerk identity
+    // Create user from Clerk identity with default team member settings
     const userId = await ctx.db.insert("users", {
       firstName: identity.givenName || "",
       lastName: identity.familyName || "",
@@ -47,11 +47,11 @@ export const ensureCurrentUser = mutation({
       clerkUserId: identity.subject,
       imageUrl: identity.pictureUrl,
       onboardingCompleted: false,
-      role: "user",
-      status: "active",
-      paid: false,
-      paymentStatus: "pending",
-      hasActiveYearAccess: false,
+      role: "member", // default role for new users
+      status: "offline",
+      joinedAt: Date.now(),
+      lastActive: Date.now(),
+      projectIds: [],
     });
 
     return userId;
@@ -90,23 +90,9 @@ export const upsertFromClerk = internalMutation({
         ),
       ),
       image_url: v.optional(v.string()),
-      public_metadata: v.optional(
-        v.object({
-          paid: v.optional(v.boolean()),
-          paymentId: v.optional(v.union(v.string(), v.number())),
-          paymentDate: v.optional(v.number()),
-          paymentStatus: v.optional(v.string()),
-          hasActiveYearAccess: v.optional(v.boolean()),
-        }),
-      ),
     }),
   },
   async handler(context, { data }) {
-    // Extract any payment data from Clerk's public metadata
-    const publicMetadata = data.public_metadata || {};
-    const isPaidFromClerk = publicMetadata.paid === true;
-
-    // Get existing user to preserve payment data if it exists
     const existingUser = await userByClerkUserId(context, data.id);
 
     // Base user data to update or insert
@@ -119,55 +105,14 @@ export const upsertFromClerk = internalMutation({
     };
 
     if (existingUser !== null) {
-      // Update existing user, preserving payment data if it exists
-      // and not overriding with new payment data from Clerk
-      const paymentData = isPaidFromClerk
-        ? {
-            paid: true,
-            paymentId: publicMetadata.paymentId?.toString(),
-            paymentDate: publicMetadata.paymentDate,
-            paymentStatus:
-              (publicMetadata.paymentStatus as "pending" | "completed" | "failed" | "refunded") ||
-              "completed",
-            hasActiveYearAccess: publicMetadata.hasActiveYearAccess === true,
-          }
-        : {
-            // Keep existing payment data if it exists
-            paid: existingUser.paid,
-            paymentId: existingUser.paymentId,
-            paymentDate: existingUser.paymentDate,
-            paymentStatus: existingUser.paymentStatus,
-            hasActiveYearAccess: existingUser.hasActiveYearAccess,
-          };
-
+      // Update existing user, preserve team-related fields
       return await context.db.patch(existingUser._id, {
         ...userData,
-        ...paymentData,
+        lastActive: Date.now(),
       });
     }
 
-    // Create new user with payment data if it exists in Clerk
-    if (isPaidFromClerk) {
-      return await context.db.insert("users", {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email || "",
-        clerkUserId: userData.clerkUserId,
-        imageUrl: userData.imageUrl,
-        onboardingCompleted: false,
-        role: "user",
-        status: "active",
-        paid: true,
-        paymentId: publicMetadata.paymentId?.toString(),
-        paymentDate: publicMetadata.paymentDate,
-        paymentStatus:
-          (publicMetadata.paymentStatus as "pending" | "completed" | "failed" | "refunded") ||
-          "completed",
-        hasActiveYearAccess: publicMetadata.hasActiveYearAccess === true,
-      });
-    }
-
-    // Create new user without payment data
+    // Create new user with default team member settings
     return await context.db.insert("users", {
       firstName: userData.firstName,
       lastName: userData.lastName,
@@ -175,11 +120,11 @@ export const upsertFromClerk = internalMutation({
       clerkUserId: userData.clerkUserId,
       imageUrl: userData.imageUrl,
       onboardingCompleted: false,
-      role: "user",
-      status: "active",
-      paid: false,
-      paymentStatus: "pending",
-      hasActiveYearAccess: false,
+      role: "member",
+      status: "offline",
+      joinedAt: Date.now(),
+      lastActive: Date.now(),
+      projectIds: [],
     });
   },
 });
@@ -253,6 +198,40 @@ export async function requireAdmin(context: QueryContext | MutationCtx): Promise
   }
 }
 
+/**
+ * Check if user has write permissions (admin or member)
+ * Viewers can only read
+ */
+export async function hasWriteAccess(context: QueryContext | MutationCtx): Promise<boolean> {
+  const user = await getCurrentUser(context);
+  if (!user) return false;
+  return user.role === "admin" || user.role === "member";
+}
+
+/**
+ * Require write access - throws if user is only a viewer
+ */
+export async function requireWrite(context: QueryContext | MutationCtx) {
+  const user = await getCurrentUser(context);
+  if (!user) {
+    throw new Error("Unauthorized: Authentication required");
+  }
+
+  if (user.role === "viewer") {
+    throw new Error("Unauthorized: Write access required. Viewers can only read.");
+  }
+
+  return user;
+}
+
+/**
+ * Require member or admin access (anyone who is not a viewer)
+ * This is an alias for requireWrite for semantic clarity
+ */
+export async function requireMember(context: QueryContext | MutationCtx) {
+  return await requireWrite(context);
+}
+
 // ============================================================================
 // ADMIN QUERIES AND MUTATIONS
 // ============================================================================
@@ -280,13 +259,13 @@ export const getUsers = query({
 export const setRole = mutation({
   args: {
     userId: v.id("users"),
-    role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
+    role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
 
     await ctx.db.patch(args.userId, {
-      role: args.role || "user",
+      role: args.role,
     });
   },
 });

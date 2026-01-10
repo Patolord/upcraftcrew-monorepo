@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as _lib_auth from "../_lib/auth.js";
 import type * as budgets from "../budgets.js";
 import type * as finance from "../finance.js";
 import type * as healthCheck from "../healthCheck.js";
@@ -25,7 +24,6 @@ import type * as users from "../users.js";
 import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  "_lib/auth": typeof _lib_auth;
   budgets: typeof budgets;
   finance: typeof finance;
   healthCheck: typeof healthCheck;

@@ -2,7 +2,7 @@
 
 import { useState, useId } from "react";
 import { useMutation } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 

@@ -2,17 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
-import { DashboardHeader } from "../../../components/dashboard/dashboard-header";
-import { DashboardStats } from "../../../components/dashboard/dashboard-stats";
-import { RecentActivities, type Activity } from "../../../components/dashboard/recent-activities";
-import { UpcomingDeadlines, type Project } from "../../../components/dashboard/upcoming-deadlines";
-import { ProjectsOverview } from "../../../components/dashboard/projects-overview";
-import { ErrorState } from "../../../components/dashboard/error-state";
-import { DashboardSkeleton } from "../../../components/ui/dashboard-skeleton";
-import { ActiveTasks, type Task } from "../../../components/dashboard/active-tasks";
-import { FinanceOverview } from "../../../components/dashboard/finance-overview";
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { DashboardHeader } from "./_components/dashboard-header";
+import { ErrorState } from "./_components/error-state";
+import { Project } from "./_components/upcoming-deadlines";
 
 export default function DashboardPage() {
   const [retryCount, setRetryCount] = useState(0);
@@ -66,41 +59,6 @@ export default function DashboardPage() {
     };
   }, [projects, teamMembers, transactions]);
 
-  // Recent activities
-  const recentActivities: Activity[] = useMemo(() => {
-    if (!teamMembers || !projects) return [];
-
-    return teamMembers.slice(0, 4).map((user, index) => ({
-      id: index + 1,
-      user: {
-        name: user.name,
-        avatar: user.avatar || "",
-      },
-      action:
-        index === 0
-          ? "completed task in"
-          : index === 1
-            ? "added new member to"
-            : index === 2
-              ? "updated status of"
-              : "created new task in",
-      target: projects[index]?.name || `Project ${String.fromCharCode(65 + index)}`,
-      time:
-        index === 0
-          ? "2 hours ago"
-          : index === 1
-            ? "4 hours ago"
-            : index === 2
-              ? "6 hours ago"
-              : "1 day ago",
-      type: (["success", "info", "warning", "primary"][index] || "primary") as
-        | "success"
-        | "info"
-        | "warning"
-        | "primary",
-    }));
-  }, [teamMembers, projects]);
-
   // Upcoming deadlines
   const upcomingDeadlines: Project[] = useMemo(() => {
     if (!projects) return [];
@@ -128,58 +86,4 @@ export default function DashboardPage() {
       </div>
     );
   }
-
-  return (
-    <AuthWrapper>
-      <div className="p-6 space-y-6">
-        <DashboardHeader />
-
-        {isLoading ? (
-          <DashboardSkeleton variant="stats" />
-        ) : (
-          <DashboardStats
-            stats={stats}
-            totalProjects={projects.length}
-            totalMembers={teamMembers.length}
-          />
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {isLoading ? (
-              <DashboardSkeleton variant="activities" />
-            ) : (
-              <RecentActivities activities={recentActivities} />
-            )}
-          </div>
-
-          <div>
-            {isLoading ? (
-              <DashboardSkeleton variant="deadlines" />
-            ) : (
-              <UpcomingDeadlines projects={upcomingDeadlines} />
-            )}
-          </div>
-        </div>
-
-        {isLoading ? (
-          <DashboardSkeleton variant="projects" />
-        ) : (
-          <ProjectsOverview
-            projects={projects.slice(0, 5).map((p) => ({
-              id: p._id,
-              name: p.name,
-              status: p.status,
-              progress: p.progress,
-              team: p.team.map((m) => ({
-                id: m._id,
-                name: m.name,
-                avatar: m.avatar || "",
-              })),
-            }))}
-          />
-        )}
-      </div>
-    </AuthWrapper>
-  );
 }

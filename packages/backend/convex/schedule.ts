@@ -1,6 +1,11 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireAuth, requireWrite } from "./_lib/auth";
+import { getCurrentUserOrThrow, requireWrite } from "./users";
+
+// Helper to require auth and return user (for backwards compatibility)
+async function requireAuth(ctx: any) {
+  return await getCurrentUserOrThrow(ctx);
+}
 
 // Query: Get all events
 export const getEvents = query({
