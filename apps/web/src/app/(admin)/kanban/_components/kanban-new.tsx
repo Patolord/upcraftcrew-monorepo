@@ -2,10 +2,10 @@
 
 import { useState, useId } from "react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import type { Id } from "@workspace/backend/_generated/dataModel";
+import type { Id } from "../../../../../convex/_generated/dataModel";
 
 interface NewTaskModalProps {
   isOpen: boolean;

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import Sortable from "sortablejs";
-import { TaskCard } from "./TaskCard";
+import { TaskCard } from "./task-card";
 import { toast } from "sonner";
 import type { Id } from "@workspace/backend/_generated/dataModel";
 

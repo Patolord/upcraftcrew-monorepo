@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Sortable from "sortablejs";
 import type { Project, ProjectStatus } from "@/types/project";
-import { KanbanColumn } from "./KanbanColumn";
+import { KanbanColumn } from "./kanban-column";
 
 interface Column {
   id: ProjectStatus;
