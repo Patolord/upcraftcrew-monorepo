@@ -76,7 +76,7 @@ export default function SchedulePage() {
       location: event.location,
       attendees: event.attendees?.map((attendee) => ({
         id: attendee._id,
-        name: attendee.name,
+        name: `${attendee.firstName} ${attendee.lastName}`,
         imageUrl: attendee.imageUrl || "/default-avatar.png",
       })),
       projectId: event.projectId,
@@ -277,13 +277,6 @@ export default function SchedulePage() {
           )}
         </>
       )}
-
-      {/* New Event Modal */}
-      <NewEventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        preSelectedDate={selectedDate}
-      />
     </div>
   );
 }
