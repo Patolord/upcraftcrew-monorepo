@@ -18,7 +18,9 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.36.7",
     "@up-craft-crew-app/env": "workspace:*",
+    "convex": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },

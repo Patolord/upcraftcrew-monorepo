@@ -1,11 +1,7 @@
-import { convexQuery } from "@convex-dev/react-query";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+"use client";
 
-export const Route = createFileRoute("/")({
-  component: HomeComponent,
-});
+import { useQuery } from "convex/react";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 
 const TITLE_TEXT = `
  ██████╗ ███████╗████████╗████████╗███████╗██████╗
@@ -23,8 +19,8 @@ const TITLE_TEXT = `
     ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
  `;
 
-function HomeComponent() {
-  const healthCheck = useQuery(convexQuery(api.healthCheck.get, {}));
+export default function HomePage() {
+  const healthCheck = useQuery(api.healthCheck.get);
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-2">
@@ -34,12 +30,12 @@ function HomeComponent() {
           <h2 className="mb-2 font-medium">API Status</h2>
           <div className="flex items-center gap-2">
             <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data === "OK" ? "bg-green-500" : healthCheck.isLoading ? "bg-orange-400" : "bg-red-500"}`}
+              className={`h-2 w-2 rounded-full ${healthCheck === "OK" ? "bg-green-500" : healthCheck === undefined ? "bg-orange-400" : "bg-red-500"}`}
             />
             <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading
+              {healthCheck === undefined
                 ? "Checking..."
-                : healthCheck.data === "OK"
+                : healthCheck === "OK"
                   ? "Connected"
                   : "Error"}
             </span>

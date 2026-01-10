@@ -8,19 +8,9 @@
  * @module
  */
 
-import type * as healthCheck from "../healthCheck.js";
-import type * as privateData from "../privateData.js";
-import type * as userAccess from "../userAccess.js";
-import type * as users from "../users.js";
-
 import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
-declare const fullApi: ApiFromModules<{
-  healthCheck: typeof healthCheck;
-  privateData: typeof privateData;
-  userAccess: typeof userAccess;
-  users: typeof users;
-}>;
+declare const fullApi: ApiFromModules<{}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
