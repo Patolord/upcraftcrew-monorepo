@@ -81,10 +81,13 @@ export function KanbanCard({ project }: KanbanCardProps) {
           {project.team && project.team.length > 0 && (
             <div className="avatar-group -space-x-3">
               {project.team.slice(0, 3).map((member) => (
-                <div key={member._id || member.name} className="avatar border-2 border-base-100">
+                <div
+                  key={member.imageUrl || member.name}
+                  className="avatar border-2 border-base-100"
+                >
                   <div className="w-6">
                     <Image
-                      src={member.avatar || "/default-avatar.png"}
+                      src={member.imageUrl || "/default-avatar.png"}
                       alt={member.name}
                       width={24}
                       height={24}

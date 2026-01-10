@@ -2,11 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
-import type { Id } from "@workspace/backend/_generated/dataModel";
-import { KanbanBoard } from "@/components/kanban/KanbanBoard";
-import { adaptConvexProject } from "@/lib/utils/project-adapter";
-import type { ProjectStatus } from "@/types/project";
+import type { Project, ProjectStatus } from "@/types/project";
+import { KanbanBoard } from "@/app/(admin)/kanban/_components/kanban-board";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+
+interface Column {
+  id: ProjectStatus;
+  title: string;
+  projects: Project[];
+}
 
 interface ProjectKanbanProps {
   projectId: Id<"projects">;
@@ -21,7 +26,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
   // Transform to array for kanban board
   const projects = useMemo(() => {
     if (!convexProject) return [];
-    return [adaptConvexProject(convexProject)];
+    return [convexProject];
   }, [convexProject]);
 
   // Filter based on search
@@ -103,7 +108,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
       </div>
 
       {/* Kanban Board */}
-      <KanbanBoard columns={columns} />
+      <KanbanBoard columns={columns as unknown as Column[]} />
     </div>
   );
 }

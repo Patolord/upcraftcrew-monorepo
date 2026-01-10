@@ -19,7 +19,7 @@ interface Task {
   assignedUser: {
     _id: string;
     name: string;
-    avatar?: string;
+    imageUrl?: string;
   } | null;
   project: {
     _id: string;

@@ -1,11 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export const ProfileMenu = () => {
   return (
     <div className="dropdown dropdown-bottom sm:dropdown-end max-sm:dropdown-center">
       <div className="flex cursor-pointer items-center gap-3">
         <div className="avatar bg-base-200 size-12 overflow-hidden rounded-full px-1 pt-1">
-          <img src="/images/avatars/6.png" alt="Avatar" />
+          <div className="w-12 rounded-full">
+            <Image src="/images/avatars/6.png" alt="Avatar" width={48} height={48} />
+          </div>
         </div>
       </div>
 

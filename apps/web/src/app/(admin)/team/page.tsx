@@ -7,6 +7,7 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { NewTeamMemberModal } from "./_components/new-team-member-modal";
 import { TeamMemberCard } from "./_components/team-member-card";
 import { TeamMemberRow } from "./_components/team-member-row";
+import { TeamMemberRole } from "@/types/team";
 
 export default function TeamPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,10 +30,11 @@ export default function TeamPage() {
     ) as string[];
 
     const filteredMembers = teamMembers.filter((member) => {
+      const fullName = `${member.firstName} ${member.lastName}`;
       const matchesSearch =
-        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.department.toLowerCase().includes(searchQuery.toLowerCase());
+        (member.department || "").toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesRole = roleFilter === "all" || member.role === roleFilter;
 

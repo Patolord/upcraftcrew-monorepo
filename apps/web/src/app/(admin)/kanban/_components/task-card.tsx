@@ -9,7 +9,7 @@ interface Task {
   assignedUser: {
     _id: string;
     name: string;
-    avatar?: string;
+    imageUrl?: string;
   } | null;
   project: {
     _id: string;
@@ -107,7 +107,7 @@ export function TaskCard({ task }: TaskCardProps) {
             <div className="avatar" title={`Assigned to ${task.assignedUser.name}`}>
               <div className="w-6 rounded-full">
                 <Image
-                  src={task.assignedUser.avatar || "/default-avatar.png"}
+                  src={task.assignedUser.imageUrl || "/default-avatar.png"}
                   alt={task.assignedUser.name}
                   width={24}
                   height={24}

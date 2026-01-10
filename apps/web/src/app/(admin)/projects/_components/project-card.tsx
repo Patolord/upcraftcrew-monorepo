@@ -106,10 +106,13 @@ export function ProjectCard({ project }: { project: Project }) {
             <div className="flex items-center justify-between">
               <div className="avatar-group -space-x-4">
                 {project.team.slice(0, 4).map((member) => (
-                  <div key={member._id || member.name} className="avatar border-2 border-base-100">
+                  <div
+                    key={member.imageUrl || member.name}
+                    className="avatar border-2 border-base-100"
+                  >
                     <div className="w-8">
                       <Image
-                        src={member.avatar || "/default-avatar.png"}
+                        src={member.imageUrl || "/default-avatar.png"}
                         alt={member.name}
                         width={28}
                         height={28}

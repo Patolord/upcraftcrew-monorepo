@@ -21,7 +21,7 @@ export const seedDatabase = mutation({
         firstName: "Alice",
         lastName: "Admin",
         email: "alice.admin@example.com",
-        imageUrl: "/images/avatars/1.png",
+        imageUrl: "/default-avatar.png",
         role: "admin" as const,
         department: "Leadership",
         status: "online" as const,

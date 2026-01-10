@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 import { roleConfig, statusConfig } from "./team-config";
-import { Doc } from "zod/v4/core";
+import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];
@@ -14,7 +14,9 @@ interface TeamMemberCardProps {
 
 export function TeamMemberCard({ member }: TeamMemberCardProps) {
   const role = roleConfig[member.role as keyof typeof roleConfig] || roleConfig.member;
-  const status = statusConfig[member.status];
+  const status =
+    statusConfig[(member.status || "offline") as keyof typeof statusConfig] || statusConfig.offline;
+  const fullName = `${member.firstName} ${member.lastName}`;
 
   return (
     <div className="card bg-base-100 border border-base-300 hover:shadow-lg transition-shadow">
@@ -25,8 +27,8 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
             <div className="avatar">
               <div className="w-16 rounded-full">
                 <Image
-                  src={member.avatar || "/placeholder-avatar.png"}
-                  alt={member.name}
+                  src={member.imageUrl || "/placeholder-avatar.png"}
+                  alt={fullName}
                   width={28}
                   height={28}
                 />
@@ -37,8 +39,8 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
             />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-lg">{member.name}</h3>
-            <p className="text-sm text-base-content/60">{member.department}</p>
+            <h3 className="font-semibold text-lg">{fullName}</h3>
+            <p className="text-sm text-base-content/60">{member.department || "No department"}</p>
             <div className="flex items-center gap-2 mt-2">
               <span className={`badge ${role.color} badge-sm`}>{role.label}</span>
               <span className={`text-xs ${status.textColor}`}>{status.label}</span>
@@ -67,7 +69,7 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
             <p className="text-xs text-base-content/60">Projects</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-semibold">{member.skills.length}</p>
+            <p className="text-lg font-semibold">{member.skills?.length || 0}</p>
             <p className="text-xs text-base-content/60">Skills</p>
           </div>
         </div>
@@ -77,7 +79,7 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
           <div className="mt-4">
             <p className="text-xs text-base-content/60 mb-2">Skills</p>
             <div className="flex flex-wrap gap-1">
-              {member.skills.slice(0, 4).map((skill) => (
+              {member.skills.slice(0, 4).map((skill: string) => (
                 <span key={skill} className="badge badge-sm badge-outline">
                   {skill}
                 </span>

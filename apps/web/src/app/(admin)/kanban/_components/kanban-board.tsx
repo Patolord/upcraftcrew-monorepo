@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Sortable from "sortablejs";
+import type Sortable from "sortablejs";
 import type { Project, ProjectStatus } from "@/types/project";
 import { KanbanColumn } from "./kanban-column";
 

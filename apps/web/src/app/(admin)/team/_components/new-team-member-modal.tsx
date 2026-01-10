@@ -5,6 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { TeamMemberStatus } from "@/types/team";
 
 interface NewTeamMemberModalProps {
   isOpen: boolean;
@@ -21,9 +22,9 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
     email: "",
     role: "member" as "admin" | "member" | "viewer",
     department: "",
-    status: "online" as "online" | "offline" | "away" | "busy",
+    status: "offline" as TeamMemberStatus,
     skills: "",
-    avatar: "",
+    imageUrl: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,16 +33,16 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
 
     try {
       await createTeamMember({
-        name: formData.name,
+        firstName: formData.name,
+        lastName: formData.name,
         email: formData.email,
         role: formData.role,
         department: formData.department,
-        status: formData.status,
         skills: formData.skills
           .split(",")
           .map((skill) => skill.trim())
           .filter((skill) => skill.length > 0),
-        avatar: formData.avatar || undefined,
+        imageUrl: formData.imageUrl || undefined,
       });
 
       toast.success("Team member added successfully!");
@@ -52,9 +53,9 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
         email: "",
         role: "member",
         department: "",
-        status: "online",
+        status: "offline",
         skills: "",
-        avatar: "",
+        imageUrl: "",
       });
 
       onClose();
@@ -184,16 +185,16 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
 
           {/* Avatar URL */}
           <div className="form-control">
-            <label htmlFor={`${formId}-avatar`} className="label">
+            <label htmlFor={`${formId}-imageUrl`} className="label">
               <span className="label-text">Avatar URL (optional)</span>
             </label>
             <input
-              id={`${formId}-avatar`}
+              id={`${formId}-imageUrl`}
               type="url"
               className="input input-bordered"
               placeholder="https://example.com/avatar.jpg"
-              value={formData.avatar}
-              onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
+              value={formData.imageUrl}
+              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
             />
           </div>
 

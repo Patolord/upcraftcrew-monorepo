@@ -546,13 +546,13 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {project.team.map((member: TeamMember) => (
                 <div
-                  key={member._id || member.name}
+                  key={member.imageUrl || member.name}
                   className="flex items-center gap-3 p-3 border border-base-300 rounded-lg"
                 >
                   <div className="avatar">
                     <div className="w-10 rounded-full">
                       <Image
-                        src={member.avatar || "/default-avatar.png"}
+                        src={member.imageUrl || "/default-avatar.png"}
                         alt={member.name}
                         width={40}
                         height={40}

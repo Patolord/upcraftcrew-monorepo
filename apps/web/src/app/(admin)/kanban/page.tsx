@@ -1,13 +1,17 @@
 "use client";
 
-import { api } from "@workspace/backend/_generated/api";
-import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import { adaptConvexProject } from "@/lib/utils/project-adapter";
-import type { ProjectStatus } from "@/types/project";
-import { KanbanBoard } from "../../../components/kanban/KanbanBoard";
-import { KanbanHeader } from "../../../components/kanban/KanbanHeader";
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
+import { useQuery } from "convex/react";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import type { Project, ProjectStatus } from "@/types/project";
+import { KanbanBoard } from "./_components/kanban-board";
+import { KanbanHeader } from "./_components/kanban-header";
+
+interface Column {
+  id: ProjectStatus;
+  title: string;
+  projects: Project[];
+}
 
 export default function KanbanPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +22,7 @@ export default function KanbanPage() {
   // Transform Convex data to Project type
   const projects = useMemo(() => {
     if (!convexProjects) return [];
-    return convexProjects.map(adaptConvexProject);
+    return convexProjects;
   }, [convexProjects]);
 
   // Filter projects based on search
@@ -75,11 +79,9 @@ export default function KanbanPage() {
   }
 
   return (
-    <AuthWrapper>
-      <div className="p-6 space-y-6">
-        <KanbanHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <KanbanBoard columns={columns} />
-      </div>
-    </AuthWrapper>
+    <div className="p-6 space-y-6">
+      <KanbanHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <KanbanBoard columns={columns as unknown as Column[]} />
+    </div>
   );
 }

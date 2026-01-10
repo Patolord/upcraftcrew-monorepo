@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ViewBudgetModal } from "./view-budget-modal";
-import { NewBudgetModal } from "./new-budget-modal";
 import { DeleteBudgetModal } from "./delete-budget-modal";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import jsPDF from "jspdf";
@@ -48,16 +47,11 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [viewMode, setViewMode] = useState<"grid" | "table">("table");
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
-  const [budgetToEdit, setBudgetToEdit] = useState<Budget | null>(null);
   const [budgetToDelete, setBudgetToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleView = (budget: Budget) => {
     setSelectedBudget(budget);
-  };
-
-  const handleEdit = (budget: Budget) => {
-    setBudgetToEdit(budget);
   };
 
   const handleDeleteClick = (budgetId: string, budgetTitle: string) => {
@@ -516,7 +510,7 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
                         >
                           <span className="iconify lucide--file-down size-4" />
                         </Button>
-                        <Button className="btn btn-ghost btn-sm" onClick={() => handleEdit(budget)}>
+                        <Button className="btn btn-ghost btn-sm" onClick={() => {}}>
                           <span className="iconify lucide--edit size-4" />
                         </Button>
                         <Button
@@ -597,7 +591,7 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
                         <span className="iconify lucide--file-down size-4" />
                         PDF
                       </Button>
-                      <Button className="btn btn-sm btn-ghost" onClick={() => handleEdit(budget)}>
+                      <Button className="btn btn-sm btn-ghost" onClick={() => {}}>
                         <span className="iconify lucide--edit size-4" />
                         Editar
                       </Button>
@@ -623,11 +617,7 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
         onClose={() => setSelectedBudget(null)}
         budget={selectedBudget}
       />
-      <NewBudgetModal
-        isOpen={!!budgetToEdit}
-        onClose={() => setBudgetToEdit(null)}
-        budgetToEdit={budgetToEdit || undefined}
-      />
+
       <DeleteBudgetModal
         isOpen={!!budgetToDelete}
         onClose={() => setBudgetToDelete(null)}

@@ -8,7 +8,7 @@ export interface Task {
   team: Array<{
     id: string;
     name: string;
-    avatar: string;
+    imageUrl: string;
   }>;
 }
 
@@ -69,9 +69,9 @@ export function ActiveTasks({ tasks }: ActiveTasksProps) {
                 {task.team.length > 0 && (
                   <div className="avatar-group -space-x-2">
                     {task.team.slice(0, 2).map((member) => (
-                      <div key={member.id} className="avatar border-2 border-base-100">
+                      <div key={member.imageUrl} className="avatar border-2 border-base-100">
                         <div className="w-6">
-                          <Image src={member.avatar} alt={member.name} width={24} height={24} />
+                          <Image src={member.imageUrl} alt={member.name} width={24} height={24} />
                         </div>
                       </div>
                     ))}

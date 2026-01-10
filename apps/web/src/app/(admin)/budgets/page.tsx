@@ -6,11 +6,9 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { BudgetDashboard } from "./_components/budget-dashboard";
 import { AllBudgets } from "./_components/all-budgets";
-import { NewBudgetModal } from "./_components/new-budget-modal";
 
 export default function BudgetsPage() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "all">("dashboard");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const budgets = useQuery(api.budgets.getBudgets);
   const stats = useQuery(api.budgets.getBudgetStats);
@@ -28,7 +26,7 @@ export default function BudgetsPage() {
           </p>
         </div>
         {activeTab === "all" && (
-          <Button className="btn btn-primary gap-2" onClick={() => setIsModalOpen(true)}>
+          <Button className="btn btn-primary gap-2" onClick={() => {}}>
             <span className="iconify lucide--plus size-5" />
             Novo Orçamento
           </Button>
@@ -70,9 +68,6 @@ export default function BudgetsPage() {
           )}
         </>
       )}
-
-      {/* New Budget Modal */}
-      <NewBudgetModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

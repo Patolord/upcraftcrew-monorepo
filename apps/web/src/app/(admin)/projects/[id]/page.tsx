@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { useQuery } from "convex/react";
-import { api } from "@workspace/backend/_generated/api";
-import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ProjectInfo } from "@/components/projects/detail/ProjectInfo";
-import { ProjectKanban } from "@/components/projects/detail/ProjectKanban";
-import { ProjectDashboard } from "@/components/projects/detail/ProjectDashboard";
-import type { Id } from "@workspace/backend/_generated/dataModel";
+import { Button } from "@base-ui/react/button";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { ProjectDashboard } from "../_components/detail/project-dashboard";
+import { ProjectInfo } from "../_components/detail/project-info";
+import { ProjectKanban } from "../_components/detail/project-kanban";
+import type { Project } from "@/types/project";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -96,7 +98,7 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Tab Content */}
-      {activeTab === "info" && <ProjectInfo project={project} />}
+      {activeTab === "info" && <ProjectInfo project={project as unknown as Project} />}
       {activeTab === "kanban" && <ProjectKanban projectId={projectId} />}
       {activeTab === "dashboard" && <ProjectDashboard project={project} />}
     </div>

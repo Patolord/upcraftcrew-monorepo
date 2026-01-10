@@ -1,6 +1,6 @@
 import type { ScheduleEvent } from "@/types/schedule";
 import { eventTypeConfig } from "./event-type-config";
-
+import Image from "next/image";
 export function EventCard({ event }: { event: ScheduleEvent }) {
   const eventType = eventTypeConfig[event.type];
 
@@ -45,9 +45,9 @@ export function EventCard({ event }: { event: ScheduleEvent }) {
           <div className="flex items-center gap-2 mt-2">
             <div className="avatar-group -space-x-3">
               {event.attendees.slice(0, 3).map((attendee) => (
-                <div key={attendee.id} className="avatar border-2 border-base-100">
+                <div key={attendee.imageUrl} className="avatar border-2 border-base-100">
                   <div className="w-6">
-                    <img src={attendee.avatar} alt={attendee.name} />
+                    <Image src={attendee.imageUrl} alt={attendee.name} width={24} height={24} />
                   </div>
                 </div>
               ))}

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
-import type { Doc } from "@workspace/backend/_generated/dataModel";
+import Image from "next/image";
+import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { roleConfig, statusConfig } from "./team-config";
 
 type TeamMemberWithProjects = Doc<"users"> & {
@@ -13,7 +13,9 @@ interface TeamMemberRowProps {
 
 export function TeamMemberRow({ member }: TeamMemberRowProps) {
   const role = roleConfig[member.role as keyof typeof roleConfig] || roleConfig.member;
-  const status = statusConfig[member.status];
+  const status =
+    statusConfig[(member.status || "offline") as keyof typeof statusConfig] || statusConfig.offline;
+  const fullName = `${member.firstName} ${member.lastName}`;
 
   return (
     <tr className="hover">
@@ -23,8 +25,8 @@ export function TeamMemberRow({ member }: TeamMemberRowProps) {
             <div className="avatar">
               <div className="w-10 rounded-full">
                 <Image
-                  src={member.avatar || "/placeholder-avatar.png"}
-                  alt={member.name}
+                  src={member.imageUrl || "/placeholder-avatar.png"}
+                  alt={fullName}
                   width={28}
                   height={28}
                 />
@@ -35,16 +37,24 @@ export function TeamMemberRow({ member }: TeamMemberRowProps) {
             />
           </div>
           <div>
-            <div className="font-medium">{member.name}</div>
-            <div className="text-sm text-base-content/60">{member.department}</div>
+            <div className="font-medium">{fullName}</div>
+            <div className="text-sm text-base-content/60">
+              {member.department || "No department"}
+            </div>
           </div>
         </div>
       </td>
       <td>
         <div className="text-sm">{member.email}</div>
         <div className="text-xs text-base-content/60">
-          {member.skills.slice(0, 2).join(", ")}
-          {member.skills.length > 2 && ` +${member.skills.length - 2}`}
+          {member.skills && member.skills.length > 0 ? (
+            <>
+              {member.skills.slice(0, 2).join(", ")}
+              {member.skills.length > 2 && ` +${member.skills.length - 2}`}
+            </>
+          ) : (
+            "No skills"
+          )}
         </div>
       </td>
       <td>

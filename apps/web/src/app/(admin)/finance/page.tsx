@@ -1,17 +1,20 @@
 "use client";
 
-import { api } from "@workspace/backend/_generated/api";
+import { Button } from "@base-ui/react/button";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useMemo, useState } from "react";
-import { CategoryBreakdown } from "@/components/finance/CategoryBreakdown";
-import { FinancialSummaryCards } from "@/components/finance/FinancialSummaryCards";
-import { QuickStats } from "@/components/finance/QuickStats";
-import { TransactionFilters } from "@/components/finance/TransactionFilters";
-import { TransactionRow } from "@/components/finance/TransactionRow";
-import { TransactionForm } from "@/components/forms/TransactionForm";
-import { Button } from "@/components/ui/button";
-import { AuthWrapper } from "@/components/auth/auth-wrapper";
-import type { Transaction, TransactionCategory, TransactionType } from "@/types/finance";
+import { useState, useMemo } from "react";
+import { CategoryBreakdown } from "./_components/category-breakdown";
+import { FinancialSummaryCards } from "./_components/financial-summary-cards";
+import { QuickStats } from "./_components/quick-stats";
+import { TransactionFilters } from "./_components/transaction-filters";
+import { TransactionRow } from "./_components/transaction-row";
+import {
+  TransactionType,
+  TransactionCategory,
+  Transaction,
+  TransactionForm,
+} from "@/types/finance";
 
 export default function FinancePage() {
   const [typeFilter, setTypeFilter] = useState<TransactionType | "all">("all");
@@ -107,117 +110,115 @@ export default function FinancePage() {
   }
 
   return (
-    <AuthWrapper>
-      <div className="p-6 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Finance</h1>
-            <p className="text-base-content/60 text-sm mt-1">
-              Track income, expenses, and financial performance
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button className="btn btn-ghost gap-2">
-              <span className="iconify lucide--download size-5" />
-              Export
-            </Button>
-            <Button
-              className="btn btn-primary gap-2"
-              onClick={() => {
-                setSelectedTransaction(null);
-                setIsFormOpen(true);
-              }}
-            >
-              <span className="iconify lucide--plus size-5" />
-              New Transaction
-            </Button>
-          </div>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Finance</h1>
+          <p className="text-base-content/60 text-sm mt-1">
+            Track income, expenses, and financial performance
+          </p>
         </div>
-
-        {/* Financial Summary Cards */}
-        <FinancialSummaryCards
-          summary={summary}
-          totalTransactions={financialSummary.transactionCount}
-          pendingTransactions={transformedTransactions.filter((t) => t.status === "pending").length}
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Transactions Table */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Filters */}
-            <TransactionFilters
-              typeFilter={typeFilter}
-              categoryFilter={categoryFilter}
-              statusFilter={statusFilter}
-              onTypeFilterChange={setTypeFilter}
-              onCategoryFilterChange={setCategoryFilter}
-              onStatusFilterChange={setStatusFilter}
-            />
-
-            {/* Transactions Table */}
-            <div className="overflow-x-auto bg-base-100 rounded-box border border-base-300">
-              <table className="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Transaction</th>
-                    <th>Category</th>
-                    <th>Client/Project</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th className="text-right">Amount</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTransactions.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-8">
-                        <span className="text-base-content/60">No transactions found</span>
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredTransactions.map((transaction) => (
-                      <TransactionRow
-                        key={transaction.id}
-                        transaction={transaction}
-                        onEdit={(t) => {
-                          setSelectedTransaction(t);
-                          setIsFormOpen(true);
-                        }}
-                      />
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-4">
-            {/* Category Breakdown */}
-            <CategoryBreakdown transactions={transformedTransactions} />
-
-            {/* Quick Stats */}
-            <QuickStats transactions={transformedTransactions} />
-          </div>
+        <div className="flex gap-2">
+          <Button className="btn btn-ghost gap-2">
+            <span className="iconify lucide--download size-5" />
+            Export
+          </Button>
+          <Button
+            className="btn btn-primary gap-2"
+            onClick={() => {
+              setSelectedTransaction(null);
+              setIsFormOpen(true);
+            }}
+          >
+            <span className="iconify lucide--plus size-5" />
+            New Transaction
+          </Button>
         </div>
-
-        {/* Transaction Form Modal */}
-        <TransactionForm
-          open={isFormOpen}
-          onOpenChange={setIsFormOpen}
-          transaction={
-            selectedTransaction
-              ? {
-                  ...selectedTransaction,
-                  status: selectedTransaction.status as "completed" | "pending",
-                }
-              : undefined
-          }
-          mode={selectedTransaction ? "edit" : "create"}
-        />
       </div>
-    </AuthWrapper>
+
+      {/* Financial Summary Cards */}
+      <FinancialSummaryCards
+        summary={summary}
+        totalTransactions={financialSummary.transactionCount}
+        pendingTransactions={transformedTransactions.filter((t) => t.status === "pending").length}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Transactions Table */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Filters */}
+          <TransactionFilters
+            typeFilter={typeFilter}
+            categoryFilter={categoryFilter}
+            statusFilter={statusFilter}
+            onTypeFilterChange={setTypeFilter}
+            onCategoryFilterChange={setCategoryFilter}
+            onStatusFilterChange={setStatusFilter}
+          />
+
+          {/* Transactions Table */}
+          <div className="overflow-x-auto bg-base-100 rounded-box border border-base-300">
+            <table className="table table-sm">
+              <thead>
+                <tr>
+                  <th>Transaction</th>
+                  <th>Category</th>
+                  <th>Client/Project</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th className="text-right">Amount</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTransactions.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-8">
+                      <span className="text-base-content/60">No transactions found</span>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredTransactions.map((transaction) => (
+                    <TransactionRow
+                      key={transaction.id}
+                      transaction={transaction}
+                      onEdit={(t) => {
+                        setSelectedTransaction(t);
+                        setIsFormOpen(true);
+                      }}
+                    />
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-4">
+          {/* Category Breakdown */}
+          <CategoryBreakdown transactions={transformedTransactions} />
+
+          {/* Quick Stats */}
+          <QuickStats transactions={transformedTransactions} />
+        </div>
+      </div>
+
+      {/* Transaction Form Modal */}
+      <TransactionForm
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        transaction={
+          selectedTransaction
+            ? {
+                ...selectedTransaction,
+                status: selectedTransaction.status as "completed" | "pending",
+              }
+            : undefined
+        }
+        mode={selectedTransaction ? "edit" : "create"}
+      />
+    </div>
   );
 }
