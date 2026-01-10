@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { requireAuth, requireWrite } from "./_lib/auth";
 
 // Query: Get all team members
 export const getTeamMembers = query({

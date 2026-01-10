@@ -5,8 +5,8 @@ import { useMutation, useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useCurrency } from "@/contexts/CurrencyContext";
-import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 interface NewBudgetModalProps {
   isOpen: boolean;
@@ -20,18 +20,28 @@ interface NewBudgetModalProps {
     totalAmount: number;
     currency: string;
     validUntil: number;
-    items: BudgetItem[];
-    projectId?: string;
+    items: {
+      description: string;
+      quantity: number;
+      unitPrice: number;
+      total: number;
+    }[];
     notes?: string;
+    projectId?: string;
   };
 }
-
-interface BudgetItem {
+type BudgetItem = {
   description: string;
   quantity: number;
   unitPrice: number;
   total: number;
-}
+  projectId?: string;
+};
+
+type Project = {
+  _id: string;
+  name: string;
+};
 
 export function NewBudgetModal({ isOpen, onClose, budgetToEdit }: NewBudgetModalProps) {
   const { formatAmount, config, currency, CURRENCIES } = useCurrency();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "convex/react";
-import { api } from "convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { BudgetDashboard } from "./_components/budget-dashboard";
 import { AllBudgets } from "./_components/all-budgets";
