@@ -2,19 +2,14 @@
 
 import { Button } from "@base-ui/react/button";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { useQuery } from "convex/react";
-import { useState, useMemo } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { useState, useMemo, useEffect } from "react";
 import { CategoryBreakdown } from "./_components/category-breakdown";
 import { FinancialSummaryCards } from "./_components/financial-summary-cards";
 import { QuickStats } from "./_components/quick-stats";
 import { TransactionFilters } from "./_components/transaction-filters";
 import { TransactionRow } from "./_components/transaction-row";
-import {
-  TransactionType,
-  TransactionCategory,
-  Transaction,
-  TransactionForm,
-} from "@/types/finance";
+import { TransactionType, TransactionCategory, Transaction } from "@/types/finance";
 
 export default function FinancePage() {
   const [typeFilter, setTypeFilter] = useState<TransactionType | "all">("all");
@@ -22,6 +17,15 @@ export default function FinancePage() {
   const [statusFilter, setStatusFilter] = useState<"all" | "completed" | "pending">("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+
+  // Ensure user exists in Convex before making queries
+  const ensureCurrentUser = useMutation(api.users.ensureCurrentUser);
+  useEffect(() => {
+    ensureCurrentUser().catch((error) => {
+      // Silently handle errors - user might already exist or not be authenticated
+      console.error("Failed to ensure user exists:", error);
+    });
+  }, [ensureCurrentUser]);
 
   // Fetch data from Convex
   const transactions = useQuery(api.finance.getTransactions);
@@ -206,19 +210,22 @@ export default function FinancePage() {
       </div>
 
       {/* Transaction Form Modal */}
-      <TransactionForm
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        transaction={
-          selectedTransaction
-            ? {
-                ...selectedTransaction,
-                status: selectedTransaction.status as "completed" | "pending",
-              }
-            : undefined
-        }
-        mode={selectedTransaction ? "edit" : "create"}
-      />
+      {/* TODO: Implement TransactionForm component */}
+      {isFormOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-base-100 p-6 rounded-lg max-w-2xl w-full mx-4">
+            <h2 className="text-xl font-bold mb-4">
+              {selectedTransaction ? "Edit Transaction" : "New Transaction"}
+            </h2>
+            <p className="text-base-content/60 mb-4">
+              Transaction form component not yet implemented
+            </p>
+            <button className="btn btn-primary" onClick={() => setIsFormOpen(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

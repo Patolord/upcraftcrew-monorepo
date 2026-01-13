@@ -1,12 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import type { Transaction, TransactionCategory } from "@/types/finance";
 import { categoryConfig } from "@/app/(admin)/finance/config";
 
 export function CategoryBreakdown({ transactions }: { transactions: Transaction[] }) {
-  const { formatAmount } = useCurrency();
   const categoryTotals = useMemo(() => {
     const totals = new Map<TransactionCategory, number>();
 
@@ -40,9 +38,7 @@ export function CategoryBreakdown({ transactions }: { transactions: Transaction[
                     <span className={`iconify ${config.icon} size-4`} />
                     <span>{config.label}</span>
                   </div>
-                  <span className="font-medium">
-                    {formatAmount(amount, { maximumFractionDigits: 0 })}
-                  </span>
+                  <span className="font-medium">{amount.toFixed(0)}</span>
                 </div>
                 <progress
                   className="progress progress-primary w-full"

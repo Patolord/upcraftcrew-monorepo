@@ -1,7 +1,5 @@
 "use client";
 
-import { useCurrency } from "@/contexts/CurrencyContext";
-
 interface DashboardStatsProps {
   stats: {
     activeProjects: number;
@@ -15,7 +13,6 @@ interface DashboardStatsProps {
 }
 
 export function DashboardStats({ stats, totalProjects, totalMembers }: DashboardStatsProps) {
-  const { formatAmount } = useCurrency();
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
       <div className="stats shadow border border-base-300">
@@ -47,7 +44,7 @@ export function DashboardStats({ stats, totalProjects, totalMembers }: Dashboard
           </div>
           <div className="stat-title text-xs">Total Revenue</div>
           <div className="stat-value text-2xl text-info">
-            {formatAmount(stats.totalRevenue / 1000, { maximumFractionDigits: 0 })}k
+            {(stats.totalRevenue / 1000).toFixed(0)}k
           </div>
           <div className="stat-desc text-xs">This period</div>
         </div>
@@ -60,7 +57,7 @@ export function DashboardStats({ stats, totalProjects, totalMembers }: Dashboard
           </div>
           <div className="stat-title text-xs">Net Profit</div>
           <div className="stat-value text-2xl text-success">
-            {formatAmount(stats.netProfit / 1000, { maximumFractionDigits: 0 })}k
+            {(stats.netProfit / 1000).toFixed(0)}k
           </div>
           <div className="stat-desc text-xs">
             {((stats.netProfit / stats.totalRevenue) * 100).toFixed(0)}% margin

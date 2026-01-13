@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface BudgetItem {
   description: string;
@@ -40,8 +39,6 @@ const statusConfig = {
 };
 
 export function ViewBudgetModal({ isOpen, onClose, budget }: ViewBudgetModalProps) {
-  const { formatAmount } = useCurrency();
-
   if (!isOpen || !budget) return null;
 
   // Validate budget status to prevent runtime errors
@@ -119,8 +116,8 @@ export function ViewBudgetModal({ isOpen, onClose, budget }: ViewBudgetModalProp
                   <tr key={`${budget._id}-item-${index}-${item.description.substring(0, 10)}`}>
                     <td>{item.description}</td>
                     <td className="text-center">{item.quantity}</td>
-                    <td className="text-right">{formatAmount(item.unitPrice)}</td>
-                    <td className="text-right font-semibold">{formatAmount(item.total)}</td>
+                    <td className="text-right">{item.unitPrice}</td>
+                    <td className="text-right font-semibold">{item.total}</td>
                   </tr>
                 ))}
               </tbody>
@@ -129,7 +126,7 @@ export function ViewBudgetModal({ isOpen, onClose, budget }: ViewBudgetModalProp
                   <td colSpan={3} className="text-right">
                     Valor Total:
                   </td>
-                  <td className="text-right text-xl">{formatAmount(budget.totalAmount)}</td>
+                  <td className="text-right text-xl">{budget.totalAmount}</td>
                 </tr>
               </tfoot>
             </table>

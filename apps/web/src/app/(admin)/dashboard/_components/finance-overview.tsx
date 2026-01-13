@@ -1,7 +1,5 @@
 "use client";
 
-import { useCurrency } from "@/contexts/CurrencyContext";
-
 interface FinanceOverviewProps {
   totalRevenue: number;
   totalExpenses: number;
@@ -15,7 +13,6 @@ export function FinanceOverview({
   netProfit,
   profitMargin,
 }: FinanceOverviewProps) {
-  const { formatAmount } = useCurrency();
   const isProfit = netProfit >= 0;
 
   // Calculate percentages for visual bar
@@ -42,7 +39,7 @@ export function FinanceOverview({
           <div className="flex items-center justify-between w-full">
             <div>
               <p className="text-xs opacity-80">Net Profit</p>
-              <p className="text-2xl font-bold">{formatAmount(Math.abs(netProfit))}</p>
+              <p className="text-2xl font-bold">{Math.abs(netProfit)}</p>
             </div>
             <div className="text-right">
               <span
@@ -64,7 +61,7 @@ export function FinanceOverview({
                 <span className="iconify lucide--arrow-down-circle size-4 text-success" />
                 <span className="text-sm font-medium">Revenue</span>
               </div>
-              <span className="text-sm font-bold text-success">{formatAmount(totalRevenue)}</span>
+              <span className="text-sm font-bold text-success">{totalRevenue}</span>
             </div>
             <div className="relative w-full h-2 bg-base-300 rounded-full overflow-hidden">
               <div
@@ -81,7 +78,7 @@ export function FinanceOverview({
                 <span className="iconify lucide--arrow-up-circle size-4 text-error" />
                 <span className="text-sm font-medium">Expenses</span>
               </div>
-              <span className="text-sm font-bold text-error">{formatAmount(totalExpenses)}</span>
+              <span className="text-sm font-bold text-error">{totalExpenses}</span>
             </div>
             <div className="relative w-full h-2 bg-base-300 rounded-full overflow-hidden">
               <div
@@ -97,7 +94,7 @@ export function FinanceOverview({
           <div className="text-center p-2 bg-base-200 rounded-lg">
             <p className="text-xs text-base-content/60">Net {isProfit ? "Profit" : "Loss"}</p>
             <p className={`text-lg font-bold ${isProfit ? "text-success" : "text-error"}`}>
-              {formatAmount(Math.abs(netProfit))}
+              {Math.abs(netProfit)}
             </p>
           </div>
           <div className="text-center p-2 bg-base-200 rounded-lg">

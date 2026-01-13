@@ -1,11 +1,8 @@
 "use client";
 
-import { useCurrency } from "@/contexts/CurrencyContext";
 import type { Transaction } from "@/types/finance";
 
 export function QuickStats({ transactions }: { transactions: Transaction[] }) {
-  const { formatAmount } = useCurrency();
-
   const incomeTransactions = transactions.filter((t) => t.type === "income");
   const expenseTransactions = transactions.filter((t) => t.type === "expense");
 
@@ -27,21 +24,15 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
         <div className="space-y-3 mt-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-base-content/60">Avg Transaction</span>
-            <span className="font-medium">
-              {formatAmount(avgTransaction, { maximumFractionDigits: 0 })}
-            </span>
+            <span className="font-medium">{avgTransaction.toFixed(0)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-base-content/60">Largest Income</span>
-            <span className="font-medium text-success">
-              {formatAmount(largestIncome, { maximumFractionDigits: 0 })}
-            </span>
+            <span className="font-medium text-success">{largestIncome.toFixed(0)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-base-content/60">Largest Expense</span>
-            <span className="font-medium text-error">
-              {formatAmount(largestExpense, { maximumFractionDigits: 0 })}
-            </span>
+            <span className="font-medium text-error">{largestExpense.toFixed(0)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-base-content/60">Active Projects</span>

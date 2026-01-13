@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 
 /**
  * Verifica se o usuário atual tem acesso pago ao conteúdo de vídeo.
@@ -16,11 +16,11 @@ import { api } from "@/convex/_generated/api";
  *   // ... resto do código só executa se tiver acesso
  * }
  */
-export async function requireVideoAccess(redirectTo = "/purchase"): Promise<true> {
-  const { userId, getToken } = await auth();
+export async function requireAccess(redirectTo = "/purchase"): Promise<true> {
+  const { userId: clerkUserId, getToken } = await auth();
 
   // Se não está logado, redireciona para compra
-  if (!userId) {
+  if (!clerkUserId) {
     redirect(redirectTo);
   }
 
@@ -28,11 +28,7 @@ export async function requireVideoAccess(redirectTo = "/purchase"): Promise<true
   const token = await getToken({ template: "convex" }).catch(() => null);
 
   // Verifica acesso no Convex (fonte de verdade)
-  const hasAccess = await fetchQuery(
-    api.userAccess.checkUserHasVideoAccessByClerkId,
-    { clerkUserId: userId },
-    token ? { token } : {},
-  );
+  const hasAccess = await fetchQuery(api.userAccess.checkUserHasAccess, {}, token ? { token } : {});
 
   if (!hasAccess) {
     redirect(redirectTo);
@@ -45,7 +41,7 @@ export async function requireVideoAccess(redirectTo = "/purchase"): Promise<true
  * Verifica acesso sem redirecionar automaticamente.
  * Útil quando você precisa fazer lógica condicional.
  *
- * @returns { hasAccess: boolean, userId: string | null }
+ * @returns { hasAccess: boolean, clerkUserId: string | null }
  *
  * @example
  * const { hasAccess, userId } = await checkVideoAccess();
@@ -53,23 +49,19 @@ export async function requireVideoAccess(redirectTo = "/purchase"): Promise<true
  *   // mostrar conteúdo limitado
  * }
  */
-export async function checkVideoAccess(): Promise<{
+export async function checkAccess(): Promise<{
   hasAccess: boolean;
-  userId: string | null;
+  clerkUserId: string | null;
 }> {
-  const { userId, getToken } = await auth();
+  const { userId: clerkUserId, getToken } = await auth();
 
-  if (!userId) {
-    return { hasAccess: false, userId: null };
+  if (!clerkUserId) {
+    return { hasAccess: false, clerkUserId: null };
   }
 
   const token = await getToken({ template: "convex" }).catch(() => null);
 
-  const hasAccess = await fetchQuery(
-    api.userAccess.checkUserHasVideoAccessByClerkId,
-    { clerkUserId: userId },
-    token ? { token } : {},
-  );
+  const hasAccess = await fetchQuery(api.userAccess.checkUserHasAccess, {}, token ? { token } : {});
 
-  return { hasAccess, userId };
+  return { hasAccess, clerkUserId };
 }

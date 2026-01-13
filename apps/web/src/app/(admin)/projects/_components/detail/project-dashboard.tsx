@@ -3,14 +3,12 @@
 import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface ProjectDashboardProps {
   project: any;
 }
 
 export function ProjectDashboard({ project }: ProjectDashboardProps) {
-  const { formatAmount } = useCurrency();
   // Fetch transactions related to this project
   const transactions = useQuery(api.finance.getTransactionsByProject, {
     projectId: project._id,
@@ -101,7 +99,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
             <div className={`stat-value text-2xl ${budgetUsage.isOverBudget ? "text-error" : ""}`}>
               {budgetUsage.percentage.toFixed(0)}%
             </div>
-            <div className="stat-desc">{formatAmount(budgetUsage.remaining)} restante</div>
+            <div className="stat-desc">{budgetUsage.remaining} restante</div>
           </div>
         </div>
 
@@ -165,19 +163,15 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Total</span>
-                <span className="text-sm font-bold">{formatAmount(project.budget.total)}</span>
+                <span className="text-sm font-bold">{project.budget.total}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Gasto</span>
-                <span className="text-sm font-bold text-error">
-                  {formatAmount(project.budget.spent)}
-                </span>
+                <span className="text-sm font-bold text-error">{project.budget.spent}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Restante</span>
-                <span className="text-sm font-bold text-success">
-                  {formatAmount(project.budget.remaining)}
-                </span>
+                <span className="text-sm font-bold text-success">{project.budget.remaining}</span>
               </div>
               <progress
                 className={`progress w-full h-4 ${budgetUsage.isOverBudget ? "progress-error" : "progress-success"}`}
@@ -196,9 +190,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 bg-success/10 border border-success rounded-lg">
               <p className="text-xs text-base-content/60 mb-1">Receita</p>
-              <p className="text-2xl font-bold text-success">
-                {formatAmount(financialData.income)}
-              </p>
+              <p className="text-2xl font-bold text-success">{financialData.income}</p>
               <p className="text-xs text-base-content/60 mt-1">
                 {transactions?.filter((t) => t.type === "income" && t.status === "completed")
                   .length || 0}{" "}
@@ -207,9 +199,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
             </div>
             <div className="p-4 bg-error/10 border border-error rounded-lg">
               <p className="text-xs text-base-content/60 mb-1">Despesas</p>
-              <p className="text-2xl font-bold text-error">
-                {formatAmount(financialData.expenses)}
-              </p>
+              <p className="text-2xl font-bold text-error">{financialData.expenses}</p>
               <p className="text-xs text-base-content/60 mt-1">
                 {transactions?.filter((t) => t.type === "expense" && t.status === "completed")
                   .length || 0}{" "}
@@ -223,7 +213,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
               <p
                 className={`text-2xl font-bold ${financialData.balance >= 0 ? "text-primary" : "text-warning"}`}
               >
-                {formatAmount(Math.abs(financialData.balance))}
+                {Math.abs(financialData.balance)}
               </p>
               <p className="text-xs text-base-content/60 mt-1">
                 {financialData.balance >= 0 ? "Lucro" : "Déficit"}

@@ -17,7 +17,7 @@ export const getTasks = query({
     // Filter tasks: show all public tasks + user's private tasks
     // Tasks without isPrivate field are treated as public (false)
     const tasks = allTasks.filter(
-      (task) => !(task.isPrivate ?? false) || task.ownerId === user.userId,
+      (task) => !(task.isPrivate ?? false) || task.ownerId === user._id,
     );
 
     // Populate assigned user and project
@@ -51,7 +51,7 @@ export const getTaskById = query({
 
     // Check if user has permission to view this task
     // Tasks without isPrivate field are treated as public (false)
-    if ((task.isPrivate ?? false) && task.ownerId !== user.userId) {
+    if ((task.isPrivate ?? false) && task.ownerId !== user._id) {
       throw new Error("Unauthorized: You don't have permission to view this private task");
     }
 
@@ -160,7 +160,7 @@ export const createTask = mutation({
       ...args,
       // Default isPrivate to false if not specified
       isPrivate: args.isPrivate ?? false,
-      ownerId: user.userId,
+      ownerId: user._id,
       createdAt: now,
       updatedAt: now,
     });
@@ -204,7 +204,7 @@ export const updateTask = mutation({
 
     // Only owner can update private tasks
     // Tasks without isPrivate field are treated as public (false)
-    if ((existingTask.isPrivate ?? false) && existingTask.ownerId !== user.userId) {
+    if ((existingTask.isPrivate ?? false) && existingTask.ownerId !== user._id) {
       throw new Error("Unauthorized: Only the owner can update this private task");
     }
 
@@ -230,7 +230,7 @@ export const deleteTask = mutation({
 
     // Only owner can delete private tasks
     // Tasks without isPrivate field are treated as public (false)
-    if ((task.isPrivate ?? false) && task.ownerId !== user.userId) {
+    if ((task.isPrivate ?? false) && task.ownerId !== user._id) {
       throw new Error("Unauthorized: Only the owner can delete this private task");
     }
 

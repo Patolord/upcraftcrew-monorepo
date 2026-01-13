@@ -1,7 +1,5 @@
 "use client";
 
-import { useCurrency } from "@/contexts/CurrencyContext";
-
 interface FinancialSummary {
   totalIncome: number;
   totalExpenses: number;
@@ -28,30 +26,21 @@ export function FinancialSummaryCards({
   totalTransactions,
   pendingTransactions,
 }: FinancialSummaryCardsProps) {
-  const { formatAmount } = useCurrency();
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
       <div className="stats shadow border border-base-300">
         <div className="stat py-4">
           <div className="stat-title text-xs">Total Income</div>
-          <div className="stat-value text-2xl text-success">
-            {formatLargeNumber(summary.totalIncome, formatAmount)}
-          </div>
-          <div className="stat-desc text-xs">
-            +{formatAmount(summary.pendingIncome, { maximumFractionDigits: 0 })} pending
-          </div>
+          <div className="stat-value text-2xl text-success"></div>
+          <div className="stat-desc text-xs"></div>
         </div>
       </div>
 
       <div className="stats shadow border border-base-300">
         <div className="stat py-4">
           <div className="stat-title text-xs">Total Expenses</div>
-          <div className="stat-value text-2xl text-error">
-            {formatLargeNumber(summary.totalExpenses, formatAmount)}
-          </div>
-          <div className="stat-desc text-xs">
-            -{formatAmount(summary.pendingExpenses, { maximumFractionDigits: 0 })} pending
-          </div>
+          <div className="stat-value text-2xl text-error"></div>
+          <div className="stat-desc text-xs"></div>
         </div>
       </div>
 
@@ -62,9 +51,7 @@ export function FinancialSummaryCards({
             className={`stat-value text-2xl ${
               summary.netProfit >= 0 ? "text-success" : "text-error"
             }`}
-          >
-            {formatLargeNumber(summary.netProfit, formatAmount)}
-          </div>
+          ></div>
           <div className="stat-desc text-xs">
             {summary.netProfit >= 0 ? "Profit" : "Loss"} this period
           </div>

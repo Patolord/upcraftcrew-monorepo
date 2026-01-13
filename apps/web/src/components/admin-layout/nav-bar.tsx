@@ -1,7 +1,5 @@
 "use client";
 
-import { CurrencySelector } from "@/components/CurrencySelector";
-
 export const NavBar = () => {
   return (
     <div className="sticky top-0 z-10 flex h-16 w-full items-center justify-between border-b border-base-300 bg-base-100 px-4">
@@ -28,9 +26,6 @@ export const NavBar = () => {
             Welcome back, great to see you again!
           </p>
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <CurrencySelector />
       </div>
     </div>
   );

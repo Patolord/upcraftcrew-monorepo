@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { ViewBudgetModal } from "./view-budget-modal";
 import { DeleteBudgetModal } from "./delete-budget-modal";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -42,7 +41,6 @@ const statusConfig = {
 type StatusFilter = "all" | Budget["status"];
 
 export function AllBudgets({ budgets }: AllBudgetsProps) {
-  const { formatAmount, config } = useCurrency();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [viewMode, setViewMode] = useState<"grid" | "table">("table");
@@ -284,15 +282,13 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
     const tableData = budget.items.map((item) => [
       item.description,
       item.quantity.toString(),
-      formatAmount(item.unitPrice),
-      formatAmount(item.total),
+      item.unitPrice.toString(),
+      item.total.toString(),
     ]);
 
     autoTable(doc, {
       startY: 85,
-      head: [["ITEM", "QTD", "VALOR UNIT.", `VALOR (${config.code})`]],
       body: tableData,
-      foot: [["", "", "TOTAL", formatAmount(budget.totalAmount)]],
       theme: "plain",
       styles: {
         textColor: [255, 255, 255],
@@ -482,7 +478,7 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
                       </div>
                     </td>
                     <td>{budget.client}</td>
-                    <td className="font-semibold">{formatAmount(budget.totalAmount)}</td>
+                    <td className="font-semibold"></td>
                     <td>
                       <span className={`badge ${statusConfig[budget.status].color}`}>
                         {statusConfig[budget.status].label}
@@ -559,7 +555,7 @@ export function AllBudgets({ budgets }: AllBudgetsProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-base-content/60">Valor Total</p>
-                      <p className="text-lg font-bold">{formatAmount(budget.totalAmount)}</p>
+                      <p className="text-lg font-bold"></p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-base-content/60">Válido até</p>
