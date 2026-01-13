@@ -17,6 +17,7 @@ interface Budget {
   client: string;
   status: "draft" | "sent" | "approved" | "rejected" | "expired";
   totalAmount: number;
+  currency?: string;
   validUntil: number;
   createdAt: number;
 }
@@ -33,6 +34,13 @@ const statusConfig = {
   rejected: { label: "Rejeitado", color: "badge-error" },
   expired: { label: "Expirado", color: "badge-warning" },
 };
+
+function formatCurrency(value: number, currency: string = "BRL"): string {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency,
+  }).format(value);
+}
 
 export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
   // Get recent budgets
@@ -60,20 +68,22 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
           <div className="stat">
             <div className="stat-title text-xs">Aprovados</div>
             <div className="stat-value text-2xl text-success">{stats?.approved || 0}</div>
-            <div className="stat-desc">Taxa: {stats?.conversionRate.toFixed(1) || 0}%</div>
+            <div className="stat-desc">Taxa: {stats?.conversionRate?.toFixed(1) || 0}%</div>
           </div>
         </div>
         <div className="stats shadow border border-base-300">
           <div className="stat">
             <div className="stat-title text-xs">Valor Total</div>
-            <div className="stat-value text-2xl">{stats?.totalValue || 0}</div>
+            <div className="stat-value text-2xl">{formatCurrency(stats?.totalValue || 0)}</div>
             <div className="stat-desc">Todos os orçamentos</div>
           </div>
         </div>
         <div className="stats shadow border border-base-300">
           <div className="stat">
             <div className="stat-title text-xs">Valor Aprovado</div>
-            <div className="stat-value text-2xl text-success">{stats?.approvedValue || 0}</div>
+            <div className="stat-value text-2xl text-success">
+              {formatCurrency(stats?.approvedValue || 0)}
+            </div>
             <div className="stat-desc">Receita confirmada</div>
           </div>
         </div>
@@ -139,9 +149,11 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
-                        <p className="font-semibold">{budget.totalAmount}</p>
+                        <p className="font-semibold">
+                          {formatCurrency(budget.totalAmount, budget.currency)}
+                        </p>
                         <p className="text-xs text-base-content/60">
-                          {new Date(budget.createdAt).toLocaleDateString()}
+                          {new Date(budget.createdAt).toLocaleDateString("pt-BR")}
                         </p>
                       </div>
                       <span className={`badge ${statusConfig[budget.status].color} badge-sm`}>

@@ -1,0 +1,125 @@
+import { NextRequest, NextResponse } from "next/server";
+import { renderToStaticMarkup } from "react-dom/server";
+import { chromium } from "playwright";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { BudgetPDFTemplate } from "../../_components/pdf-template";
+import type { Budget } from "../../_components/pdf-template/types";
+
+// HTML wrapper for the PDF template
+function getHTMLDocument(content: string): string {
+  return `
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Proposta Comercial</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+          @page {
+            size: A4;
+            margin: 0;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+          }
+          .pdf-page {
+            width: 794px;
+            height: 1123px;
+            page-break-after: always;
+            page-break-inside: avoid;
+            overflow: hidden;
+          }
+          .pdf-page:last-child {
+            page-break-after: auto;
+          }
+        </style>
+      </head>
+      <body>
+        ${content}
+      </body>
+    </html>
+  `;
+}
+
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await params;
+
+    // Fetch budget data from Convex
+    const budgetData = await fetchQuery(api.budgets.getBudgetById, {
+      id: id as Id<"budgets">,
+    });
+
+    if (!budgetData) {
+      return NextResponse.json({ error: "Budget not found" }, { status: 404 });
+    }
+
+    // Transform to Budget type
+    const budget: Budget = {
+      _id: budgetData._id,
+      title: budgetData.title,
+      client: budgetData.client,
+      description: budgetData.description,
+      status: budgetData.status,
+      totalAmount: budgetData.totalAmount,
+      currency: budgetData.currency,
+      items: budgetData.items,
+      validUntil: budgetData.validUntil,
+      createdAt: budgetData.createdAt,
+      updatedAt: budgetData.updatedAt,
+      projectId: budgetData.projectId,
+      notes: budgetData.notes,
+      objectives: budgetData.objectives,
+      scopeOptions: budgetData.scopeOptions,
+      extras: budgetData.extras,
+      paymentTerms: budgetData.paymentTerms,
+      deliveryDeadline: budgetData.deliveryDeadline,
+    };
+
+    // Render React component to static HTML
+    const reactMarkup = renderToStaticMarkup(BudgetPDFTemplate({ budget }));
+    const htmlDocument = getHTMLDocument(reactMarkup);
+
+    // Launch Playwright browser and generate PDF
+    const browser = await chromium.launch({
+      headless: true,
+    });
+    const page = await browser.newPage();
+
+    // Set content and wait for it to load
+    await page.setContent(htmlDocument, {
+      waitUntil: "networkidle",
+    });
+
+    // Generate PDF
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "0",
+        right: "0",
+        bottom: "0",
+        left: "0",
+      },
+    });
+
+    await browser.close();
+
+    // Return PDF response
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="proposta-${budget.title.toLowerCase().replace(/\s+/g, "-")}.pdf"`,
+      },
+    });
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    return NextResponse.json({ error: "Failed to generate PDF" }, { status: 500 });
+  }
+}

@@ -1,0 +1,834 @@
+{
+  "common": {
+    "cta": {
+      "getFreeConsultation": "Receber consultoria gratuita",
+      "getQuote": "Solicitar orçamento",
+      "startProject": "Iniciar projeto",
+      "contactUs": "Fale conosco"
+    },
+    "status": {
+      "pending": "Pendente...",
+      "optimal": "Ideal"
+    },
+    "form": {
+      "emailPlaceholder": "Endereço de e-mail",
+      "emailHelper": "Sem spam, prometemos!",
+      "emailInvalid": "Por favor, insira um e-mail válido",
+      "emailSent": "E-mail enviado com sucesso!",
+      "emailError": "Erro ao enviar e-mail"
+    },
+    "dialog": {
+      "confirmEmail": "Confirmar e-mail",
+      "confirmEmailDescription": "Você deseja enviar este e-mail para receber consultoria gratuita?",
+      "emailLabel": "E-mail:",
+      "editButton": "Editar",
+      "confirmButton": "Confirmar",
+      "sendingButton": "Enviando..."
+    },
+    "badges": {
+      "mostPopular": "Mais popular",
+      "custom": "Sob medida",
+      "new": "Novo",
+      "bestValue": "Melhor custo-benefício"
+    },
+    "pricing": {
+      "whatsIncluded": "O que está incluso:"
+    }
+  },
+  "topbar": {
+    "menu": [
+      { "title": "Início", "target": "hero" },
+      { "title": "Portfólio", "target": "portfolio" },
+      { "title": "Recursos", "target": "features" },
+      { "title": "Benefícios", "target": "benefits" },
+      { "title": "Planos", "target": "pricing" },
+      { "title": "Contato", "target": "contact" }
+    ],
+    "mobileNavigationLabel": "Navegação",
+    "languageSwitch": {
+      "label": "Idioma",
+      "ariaLabel": "Alterar idioma",
+      "options": {
+        "pt-BR": "Português",
+        "en": "Inglês"
+      }
+    }
+  },
+  "hero": {
+    "badge": {
+      "prefix": "Confiado por",
+      "highlight": "Empresas globais"
+    },
+    "title": {
+      "line1": "Desenvolvimento web de alta qualidade",
+      "line2": "Entregue",
+      "highlight": "com fluidez"
+    },
+    "description": "Ajudamos empresas a crescer mais rápido com soluções web e de software sob medida — construídas com os mais altos padrões, comunicação clara e entrega confiável.",
+    "primaryCta": "Receber consultoria gratuita",
+    "secondaryCta": "Nosso processo",
+    "cards": {
+      "left": {
+        "badgeTitle": "Desenvolvimento web moderno",
+        "secondaryCard": {
+          "title": "React & Next.js",
+          "description": "Stack moderna"
+        },
+        "performance": {
+          "label": "Desempenho",
+          "value": "Ideal"
+        },
+        "email": {
+          "title": "Alerta por e-mail",
+          "status": "Pendente...",
+          "percentage": "47%"
+        }
+      },
+      "center": {
+        "highlight": "Soluções personalizadas em ação"
+      },
+      "right": {
+        "badgeTitle": "Desenvolvimento de apps",
+        "supportCard": {
+          "title": "Suporte contínuo",
+          "growth": "+78%"
+        },
+        "resources": {
+          "usage": "3.4vGPU de 5vGPU"
+        }
+      },
+      "top": {
+        "title": "Código limpo e boas práticas"
+      }
+    }
+  },
+  "portfolio": {
+    "eyebrow": "Nossos projetos",
+    "title": "Portfólio em destaque",
+    "controls": {
+      "previous": "Projetos anteriores",
+      "next": "Próximos projetos"
+    },
+    "filters": {
+      "all": "Todos",
+      "basicLanding": "Landing Básica",
+      "artisticLanding": "Landing Artística",
+      "businessWebsite": "Site Institucional",
+      "ecommerce": "Loja Virtual (E-commerce)",
+      "webApp": "Web App",
+      "mobileApp": "App Mobile",
+      "consulting": "Consultoria"
+    },
+    "projectPage": {
+      "backToPortfolio": "Voltar ao portfólio",
+      "technologies": "Tecnologias",
+      "keyHighlights": "Principais Destaques",
+      "interestedInSimilar": "Interessado em um projeto similar?",
+      "ctaDescription": "Entre em contato conosco para discutir como podemos criar uma solução personalizada para o seu negócio.",
+      "contactUs": "Fale conosco",
+      "viewMoreProjects": "Ver mais projetos",
+      "viewMore": "Ver mais"
+    },
+    "projects": [
+      {
+        "name": "RLP Engenharia",
+        "industry": "Site Institucional",
+        "category": "Websites",
+        "year": "2024",
+        "image": "/rlpeng.png",
+        "alt": "Site institucional da RLP Engenharia",
+        "tagline": "Excelência em engenharia mecânica e soluções industriais.",
+        "stack": ["Design Responsivo", "SEO", "CMS"],
+        "description": "Site institucional apresentando os serviços de engenharia mecânica, consultoria técnica e soluções industriais da RLP Engenharia.",
+        "highlights": [
+          "Apresentação completa de serviços e expertise técnica",
+          "Portfólio de projetos industriais e consultoria especializada",
+          "Formulário de contato integrado para solicitações de orçamento"
+        ]
+      },
+      {
+        "name": "OrtoQBank",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2025",
+        "image": "/pagini.png",
+        "alt": "Prévia da plataforma de banco de questões em múltiplos dispositivos",
+        "tagline": "Preparação ortopédica com trilhas adaptativas e analytics.",
+        "stack": ["Cursos", "Quizzes", "Paginação"],
+        "description": "Landing e portal de estudos para residentes TEOT/TEPOT com trilhas guiadas, UX responsiva e onboarding de assinaturas.",
+        "highlights": [
+          "Planos com recorrência para turmas R1–R3 integrados ao checkout",
+          "Dashboards acompanhando desempenho por especialidade",
+          "Simulador mobile-first com provas comentadas e inéditas"
+        ]
+      },
+      {
+        "name": "Starbem",
+        "industry": "Landing Artística",
+        "category": "Aplicativos Web",
+        "year": "2025",
+        "image": "/starbem.png",
+        "alt": "Plataforma de terapia com interface de agendamento",
+        "tagline": "Acesso imediato a terapia com preços transparentes.",
+        "stack": ["Terapia Online", "Agendamento Instantâneo", "Funnel de Onboarding"],
+        "description": "Experiência bilíngue para a healthtech canadense com agendamento instantâneo, funil de onboarding e planos com pacotes promocionais.",
+        "highlights": [
+          "Hero destacando disponibilidade em até 48h e sessão gratuita de 60 minutos",
+          "Catálogo modular de especialidades como ansiedade, burnout e insônia",
+          "Fluxo de pagamento com opção avulsa e pacotes com desconto"
+        ]
+      },
+      {
+        "name": "Chat Do",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2025",
+        "image": "/chatdo.png",
+        "alt": "Plataforma de produtividade com widgets de chat e tarefas",
+        "tagline": "Orquestração de tarefas via chat que mantém o time entregando.",
+        "stack": ["kanban", "chat", "task"],
+        "description": "Landing e tour do produto Chat Do, destacando automações de conversa para tarefa, colaboração em tempo real e lembretes por e-mail.",
+        "highlights": [
+          "Slider hero apresentando as jornadas Talk, Taskify e Team Up",
+          "Grade de recursos com tarefas, chat, equipe e notificações",
+          "Funil de conversão incentivando o usuário a começar imediatamente"
+        ]
+      },
+      {
+        "name": "Vibra 50 Anos Challenge",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2024",
+        "image": "/vibra.webp",
+        "alt": "Plataforma comemorativa da Vibra com ranking de colaboradores",
+        "tagline": "Hub gamificado celebrando os 50 anos da Vibra com conhecimento e prêmios.",
+        "stack": ["gamificação", "ranking", "quizzes"],
+        "description": "Plataforma interativa criada para colaboradores Vibra, com quizzes sobre a empresa, sua história e marca, ranking em tempo real e distribuição de premiações durante a celebração de cinco décadas.",
+        "highlights": [
+          "Missões temáticas cobrindo história, posicionamento e negócios da Vibra",
+          "Leaderboard corporativo estimulando disputa saudável entre equipes",
+          "Sistema automático de pontuação e recompensas para reconhecer os destaques"
+        ]
+      },
+      {
+        "name": "Paloma S. Queiroz Portfolio",
+        "industry": "Landing Básica",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/paloma.png",
+        "alt": "Site portfolio da engenheira Paloma S. Queiroz",
+        "tagline": "Liderança em engenharia mecânica e implantação ISO 9001.",
+        "stack": ["timeline", "carousel", "downloadable"],
+        "description": "Site pessoal apresentando a carreira de Paloma em engenharia mecânica, atuação no comitê ISO 9001, MBA em andamento e projetos de qualidade e soluções digitais.",
+        "highlights": [
+          "Linha do tempo profissional com cargos em consultoria de serviços e assistência técnica",
+          "Carrossel de projetos com ISO 9001, coordenação do OrtoQBank e site da RLP",
+          "Currículo para download e seção de idiomas para recrutadores"
+        ]
+      },
+      {
+        "name": "Luis Fernando Aviation Consulting",
+        "industry": "Landing Básica",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/lsf.png",
+        "alt": "Página de portfolio destacando consultoria aeronáutica",
+        "tagline": "Suporte regulatório para companhias aéreas e lessores globais.",
+        "stack": ["Design Responsivo", "SEO", "Autenticação"],
+        "description": "Site responsivo apresentando mais de 20 anos reduzindo riscos em entregas e devoluções de aeronaves para companhias, arrendadoras e MROs.",
+        "highlights": [
+          "Sessões de missão, experiência e expertise logo na dobra",
+          "Carrossel exibindo 50+ projetos e 8 famílias de aeronaves suportadas",
+          "Fluxos de CTA guiando pedidos de consultoria em múltiplos idiomas"
+        ]
+      },
+      {
+        "name": "Warehouse Watcher",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2024",
+        "image": "/warehouse.webp",
+        "alt": "Plataforma de gestão de armazéns com dashboards em tempo real",
+        "tagline": "Gestão de estoque autônoma com visibilidade em tempo real.",
+        "stack": ["estoque", "analytics", "dashboard"],
+        "description": "Aplicação web que entrega atualizações instantâneas de estoque, rastreio logístico e relatórios auditáveis para empresas com alto volume em armazéns.",
+        "highlights": [
+          "Telemetria em tempo real sincronizando entradas e saídas de mercadorias",
+          "Centro de relatórios avançados com KPIs detalhados e exportação auditável",
+          "Portal para empresas e clientes em uma única solução independente"
+        ]
+      },
+      {
+        "name": "Upcraft Crew",
+        "industry": "Landing Artística",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/upcraft.png",
+        "alt": "Landing page da Upcraft Crew",
+        "tagline": "Estúdio boutique de desenvolvimento web com soluções modernas.",
+        "stack": ["Next.js", "Animações", "Design Artístico"],
+        "description": "Landing page artística e interativa apresentando os serviços de desenvolvimento web da Upcraft Crew, com animações sofisticadas e experiência visual imersiva.",
+        "highlights": [
+          "Design moderno com microinterações e animações fluidas",
+          "Portfólio completo de projetos em destaque com filtros por categoria",
+          "Seção de preços transparente com planos detalhados para cada tipo de serviço"
+        ]
+      },
+      {
+        "name": "Unstack",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2025",
+        "image": "/unstack.png",
+        "alt": "Plataforma de aprendizado personalizado para desenvolvedores",
+        "tagline": "Aprenda sua stack de forma inteligente e focada.",
+        "stack": ["GitHub API", "IA", "Analytics"],
+        "description": "Plataforma web que analisa repositórios GitHub para criar trilhas de aprendizado personalizadas, detectando tecnologias e identificando lacunas de conhecimento.",
+        "highlights": [
+          "Análise automática de tecnologias em repositórios GitHub",
+          "Geração de plano de estudos personalizado baseado em gaps reais",
+          "Dashboard acompanhando progresso de aprendizado e evolução técnica"
+        ]
+      },
+      {
+        "name": "Gestão Operacional",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2024",
+        "image": "/gestao-operacional.png",
+        "alt": "Plataforma de gestão operacional para consultoria em engenharia",
+        "tagline": "Gestão operacional centralizada com indicadores em tempo real.",
+        "stack": ["Dashboard", "Kanban", "Chat", "Relatórios"],
+        "description": "Aplicação web completa para gestão de processos, indicadores e comunicação interna, desenvolvida para centralizar operações de consultoria em engenharia com dashboards, agenda semanal, kanban e análises financeiras.",
+        "highlights": [
+          "Dashboard operacional com KPIs em tempo real e gráficos de distribuição por status",
+          "Sistema integrado de comunicação interna com chat, notas e notificações automáticas",
+          "Módulos de análise financeira e produtiva com rankings e taxa de conversão"
+        ]
+      },
+      {
+        "name": "Assistência Técnica",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2024",
+        "image": "/assistencia-tecnica.png",
+        "alt": "Sistema de gerenciamento de assistência técnica",
+        "tagline": "Gestão completa de agendamentos e serviços técnicos.",
+        "stack": ["Agendamento", "Dashboard", "Chat", "Calendário"],
+        "description": "Sistema web para gerenciamento de assistência técnica com agendamento de serviços, programação semanal por técnico, acompanhamento de status e chat interno para equipes de campo.",
+        "highlights": [
+          "Dashboard centralizado para visualização de todos os serviços agendados",
+          "Calendário semanal com distribuição de serviços por técnico",
+          "Rastreamento de status em tempo real (Agendado, Orçamento, Concluído)"
+        ]
+      },
+      {
+        "name": "Clínica Coluna Conectada",
+        "industry": "Web App",
+        "category": "Aplicativos Web",
+        "year": "2024",
+        "image": "/clinica-coluna.png",
+        "alt": "Sistema de onboarding de pacientes para clínicas",
+        "tagline": "Onboarding de pacientes com agendamento e relatórios integrados.",
+        "stack": ["Formulários", "Agendamento", "Database", "Healthcare"],
+        "description": "Formulário de onboarding de pacientes para clínicas com sistema de agendamento de consultas, coleta de dados médicos e geração de relatórios estruturados.",
+        "highlights": [
+          "Formulário completo de cadastro e histórico médico do paciente",
+          "Sistema de agendamento de consultas integrado ao cadastro",
+          "Geração automática de relatórios e organização de dados clínicos"
+        ]
+      }
+    ]
+  },
+  "features": {
+    "eyebrow": "Nossos serviços",
+    "title": "Criado para o seu sucesso",
+    "items": [
+      {
+        "title": "Aplicações web personalizadas",
+        "description": "Aplicações feitas sob medida com React, Next.js e frameworks modernos para atender às necessidades do seu negócio."
+      },
+      {
+        "title": "Desenvolvimento de plataformas SaaS",
+        "description": "Soluções SaaS completas com autenticação, pagamentos integrados e arquitetura escalável para empresas em crescimento."
+      },
+      {
+        "title": "Soluções de e-commerce",
+        "description": "Plataformas de e-commerce modernas com pagamentos seguros, gestão de estoque e experiência de uso impecável."
+      },
+      {
+        "title": "APIs e integrações",
+        "description": "APIs REST e integrações de terceiros para conectar seus sistemas e otimizar processos."
+      },
+      {
+        "title": "Deploy em nuvem e DevOps",
+        "description": "Implantação simplificada na AWS, Vercel ou na nuvem de sua escolha, com pipelines de CI/CD e monitoramento."
+      },
+      {
+        "title": "Suporte contínuo",
+        "description": "Manutenção, atualizações e suporte técnico para manter suas aplicações em perfeito funcionamento.",
+        "cta": "Saiba mais sobre nossos serviços"
+      }
+    ]
+  },
+  "benefits": {
+    "eyebrow": "Por que nos escolher",
+    "title": "Por que trabalhar conosco?",
+    "description": "Somos um estúdio boutique especializado em React, Next.js e nuvem moderna. Pequenos o bastante para oferecer atenção próxima, experientes o suficiente para entregar resultados de nível enterprise.",
+    "items": [
+      {
+        "title": "Soluções sob medida",
+        "description": "Aplicações pensadas especificamente para os objetivos do seu negócio"
+      },
+      {
+        "title": "Custo-benefício real",
+        "description": "Valores competitivos sem abrir mão de qualidade ou comunicação"
+      },
+      {
+        "title": "Comunicação clara",
+        "description": "Desenvolvedores fluentes em inglês e horários flexíveis em vários fusos"
+      },
+      {
+        "title": "Expertise comprovada",
+        "description": "Aplicações full-stack, plataformas SaaS e landing pages modernas"
+      },
+      {
+        "title": "Atendimento próximo",
+        "description": "Contato direto com desenvolvedores seniors, sem intermediários"
+      },
+      {
+        "title": "Entrega confiável",
+        "description": "Projetos consistentes com atualizações transparentes de progresso"
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "Nosso processo",
+    "title": "Como conduzimos o desenvolvimento",
+    "steps": [
+      {
+        "title": "Descoberta e planejamento",
+        "subtitle": "Começamos entendendo sua visão e requisitos.",
+        "stepLabel": "Primeiro passo",
+        "items": [
+          "Levantamento de requisitos",
+          "Wireframes",
+          "Planejamento de cronograma",
+          "Especificação técnica"
+        ]
+      },
+      {
+        "title": "Design e desenvolvimento",
+        "subtitle": "Nossa equipe dá vida à sua ideia com código limpo",
+        "stepLabel": "Segundo passo"
+      },
+      {
+        "title": "Testes e implantação",
+        "subtitle": "Testes rigorosos e deploy sem atritos para produção",
+        "stepLabel": "Terceiro passo",
+        "items": ["Garantia de qualidade", "Deploy em nuvem", "Auditoria de segurança", "Go live"]
+      },
+      {
+        "title": "Suporte contínuo",
+        "subtitle": "Manutenção e suporte permanentes para sua aplicação.",
+        "stepLabel": "Quarto passo",
+        "items": [
+          "Monitoramento de performance",
+          "Atualizações e correções",
+          "Atualizações de segurança",
+          "Suporte técnico",
+          "Evolução de funcionalidades",
+          "Code reviews",
+          "Mais"
+        ]
+      }
+    ]
+  },
+  "integrations": {
+    "eyebrow": "Sincronização sem esforço",
+    "title": "Integrações poderosas",
+    "description": "Nossa plataforma se conecta às ferramentas que você já usa, deixando a automação simples e natural.",
+    "items": [
+      {
+        "title": "HubSpot",
+        "description": "Sincronize dados de clientes e acompanhe interações para potencializar vendas e suporte",
+        "category": "CRM",
+        "image": "/images/brand-logo/hubspot.svg"
+      },
+      {
+        "title": "Shopify",
+        "description": "Atualize estoque, processe pedidos e envie notificações automaticamente",
+        "category": "E-commerce",
+        "image": "/images/brand-logo/shopify.svg"
+      },
+      {
+        "title": "Zapier",
+        "description": "Conecte-se a mais de 5.000 apps para automatizar tarefas repetitivas e fluxos de trabalho",
+        "category": "Automação",
+        "image": "/images/brand-logo/zapier.svg"
+      },
+      {
+        "title": "Stripe",
+        "description": "Automatize faturas, pagamentos e cobranças recorrentes com integração Stripe",
+        "category": "Pagamentos",
+        "image": "/images/brand-logo/stripe.svg"
+      },
+      {
+        "title": "Slack",
+        "description": "Envie atualizações instantâneas para o time sem trocar de aplicativo",
+        "category": "Comunicação",
+        "image": "/images/brand-logo/slack.svg"
+      },
+      {
+        "title": "Google Drive",
+        "description": "Armazene e organize documentos importantes garantindo acesso fácil sempre que precisar",
+        "category": "Armazenamento",
+        "image": "/images/brand-logo/g-drive.svg"
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Histórias de sucesso",
+    "title": "Empresas que confiam no nosso trabalho",
+    "description": "Veja como organizações ao redor do mundo ampliaram sua presença digital com nossas soluções sob medida.",
+    "avatarAlt": "Foto de perfil",
+    "stats": [
+      {
+        "title": "Entrega pontual",
+        "number": "100%",
+        "description": "Projetos entregues dentro do prazo e do orçamento."
+      },
+      {
+        "title": "Suporte gratuito",
+        "number": "30 dias",
+        "description": "Ajustes complementares e suporte contínuo incluídos."
+      },
+      {
+        "title": "Clientes satisfeitos",
+        "number": "100%",
+        "description": "Taxa de satisfação em projetos concluídos."
+      },
+      {
+        "title": "Tempo de resposta",
+        "number": "< 2h",
+        "description": "Tempo médio de retorno em comunicações com clientes."
+      }
+    ],
+    "list": [
+      {
+        "image": "/images/avatars/1.png",
+        "name": "Sarah Mitchell",
+        "comments": "Trabalhar com a equipe foi excepcional. Entregaram nossa plataforma SaaS personalizada no prazo e dentro do orçamento. A qualidade superou nossas expectativas.",
+        "company": "TechFlow Solutions",
+        "position": "Diretora de Operações",
+        "location": "Manchester, Reino Unido"
+      },
+      {
+        "image": "/images/avatars/2.png",
+        "name": "Alex Rodriguez",
+        "comments": "Experiência de desenvolvimento impecável. Comunicação clara em diferentes fusos, entrega confiável e o produto final ficou exatamente como precisávamos.",
+        "company": "InnovateCore",
+        "position": "CTO",
+        "location": "Toronto, Canadá"
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "Preços transparentes",
+    "title": "Planos de desenvolvimento",
+    "sectionsLabel": "O que está incluso",
+    "tabs": {
+      "websites": "Websites",
+      "webApps": "Aplicativos Web",
+      "mobileApps": "Aplicativos Mobile",
+      "maintenance": "Manutenção",
+      "consulting": "Consultoria"
+    },
+    "cta": {
+      "websites": "Solicitar orçamento",
+      "webApps": "Iniciar projeto",
+      "mobileApps": "Iniciar projeto",
+      "maintenance": "Assinar",
+      "consulting": "Agendar"
+    },
+    "plans": {
+      "websites": [
+        {
+          "title": "Landing Básica",
+          "price": "R$ 1.200",
+          "includes": [
+            { "text": "1 página responsiva (landing ou portfólio)", "included": true },
+            { "text": "Design clean e SEO básico", "included": true },
+            { "text": "Formulário de contato funcional", "included": true },
+            { "text": "Deploy e hospedagem", "included": true },
+            { "text": "Animações avançadas", "included": false },
+            { "text": "Integração com CMS", "included": false }
+          ],
+          "tagline": "Perfeito para quem precisa publicar rápido com investimento enxuto.",
+          "customCta": "Compre agora"
+        },
+        {
+          "title": "Landing Artística",
+          "price": "a partir de R$ 2.500",
+          "includes": [
+            { "text": "Design artístico com microinterações", "included": true },
+            { "text": "Animações e storytelling visual", "included": true },
+            { "text": "SEO e performance otimizados", "included": true },
+            { "text": "Hospedagem e deploy incluídos", "included": true },
+            { "text": "Até 5 páginas (Home, Sobre, Serviços, Contato...)", "included": true },
+            { "text": "CMS dinâmico", "included": false }
+          ],
+          "tagline": "Para criadores e marcas que querem encantar no primeiro olhar.",
+          "popular": true
+        },
+        {
+          "title": "Site Institucional",
+          "price": "a partir de R$ 2.500",
+          "includes": [
+            { "text": "Até 5 páginas (Home, Sobre, Serviços, Contato...)", "included": true },
+            { "text": "Formulários, SEO básico e analytics", "included": true },
+            { "text": "Layout mobile-first e acessível", "included": true },
+            { "text": "Integrações personalizadas", "included": false },
+            { "text": "Funcionalidade de e-commerce", "included": false }
+          ],
+          "tagline": "Para empresas que precisam de presença digital completa e confiável."
+        },
+        {
+          "title": "Loja Virtual (E-commerce)",
+          "price": "a partir de R$ 3.000",
+          "includes": [
+            { "text": "Catálogo de produtos e categorias", "included": true },
+            { "text": "Carrinho e checkout", "included": true },
+            { "text": "Gestão de pedidos e estoque", "included": true },
+            { "text": "Descontos/cupom e cálculo de frete*", "included": true },
+            { "text": "Integração com CMS para vitrines", "included": true },
+            { "text": "Automação fiscal/logística (sob escopo)", "included": false }
+          ],
+          "tagline": "Para quem quer vender online com performance e experiência profissional."
+        }
+      ],
+      "webApps": [
+        {
+          "title": "Web App Start",
+          "price": "a partir de R$ 4.000",
+          "includes": [
+            { "text": "Login/autenticação", "included": true },
+            { "text": "Banco de dados sincronizado (Convex)", "included": true },
+            { "text": "Painel básico e CRUD inicial", "included": true },
+            { "text": "Deploy na Vercel", "included": true },
+            { "text": "Design responsivo e mobile-first", "included": true },
+            { "text": "Integrações externas", "included": false },
+            { "text": "Sistema de pagamentos", "included": false },
+            { "text": "Painel administrativo", "included": false }
+          ],
+          "tagline": "Para validar um MVP com velocidade e base sólida."
+        },
+        {
+          "title": "Web App Pro",
+          "price": "a partir de R$ 8.000",
+          "includes": [
+            { "text": "APIs, CRUD completo e notificações", "included": true },
+            { "text": "Planos e cobrança", "included": true },
+            { "text": "Área do usuário + painel admin", "included": true },
+            { "text": "Observabilidade", "included": true },
+            { "text": "Upload e gestão de arquivos", "included": true },
+            { "text": "E-mails transacionais", "included": true },
+            { "text": "Integrações com APIs externas", "included": false },
+            { "text": "Recursos de IA/ML", "included": false }
+          ],
+          "tagline": "Para negócios em crescimento com automações.",
+          "popular": true
+        },
+        {
+          "title": "Web App SaaS Premium",
+          "price": "a partir de R$ 15.000",
+          "includes": [
+            { "text": "Multiusuário e permissões", "included": true },
+            { "text": "Integrações externas avançadas", "included": true },
+            { "text": "Automação com IA", "included": true },
+            { "text": "Backend proprietário", "included": true },
+            { "text": "Analytics e métricas avançadas", "included": true },
+            { "text": "Webhooks e event-driven", "included": true },
+            { "text": "White-label e customização total", "included": true },
+            { "text": "SLA e suporte prioritário", "included": true }
+          ],
+          "tagline": "Para produtos SaaS que exigem escala e robustez."
+        }
+      ],
+      "mobileApps": [
+        {
+          "title": "App MVP",
+          "price": "a partir de R$ 7.000",
+          "includes": [
+            { "text": "Login e autenticação", "included": true },
+            { "text": "Até 3 telas principais", "included": true },
+            { "text": "Backend integrado", "included": true },
+            { "text": "Publicação no Google Play", "included": true },
+            { "text": "Design UI/UX básico", "included": true },
+            { "text": "Push notifications", "included": false },
+            { "text": "Publicação na App Store e Google Play", "included": false },
+            { "text": "Integração com APIs externas", "included": false }
+          ],
+          "tagline": "Perfeito para testar uma ideia no mercado real."
+        },
+        {
+          "title": "App Avançado",
+          "price": "a partir de R$ 12.000",
+          "includes": [
+            { "text": "Animações e navegação refinada", "included": true },
+            { "text": "Sincronização em tempo real", "included": true },
+            { "text": "Pagamentos", "included": true },
+            { "text": "Push Notifications", "included": true },
+            { "text": "Câmera e galeria de fotos", "included": true },
+            { "text": "Geolocalização e mapas", "included": true },
+            { "text": "Modo offline", "included": true },
+            { "text": "Analytics e tracking de eventos", "included": false }
+          ],
+          "tagline": "Para apps com engajamento e integrações importantes.",
+          "popular": true
+        },
+        {
+          "title": "App Full Custom",
+          "price": "a partir de R$ 18.000",
+          "includes": [
+            { "text": "Design exclusivo e CI/CD configurado", "included": true },
+            { "text": "iOS e Android + painel web admin", "included": true },
+            { "text": "Backend proprietário", "included": true },
+            { "text": "Publicação nas lojas (iOS + Android)", "included": true },
+            { "text": "Deep linking e compartilhamento", "included": true },
+            { "text": "Biometria (Face ID/Touch ID)", "included": true },
+            { "text": "Chat em tempo real", "included": true },
+            { "text": "Vídeo chamadas ou streaming", "included": false }
+          ],
+          "tagline": "Para startups e empresas que precisam de um app completo."
+        }
+      ],
+      "maintenance": [
+        {
+          "title": "Manutenção Essencial",
+          "price": "R$ 300/mês",
+          "includes": [
+            { "text": "Atualizações básicas e correções", "included": true },
+            { "text": "Backups automáticos semanais", "included": true },
+            { "text": "Verificação de segurança mensal", "included": true },
+            { "text": "1h de suporte mensal", "included": true },
+            { "text": "Atualização de dependências", "included": true },
+            { "text": "Monitoramento de uptime", "included": false },
+            { "text": "Suporte prioritário", "included": false },
+            { "text": "Desenvolvimento de novas features", "included": false }
+          ],
+          "tagline": "Para sites e portfólios em produção estável."
+        },
+        {
+          "title": "Manutenção Pro",
+          "price": "R$ 600/mês",
+          "includes": [
+            { "text": "Monitoramento 24/7 de uptime/performance", "included": true },
+            { "text": "Correções e pequenas melhorias", "included": true },
+            { "text": "3h de suporte mensais", "included": true },
+            { "text": "Backups diários com retenção 30 dias", "included": true },
+            { "text": "Otimização de performance", "included": true },
+            { "text": "Relatórios mensais de analytics", "included": true },
+            { "text": "Suporte prioritário (resposta em 24h)", "included": true },
+            { "text": "Desenvolvimento de features complexas", "included": false }
+          ],
+          "tagline": "Para e-commerces e web apps ativos.",
+          "popular": true
+        },
+        {
+          "title": "Suporte Premium",
+          "price": "a partir de R$ 1.200/mês",
+          "includes": [
+            { "text": "Desenvolvimento de novas features", "included": true },
+            { "text": "Hospedagem gerenciada enterprise", "included": true },
+            { "text": "Revisão de SEO e métricas mensais", "included": true },
+            { "text": "8h+ de desenvolvimento mensal", "included": true },
+            { "text": "Reuniões de roadmap e planejamento", "included": true },
+            { "text": "Suporte urgente (resposta em 4h)", "included": true },
+            { "text": "CDN e otimização global", "included": true },
+            { "text": "Auditoria de segurança trimestral", "included": true }
+          ],
+          "tagline": "Para produtos em evolução constante com roadmap."
+        }
+      ],
+      "consulting": [
+        {
+          "title": "Consultoria ",
+          "price": "R$ 0",
+          "includes": [
+            { "text": "1 hora de call individual", "included": true },
+            { "text": "Análise do seu projeto ou ideia", "included": true },
+            { "text": "Direcionamento técnico personalizado", "included": true },
+            { "text": "Recomendações de stack e arquitetura", "included": true },
+            { "text": "Gravação da sessão", "included": true },
+            { "text": "Material de apoio pós-call", "included": false },
+            { "text": "Suporte por 7 dias após a call", "included": false }
+          ],
+          "tagline": "Ideal para tirar dúvidas e validar sua ideia com um especialista."
+        },
+        {
+          "title": "Consultoria para Negócios",
+          "price": "R$ 1.500",
+          "includes": [
+            { "text": "3 horas de consultoria técnica", "included": true },
+            { "text": "Análise completa do negócio digital", "included": true },
+            { "text": "Roadmap de implementação", "included": true },
+            { "text": "Estimativas de custo e tempo", "included": true },
+            { "text": "Recomendações de ferramentas e stack", "included": true },
+            { "text": "Documento detalhado pós-consultoria", "included": true },
+            { "text": "2 semanas de suporte por e-mail", "included": true },
+            { "text": "Revisão de código existente", "included": false }
+          ],
+          "tagline": "Perfeito para empresas que precisam planejar sua transformação digital.",
+          "popular": true
+        },
+        {
+          "title": "Mentoria Personalizada",
+          "price": "R$ 3.000",
+          "includes": [
+            { "text": "4 sessões de 1h por mês durante 4 meses", "included": true },
+            { "text": "Acompanhamento de projetos pessoais", "included": true },
+            { "text": "Code review ilimitado", "included": true },
+            { "text": "Suporte via Discord dedicado", "included": true },
+            { "text": "Planejamento de carreira dev", "included": true },
+            { "text": "Material exclusivo e recursos", "included": true },
+            { "text": "Acesso ao curso da stack", "included": true },
+            { "text": "Networking com a comunidade", "included": true }
+          ],
+          "tagline": "Para devs que querem acelerar o aprendizado com acompanhamento próximo."
+        }
+      ]
+    }
+  },
+  "footer": {
+    "eyebrow": "Fique conectado",
+    "title": "Pronto para iniciar seu projeto?",
+    "description": "Vamos conversar sobre as necessidades do seu negócio. Ganhe uma consultoria gratuita e descubra como podemos tirar sua ideia do papel.",
+    "cta": "Receber consultoria gratuita",
+    "summary": "Estúdio boutique especializado em React, Next.js e soluções modernas em nuvem. Proximidade no atendimento e resultados em nível enterprise.",
+    "social": {
+      "google": "Google",
+      "apple": "Apple",
+      "github": "Github",
+      "x": "X"
+    },
+    "quickLinks": {
+      "title": "Links rápidos",
+      "items": ["Início", "Recursos", "Planos", "Sobre nós", "Contato"]
+    },
+    "resources": {
+      "title": "Materiais",
+      "items": ["Documentação", "Central de ajuda", "FAQs", "Comunidade", "Blog"]
+    },
+    "communityBadge": "Novo",
+    "legal": {
+      "copyright": "© {year} Upcraft Crew",
+      "credit": {
+        "prefix": "Do conceito à realidade por",
+        "linkLabel": "Upcraft Crew"
+      },
+      "terms": "Termos",
+      "privacy": "Política de privacidade"
+    }
+  }
+}

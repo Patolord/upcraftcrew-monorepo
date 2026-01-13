@@ -146,10 +146,40 @@ export const createBudget = mutation({
     validUntil: v.number(),
     projectId: v.optional(v.id("projects")),
     notes: v.optional(v.string()),
+    // New fields
+    objectives: v.optional(
+      v.array(
+        v.object({
+          title: v.string(),
+          description: v.string(),
+        }),
+      ),
+    ),
+    scopeOptions: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          features: v.array(v.string()),
+          value: v.optional(v.number()),
+          isSelected: v.boolean(),
+        }),
+      ),
+    ),
+    extras: v.optional(
+      v.array(
+        v.object({
+          description: v.string(),
+          value: v.number(),
+          recurrence: v.optional(v.string()),
+        }),
+      ),
+    ),
+    paymentTerms: v.optional(v.array(v.string())),
+    deliveryDeadline: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);
-    // Calculate total amount
+    // Calculate total amount from items
     const totalAmount = args.items.reduce((sum, item) => sum + item.total, 0);
 
     const now = Date.now();
@@ -195,6 +225,36 @@ export const updateBudget = mutation({
     validUntil: v.optional(v.number()),
     projectId: v.optional(v.id("projects")),
     notes: v.optional(v.string()),
+    // New fields
+    objectives: v.optional(
+      v.array(
+        v.object({
+          title: v.string(),
+          description: v.string(),
+        }),
+      ),
+    ),
+    scopeOptions: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          features: v.array(v.string()),
+          value: v.optional(v.number()),
+          isSelected: v.boolean(),
+        }),
+      ),
+    ),
+    extras: v.optional(
+      v.array(
+        v.object({
+          description: v.string(),
+          value: v.number(),
+          recurrence: v.optional(v.string()),
+        }),
+      ),
+    ),
+    paymentTerms: v.optional(v.array(v.string())),
+    deliveryDeadline: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);

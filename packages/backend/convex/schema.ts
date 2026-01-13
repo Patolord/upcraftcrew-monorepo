@@ -99,6 +99,7 @@ export default defineSchema({
     .index("by_project", ["projectId"]),
 
   budgets: defineTable({
+    // Basic info
     title: v.string(),
     client: v.string(),
     description: v.string(),
@@ -109,6 +110,45 @@ export default defineSchema({
       v.literal("rejected"),
       v.literal("expired"),
     ),
+
+    // Objectives for the proposal
+    objectives: v.optional(
+      v.array(
+        v.object({
+          title: v.string(),
+          description: v.string(),
+        }),
+      ),
+    ),
+
+    // Scope options (multiple pricing tiers)
+    scopeOptions: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          features: v.array(v.string()),
+          value: v.optional(v.number()),
+          isSelected: v.boolean(),
+        }),
+      ),
+    ),
+
+    // Extra services/items
+    extras: v.optional(
+      v.array(
+        v.object({
+          description: v.string(),
+          value: v.number(),
+          recurrence: v.optional(v.string()),
+        }),
+      ),
+    ),
+
+    // Payment and delivery terms
+    paymentTerms: v.optional(v.array(v.string())),
+    deliveryDeadline: v.optional(v.string()),
+
+    // Investment items (legacy support)
     totalAmount: v.number(),
     currency: v.string(),
     items: v.array(
@@ -119,6 +159,8 @@ export default defineSchema({
         total: v.number(),
       }),
     ),
+
+    // Dates and metadata
     validUntil: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),

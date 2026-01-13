@@ -1,0 +1,838 @@
+{
+  "common": {
+    "cta": {
+      "getFreeConsultation": "Get Free Consultation",
+      "getQuote": "Get Quote",
+      "startProject": "Start Project",
+      "contactUs": "Contact Us"
+    },
+    "status": {
+      "pending": "Pending...",
+      "optimal": "Optimal"
+    },
+    "form": {
+      "emailPlaceholder": "Email Address",
+      "emailHelper": "Never spam!",
+      "emailInvalid": "Please enter a valid email",
+      "emailSent": "Email sent successfully!",
+      "emailError": "Error sending email"
+    },
+    "dialog": {
+      "confirmEmail": "Confirm email",
+      "confirmEmailDescription": "Do you want to send this email to receive free consultation?",
+      "emailLabel": "Email:",
+      "editButton": "Edit",
+      "confirmButton": "Confirm",
+      "sendingButton": "Sending..."
+    },
+    "badges": {
+      "mostPopular": "Most Popular",
+      "custom": "Custom",
+      "new": "New",
+      "bestValue": "Best Value"
+    },
+    "pricing": {
+      "whatsIncluded": "What's Included:"
+    }
+  },
+  "topbar": {
+    "menu": [
+      { "title": "Home", "target": "hero" },
+      { "title": "Portfolio", "target": "portfolio" },
+      { "title": "Features", "target": "features" },
+      { "title": "Benefits", "target": "benefits" },
+      { "title": "Pricing", "target": "pricing" },
+      { "title": "Contact", "target": "contact" }
+    ],
+    "mobileNavigationLabel": "Navigation",
+    "languageSwitch": {
+      "label": "Language",
+      "ariaLabel": "Change language",
+      "options": {
+        "pt-BR": "Portuguese",
+        "en": "English"
+      }
+    }
+  },
+  "hero": {
+    "badge": {
+      "prefix": "Trusted by",
+      "highlight": "Global Businesses"
+    },
+    "title": {
+      "line1": "High-Quality Web Development",
+      "line2": "Delivered",
+      "highlight": "Seamlessly"
+    },
+    "description": "We help businesses scale faster with bespoke web and software solutions — built to the highest standards, with clear communication and reliable delivery.",
+    "primaryCta": "Get Free Consultation",
+    "secondaryCta": "Our Process",
+    "cards": {
+      "left": {
+        "badgeTitle": "Modern Web Development",
+        "secondaryCard": {
+          "title": "React & Next.js",
+          "description": "Modern Tech Stack"
+        },
+        "performance": {
+          "label": "Performance",
+          "value": "Optimal"
+        },
+        "email": {
+          "title": "Email Alert",
+          "status": "Pending...",
+          "percentage": "47%"
+        }
+      },
+      "center": {
+        "highlight": "Bespoke Solutions in Action"
+      },
+      "right": {
+        "badgeTitle": "Seamless Development Process",
+        "supportCard": {
+          "title": "Ongoing Support",
+          "growth": "+78%"
+        },
+        "resources": {
+          "usage": "3.4vGPU of 5vGPU"
+        }
+      },
+      "top": {
+        "title": "Clean Code & Best Practices"
+      }
+    }
+  },
+  "portfolio": {
+    "eyebrow": "Our Work",
+    "title": "Portfolio Highlights",
+    "description": "Real-world products that blend delightful design with measurable business outcomes.",
+    "controls": {
+      "previous": "Previous projects",
+      "next": "Next projects"
+    },
+    "filters": {
+      "all": "All",
+      "basicLanding": "Basic Landing",
+      "artisticLanding": "Artistic Landing",
+      "businessWebsite": "Business Website",
+      "ecommerce": "E-commerce",
+      "webApp": "Web App",
+      "mobileApp": "Mobile App",
+      "consulting": "Consulting"
+    },
+    "projectPage": {
+      "backToPortfolio": "Back to portfolio",
+      "technologies": "Technologies",
+      "keyHighlights": "Key Highlights",
+      "interestedInSimilar": "Interested in a similar project?",
+      "ctaDescription": "Get in touch with us to discuss how we can create a custom solution for your business.",
+      "contactUs": "Contact us",
+      "viewMoreProjects": "View more projects",
+      "viewMore": "View more"
+    },
+    "projects": [
+      {
+        "name": "RLP Engenharia",
+        "industry": "Business Website",
+        "category": "Websites",
+        "year": "2024",
+        "image": "/rlpeng.png",
+        "alt": "RLP Engenharia institutional website",
+        "tagline": "Excellence in mechanical engineering and industrial solutions.",
+        "stack": ["responsive", "seo", "cms"],
+        "description": "Corporate website showcasing mechanical engineering services, technical consulting, and industrial solutions offered by RLP Engenharia.",
+        "highlights": [
+          "Complete presentation of services and technical expertise",
+          "Portfolio of industrial projects and specialized consulting",
+          "Integrated contact form for quote requests"
+        ]
+      },
+      {
+        "name": "OrtoQBank",
+        "industry": "Web App",
+        "category": "Web Apps",
+        "year": "2025",
+        "image": "/pagini.png",
+        "alt": "Question bank platform preview across devices",
+        "tagline": "Orthopedic exam prep with adaptive study analytics.",
+        "stack": ["courses", "quizzes", "pagination"],
+        "description": "Marketing site and learning portal for TEOT/TEPOT residents featuring guided trails, responsive UX, and subscription onboarding.",
+        "highlights": [
+          "Pricing tiers tailored to R1–R3 cohorts with recurring billing",
+          "Performance dashboards tracking accuracy by specialty",
+          "Mobile-first simulator for solving annotated past exams"
+        ]
+      },
+      {
+        "name": "Starbem",
+        "industry": "Landing Artística",
+        "category": "Web Apps",
+        "year": "2025",
+        "image": "/starbem.png",
+        "alt": "Therapy platform with scheduling interface",
+        "tagline": "On-demand therapy access with transparent pricing.",
+        "stack": ["online therapy", "instant booking", "onboarding funnel"],
+        "description": "Bilingual experience for the Canadian teletherapy startup, including instant therapist booking, onboarding funnel, and tiered plans.",
+        "highlights": [
+          "Hero with immediate availability promise and free 60-minute trial",
+          "Modular service catalog covering anxiety, burnout, and sleep",
+          "Checkout flow supporting pay-per-session and discounted bundles"
+        ]
+      },
+      {
+        "name": "Chat Do",
+        "industry": "Web App",
+        "category": "Web Apps",
+        "year": "2025",
+        "image": "/chatdo.png",
+        "alt": "Team productivity platform with chat and task widgets",
+        "tagline": "Chat-powered task orchestration that nudges teams to deliver.",
+        "stack": ["kanban", "chat", "task"],
+        "description": "Marketing site and product tour for Chat Do, showcasing conversation-to-task automation, real-time collaboration, and email nudges.",
+        "highlights": [
+          "Hero slider introducing Talk, Taskify, and Team Up journeys",
+          "Feature grid detailing tasks, chat, team management, and notifications",
+          "Conversion funnel encouraging users to start building instantly"
+        ]
+      },
+      {
+        "name": "Vibra 50 Years Challenge",
+        "industry": "Web App",
+        "category": "Web Apps",
+        "year": "2024",
+        "image": "/vibra.webp",
+        "alt": "Vibra celebratory gaming platform with leaderboard",
+        "tagline": "Employee gaming hub celebrating Vibra's 50-year legacy.",
+        "stack": ["gamification", "leaderboard", "quizzes"],
+        "description": "Interactive platform built for Vibra employees featuring themed quizzes about company history, brand, and business units, with live rankings and award distribution to commemorate five decades of operations.",
+        "highlights": [
+          "Progressive quiz missions spanning history, brand values, and innovation initiatives",
+          "Company-wide leaderboard encouraging friendly competition between business units",
+          "Automated reward system spotlighting top performers during the anniversary celebration"
+        ]
+      },
+      {
+        "name": "Paloma S. Queiroz Portfolio",
+        "industry": "Landing Básica",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/paloma.png",
+        "alt": "Portfolio website for mechanical engineer Paloma S. Queiroz",
+        "tagline": "Showcasing engineering leadership and ISO 9001 initiatives.",
+        "stack": ["timeline", "carousel", "downloadable"],
+        "description": "Personal site presenting Paloma's mechanical engineering career, ISO 9001 committee leadership, MBA pursuits, and highlighted projects spanning quality management and digital solutions.",
+        "highlights": [
+          "Experience timeline covering service consulting and technical assistance roles",
+          "Project spotlight carousel featuring ISO 9001 rollout, OrtoQBank coordination, and RLP site build",
+          "Downloadable résumé and multilingual skills section for quick recruiter access"
+        ]
+      },
+      {
+        "name": "Luis Fernando Aviation Consulting",
+        "industry": "Basic Landing",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/lsf.png",
+        "alt": "Portfolio page highlighting aviation consulting services",
+        "tagline": "Compliance-driven support for global aviation operators.",
+        "stack": ["responsive", "seo", "authentication"],
+        "description": "Responsive portfolio showcasing 20+ years de-risking aircraft deliveries and lease returns for airlines, lessors, and MRO partners.",
+        "highlights": [
+          "Mission, experience, and expertise modules surfaced above the fold",
+          "Carousel featuring 50+ projects and 8 supported aircraft families",
+          "Call-to-action flows driving consultation requests across locales"
+        ]
+      },
+      {
+        "name": "Warehouse Watcher",
+        "industry": "Web App",
+        "category": "Web Apps",
+        "year": "2024",
+        "image": "/warehouse.webp",
+        "alt": "Warehouse management platform with real-time dashboards",
+        "tagline": "Standalone inventory management with real-time visibility.",
+        "stack": ["inventory", "analytics", "dashboard"],
+        "description": "Web application delivering instant stock updates, logistics tracking, and audit-ready reporting for enterprises managing high-volume warehouses.",
+        "highlights": [
+          "Real-time telemetry syncing inbound and outbound stock movements",
+          "Advanced reporting center with drill-down KPIs and exportable audits",
+          "Customer-ready portal separating business and client experiences in one solution"
+        ]
+      },
+      {
+        "name": "Upcraft Crew",
+        "industry": "Landing Artística",
+        "category": "Websites",
+        "year": "2025",
+        "image": "/upcraft.png",
+        "alt": "Upcraft Crew landing page",
+        "tagline": "Boutique web development studio with modern solutions.",
+        "stack": ["Next.js", "Animations", "Artistic Design"],
+        "description": "Artistic and interactive landing page showcasing Upcraft Crew's web development services, featuring sophisticated animations and immersive visual experience.",
+        "highlights": [
+          "Modern design with smooth micro-interactions and fluid animations",
+          "Complete portfolio of featured projects with category filters",
+          "Transparent pricing section with detailed plans for each service type"
+        ]
+      },
+      {
+        "name": "Unstack",
+        "industry": "Web App",
+        "category": "Web Applications",
+        "year": "2025",
+        "image": "/unstack.png",
+        "alt": "Personalized learning platform for developers",
+        "tagline": "Learn your stack intelligently and focused.",
+        "stack": ["GitHub API", "AI", "Analytics"],
+        "description": "Web platform that analyzes GitHub repositories to create personalized learning paths, detecting technologies and identifying knowledge gaps.",
+        "highlights": [
+          "Automatic technology analysis in GitHub repositories",
+          "Personalized study plan generation based on real gaps",
+          "Dashboard tracking learning progress and technical evolution"
+        ]
+      },
+      {
+        "name": "Operational Management",
+        "industry": "Web App",
+        "category": "Web Applications",
+        "year": "2024",
+        "image": "/gestao-operacional.png",
+        "alt": "Operational management platform for engineering consultancy",
+        "tagline": "Centralized operational management with real-time indicators.",
+        "stack": ["Dashboard", "Kanban", "Chat", "Reports"],
+        "description": "Complete web application for process management, indicators and internal communication, developed to centralize engineering consultancy operations with dashboards, weekly agenda, kanban and financial analysis.",
+        "highlights": [
+          "Operational dashboard with real-time KPIs and distribution charts by status",
+          "Integrated internal communication system with chat, notes and automatic notifications",
+          "Financial and production analysis modules with rankings and conversion rates"
+        ]
+      },
+      {
+        "name": "Technical Assistance",
+        "industry": "Web App",
+        "category": "Web Applications",
+        "year": "2024",
+        "image": "/assistencia-tecnica.png",
+        "alt": "Technical assistance management system",
+        "tagline": "Complete management of technical service scheduling.",
+        "stack": ["Scheduling", "Dashboard", "Chat", "Calendar"],
+        "description": "Web system for technical assistance management with service scheduling, weekly programming by technician, status tracking and internal chat for field teams.",
+        "highlights": [
+          "Centralized dashboard for viewing all scheduled services",
+          "Weekly calendar with service distribution by technician",
+          "Real-time status tracking (Scheduled, Budgeting, Completed)"
+        ]
+      },
+      {
+        "name": "Connected Spine Clinic",
+        "industry": "Web App",
+        "category": "Web Applications",
+        "year": "2024",
+        "image": "/clinica-coluna.png",
+        "alt": "Patient onboarding system for clinics",
+        "tagline": "Patient onboarding with integrated scheduling and reports.",
+        "stack": ["Forms", "Scheduling", "Database", "Healthcare"],
+        "description": "Patient onboarding form for clinics with appointment scheduling system, medical data collection and structured report generation.",
+        "highlights": [
+          "Complete registration form with patient medical history",
+          "Appointment scheduling system integrated with registration",
+          "Automatic report generation and clinical data organization"
+        ]
+      }
+    ]
+  },
+  "features": {
+    "eyebrow": "Our Services",
+    "title": "Built for Your Success",
+    "description": "From concept to deployment, we deliver modern web solutions that drive your business forward with cutting-edge technology.",
+    "items": [
+      {
+        "title": "Custom Web Applications",
+        "description": "Bespoke web applications built with React, Next.js, and modern frameworks tailored to your specific business requirements."
+      },
+      {
+        "title": "SaaS Platform Development",
+        "description": "Complete SaaS solutions with user authentication, payment integration, and scalable architecture for growing businesses."
+      },
+      {
+        "title": "E-commerce Solutions",
+        "description": "Modern e-commerce platforms with secure payment processing, inventory management, and seamless user experience."
+      },
+      {
+        "title": "API Development & Integration",
+        "description": "RESTful APIs and third-party integrations to connect your systems and streamline business processes."
+      },
+      {
+        "title": "Cloud Deployment & DevOps",
+        "description": "Seamless deployment to AWS, Vercel, or your preferred cloud platform with CI/CD pipelines and monitoring."
+      },
+      {
+        "title": "Ongoing Support",
+        "description": "Comprehensive maintenance, updates, and technical support to keep your applications running smoothly.",
+        "cta": "Learn more about our services"
+      }
+    ]
+  },
+  "benefits": {
+    "eyebrow": "Why Choose Us",
+    "title": "Why Work With Us?",
+    "description": "We are a boutique software studio specialising in React, Next.js, and modern cloud solutions. Small enough to give you personal attention, skilled enough to deliver enterprise-grade results.",
+    "items": [
+      {
+        "title": "Bespoke Solutions",
+        "description": "Tailored web applications designed specifically for your business goals"
+      },
+      {
+        "title": "Cost-Effective Development",
+        "description": "Offshore rates without compromise on quality or communication"
+      },
+      {
+        "title": "Clear Communication",
+        "description": "English-speaking developers with flexible hours across multiple time zones"
+      },
+      {
+        "title": "Proven Expertise",
+        "description": "Full-stack web apps, SaaS platforms, and modern landing pages"
+      },
+      {
+        "title": "Personal Attention",
+        "description": "Direct access to senior developers, not a faceless team"
+      },
+      {
+        "title": "Reliable Delivery",
+        "description": "Consistent project delivery with transparent progress updates"
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "Our Process",
+    "title": "Our Development Process",
+    "description": "From initial consultation to final deployment, we follow a proven process that ensures quality and transparency",
+    "steps": [
+      {
+        "title": "Discovery & Planning",
+        "subtitle": "We start by understanding your vision and requirements.",
+        "stepLabel": "First step",
+        "items": [
+          "Requirements gathering",
+          "Wireframing",
+          "Timeline planning",
+          "Technical specification"
+        ]
+      },
+      {
+        "title": "Development & Design",
+        "subtitle": "Our team brings your vision to life with clean code",
+        "stepLabel": "Second step"
+      },
+      {
+        "title": "Testing & Deployment",
+        "subtitle": "Rigorous testing and seamless deployment to production",
+        "stepLabel": "Third step",
+        "items": ["Quality assurance", "Cloud deployment", "Security audit", "Go live"]
+      },
+      {
+        "title": "Ongoing Support",
+        "subtitle": "Continuous maintenance and support for your application.",
+        "stepLabel": "Fourth step",
+        "items": [
+          "Performance Monitoring",
+          "Updates & Patches",
+          "Security Updates",
+          "Technical Support",
+          "Feature Enhancements",
+          "Code Reviews",
+          "More"
+        ]
+      }
+    ]
+  },
+  "integrations": {
+    "eyebrow": "Seamless Sync",
+    "title": "Powerful Integrations",
+    "description": "Our platform integrates with the tools you already use, making automation smooth and effortless",
+    "items": [
+      {
+        "title": "HubSpot",
+        "description": "Sync customer data and track interactions effortlessly to improve sales and support",
+        "category": "CRM",
+        "image": "/images/brand-logo/hubspot.svg"
+      },
+      {
+        "title": "Shopify",
+        "description": "Automatically update inventory, process orders, and send customer notifications",
+        "category": "E-commerce",
+        "image": "/images/brand-logo/shopify.svg"
+      },
+      {
+        "title": "Zapier",
+        "description": "Connect with 5,000+ apps to automate repetitive tasks and streamline workflows effortlessly",
+        "category": "Automation",
+        "image": "/images/brand-logo/zapier.svg"
+      },
+      {
+        "title": "Stripe",
+        "description": "Automate invoicing, payments, and subscription billing with seamless Stripe integration",
+        "category": "Payment",
+        "image": "/images/brand-logo/stripe.svg"
+      },
+      {
+        "title": "Slack",
+        "description": "Send instant updates to your team, keeping everyone aligned without switching apps",
+        "category": "Communication",
+        "image": "/images/brand-logo/slack.svg"
+      },
+      {
+        "title": "Google Drive",
+        "description": "Automatically store and organize important documents, ensuring easy access whenever needed",
+        "category": "Storage",
+        "image": "/images/brand-logo/g-drive.svg"
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Client Success",
+    "title": "Trusted by Businesses Worldwide",
+    "description": "See how companies across the globe have scaled their digital presence with our bespoke web development solutions",
+    "avatarAlt": "Profile picture",
+    "stats": [
+      {
+        "title": "On-Time Delivery",
+        "number": "100%",
+        "description": "Projects delivered on schedule and within budget."
+      },
+      {
+        "title": "Free Support",
+        "number": "30 days",
+        "description": "Complimentary adjustments and ongoing support included."
+      },
+      {
+        "title": "Happy Clients",
+        "number": "100%",
+        "description": "Client satisfaction rate on completed projects."
+      },
+      {
+        "title": "Response Time",
+        "number": "< 2hrs",
+        "description": "Average response time for client communications."
+      }
+    ],
+    "list": [
+      {
+        "image": "/images/avatars/1.png",
+        "name": "Sarah Mitchell",
+        "comments": "Working with this team was exceptional. They delivered our custom SaaS platform on time and within budget. The quality exceeded our expectations.",
+        "company": "TechFlow Solutions",
+        "position": "Operations Director",
+        "location": "Manchester, UK"
+      },
+      {
+        "image": "/images/avatars/2.png",
+        "name": "Alex Rodriguez",
+        "comments": "Outstanding development experience. Clear communication across time zones, reliable delivery, and the final product was exactly what we needed.",
+        "company": "InnovateCore",
+        "position": "CTO",
+        "location": "Toronto, Canada"
+      }
+    ]
+  },
+  "pricing": {
+    "eyebrow": "Transparent Pricing",
+    "title": "Development Pricing",
+    "sectionsLabel": "What's Included",
+    "tabs": {
+      "websites": "Websites",
+      "webApps": "Web Apps",
+      "mobileApps": "Mobile Apps",
+      "maintenance": "Maintenance",
+      "consulting": "Consulting"
+    },
+    "cta": {
+      "websites": "Get Quote",
+      "webApps": "Start Project",
+      "mobileApps": "Start Project",
+      "maintenance": "Subscribe",
+      "consulting": "Schedule"
+    },
+    "plans": {
+      "websites": [
+        {
+          "title": "Basic Landing",
+          "price": "$240",
+          "includes": [
+            { "text": "1 responsive page (landing or portfolio)", "included": true },
+            { "text": "Clean design and basic SEO", "included": true },
+            { "text": "Functional contact form", "included": true },
+            { "text": "Deploy on own domain or Vercel", "included": true },
+            { "text": "Advanced animations", "included": false },
+            { "text": "CMS integration", "included": false }
+          ],
+          "tagline": "Perfect for those who need to publish quickly with a lean budget.",
+          "customCta": "Buy now"
+        },
+        {
+          "title": "Artistic Landing",
+          "price": "from $500",
+          "includes": [
+            { "text": "Artistic design with micro-interactions", "included": true },
+            { "text": "Animations (GSAP) and visual storytelling", "included": true },
+            { "text": "Optimized SEO and performance", "included": true },
+            { "text": "Hosting and deployment included", "included": true },
+            { "text": "Up to 5 pages (Home, About, Services, Contact...)", "included": true },
+            { "text": "Dynamic CMS", "included": false }
+          ],
+          "tagline": "For creators and brands that want to captivate at first glance.",
+          "popular": true
+        },
+        {
+          "title": "Business Website",
+          "price": "from $500",
+          "includes": [
+            { "text": "Up to 5 pages (Home, About, Services, Contact...)", "included": true },
+            { "text": "Optional CMS for content editing", "included": true },
+            { "text": "Forms, basic SEO and analytics", "included": true },
+            { "text": "Mobile-first and accessible layout", "included": true },
+            { "text": "Custom integrations", "included": false },
+            { "text": "E-commerce functionality", "included": false }
+          ],
+          "tagline": "For companies that need a complete and reliable digital presence."
+        },
+        {
+          "title": "Online Store (E-commerce)",
+          "price": "from $600",
+          "includes": [
+            { "text": "Product catalog and categories", "included": true },
+            { "text": "Cart and checkout (Stripe/MercadoPago)", "included": true },
+            { "text": "Order and inventory management", "included": true },
+            { "text": "Discounts/coupons and shipping calculation*", "included": true },
+            { "text": "CMS integration for storefronts", "included": true },
+            { "text": "Tax/logistics automation (under scope)", "included": false }
+          ],
+          "tagline": "For those who want to sell online with performance and professional experience."
+        }
+      ],
+      "webApps": [
+        {
+          "title": "Web App Start",
+          "price": "from $800",
+          "includes": [
+            { "text": "Login/authentication (Clerk/Auth.js)", "included": true },
+            { "text": "Synchronized database (Convex)", "included": true },
+            { "text": "Basic dashboard and initial CRUD", "included": true },
+            { "text": "Deploy on Vercel", "included": true },
+            { "text": "Responsive and mobile-first design", "included": true },
+            { "text": "External integrations", "included": false },
+            { "text": "Payment system", "included": false },
+            { "text": "Admin panel", "included": false }
+          ],
+          "tagline": "To validate an MVP with speed and solid foundation."
+        },
+        {
+          "title": "Web App Pro",
+          "price": "from $1,600",
+          "includes": [
+            { "text": "APIs, complete CRUD and notifications", "included": true },
+            { "text": "Plans and billing", "included": true },
+            { "text": "User area + admin panel", "included": true },
+            { "text": "Sentry/Cloudflare for observability", "included": true },
+            { "text": "File upload and management", "included": true },
+            { "text": "Transactional emails (Resend)", "included": true },
+            { "text": "External API integrations", "included": false },
+            { "text": "AI/ML features", "included": false }
+          ],
+          "tagline": "For growing businesses with automations.",
+          "popular": true
+        },
+        {
+          "title": "Web App SaaS Premium",
+          "price": "from $3,000",
+          "includes": [
+            { "text": "Multi-user and permissions", "included": true },
+            { "text": "Advanced external integrations", "included": true },
+            { "text": "AI automation (Firecrawl/OpenAI)", "included": true },
+            { "text": "Proprietary backend (Convex)", "included": true },
+            { "text": "Advanced analytics and metrics", "included": true },
+            { "text": "Webhooks and event-driven", "included": true },
+            { "text": "White-label and full customization", "included": true },
+            { "text": "SLA and priority support", "included": true }
+          ],
+          "tagline": "For SaaS products that require scale and robustness."
+        }
+      ],
+      "mobileApps": [
+        {
+          "title": "App MVP",
+          "price": "from $1,400",
+          "includes": [
+            { "text": "Login and authentication", "included": true },
+            { "text": "Up to 3 main screens", "included": true },
+            { "text": "Integrated backend (Convex/Firebase)", "included": true },
+            { "text": "Google Play publication", "included": true },
+            { "text": "Basic UI/UX design", "included": true },
+            { "text": "Push notifications", "included": false },
+            { "text": "App Store (iOS) publication", "included": false },
+            { "text": "External API integration", "included": false }
+          ],
+          "tagline": "Perfect for testing an idea in the real market."
+        },
+        {
+          "title": "Advanced App",
+          "price": "from $2,400",
+          "includes": [
+            { "text": "Animations and refined navigation", "included": true },
+            { "text": "Real-time synchronization", "included": true },
+            { "text": "Payments", "included": true },
+            { "text": "Push Notifications", "included": true },
+            { "text": "Camera and photo gallery", "included": true },
+            { "text": "Geolocation and maps", "included": true },
+            { "text": "Offline mode (local storage)", "included": true },
+            { "text": "Analytics and event tracking", "included": false }
+          ],
+          "tagline": "For apps with engagement and important integrations.",
+          "popular": true
+        },
+        {
+          "title": "Full Custom App",
+          "price": "from $3,600",
+          "includes": [
+            { "text": "Exclusive design and CI/CD configured", "included": true },
+            { "text": "iOS and Android + web admin panel", "included": true },
+            { "text": "Proprietary backend (Convex + Clerk + Sentry)", "included": true },
+            { "text": "Store publication (iOS + Android)", "included": true },
+            { "text": "Deep linking and sharing", "included": true },
+            { "text": "Biometrics (Face ID/Touch ID)", "included": true },
+            { "text": "Real-time chat", "included": true },
+            { "text": "Video calls or streaming", "included": false }
+          ],
+          "tagline": "For startups and companies that need a complete app."
+        }
+      ],
+      "maintenance": [
+        {
+          "title": "Essential Maintenance",
+          "price": "$60/month",
+          "includes": [
+            { "text": "Basic updates and fixes", "included": true },
+            { "text": "Automatic weekly backups", "included": true },
+            { "text": "Monthly security check", "included": true },
+            { "text": "1h of monthly support", "included": true },
+            { "text": "Dependencies updates", "included": true },
+            { "text": "Uptime monitoring", "included": false },
+            { "text": "Priority support", "included": false },
+            { "text": "New features development", "included": false }
+          ],
+          "tagline": "For sites and portfolios in stable production."
+        },
+        {
+          "title": "Pro Maintenance",
+          "price": "$120/month",
+          "includes": [
+            { "text": "24/7 uptime/performance monitoring", "included": true },
+            { "text": "Fixes and small improvements", "included": true },
+            { "text": "3h of monthly support", "included": true },
+            { "text": "Daily backups with 30-day retention", "included": true },
+            { "text": "Performance optimization", "included": true },
+            { "text": "Monthly analytics reports", "included": true },
+            { "text": "Priority support (24h response)", "included": true },
+            { "text": "Complex features development", "included": false }
+          ],
+          "tagline": "For active e-commerce and web apps.",
+          "popular": true
+        },
+        {
+          "title": "Premium Support",
+          "price": "from $240/month",
+          "includes": [
+            { "text": "New features development", "included": true },
+            { "text": "Enterprise managed hosting", "included": true },
+            { "text": "Monthly SEO and metrics review", "included": true },
+            { "text": "8h+ monthly development", "included": true },
+            { "text": "Roadmap and planning meetings", "included": true },
+            { "text": "Urgent support (4h response)", "included": true },
+            { "text": "CDN and global optimization", "included": true },
+            { "text": "Quarterly security audit", "included": true }
+          ],
+          "tagline": "For products in constant evolution with roadmap."
+        }
+      ],
+      "consulting": [
+        {
+          "title": "Quick Consultation",
+          "price": "$0",
+          "includes": [
+            { "text": "1 hour individual call", "included": true },
+            { "text": "Analysis of your project or idea", "included": true },
+            { "text": "Personalized technical guidance", "included": true },
+            { "text": "Stack and architecture recommendations", "included": true },
+            { "text": "Session recording", "included": true },
+            { "text": "Post-call support material", "included": false },
+            { "text": "7 days support after call", "included": false }
+          ],
+          "tagline": "Ideal for clarifying doubts and validating your idea with an expert."
+        },
+        {
+          "title": "Business Consulting",
+          "price": "$300",
+          "includes": [
+            { "text": "3 hours of technical consulting", "included": true },
+            { "text": "Complete digital business analysis", "included": true },
+            { "text": "Implementation roadmap", "included": true },
+            { "text": "Cost and time estimates", "included": true },
+            { "text": "Tools and stack recommendations", "included": true },
+            { "text": "Detailed post-consulting document", "included": true },
+            { "text": "2 weeks of email support", "included": true },
+            { "text": "Existing code review", "included": false }
+          ],
+          "tagline": "Perfect for companies that need to plan their digital transformation.",
+          "popular": true
+        },
+        {
+          "title": "Personalized Mentoring",
+          "price": "$600",
+          "includes": [
+            { "text": "4 sessions of 1h per month during 4 months", "included": true },
+            { "text": "Personal project follow-up", "included": true },
+            { "text": "Unlimited code review", "included": true },
+            { "text": "Dedicated Discord support", "included": true },
+            { "text": "Dev career planning", "included": true },
+            { "text": "Exclusive materials and resources", "included": true },
+            { "text": "Access to stack course", "included": true },
+            { "text": "Community networking", "included": true }
+          ],
+          "tagline": "For devs who want to accelerate learning with close follow-up."
+        }
+      ]
+    }
+  },
+  "footer": {
+    "eyebrow": "Stay Connected",
+    "title": "Ready to Start Your Project?",
+    "description": "Let's discuss your web development needs. Get a free consultation and see how we can help bring your vision to life.",
+    "cta": "Get Free Consultation",
+    "summary": "Boutique software studio specialising in React, Next.js, and modern cloud solutions. Small enough to give you personal attention, skilled enough to deliver enterprise-grade results.",
+    "social": {
+      "google": "Google",
+      "apple": "Apple",
+      "github": "Github",
+      "x": "X"
+    },
+    "quickLinks": {
+      "title": "Quick Links",
+      "items": ["Home", "Features", "Pricing", "About Us", "Contact"]
+    },
+    "resources": {
+      "title": "Resources",
+      "items": ["Documentation", "Help Center", "FAQs", "Community", "Blog"]
+    },
+    "communityBadge": "New",
+    "legal": {
+      "copyright": "© {year} Upcraft Crew",
+      "credit": {
+        "prefix": "Concept to Reality by",
+        "linkLabel": "Upcraft Crew"
+      },
+      "terms": "Terms",
+      "privacy": "Privacy Policy"
+    }
+  }
+}
