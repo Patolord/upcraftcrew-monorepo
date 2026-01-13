@@ -1,14 +1,16 @@
-export interface Project {
-  id: string;
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+
+interface Project {
+  _id: Id<"projects">;
   name: string;
-  endDate: string;
+  endDate: number;
 }
 
-interface UpcomingDeadlinesProps {
+interface DashboardUpcomingDeadlinesProps {
   projects: Project[];
 }
 
-export function UpcomingDeadlines({ projects }: UpcomingDeadlinesProps) {
+export function DashboardUpcomingDeadlines({ projects }: DashboardUpcomingDeadlinesProps) {
   return (
     <div className="card bg-base-100 border border-base-300">
       <div className="card-body">
@@ -24,14 +26,12 @@ export function UpcomingDeadlines({ projects }: UpcomingDeadlinesProps) {
         </div>
         <div className="space-y-3">
           {projects.map((project) => {
-            const daysUntil = Math.ceil(
-              (new Date(project.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-            );
+            const daysUntil = Math.ceil((project.endDate - Date.now()) / (1000 * 60 * 60 * 24));
             const isUrgent = daysUntil <= 3;
 
             return (
               <div
-                key={project.id}
+                key={project._id}
                 className="flex items-start justify-between gap-3 pb-3 border-b border-base-300 last:border-0 last:pb-0"
               >
                 <div className="flex-1 min-w-0">
@@ -44,9 +44,7 @@ export function UpcomingDeadlines({ projects }: UpcomingDeadlinesProps) {
                   </p>
                 </div>
                 <span
-                  className={`badge ${
-                    isUrgent ? "badge-error" : "badge-warning"
-                  } badge-sm flex-shrink-0`}
+                  className={`badge ${isUrgent ? "badge-error" : "badge-warning"} badge-sm flex-shrink-0`}
                 >
                   {daysUntil}d
                 </span>

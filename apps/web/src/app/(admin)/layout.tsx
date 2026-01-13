@@ -3,9 +3,9 @@
 import { type ReactNode } from "react";
 
 import { Footer } from "@/components/admin-layout/Footer";
-import { AppSidebar } from "@/components/admin-layout/app-sidebar";
+import { AppSidebar } from "@/components/admin-layout/sidebar/app-sidebar";
 import { Providers } from "@/components/providers";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 
 const Layout = ({ children }: { children: ReactNode }) => {

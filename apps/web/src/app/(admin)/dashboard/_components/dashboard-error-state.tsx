@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 
-interface ErrorStateProps {
+interface DashboardErrorStateProps {
   title?: string;
   message?: string;
   onRetry?: () => void;
 }
 
-export function ErrorState({
+export function DashboardErrorState({
   title = "Something went wrong",
   message = "We couldn't load the dashboard data. Please try again.",
   onRetry,
-}: ErrorStateProps) {
+}: DashboardErrorStateProps) {
   return (
     <div className="min-h-[400px] flex items-center justify-center">
       <div className="text-center space-y-4 max-w-md">
@@ -22,7 +22,7 @@ export function ErrorState({
           <p className="text-base-content/60 text-sm">{message}</p>
         </div>
         {onRetry && (
-          <Button onClick={onRetry} className="btn btn-primary">
+          <Button onClick={onRetry} className="gap-2">
             <span className="iconify lucide--refresh-cw size-4" />
             Try Again
           </Button>

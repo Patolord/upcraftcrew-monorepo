@@ -10,24 +10,44 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "../../../../components/ui/dialog";
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-export function NewProjectModal() {
+interface DashboardNewProjectModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+interface FormData {
+  name: string;
+  client: string;
+  description: string;
+  status: "planning" | "in-progress" | "completed";
+  priority: "low" | "medium" | "high" | "urgent";
+  startDate: string;
+  endDate: string;
+  progress: number;
+  budget: {
+    total: number;
+    spent: number;
+    remaining: number;
+  };
+  tags: string;
+}
+
+export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewProjectModalProps) {
   const id = useId();
-  const [open, setOpen] = useState(false);
   const createProject = useMutation(api.projects.createProject);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     client: "",
     description: "",
-    status: "planning" as const,
-    priority: "medium" as const,
+    status: "planning",
+    priority: "medium",
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     progress: 0,
@@ -38,6 +58,25 @@ export function NewProjectModal() {
     },
     tags: "",
   });
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      client: "",
+      description: "",
+      status: "planning",
+      priority: "medium",
+      startDate: new Date().toISOString().split("T")[0],
+      endDate: "",
+      progress: 0,
+      budget: {
+        total: 0,
+        spent: 0,
+        remaining: 0,
+      },
+      tags: "",
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,23 +104,8 @@ export function NewProjectModal() {
       });
 
       toast.success("Project created successfully!");
-      setOpen(false);
-      setFormData({
-        name: "",
-        client: "",
-        description: "",
-        status: "planning",
-        priority: "medium",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: "",
-        progress: 0,
-        budget: {
-          total: 0,
-          spent: 0,
-          remaining: 0,
-        },
-        tags: "",
-      });
+      onOpenChange(false);
+      resetForm();
     } catch (error) {
       toast.error("Failed to create project");
       console.error(error);
@@ -89,13 +113,7 @@ export function NewProjectModal() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button className="btn btn-primary gap-2">
-          <span className="iconify lucide--plus size-5" />
-          New Project
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
@@ -143,7 +161,7 @@ export function NewProjectModal() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    status: e.target.value as any,
+                    status: e.target.value as "planning" | "in-progress" | "completed",
                   })
                 }
               >
@@ -161,7 +179,7 @@ export function NewProjectModal() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    priority: e.target.value as any,
+                    priority: e.target.value as "low" | "medium" | "high" | "urgent",
                   })
                 }
               >
@@ -249,12 +267,10 @@ export function NewProjectModal() {
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="btn btn-primary">
-              Create Project
-            </Button>
+            <Button type="submit">Create Project</Button>
           </DialogFooter>
         </form>
       </DialogContent>

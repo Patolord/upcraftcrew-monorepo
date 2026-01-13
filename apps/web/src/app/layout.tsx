@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/header";
 import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
@@ -17,6 +15,9 @@ import {
 export const metadata: Metadata = {
   title: "Up Craft Crew",
   description: "Up Craft Crew App",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
