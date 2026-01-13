@@ -1,7 +1,7 @@
 "use client";
 
-import { SECTION_IDS } from "@/app/[locale]/constants";
-import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
+import { SECTION_IDS } from "../constants";
+import { useLandingI18n } from "../providers/landing-i18n-provider";
 
 export const Features = () => {
   const { messages } = useLandingI18n();
