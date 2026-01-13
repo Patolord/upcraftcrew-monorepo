@@ -61,20 +61,6 @@ export function KanbanCard({ project }: KanbanCardProps) {
           />
         </div>
 
-        {/* Tags */}
-        {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {project.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="badge badge-xs badge-ghost">
-                {tag}
-              </span>
-            ))}
-            {project.tags.length > 2 && (
-              <span className="badge badge-xs badge-ghost">+{project.tags.length - 2}</span>
-            )}
-          </div>
-        )}
-
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-base-300">
           {/* Team Avatars */}

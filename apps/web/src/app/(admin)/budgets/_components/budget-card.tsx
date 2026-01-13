@@ -74,16 +74,10 @@ export function BudgetCard({ budget, onView, onEdit, onDelete }: BudgetCardProps
   };
 
   return (
-    <div className="card bg-base-100 border border-base-300 hover:shadow-lg transition-shadow">
+    <div className="card bg-base-100 border border-orange-500 rounded-md hover:shadow-lg hover:shadow-orange-500/50 p-8 transition-shadow">
       <div className="card-body">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-2">
-          <span className={`iconify ${statusInfo.icon} size-6 text-base-content/60`} />
-          <span className={`badge ${statusInfo.color} badge-sm`}>{statusInfo.label}</span>
-        </div>
-
         {/* Title and client */}
-        <h3 className="card-title text-base line-clamp-1">{budget.title}</h3>
+        <h3 className="card-title text-base pt-0 line-clamp-1">{budget.title}</h3>
         <p className="text-sm text-base-content/60">{budget.client}</p>
         <p className="text-xs text-base-content/60 line-clamp-2 mt-2">{budget.description}</p>
 
@@ -109,29 +103,25 @@ export function BudgetCard({ budget, onView, onEdit, onDelete }: BudgetCardProps
         </div>
 
         {/* Actions */}
-        <div className="card-actions justify-between mt-4">
+        <div className="card-actions flex justify-end mt-6">
           <Button
             variant="ghost"
             size="sm"
             className="text-error"
             onClick={() => onDelete(budget._id, budget.title)}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 mr-1 text-orange-500" />
           </Button>
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm" onClick={() => onView(budget)}>
-              <Eye className="h-4 w-4 mr-1" />
-              Ver
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleDownloadPDF}>
-              <FileDown className="h-4 w-4 mr-1" />
-              PDF
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
-              <Pencil className="h-4 w-4 mr-1" />
-              Editar
-            </Button>
-          </div>
+
+          <Button variant="ghost" size="sm" onClick={() => onView(budget)}>
+            <Eye className="h-4 w-4 mr-1 text-orange-500" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleDownloadPDF}>
+            <FileDown className="h-4 w-4 mr-1 text-orange-500" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
+            <Pencil className="h-4 w-4 mr-1 text-orange-500" />
+          </Button>
         </div>
       </div>
     </div>

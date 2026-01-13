@@ -20,17 +20,16 @@ interface DashboardProjectsOverviewProps {
 
 export function DashboardProjectsOverview({ projects }: DashboardProjectsOverviewProps) {
   return (
-    <div className="card bg-base-100 border border-base-300">
+    <div className="card pt-4 bg-base-100 ">
       <div className="card-body">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="card-title text-lg">Project Status</h2>
+          <h2 className="card-title text-lg text-orange-500">Project Status</h2>
           <a
             href="/projects"
-            className="btn btn-ghost btn-sm flex items-center"
             aria-label="View all projects"
+            className=" text-sm flex items-center text-orange-500 border-orange-500 border rounded-full px-2"
           >
             View All
-            <span className="iconify lucide--arrow-right size-4 ml-1" aria-hidden="true" />
           </a>
         </div>
         <div className="space-y-4">

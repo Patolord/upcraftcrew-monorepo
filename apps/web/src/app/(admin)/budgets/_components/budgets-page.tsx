@@ -5,7 +5,7 @@ import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutDashboard, FileText } from "lucide-react";
+import { Plus, LayoutDashboard, FileTextIcon } from "lucide-react";
 import { BudgetDashboard } from "./budget-dashboard";
 import { BudgetList } from "./budget-list";
 import { BudgetSlideOver } from "./budget-slide-over";
@@ -122,17 +122,17 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 pl-18 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Orçamentos</h1>
-          <p className="text-base-content/60 text-sm mt-1">
-            Gerencie propostas e orçamentos para clientes
-          </p>
+          <h1 className="text-3xl text-orange-500 font-medium pb-2">Orçamentos</h1>
         </div>
         {activeTab === "all" && (
-          <Button onClick={handleCreateNew} className="gap-2">
+          <Button
+            onClick={handleCreateNew}
+            className="gap-2 text-white bg-orange-500 border rounded-md"
+          >
             <Plus className="h-4 w-4" />
             Novo Orçamento
           </Button>
@@ -140,23 +140,23 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
       </div>
 
       {/* Tabs */}
-      <div className="tabs tabs-boxed w-fit">
-        <button
+      <div className="tabs tabs-boxed border border-orange-500 rounded-full w-fit justify-center">
+        <Button
           type="button"
-          className={`tab gap-2 ${activeTab === "dashboard" ? "tab-active" : ""}`}
+          className={`tab bg-white rounded-full text-orange-500 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "dashboard" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
         >
           <LayoutDashboard className="h-4 w-4" />
           Dashboard
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className={`tab gap-2 ${activeTab === "all" ? "tab-active" : ""}`}
+          className={`tab bg-white rounded-full text-orange-500 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "all" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("all")}
         >
-          <FileText className="h-4 w-4" />
+          <FileTextIcon className="h-4 w-4" />
           Todos os Orçamentos
-        </button>
+        </Button>
       </div>
 
       {/* Tab Content */}

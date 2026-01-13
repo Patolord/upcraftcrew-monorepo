@@ -78,13 +78,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2025-09-01").getTime(),
         endDate: new Date("2025-12-15").getTime(),
         progress: 65,
-        budget: {
-          total: 45000,
-          spent: 22500,
-          remaining: 22500,
-        },
+        budget: 45000,
         teamIds: [userIds[0], userIds[1], userIds[2]],
-        tags: ["web", "design", "development"],
       },
       {
         name: "Mobile App Development",
@@ -95,13 +90,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2025-08-15").getTime(),
         endDate: new Date("2026-01-30").getTime(),
         progress: 45,
-        budget: {
-          total: 80000,
-          spent: 35000,
-          remaining: 45000,
-        },
+        budget: 80000,
         teamIds: [userIds[1]],
-        tags: ["mobile", "ios", "android"],
       },
       {
         name: "Brand Identity",
@@ -112,13 +102,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2025-06-01").getTime(),
         endDate: new Date("2025-08-30").getTime(),
         progress: 100,
-        budget: {
-          total: 25000,
-          spent: 24500,
-          remaining: 500,
-        },
+        budget: 25000,
         teamIds: [userIds[0]],
-        tags: ["branding", "design"],
       },
       {
         name: "E-commerce Platform",
@@ -129,13 +114,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2026-01-15").getTime(),
         endDate: new Date("2026-06-30").getTime(),
         progress: 10,
-        budget: {
-          total: 120000,
-          spent: 0,
-          remaining: 120000,
-        },
+        budget: 120000,
         teamIds: [userIds[1]],
-        tags: ["e-commerce", "web", "backend"],
       },
       {
         name: "Marketing Campaign",
@@ -146,13 +126,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2025-11-01").getTime(),
         endDate: new Date("2026-02-28").getTime(),
         progress: 20,
-        budget: {
-          total: 30000,
-          spent: 5000,
-          remaining: 25000,
-        },
+        budget: 30000,
         teamIds: [],
-        tags: ["marketing", "social-media"],
       },
       {
         name: "Internal CRM System",
@@ -163,13 +138,8 @@ export const seedDatabase = mutation({
         startDate: new Date("2025-09-15").getTime(),
         endDate: new Date("2025-11-30").getTime(),
         progress: 55,
-        budget: {
-          total: 55000,
-          spent: 28000,
-          remaining: 27000,
-        },
+        budget: 55000,
         teamIds: [userIds[1], userIds[2]],
-        tags: ["internal", "crm", "development"],
       },
     ];
 

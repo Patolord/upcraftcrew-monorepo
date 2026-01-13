@@ -110,17 +110,15 @@ export const createProject = mutation({
     startDate: v.number(),
     endDate: v.number(),
     progress: v.number(),
-    budget: v.object({
-      total: v.number(),
-      spent: v.number(),
-      remaining: v.number(),
-    }),
+    budget: v.optional(v.number()),
     teamIds: v.array(v.id("users")),
-    tags: v.array(v.string()),
   },
   handler: async (ctx, args) => {
     await requireWrite(ctx);
-    const projectId = await ctx.db.insert("projects", args);
+    const projectId = await ctx.db.insert("projects", {
+      ...args,
+      budget: args.budget || 0,
+    });
 
     // Update team members' projectIds
     for (const userId of args.teamIds) {
@@ -152,15 +150,8 @@ export const updateProject = mutation({
     startDate: v.optional(v.number()),
     endDate: v.optional(v.number()),
     progress: v.optional(v.number()),
-    budget: v.optional(
-      v.object({
-        total: v.number(),
-        spent: v.number(),
-        remaining: v.number(),
-      }),
-    ),
+    budget: v.optional(v.number()),
     teamIds: v.optional(v.array(v.id("users"))),
-    tags: v.optional(v.array(v.string())),
     notes: v.optional(v.string()),
     files: v.optional(
       v.array(

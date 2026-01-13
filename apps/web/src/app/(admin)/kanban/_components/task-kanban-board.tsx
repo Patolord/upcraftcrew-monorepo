@@ -26,7 +26,6 @@ interface Task {
     name: string;
   } | null;
   dueDate?: number;
-  tags: string[];
 }
 
 interface Column {

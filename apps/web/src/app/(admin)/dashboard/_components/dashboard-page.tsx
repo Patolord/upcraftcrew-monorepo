@@ -23,13 +23,8 @@ interface Project {
   startDate: number;
   endDate: number;
   progress: number;
-  budget: {
-    total: number;
-    spent: number;
-    remaining: number;
-  };
+  budget: number;
   teamIds: Id<"users">[];
-  tags: string[];
   team?: Array<{
     _id: Id<"users">;
     firstName: string;
@@ -73,7 +68,6 @@ interface Task {
   assignedTo?: Id<"users">;
   projectId?: Id<"projects">;
   dueDate?: number;
-  tags: string[];
   createdAt: number;
   updatedAt: number;
   assignedUser?: TeamMember | null;
@@ -164,17 +158,17 @@ export function DashboardPage({
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 pl-18 pr-18 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-base-content/60 text-sm mt-1">
+          <h1 className="text-3xl text-orange-500 font-medium">Dashboard</h1>
+          <p className="text-base-content/60 pb-4 text-sm mt-1">
             Welcome back! Here&apos;s what&apos;s happening today
           </p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
+        <Button onClick={() => setIsModalOpen(true)} className=" bg-orange-500 gap-2 rounded-full">
+          <Plus className="h-6 w-4 " />
           New Project
         </Button>
       </div>
@@ -187,7 +181,7 @@ export function DashboardPage({
       />
 
       {/* Recent Activities + Upcoming Deadlines */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <DashboardRecentActivities activities={recentActivities} />
         </div>

@@ -37,9 +37,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
   const startDateId = useId();
   const endDateId = useId();
   const progressId = useId();
-  const budgetTotalId = useId();
-  const budgetSpentId = useId();
-  const tagsId = useId();
+  const budgetId = useId();
   const notesId = useId();
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,9 +56,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
     startDate: new Date(project.startDate).toISOString().split("T")[0],
     endDate: project.endDate ? new Date(project.endDate).toISOString().split("T")[0] : "",
     progress: project.progress,
-    budgetTotal: project.budget?.total || 0,
-    budgetSpent: project.budget?.spent || 0,
-    tags: (project.tags || []).join(", "),
+    budget: project.budget || 0,
     notes: project.notes || "",
   });
 
@@ -94,15 +90,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
         startDate: new Date(formData.startDate).getTime(),
         endDate: new Date(formData.endDate).getTime(),
         progress: formData.progress,
-        budget: {
-          total: formData.budgetTotal,
-          spent: formData.budgetSpent,
-          remaining: formData.budgetTotal - formData.budgetSpent,
-        },
-        tags: formData.tags
-          .split(",")
-          .map((tag: string) => tag.trim())
-          .filter((tag: string) => tag.length > 0),
+        budget: formData.budget,
         notes: formData.notes,
         files: files,
       });
@@ -127,9 +115,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
       startDate: new Date(project.startDate).toISOString().split("T")[0],
       endDate: project.endDate ? new Date(project.endDate).toISOString().split("T")[0] : "",
       progress: project.progress,
-      budgetTotal: project.budget?.total || 0,
-      budgetSpent: project.budget?.spent || 0,
-      tags: (project.tags || []).join(", "),
+      budget: project.budget || 0,
       notes: project.notes || "",
     });
     setFiles(
@@ -380,32 +366,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
               )}
             </div>
 
-            {/* Tags */}
-            <div className="form-control">
-              <label className="block mb-2" htmlFor={tagsId}>
-                <span className="text-sm font-medium">Tags</span>
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id={tagsId}
-                  className="input input-bordered w-full border-2"
-                  placeholder="design, development, urgent (separadas por vírgula)"
-                  value={formData.tags}
-                  onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                />
-              ) : project.tags && project.tags.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag: string) => (
-                    <span key={tag} className="badge badge-ghost">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-base-content/60">Nenhuma tag</p>
-              )}
-            </div>
+            <div className="flex flex-wrap gap-2"></div>
 
             {/* Start Date */}
             <div className="form-control">
@@ -483,20 +444,20 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
 
             {/* Budget Total */}
             <div className="form-control">
-              <label className="block mb-2" htmlFor={budgetTotalId}>
+              <label className="block mb-2" htmlFor={budgetId}>
                 <span className="text-sm font-medium">Orçamento Total</span>
               </label>
               {isEditing ? (
                 <input
                   type="text"
                   inputMode="decimal"
-                  id={budgetTotalId}
+                  id={budgetId}
                   className="input input-bordered w-full border-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  value={formData.budgetTotal}
+                  value={formData.budget}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      budgetTotal: Number(e.target.value) || 0,
+                      budget: Number(e.target.value) || 0,
                     })
                   }
                 />
@@ -507,27 +468,27 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
               )}
             </div>
 
-            {/* Budget Spent */}
+            {/* Budget */}
             <div className="form-control">
-              <label className="block mb-2" htmlFor={budgetSpentId}>
+              <label className="block mb-2" htmlFor={budgetId}>
                 <span className="text-sm font-medium">Orçamento Gasto</span>
               </label>
               {isEditing ? (
                 <input
                   type="text"
                   inputMode="decimal"
-                  id={budgetSpentId}
+                  id={budgetId}
                   className="input input-bordered w-full border-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  value={formData.budgetSpent}
+                  value={formData.budget}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      budgetSpent: Number(e.target.value) || 0,
+                      budget: Number(e.target.value) || 0,
                     })
                   }
                 />
               ) : project.budget ? (
-                <p className="text-base-content">${project.budget.spent.toLocaleString()}</p>
+                <p className="text-base-content">${project.budget.toLocaleString()}</p>
               ) : (
                 <p className="text-base-content/60">Não definido</p>
               )}

@@ -42,7 +42,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
 
   // Calculate budget usage
   const budgetUsage = useMemo(() => {
-    const percentage = (project.budget.spent / project.budget.total) * 100;
+    const percentage = (project.budget / project.budget) * 100;
     const remaining = project.budget.remaining;
     const isOverBudget = percentage > 100;
 
@@ -167,7 +167,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Gasto</span>
-                <span className="text-sm font-bold text-error">{project.budget.spent}</span>
+                <span className="text-sm font-bold text-error">{project.budget}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Restante</span>

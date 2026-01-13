@@ -12,10 +12,10 @@ interface DashboardUpcomingDeadlinesProps {
 
 export function DashboardUpcomingDeadlines({ projects }: DashboardUpcomingDeadlinesProps) {
   return (
-    <div className="card bg-base-100 border border-base-300">
+    <div className="card pt-4 bg-base-100">
       <div className="card-body">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="card-title text-lg">Upcoming Deadlines</h2>
+          <h2 className="card-title text-lg text-orange-500">Upcoming Deadlines</h2>
           <a
             href="/schedule"
             className="btn btn-ghost btn-sm flex items-center"

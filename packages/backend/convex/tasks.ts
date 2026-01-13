@@ -149,7 +149,6 @@ export const createTask = mutation({
     assignedTo: v.optional(v.id("users")),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
-    tags: v.array(v.string()),
     isPrivate: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -190,7 +189,6 @@ export const updateTask = mutation({
     assignedTo: v.optional(v.id("users")),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
-    tags: v.optional(v.array(v.string())),
     isPrivate: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {

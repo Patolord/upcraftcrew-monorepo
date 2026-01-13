@@ -16,7 +16,6 @@ interface Task {
     name: string;
   } | null;
   dueDate?: number;
-  tags: string[];
   isPrivate?: boolean;
 }
 
@@ -83,20 +82,6 @@ export function TaskCard({ task }: TaskCardProps) {
               <span className="iconify lucide--folder size-3 mr-1" aria-hidden="true" />
               {task.project.name}
             </span>
-          </div>
-        )}
-
-        {/* Tags */}
-        {task.tags && task.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {task.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="badge badge-xs badge-ghost">
-                {tag}
-              </span>
-            ))}
-            {task.tags.length > 2 && (
-              <span className="badge badge-xs badge-ghost">+{task.tags.length - 2}</span>
-            )}
           </div>
         )}
 

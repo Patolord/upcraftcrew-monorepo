@@ -78,10 +78,7 @@ export function ProjectCard({ project }: { project: Project }) {
           {project.budget && (
             <div>
               <p className="text-xs text-base-content/60 mb-1">Budget</p>
-              <p className="text-sm font-medium">
-                ${project.budget.spent?.toLocaleString() || 0} / $
-                {project.budget.total.toLocaleString()}
-              </p>
+              <p className="text-sm font-medium">{project.budget.toLocaleString()}</p>
             </div>
           )}
           <div>
@@ -133,17 +130,6 @@ export function ProjectCard({ project }: { project: Project }) {
                 {priority.label}
               </span>
             </div>
-          </div>
-        )}
-
-        {/* Tags */}
-        {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
-            {project.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="badge badge-sm badge-ghost text-xs">
-                {tag}
-              </span>
-            ))}
           </div>
         )}
 

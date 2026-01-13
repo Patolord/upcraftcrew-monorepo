@@ -30,12 +30,7 @@ interface FormData {
   startDate: string;
   endDate: string;
   progress: number;
-  budget: {
-    total: number;
-    spent: number;
-    remaining: number;
-  };
-  tags: string;
+  budget: number;
 }
 
 export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewProjectModalProps) {
@@ -51,12 +46,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     progress: 0,
-    budget: {
-      total: 0,
-      spent: 0,
-      remaining: 0,
-    },
-    tags: "",
+    budget: 0,
   });
 
   const resetForm = () => {
@@ -69,12 +59,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
       startDate: new Date().toISOString().split("T")[0],
       endDate: "",
       progress: 0,
-      budget: {
-        total: 0,
-        spent: 0,
-        remaining: 0,
-      },
-      tags: "",
+      budget: 0,
     });
   };
 
@@ -91,16 +76,8 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
         startDate: new Date(formData.startDate).getTime(),
         endDate: new Date(formData.endDate).getTime(),
         progress: formData.progress,
-        budget: {
-          total: formData.budget.total,
-          spent: formData.budget.spent,
-          remaining: formData.budget.total - formData.budget.spent,
-        },
+        budget: formData.budget,
         teamIds: [],
-        tags: formData.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter(Boolean),
       });
 
       toast.success("Project created successfully!");
@@ -114,11 +91,12 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] rounded-lg border border-orange-500 overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
           <DialogDescription>Fill in the details to create a new project</DialogDescription>
         </DialogHeader>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -127,6 +105,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
                 id={`${id}-name`}
                 required
                 value={formData.name}
+                className="rounded-md"
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
@@ -136,6 +115,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
                 id={`${id}-client`}
                 required
                 value={formData.client}
+                className="rounded-md"
                 onChange={(e) => setFormData({ ...formData, client: e.target.value })}
               />
             </div>
@@ -147,6 +127,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
               id={`${id}-description`}
               required
               value={formData.description}
+              className="rounded-md"
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
           </div>
@@ -156,7 +137,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
               <Label htmlFor={`${id}-status`}>Status</Label>
               <select
                 id={`${id}-status`}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full rounded-md"
                 value={formData.status}
                 onChange={(e) =>
                   setFormData({
@@ -174,7 +155,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
               <Label htmlFor={`${id}-priority`}>Priority</Label>
               <select
                 id={`${id}-priority`}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full rounded-md"
                 value={formData.priority}
                 onChange={(e) =>
                   setFormData({
@@ -199,6 +180,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
                 type="date"
                 required
                 value={formData.startDate}
+                className="rounded-md"
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
               />
             </div>
@@ -209,6 +191,7 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
                 type="date"
                 required
                 value={formData.endDate}
+                className="rounded-md"
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
               />
             </div>
@@ -216,61 +199,29 @@ export function DashboardNewProjectModal({ open, onOpenChange }: DashboardNewPro
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor={`${id}-budgetTotal`}>Total Budget *</Label>
+              <Label htmlFor={`${id}-budget`}>Total Budget *</Label>
               <Input
-                id={`${id}-budgetTotal`}
-                type="number"
+                id={`${id}-budget`}
                 required
-                min="0"
-                value={formData.budget.total}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    budget: {
-                      ...formData.budget,
-                      total: Number(e.target.value),
-                      remaining: Number(e.target.value) - formData.budget.spent,
-                    },
-                  })
-                }
+                value={formData.budget}
+                className="rounded-md"
+                onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) || 0 })}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor={`${id}-budgetSpent`}>Budget Spent</Label>
-              <Input
-                id={`${id}-budgetSpent`}
-                type="number"
-                min="0"
-                value={formData.budget.spent}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    budget: {
-                      ...formData.budget,
-                      spent: Number(e.target.value),
-                      remaining: formData.budget.total - Number(e.target.value),
-                    },
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor={`${id}-tags`}>Tags (comma-separated)</Label>
-            <Input
-              id={`${id}-tags`}
-              placeholder="design, development, marketing"
-              value={formData.tags}
-              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-            />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              className="border-orange-500 text-orange-500 rounded-lg"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit">Create Project</Button>
+            <Button type="submit" className="bg-orange-500 border-orange-500 text-white rounded-lg">
+              Create Project
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

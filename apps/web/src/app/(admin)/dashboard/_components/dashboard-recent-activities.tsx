@@ -23,25 +23,12 @@ interface DashboardRecentActivitiesProps {
   activities: Activity[];
 }
 
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now();
-  const diffMs = now - timestamp;
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
-  return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-}
-
 export function DashboardRecentActivities({ activities }: DashboardRecentActivitiesProps) {
   return (
-    <div className="card bg-base-100 border border-base-300">
+    <div className="card pt-4 bg-base-100 ">
       <div className="card-body">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="card-title text-lg">Recent Activities</h2>
+          <h2 className="card-title text-lg text-orange-500">Recent Activities</h2>
         </div>
 
         <div className="space-y-4">
@@ -81,7 +68,11 @@ export function DashboardRecentActivities({ activities }: DashboardRecentActivit
                   <span className="font-medium">{activity.project?.name || "Unknown Project"}</span>
                 </p>
                 <p className="text-xs text-base-content/60 mt-0.5">
-                  {formatTimeAgo(activity.updatedAt)}
+                  {new Date(activity.updatedAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </p>
               </div>
 

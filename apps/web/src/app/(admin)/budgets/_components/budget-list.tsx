@@ -95,22 +95,22 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row  gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/60" />
+          <Search className="absolute left-3 text-orange-500 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/60" />
           <Input
-            className="pl-9"
+            className="pl-9 text-orange-500 border border-orange-500 rounded-md"
             placeholder="Buscar orçamentos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <select
-          className="select select-bordered w-full sm:w-48"
+          className="select select-bordered w-full text-sm sm:w-48 pl-2 border border-orange-500 rounded-md"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
         >
-          <option value="all">Todos os Status</option>
+          <option value="all">Status</option>
           <option value="draft">Rascunho</option>
           <option value="sent">Enviado</option>
           <option value="approved">Aprovado</option>

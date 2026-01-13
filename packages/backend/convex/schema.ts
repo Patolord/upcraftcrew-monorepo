@@ -51,13 +51,8 @@ export default defineSchema({
     startDate: v.number(),
     endDate: v.number(),
     progress: v.number(),
-    budget: v.object({
-      total: v.number(),
-      spent: v.number(),
-      remaining: v.number(),
-    }),
+    budget: v.number(),
     teamIds: v.array(v.id("users")),
-    tags: v.array(v.string()),
     notes: v.optional(v.string()),
     files: v.optional(
       v.array(
@@ -190,7 +185,6 @@ export default defineSchema({
     assignedTo: v.optional(v.id("users")),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
-    tags: v.array(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
     isPrivate: v.optional(v.boolean()),

@@ -54,73 +54,51 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Total Orçamentos</div>
-            <div className="stat-value text-2xl">{stats?.total || 0}</div>
-            <div className="stat-desc">Todos os status</div>
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div className="stat-title pt-3 text-xl">Total Orçamentos</div>
+          <div className="stat-value pt-2 pb-4 text-lg">{stats?.total || 0}</div>
+        </div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Rascunho</div>
+            <div className="stat-value pt-2 pb-4 text-lg">{stats?.draft || 0}</div>
           </div>
         </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Aprovados</div>
-            <div className="stat-value text-2xl text-success">{stats?.approved || 0}</div>
-            <div className="stat-desc">Taxa: {stats?.conversionRate?.toFixed(1) || 0}%</div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Enviados</div>
+            <div className="stat-value pt-2 pb-4 text-lg">{stats?.sent || 0}</div>
           </div>
         </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Valor Total</div>
-            <div className="stat-value text-2xl">{formatCurrency(stats?.totalValue || 0)}</div>
-            <div className="stat-desc">Todos os orçamentos</div>
-          </div>
-        </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Valor Aprovado</div>
-            <div className="stat-value text-2xl text-success">
-              {formatCurrency(stats?.approvedValue || 0)}
-            </div>
-            <div className="stat-desc">Receita confirmada</div>
-          </div>
-        </div>
-      </div>
 
-      {/* Status Overview */}
-      <div className="card bg-base-100 border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-lg mb-4">Status dos Orçamentos</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
-              <span className="iconify lucide--file-edit size-8 text-base-content/60" />
-              <div>
-                <p className="text-2xl font-bold">{stats?.draft || 0}</p>
-                <p className="text-xs text-base-content/60">Rascunho</p>
-              </div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Rejeitados</div>
+            <div className="stat-value pt-2 pb-4 text-lg">{stats?.rejected || 0}</div>
+          </div>
+        </div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Aprovados</div>
+            <div className="stat-value pt-2 pb-4 text-lg">{stats?.approved || 0}</div>
+          </div>
+        </div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Valor Total</div>
+            <div className="stat-value pt-2 pb-4 text-lg">
+              {formatCurrency(stats?.totalValue || 0)}
             </div>
-            <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
-              <span className="iconify lucide--send size-8 text-info" />
-              <div>
-                <p className="text-2xl font-bold">{stats?.sent || 0}</p>
-                <p className="text-xs text-base-content/60">Enviados</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
-              <span className="iconify lucide--check-circle size-8 text-success" />
-              <div>
-                <p className="text-2xl font-bold">{stats?.approved || 0}</p>
-                <p className="text-xs text-base-content/60">Aprovados</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
-              <span className="iconify lucide--x-circle size-8 text-error" />
-              <div>
-                <p className="text-2xl font-bold">{stats?.rejected || 0}</p>
-                <p className="text-xs text-base-content/60">Rejeitados</p>
-              </div>
+          </div>
+        </div>
+        <div className="stats border text-center border-orange-500 rounded-md">
+          <div>
+            <div className="stat-title pt-3 text-xl">Valor Aprovado</div>
+            <div className="stat-value pt-2 pb-4 text-lg">
+              {formatCurrency(stats?.approvedValue || 0)}
             </div>
           </div>
         </div>
@@ -128,9 +106,9 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Budgets */}
-        <div className="card bg-base-100 border border-base-300">
+        <div className="card bg-base-100 ">
           <div className="card-body">
-            <h2 className="card-title text-lg mb-4">Orçamentos Recentes</h2>
+            <h2 className="card-title text-lg mb-4 text-orange-500">Orçamentos Recentes</h2>
             <div className="space-y-3">
               {recentBudgets.length === 0 ? (
                 <div className="text-center py-8">
@@ -168,14 +146,14 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
         </div>
 
         {/* Expiring Soon */}
-        <div className="card bg-base-100 border border-base-300">
+        <div className="card bg-base-100 ">
           <div className="card-body">
-            <h2 className="card-title text-lg mb-4">Vencendo em Breve</h2>
+            <h2 className="card-title text-lg text-orange-500 mt-8">Vencendo em Breve</h2>
             <div className="space-y-3">
               {expiringSoon.length === 0 ? (
                 <div className="text-center py-8">
                   <span className="iconify lucide--calendar-check size-12 text-base-content/20" />
-                  <p className="text-sm text-base-content/60 mt-2">Nenhum orçamento vencendo</p>
+                  <p className="text-sm text-base-content/60 mt-8">Nenhum orçamento vencendo</p>
                 </div>
               ) : (
                 expiringSoon.map((budget) => {

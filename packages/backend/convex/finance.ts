@@ -206,15 +206,7 @@ export const createTransaction = mutation({
     if (args.projectId && args.status === "completed") {
       const project = await ctx.db.get(args.projectId);
       if (project) {
-        const updatedBudget = {
-          ...project.budget,
-          spent:
-            args.type === "expense" ? project.budget.spent + args.amount : project.budget.spent,
-          remaining:
-            args.type === "expense"
-              ? project.budget.remaining - args.amount
-              : project.budget.remaining,
-        };
+        const updatedBudget = project.budget + args.amount;
 
         await ctx.db.patch(args.projectId, {
           budget: updatedBudget,
@@ -259,12 +251,8 @@ export const updateTransaction = mutation({
         const amount = updates.amount ?? existingTransaction.amount;
         const type = updates.type ?? existingTransaction.type;
 
-        const updatedBudget = {
-          ...project.budget,
-          spent: type === "expense" ? project.budget.spent + amount : project.budget.spent,
-          remaining:
-            type === "expense" ? project.budget.remaining - amount : project.budget.remaining,
-        };
+        const updatedBudget =
+          type === "expense" ? project.budget + amount : project.budget + amount;
 
         await ctx.db.patch(existingTransaction.projectId, {
           budget: updatedBudget,
@@ -297,11 +285,7 @@ export const deleteTransaction = mutation({
     ) {
       const project = await ctx.db.get(transaction.projectId);
       if (project) {
-        const updatedBudget = {
-          ...project.budget,
-          spent: project.budget.spent - transaction.amount,
-          remaining: project.budget.remaining + transaction.amount,
-        };
+        const updatedBudget = project.budget - transaction.amount;
 
         await ctx.db.patch(transaction.projectId, {
           budget: updatedBudget,
