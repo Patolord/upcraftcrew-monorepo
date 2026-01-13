@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToStaticMarkup } from "react-dom/server";
 import { chromium } from "playwright";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { renderToHTML } from "@/lib/pdf-renderer";
 import { BudgetPDFTemplate } from "../../_components/pdf-template";
 import type { Budget } from "../../_components/pdf-template/types";
 
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     };
 
     // Render React component to static HTML
-    const reactMarkup = renderToStaticMarkup(BudgetPDFTemplate({ budget }));
+    const reactMarkup = renderToHTML(BudgetPDFTemplate({ budget }));
     const htmlDocument = getHTMLDocument(reactMarkup);
 
     // Launch Playwright browser and generate PDF
@@ -110,8 +110,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     await browser.close();
 
-    // Return PDF response
-    return new NextResponse(pdfBuffer, {
+    // Return PDF response (convert Buffer to Uint8Array for NextResponse compatibility)
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",

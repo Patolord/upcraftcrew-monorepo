@@ -5,7 +5,6 @@ import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { DashboardHeader } from "./_components/dashboard-header";
 import { ErrorState } from "./_components/error-state";
-import { Project } from "./_components/upcoming-deadlines";
 
 export default function DashboardPage() {
   const [retryCount, setRetryCount] = useState(0);
@@ -27,13 +26,7 @@ export default function DashboardPage() {
   // Calculate overview stats
   const stats = useMemo(() => {
     if (!projects || !teamMembers || !transactions) {
-      return {
-        activeProjects: 0,
-        activeMembers: 0,
-        totalRevenue: 0,
-        netProfit: 0,
-        avgProgress: 0,
-      };
+      return {};
     }
 
     const activeProjects = projects.filter((p) => p.status === "in-progress").length;
@@ -58,32 +51,4 @@ export default function DashboardPage() {
       avgProgress: avgProjectProgress,
     };
   }, [projects, teamMembers, transactions]);
-
-  // Upcoming deadlines
-  const upcomingDeadlines: Project[] = useMemo(() => {
-    if (!projects) return [];
-
-    return projects
-      .filter((p) => p.endDate && p.status !== "completed")
-      .sort((a, b) => a.endDate - b.endDate)
-      .slice(0, 4)
-      .map((p) => ({
-        id: p._id,
-        name: p.name,
-        endDate: new Date(p.endDate).toISOString(),
-      }));
-  }, [projects]);
-
-  // Loading state
-  const isLoading = !projects || !teamMembers || !transactions;
-
-  // Show error state if all queries failed after loading
-  if (hasError && retryCount > 0) {
-    return (
-      <div className="p-6">
-        <DashboardHeader />
-        <ErrorState onRetry={handleRetry} />
-      </div>
-    );
-  }
 }

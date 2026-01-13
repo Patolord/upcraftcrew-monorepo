@@ -3,9 +3,7 @@ import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 
 import { LandingI18nProvider } from "./providers/landing-i18n-provider";
-
-export const SUPPORTED_LOCALES = ["en", "pt"] as const;
-export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+import { SUPPORTED_LOCALES, type SupportedLocale } from "./constants";
 
 type Params = Promise<{ locale: string }>;
 

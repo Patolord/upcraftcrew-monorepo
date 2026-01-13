@@ -1,3 +1,6 @@
+export const SUPPORTED_LOCALES = ["en", "pt"] as const;
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+
 export const SECTION_IDS = {
   hero: "hero",
   portfolio: "portfolio",

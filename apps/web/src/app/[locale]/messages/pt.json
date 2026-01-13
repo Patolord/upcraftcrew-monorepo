@@ -105,6 +105,7 @@
   "portfolio": {
     "eyebrow": "Nossos projetos",
     "title": "Portfólio em destaque",
+    "description": "Produtos reais que combinam design encantador com resultados de negócio mensuráveis.",
     "controls": {
       "previous": "Projetos anteriores",
       "next": "Próximos projetos"

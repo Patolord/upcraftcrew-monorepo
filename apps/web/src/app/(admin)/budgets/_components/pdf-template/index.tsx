@@ -64,4 +64,4 @@ export function BudgetPDFTemplate({ budget }: BudgetPDFTemplateProps) {
   );
 }
 
-export type { Budget, BudgetPDFTemplateProps } from "./types";
+export type { Budget, PDFTemplateProps as BudgetPDFTemplateProps } from "./types";

@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 
-import { SECTION_IDS } from "@/app/[locale]/constants";
-import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
+import { SECTION_IDS } from "../constants";
+import { useLandingI18n } from "../providers/landing-i18n-provider";
 import { useQueryState, parseAsString } from "nuqs";
 import Link from "next/link";
 
