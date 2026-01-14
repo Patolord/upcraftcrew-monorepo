@@ -3,27 +3,27 @@ import type { EventType } from "@/types/schedule";
 export const eventTypeConfig: Record<EventType, { label: string; icon: string; color: string }> = {
   meeting: {
     label: "Meeting",
-    icon: "lucide--video",
+    icon: "VideoIcon",
     color: "badge-primary",
   },
   deadline: {
     label: "Deadline",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
     color: "badge-error",
   },
   task: {
     label: "Task",
-    icon: "lucide--check-circle",
+    icon: "CheckCircleIcon",
     color: "badge-success",
   },
   reminder: {
     label: "Reminder",
-    icon: "lucide--bell",
+    icon: "BellIcon",
     color: "badge-warning",
   },
   milestone: {
     label: "Milestone",
-    icon: "lucide--target",
+    icon: "TargetIcon",
     color: "badge-secondary",
   },
 };

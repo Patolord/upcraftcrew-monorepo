@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { MailIcon } from "lucide-react";
 
 export const Footer = () => {
   const { messages } = useLandingI18n();
@@ -79,7 +80,7 @@ export const Footer = () => {
         <div className="mt-8 flex items-start justify-center gap-4">
           <div>
             <div className="input w-40 sm:w-64">
-              <span className="iconify lucide--mail text-base-content/80 size-5"></span>
+              <MailIcon className="text-base-content/80 size-5" />
               <input
                 name="email"
                 placeholder={common.form.emailPlaceholder}

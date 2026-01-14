@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { CalendarIcon } from "lucide-react";
 
 interface ProjectDashboardProps {
   project: any;
@@ -239,7 +240,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                   className="flex items-center justify-between p-3 border border-base-300 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="iconify lucide--calendar size-5 text-primary" />
+                    <CalendarIcon className="h-5 w-5 text-primary" />
                     <div>
                       <p className="font-medium">{event.title}</p>
                       <p className="text-xs text-base-content/60">

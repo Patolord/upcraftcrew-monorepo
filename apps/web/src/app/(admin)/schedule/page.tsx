@@ -7,6 +7,14 @@ import { useQuery } from "convex/react";
 import { useState, useMemo } from "react";
 import { CalendarDay } from "./_components/calendar-day";
 import { EventCard } from "./_components/event-card";
+import {
+  PlusIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CalendarIcon,
+  ListIcon,
+  CalendarXIcon,
+} from "lucide-react";
 
 // Helper function to get event color based on type
 function getEventColor(type: EventType): string {
@@ -116,7 +124,7 @@ export default function SchedulePage() {
           </p>
         </div>
         <Button className="btn btn-primary gap-2" onClick={() => setIsModalOpen(true)}>
-          <span className="iconify lucide--plus size-5" />
+          <PlusIcon className="h-5 w-5" />
           New Event
         </Button>
       </div>
@@ -172,7 +180,7 @@ export default function SchedulePage() {
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="flex items-center gap-2">
               <Button className="btn btn-sm" onClick={previousMonth}>
-                <span className="iconify lucide--chevron-left size-4" />
+                <ChevronLeftIcon className="h-4 w-4" />
               </Button>
               <h2 className="text-lg font-semibold min-w-48 text-center">
                 {selectedDate.toLocaleDateString("en-US", {
@@ -181,7 +189,7 @@ export default function SchedulePage() {
                 })}
               </h2>
               <Button className="btn btn-sm" onClick={nextMonth}>
-                <span className="iconify lucide--chevron-right size-4" />
+                <ChevronRightIcon className="h-4 w-4" />
               </Button>
               <Button className="btn btn-sm btn-ghost" onClick={() => setSelectedDate(new Date())}>
                 Today
@@ -207,14 +215,14 @@ export default function SchedulePage() {
                   className={`btn btn-sm join-item ${viewMode === "month" ? "btn-active" : ""}`}
                   onClick={() => setViewMode("month")}
                 >
-                  <span className="iconify lucide--calendar size-4" />
+                  <CalendarIcon className="h-4 w-4" />
                   Month
                 </Button>
                 <Button
                   className={`btn btn-sm join-item ${viewMode === "list" ? "btn-active" : ""}`}
                   onClick={() => setViewMode("list")}
                 >
-                  <span className="iconify lucide--list size-4" />
+                  <ListIcon className="h-4 w-4" />
                   List
                 </Button>
               </div>
@@ -260,7 +268,7 @@ export default function SchedulePage() {
               <h3 className="font-semibold">Upcoming Events</h3>
               {upcomingEvents.length === 0 ? (
                 <div className="text-center py-12">
-                  <span className="iconify lucide--calendar-x size-16 text-base-content/20 mb-4" />
+                  <CalendarXIcon className="h-16 w-16 text-base-content/20 mb-4" />
                   <h3 className="text-lg font-medium mb-2">No upcoming events</h3>
                   <p className="text-base-content/60 text-sm">
                     Try adjusting your filters or add new events

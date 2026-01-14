@@ -8,6 +8,14 @@ import { NewTeamMemberModal } from "./_components/new-team-member-modal";
 import { TeamMemberCard } from "./_components/team-member-card";
 import { TeamMemberRow } from "./_components/team-member-row";
 import { TeamMemberRole } from "@/types/team";
+import {
+  AlertCircleIcon,
+  TableIcon,
+  UserPlusIcon,
+  UsersRoundIcon,
+  LayoutGridIcon,
+  SearchIcon,
+} from "lucide-react";
 
 export default function TeamPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,7 +96,7 @@ export default function TeamPage() {
     return (
       <div className="p-6 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <span className="iconify lucide--alert-circle size-16 text-error mb-4" />
+          <AlertCircleIcon className="h-16 w-16 text-error mb-4" />
           <h3 className="text-lg font-medium mb-2">Failed to load team members</h3>
           <p className="text-base-content/60 text-sm">Please try refreshing the page</p>
         </div>
@@ -107,7 +115,7 @@ export default function TeamPage() {
           </p>
         </div>
         <Button className="btn btn-primary gap-2" onClick={() => setIsModalOpen(true)}>
-          <span className="iconify lucide--user-plus size-5" />
+          <UserPlusIcon className="h-5 w-5" />
           Add Member
         </Button>
       </div>
@@ -144,7 +152,7 @@ export default function TeamPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1">
           <label className="input input-bordered flex items-center gap-2">
-            <span className="iconify lucide--search size-4 text-base-content/60" />
+            <SearchIcon className="h-4 w-4 text-base-content/60" />
             <input
               type="text"
               className="grow"
@@ -184,13 +192,13 @@ export default function TeamPage() {
             className={`btn join-item ${viewMode === "grid" ? "btn-active" : ""}`}
             onClick={() => setViewMode("grid")}
           >
-            <span className="iconify lucide--layout-grid size-4" />
+            <LayoutGridIcon className="h-4 w-4" />
           </Button>
           <Button
             className={`btn join-item ${viewMode === "table" ? "btn-active" : ""}`}
             onClick={() => setViewMode("table")}
           >
-            <span className="iconify lucide--table size-4" />
+            <TableIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -198,7 +206,7 @@ export default function TeamPage() {
       {/* Team Members Grid/Table */}
       {filteredMembers.length === 0 ? (
         <div className="text-center py-12">
-          <span className="iconify lucide--users-round size-16 text-base-content/20 mb-4" />
+          <UsersRoundIcon className="h-16 w-16 text-base-content/20 mb-4" />
           <h3 className="text-lg font-medium mb-2">No team members found</h3>
           <p className="text-base-content/60 text-sm">Try adjusting your search or filters</p>
         </div>

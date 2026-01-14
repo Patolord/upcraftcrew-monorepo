@@ -2,7 +2,17 @@
 
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import { Eye, FileDown, Pencil, Trash2 } from "lucide-react";
+import {
+  EyeIcon,
+  FileDownIcon,
+  PencilIcon,
+  Trash2Icon,
+  FileEditIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  SendIcon,
+} from "lucide-react";
 
 interface Budget {
   _id: Id<"budgets">;
@@ -50,11 +60,11 @@ interface BudgetCardProps {
 }
 
 const statusConfig = {
-  draft: { label: "Rascunho", color: "badge-ghost", icon: "lucide--file-edit" },
-  sent: { label: "Enviado", color: "badge-info", icon: "lucide--send" },
-  approved: { label: "Aprovado", color: "badge-success", icon: "lucide--check-circle" },
-  rejected: { label: "Rejeitado", color: "badge-error", icon: "lucide--x-circle" },
-  expired: { label: "Expirado", color: "badge-warning", icon: "lucide--clock" },
+  draft: { label: "Rascunho", color: "badge-ghost", icon: "FileEditIcon" },
+  sent: { label: "Enviado", color: "badge-info", icon: "SendIcon" },
+  approved: { label: "Aprovado", color: "badge-success", icon: "CheckCircleIcon" },
+  rejected: { label: "Rejeitado", color: "badge-error", icon: "XCircleIcon" },
+  expired: { label: "Expirado", color: "badge-warning", icon: "ClockIcon" },
 };
 
 function formatCurrency(value: number, currency: string = "BRL"): string {
@@ -110,17 +120,17 @@ export function BudgetCard({ budget, onView, onEdit, onDelete }: BudgetCardProps
             className="text-error"
             onClick={() => onDelete(budget._id, budget.title)}
           >
-            <Trash2 className="h-4 w-4 mr-1 text-orange-500" />
+            <Trash2Icon className="h-4 w-4 mr-1 text-orange-500" />
           </Button>
 
           <Button variant="ghost" size="sm" onClick={() => onView(budget)}>
-            <Eye className="h-4 w-4 mr-1 text-orange-500" />
+            <EyeIcon className="h-4 w-4 mr-1 text-orange-500" />
           </Button>
           <Button variant="ghost" size="sm" onClick={handleDownloadPDF}>
-            <FileDown className="h-4 w-4 mr-1 text-orange-500" />
+            <FileDownIcon className="h-4 w-4 mr-1 text-orange-500" />
           </Button>
           <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
-            <Pencil className="h-4 w-4 mr-1 text-orange-500" />
+            <PencilIcon className="h-4 w-4 mr-1 text-orange-500" />
           </Button>
         </div>
       </div>

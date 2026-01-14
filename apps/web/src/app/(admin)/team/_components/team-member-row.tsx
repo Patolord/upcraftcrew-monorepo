@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { roleConfig, statusConfig } from "./team-config";
+import { MessageCircleIcon, UserIcon, MoreHorizontalIcon } from "lucide-react";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];
@@ -69,13 +70,13 @@ export function TeamMemberRow({ member }: TeamMemberRowProps) {
       <td>
         <div className="flex items-center gap-1">
           <Button className="btn btn-ghost btn-xs">
-            <span className="iconify lucide--message-circle size-4" />
+            <MessageCircleIcon className="h-4 w-4" />
           </Button>
           <Button className="btn btn-ghost btn-xs">
-            <span className="iconify lucide--user size-4" />
+            <UserIcon className="h-4 w-4" />
           </Button>
           <Button className="btn btn-ghost btn-xs">
-            <span className="iconify lucide--more-horizontal size-4" />
+            <MoreHorizontalIcon className="h-4 w-4" />
           </Button>
         </div>
       </td>

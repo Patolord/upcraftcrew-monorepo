@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FlagIcon, FolderIcon, LockIcon, UserIcon } from "lucide-react";
 
 interface Task {
   _id: string;
@@ -23,22 +24,22 @@ const priorityConfig = {
   low: {
     label: "Low",
     color: "text-base-content/60",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   medium: {
     label: "Medium",
     color: "text-info",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   high: {
     label: "High",
     color: "text-warning",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   urgent: {
     label: "Urgent",
     color: "text-error",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
 };
 
@@ -62,7 +63,7 @@ export function TaskCard({ task }: TaskCardProps) {
                 title="Private Task"
                 aria-label="Private Task"
               >
-                <span className="iconify lucide--lock size-3.5" aria-hidden="true" />
+                <LockIcon className="h-3.5 w-3.5" aria-hidden="true" />
               </span>
             )}
             <h4 className="font-semibold text-sm line-clamp-2 flex-1">{task.title}</h4>
@@ -79,7 +80,7 @@ export function TaskCard({ task }: TaskCardProps) {
         {task.project && (
           <div className="mt-2">
             <span className="badge badge-sm badge-ghost">
-              <span className="iconify lucide--folder size-3 mr-1" aria-hidden="true" />
+              <FolderIcon className="h-3 w-3 mr-1" aria-hidden="true" />
               {task.project.name}
             </span>
           </div>
@@ -102,7 +103,7 @@ export function TaskCard({ task }: TaskCardProps) {
           ) : (
             <div className="avatar placeholder" title="Unassigned">
               <div className="w-6 rounded-full bg-base-300">
-                <span className="iconify lucide--user size-3" aria-hidden="true" />
+                <UserIcon className="h-3 w-3" aria-hidden="true" />
               </div>
             </div>
           )}
@@ -116,9 +117,7 @@ export function TaskCard({ task }: TaskCardProps) {
               aria-label={`Due date: ${new Date(task.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
             >
               <span
-                className={`iconify ${
-                  isOverdue ? "lucide--alert-circle" : "lucide--calendar"
-                } size-3`}
+                className={`${isOverdue ? "AlertCircleIcon" : "CalendarIcon"} size-3`}
                 aria-hidden="true"
               />
               <span>

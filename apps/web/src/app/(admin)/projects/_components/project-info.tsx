@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import type { Project, ProjectPriority, ProjectStatus, TeamMember } from "@/types/project";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { DownloadIcon, FileIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { SaveIcon } from "lucide-react";
+import { UploadIcon } from "lucide-react";
 
 interface ProjectInfoProps {
   project: Project;
@@ -202,7 +205,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
             </>
           ) : (
             <>
-              <span className="iconify text-white lucide--trash-2 size-4" />
+              <Trash2Icon className="h-4 w-4 text-white" />
               Excluir
             </>
           )}
@@ -211,7 +214,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
         <div className="flex gap-2">
           {!isEditing ? (
             <Button className="btn btn-primary" onClick={() => setIsEditing(true)}>
-              <span className="iconify lucide--pencil size-4" />
+              <PencilIcon className="h-4 w-4" />
               Editar
             </Button>
           ) : (
@@ -235,7 +238,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                   </>
                 ) : (
                   <>
-                    <span className="iconify lucide--save size-4" />
+                    <SaveIcon className="h-4 w-4" />
                     Salvar
                   </>
                 )}
@@ -462,7 +465,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                   }
                 />
               ) : project.budget ? (
-                <p className="text-base-content">${project.budget.total.toLocaleString()}</p>
+                <p className="text-base-content">${project.budget.toLocaleString()}</p>
               ) : (
                 <p className="text-base-content/60">Não definido</p>
               )}
@@ -582,7 +585,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                     </>
                   ) : (
                     <>
-                      <span className="iconify lucide--upload size-4" />
+                      <UploadIcon className="h-4 w-4" />
                       Upload
                     </>
                   )}
@@ -601,7 +604,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                   className="flex items-center justify-between p-3 border border-base-300 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="iconify lucide--file size-5 text-base-content/60" />
+                    <FileIcon className="h-5 w-5 text-base-content/60" />
                     <div>
                       <p className="font-medium text-sm">{file.name}</p>
                       <p className="text-xs text-base-content/60">
@@ -612,7 +615,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                   </div>
                   <div className="flex gap-2">
                     <a href={file.url} download={file.name} className="btn btn-ghost btn-sm">
-                      <span className="iconify lucide--download size-4" />
+                      <DownloadIcon className="h-4 w-4" />
                     </a>
                     {isEditing && (
                       <button
@@ -620,7 +623,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                         onClick={() => handleRemoveFile(file.id || file.name)}
                         className="btn btn-ghost btn-sm text-error"
                       >
-                        <span className="iconify lucide--trash-2 size-4" />
+                        <Trash2Icon className="h-4 w-4" />
                       </button>
                     )}
                   </div>

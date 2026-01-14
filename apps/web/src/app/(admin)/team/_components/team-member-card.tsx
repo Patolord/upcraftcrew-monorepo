@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { roleConfig, statusConfig } from "./team-config";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { MailIcon, UserIcon, CalendarIcon, MessageCircleIcon } from "lucide-react";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];
@@ -51,11 +52,11 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
         {/* Contact Info */}
         <div className="mt-4 space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <span className="iconify lucide--mail size-4 text-base-content/60" />
+            <MailIcon className="h-4 w-4 text-base-content/60" />
             <span className="text-base-content/70">{member.email}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="iconify lucide--calendar size-4 text-base-content/60" />
+            <CalendarIcon className="h-4 w-4 text-base-content/60" />
             <span className="text-base-content/70">
               Joined {new Date(member.joinedAt).toLocaleDateString()}
             </span>
@@ -94,11 +95,11 @@ export function TeamMemberCard({ member }: TeamMemberCardProps) {
         {/* Actions */}
         <div className="card-actions justify-end mt-4">
           <Button className="btn btn-ghost btn-sm">
-            <span className="iconify lucide--message-circle size-4" />
+            <MessageCircleIcon className="h-4 w-4" />
             Message
           </Button>
           <Button className="btn btn-ghost btn-sm">
-            <span className="iconify lucide--user size-4" />
+            <UserIcon className="h-4 w-4" />
             View Profile
           </Button>
         </div>

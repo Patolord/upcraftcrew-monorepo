@@ -87,8 +87,10 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
     items: initialData?.items || [{ description: "", quantity: 1, unitPrice: 0, total: 0 }],
     validUntil: initialData?.validUntil || Date.now() + 15 * 24 * 60 * 60 * 1000, // 15 days from now
     notes: initialData?.notes || "",
-    objectives: initialData?.objectives || [],
-    scopeOptions: initialData?.scopeOptions || [],
+    objectives: initialData?.objectives || [{ title: "", description: "" }],
+    scopeOptions: initialData?.scopeOptions || [
+      { name: "", features: [""], value: undefined, isSelected: false },
+    ],
     extras: initialData?.extras || [],
     paymentTerms: initialData?.paymentTerms || [
       "50% na assinatura da proposta",
@@ -180,8 +182,8 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
               type="button"
               className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
                 activeSection === section.id
-                  ? "bg-primary text-primary-content"
-                  : "bg-base-200 text-base-content/70 hover:bg-base-300"
+                  ? "bg-orange-500 text-white"
+                  : "bg-base-200 text-base-content/70 hover:bg-orange-500 hover:text-white"
               }`}
               onClick={() => setActiveSection(section.id)}
             >
@@ -198,32 +200,40 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="title">Título da Proposta</Label>
+                <Label htmlFor="title" className="pb-3">
+                  Título da Proposta
+                </Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => updateField("title", e.target.value)}
                   placeholder="Ex: Desenvolvimento de Website"
                   required
+                  className="border border-orange-500 rounded-md"
                 />
               </div>
               <div>
-                <Label htmlFor="client">Cliente</Label>
+                <Label htmlFor="client" className="pb-3">
+                  Cliente
+                </Label>
                 <Input
                   id="client"
                   value={formData.client}
                   onChange={(e) => updateField("client", e.target.value)}
                   placeholder="Nome do cliente"
                   required
+                  className="border border-orange-500 rounded-md"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description" className="pb-3">
+                Descrição
+              </Label>
               <textarea
                 id="description"
-                className="w-full min-h-[100px] px-3 py-2 text-sm border border-input rounded-md bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-full min-h-[100px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
                 value={formData.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 placeholder="Descreva brevemente o projeto..."
@@ -233,10 +243,12 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status" className="pb-3">
+                  Status
+                </Label>
                 <select
                   id="status"
-                  className="w-full h-8 px-2 text-sm border border-input rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-ring"
+                  className="w-full h-8 px-2 text-sm border border-input rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
                   value={formData.status}
                   onChange={(e) =>
                     updateField("status", e.target.value as BudgetFormData["status"])
@@ -250,10 +262,12 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                 </select>
               </div>
               <div>
-                <Label htmlFor="currency">Moeda</Label>
+                <Label htmlFor="currency" className="pb-3">
+                  Moeda
+                </Label>
                 <select
                   id="currency"
-                  className="w-full h-8 px-2 text-sm border border-input rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-ring"
+                  className="w-full h-8 px-2 text-xs bg-transparent focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
                   value={formData.currency}
                   onChange={(e) => updateField("currency", e.target.value)}
                 >
@@ -263,21 +277,26 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                 </select>
               </div>
               <div>
-                <Label htmlFor="validUntil">Válido até</Label>
+                <Label htmlFor="validUntil" className="pb-3">
+                  Válido até
+                </Label>
                 <Input
                   id="validUntil"
                   type="date"
                   value={new Date(formData.validUntil).toISOString().split("T")[0]}
                   onChange={(e) => updateField("validUntil", new Date(e.target.value).getTime())}
+                  className="border border-orange-500 rounded-md"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="notes">Observações</Label>
+              <Label htmlFor="notes" className="pb-3">
+                Observações
+              </Label>
               <textarea
                 id="notes"
-                className="w-full min-h-[80px] px-3 py-2 text-sm border border-input rounded-md bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-full min-h-[80px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
                 value={formData.notes || ""}
                 onChange={(e) => updateField("notes", e.target.value)}
                 placeholder="Observações adicionais..."

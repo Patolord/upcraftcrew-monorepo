@@ -7,10 +7,11 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { ProjectDashboard } from "../_components/detail/project-dashboard";
-import { ProjectInfo } from "../_components/detail/project-info";
-import { ProjectKanban } from "../_components/detail/project-kanban";
+import { ProjectDashboard } from "../_components/project-dashboard";
+import { ProjectInfo } from "../_components/project-info";
+import { ProjectKanban } from "../_components/project-kanban";
 import type { Project } from "@/types/project";
+import { AlertCircleIcon, ArrowLeftIcon, InfoIcon, BarChart3Icon, KanbanIcon } from "lucide-react";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -38,15 +39,15 @@ export default function ProjectDetailPage() {
 
   if (notFound) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[400px]">
+      <div className="p-6 flex items-cen  ter justify-center min-h-[400px]">
         <div className="text-center">
-          <span className="iconify lucide--alert-circle size-16 text-error mb-4" />
+          <AlertCircleIcon className="h-16 w-16 text-error mb-4" />
           <h3 className="text-lg font-medium mb-2">Projeto não encontrado</h3>
           <p className="text-base-content/60 text-sm mb-4">
             O projeto que você está procurando não existe ou foi removido.
           </p>
           <Button className="btn btn-primary" onClick={() => router.push("/projects")}>
-            <span className="iconify lucide--arrow-left size-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Voltar para Projetos
           </Button>
         </div>
@@ -60,7 +61,7 @@ export default function ProjectDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button className="btn btn-ghost btn-sm" onClick={() => router.push("/projects")}>
-            <span className="iconify lucide--arrow-left size-4" />
+            <ArrowLeftIcon className="h-4 w-4" />
           </Button>
           <div>
             <h1 className="text-2xl font-bold">{project.name}</h1>
@@ -76,7 +77,7 @@ export default function ProjectDetailPage() {
           className={`tab ${activeTab === "info" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("info")}
         >
-          <span className="iconify lucide--info size-4 mr-2" />
+          <InfoIcon className="h-4 w-4 mr-2" />
           Informações
         </button>
         <button
@@ -84,7 +85,7 @@ export default function ProjectDetailPage() {
           className={`tab ${activeTab === "kanban" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("kanban")}
         >
-          <span className="iconify lucide--layout-kanban size-4 mr-2" />
+          <KanbanIcon className="h-4 w-4 mr-2" />
           Kanban
         </button>
         <button
@@ -92,7 +93,7 @@ export default function ProjectDetailPage() {
           className={`tab ${activeTab === "dashboard" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
         >
-          <span className="iconify lucide--bar-chart-3 size-4 mr-2" />
+          <BarChart3Icon className="h-4 w-4 mr-2" />
           Dashboard
         </button>
       </div>

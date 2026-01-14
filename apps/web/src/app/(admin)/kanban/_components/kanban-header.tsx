@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { PlusIcon, SearchIcon } from "lucide-react";
 
 interface KanbanHeaderProps {
   searchQuery: string;
@@ -15,7 +16,7 @@ export function KanbanHeader({ searchQuery, setSearchQuery }: KanbanHeaderProps)
       <div className="flex items-center gap-3">
         <div className="form-control">
           <div className="input-group">
-            <span className="iconify lucide--search size-5 text-base-content/60" />
+            <SearchIcon className="h-5 w-5 text-base-content/60" />
             <input
               type="text"
               placeholder="Search projects..."
@@ -26,7 +27,7 @@ export function KanbanHeader({ searchQuery, setSearchQuery }: KanbanHeaderProps)
           </div>
         </div>
         <Button className="btn btn-primary">
-          <span className="iconify lucide--plus size-5" />
+          <PlusIcon className="h-5 w-5" />
           New Project
         </Button>
       </div>

@@ -9,6 +9,7 @@ import { ProjectsHeader } from "./_components/projects-header";
 import { ProjectsList } from "./_components/projects-list";
 import { ProjectsStats } from "./_components/projects-stats";
 import type { Project } from "@/types/project";
+import { AlertCircleIcon } from "lucide-react";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,7 +57,7 @@ export default function ProjectsPage() {
       <div className="p-6 space-y-6">
         <ProjectsHeader onNewProject={() => {}} />
         <div className="alert alert-error">
-          <span className="iconify lucide--alert-circle size-5" />
+          <AlertCircleIcon className="h-5 w-5" />
           <span>Failed to load projects. Please try again later.</span>
         </div>
       </div>
@@ -64,9 +65,8 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 pl-18 pr-12 space-y-6">
       <ProjectsHeader onNewProject={() => {}} />
-      <ProjectsStats projects={projects as unknown as Project[]} />
       <ProjectsFilters
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -75,6 +75,7 @@ export default function ProjectsPage() {
         viewMode={viewMode}
         setViewMode={setViewMode}
       />
+      <ProjectsStats projects={projects as unknown as Project[]} />
       <ProjectsList projects={filteredProjects as unknown as Project[]} viewMode={viewMode} />
     </div>
   );

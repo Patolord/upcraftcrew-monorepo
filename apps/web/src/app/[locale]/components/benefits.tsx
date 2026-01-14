@@ -27,26 +27,26 @@ export const Benefits = () => {
   const { messages } = useLandingI18n();
   const { benefits } = messages;
   const iconClasses = [
-    { iconClass: "bg-green-500/10 text-green-600", icon: "lucide--code" },
+    { iconClass: "bg-green-500/10 text-green-600", icon: "CodeIcon" },
     {
       iconClass: "bg-yellow-600/10 text-yellow-600",
-      icon: "lucide--pound-sterling",
+      icon: "PoundSterlingIcon",
     },
     {
       iconClass: "bg-red-500/10 text-red-500",
-      icon: "lucide--message-circle",
+      icon: "MessageCircleIcon",
     },
     {
       iconClass: "bg-purple-500/10 text-purple-500",
-      icon: "lucide--award",
+      icon: "AwardIcon",
     },
     {
       iconClass: "bg-orange-500/10 text-orange-500",
-      icon: "lucide--user-check",
+      icon: "UserCheckIcon",
     },
     {
       iconClass: "bg-teal-500/10 text-teal-600",
-      icon: "lucide--clock",
+      icon: "ClockIcon",
     },
   ] as const;
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import type { Project } from "@/types/project";
+import { EyeIcon, FlagIcon } from "lucide-react";
 
 const statusConfig = {
   planning: {
@@ -42,7 +43,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const priority = priorityConfig[project.priority];
 
   return (
-    <div className="card bg-base-100 border border-base-300 hover:shadow-lg transition-shadow">
+    <div className="card p-6 bg-base-100 border border-orange-500 rounded-md hover:shadow-lg transition-shadow">
       <div className="card-body">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
@@ -126,7 +127,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 )}
               </div>
               <span className={`text-xs font-medium ${priority.color}`}>
-                <span className="iconify lucide--flag size-3 inline mr-1" />
+                <FlagIcon className="h-3 w-3 inline mr-1" />
                 {priority.label}
               </span>
             </div>
@@ -137,7 +138,7 @@ export function ProjectCard({ project }: { project: Project }) {
         <div className="card-actions justify-end mt-4 pt-4 border-t border-base-300">
           <Link href={`/projects/${project.id}`}>
             <Button className="btn btn-primary btn-sm">
-              <span className="iconify lucide--eye size-4" />
+              <EyeIcon className="h-4 w-4" />
               View
             </Button>
           </Link>

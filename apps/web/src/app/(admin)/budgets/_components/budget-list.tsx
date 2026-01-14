@@ -4,7 +4,22 @@ import { useState, useMemo } from "react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, LayoutGrid, List, Eye, FileDown, Pencil, Trash2, AlertCircle } from "lucide-react";
+import {
+  SearchIcon,
+  LayoutGridIcon,
+  ListIcon,
+  EyeIcon,
+  FileDownIcon,
+  PencilIcon,
+  Trash2Icon,
+  AlertCircleIcon,
+  FileEditIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  SendIcon,
+  FileTextIcon,
+} from "lucide-react";
 import { BudgetCard } from "./budget-card";
 
 interface Budget {
@@ -53,11 +68,11 @@ interface BudgetListProps {
 }
 
 const statusConfig = {
-  draft: { label: "Rascunho", color: "badge-ghost", icon: "lucide--file-edit" },
-  sent: { label: "Enviado", color: "badge-info", icon: "lucide--send" },
-  approved: { label: "Aprovado", color: "badge-success", icon: "lucide--check-circle" },
-  rejected: { label: "Rejeitado", color: "badge-error", icon: "lucide--x-circle" },
-  expired: { label: "Expirado", color: "badge-warning", icon: "lucide--clock" },
+  draft: { label: "Rascunho", color: "badge-ghost", icon: "FileEditIcon" },
+  sent: { label: "Enviado", color: "badge-info", icon: "SendIcon" },
+  approved: { label: "Aprovado", color: "badge-success", icon: "CheckCircleIcon" },
+  rejected: { label: "Rejeitado", color: "badge-error", icon: "XCircleIcon" },
+  expired: { label: "Expirado", color: "badge-warning", icon: "ClockIcon" },
 };
 
 type StatusFilter = "all" | Budget["status"];
@@ -95,9 +110,9 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
   return (
     <div className="space-y-4">
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row  gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 text-orange-500 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/60" />
+          <SearchIcon className="absolute left-3 text-orange-500 top-1/2 -translate-y-1/2 h-4 w-4 text-base-content/60" />
           <Input
             className="pl-9 text-orange-500 border border-orange-500 rounded-md"
             placeholder="Buscar orçamentos..."
@@ -117,22 +132,22 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
           <option value="rejected">Rejeitado</option>
           <option value="expired">Expirado</option>
         </select>
-        <div className="join">
+        <div className="flex gap-1">
           <Button
             variant={viewMode === "table" ? "default" : "outline"}
             size="icon"
-            className="join-item"
+            className="join-item border border-orange-500 bg-white hover:shadow-lg rounded-md"
             onClick={() => setViewMode("table")}
           >
-            <List className="h-4 w-4" />
+            <ListIcon className="text-orange-500 h-4 w-4" />
           </Button>
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
             size="icon"
-            className="join-item"
+            className="join-item border border-orange-500 bg-white hover:shadow-lg rounded-md"
             onClick={() => setViewMode("grid")}
           >
-            <LayoutGrid className="h-4 w-4" />
+            <LayoutGridIcon className="text-orange-500  h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -140,7 +155,7 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
       {/* Empty State */}
       {filteredBudgets.length === 0 ? (
         <div className="text-center py-12 border border-base-300 rounded-lg">
-          <span className="iconify lucide--file-text size-16 text-base-content/20 mx-auto block mb-4" />
+          <FileTextIcon className="h-16 w-16 text-base-content/20 mx-auto block mb-4" />
           <h3 className="text-lg font-medium mb-2">Nenhum orçamento encontrado</h3>
           <p className="text-base-content/60 text-sm">
             {searchQuery || statusFilter !== "all"
@@ -150,98 +165,91 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
         </div>
       ) : viewMode === "table" ? (
         /* Table View */
-        <div className="overflow-x-auto bg-base-100 rounded-lg border border-base-300">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Orçamento</th>
-                <th>Cliente</th>
-                <th>Valor</th>
-                <th>Status</th>
-                <th>Válido Até</th>
-                <th>Criado Em</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredBudgets.map((budget) => {
-                const isExpiringSoon =
-                  budget.status === "sent" &&
-                  budget.validUntil - Date.now() <= 7 * 24 * 60 * 60 * 1000;
-                const statusInfo = statusConfig[budget.status];
-
-                return (
-                  <tr key={budget._id} className="hover">
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`iconify ${statusInfo.icon} size-5 text-base-content/60`}
-                        />
-                        <div>
-                          <p className="font-medium">{budget.title}</p>
-                          <p className="text-xs text-base-content/60 line-clamp-1">
-                            {budget.description}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{budget.client}</td>
-                    <td className="font-semibold">
-                      {formatCurrency(budget.totalAmount, budget.currency)}
-                    </td>
-                    <td>
-                      <span className={`badge ${statusInfo.color}`}>{statusInfo.label}</span>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        {isExpiringSoon && <AlertCircle className="h-4 w-4 text-warning" />}
-                        <span className={isExpiringSoon ? "text-warning font-medium" : ""}>
-                          {new Date(budget.validUntil).toLocaleDateString("pt-BR")}
-                        </span>
-                      </div>
-                    </td>
-                    <td>{new Date(budget.createdAt).toLocaleDateString("pt-BR")}</td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => onView(budget)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleDownloadPDF(budget._id)}
-                        >
-                          <FileDown className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => onEdit(budget)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-error"
-                          onClick={() => onDelete(budget._id, budget.title)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="overflow-x-auto bg-base-100 rounded-lg border border-orange-500 p-2 pl-8">
+          <div className=" flex-col gap-2 grid grid-cols-7">
+            <div>
+              Orçamento
+              <p className="font-medium">{filteredBudgets.map((budget) => budget.title)}</p>
+              <p className="text-xs text-base-content/60 line-clamp-1">
+                {filteredBudgets.map((budget) => budget.description)}
+              </p>
+            </div>
+            <div>
+              Cliente
+              <div>{filteredBudgets.map((budget) => budget.client)}</div>
+            </div>
+            <div>
+              Valor
+              <div className="font-semibold">
+                {filteredBudgets.map((budget) =>
+                  formatCurrency(budget.totalAmount, budget.currency),
+                )}
+              </div>
+            </div>
+            <div>
+              Status
+              <div>{filteredBudgets.map((budget) => statusConfig[budget.status].label)}</div>
+            </div>
+            <div>
+              Validade
+              <div>
+                {filteredBudgets.map((budget) =>
+                  new Date(budget.validUntil).toLocaleDateString("pt-BR"),
+                )}
+              </div>
+            </div>
+            <div>
+              Criado Em
+              <div>
+                {filteredBudgets.map((budget) =>
+                  new Date(budget.createdAt).toLocaleDateString("pt-BR"),
+                )}
+              </div>
+            </div>
+            <div>
+              Ações
+              <div>
+                {filteredBudgets.map((budget) => (
+                  <div key={budget._id}>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-4"
+                        onClick={() => onView(budget)}
+                      >
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-4"
+                        onClick={() => handleDownloadPDF(budget._id)}
+                      >
+                        <FileDownIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-4"
+                        onClick={() => onEdit(budget)}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-4 text-error"
+                        onClick={() => onDelete(budget._id, budget.title)}
+                      >
+                        <Trash2Icon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         /* Grid View */

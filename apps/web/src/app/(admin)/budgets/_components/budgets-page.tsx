@@ -5,7 +5,7 @@ import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutDashboard, FileTextIcon } from "lucide-react";
+import { PlusIcon, LayoutDashboardIcon, FileTextIcon } from "lucide-react";
 import { BudgetDashboard } from "./budget-dashboard";
 import { BudgetList } from "./budget-list";
 import { BudgetSlideOver } from "./budget-slide-over";
@@ -133,29 +133,29 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
             onClick={handleCreateNew}
             className="gap-2 text-white bg-orange-500 border rounded-md"
           >
-            <Plus className="h-4 w-4" />
+            <PlusIcon className="h-4 w-4" />
             Novo Orçamento
           </Button>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="tabs tabs-boxed border border-orange-500 rounded-full w-fit justify-center">
+      <div className="tabs tabs-boxed rounded-full w-fit justify-center">
         <Button
           type="button"
-          className={`tab bg-white rounded-full text-orange-500 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "dashboard" ? "tab-active" : ""}`}
+          className={`tab bg-white rounded-full text-base-content/60 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "dashboard" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
         >
-          <LayoutDashboard className="h-4 w-4" />
+          <LayoutDashboardIcon className=" h-4 w-4" />
           Dashboard
         </Button>
         <Button
           type="button"
-          className={`tab bg-white rounded-full text-orange-500 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "all" ? "tab-active" : ""}`}
+          className={`tab bg-white rounded-full text-base-content/60 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "all" ? "tab-active" : ""}`}
           onClick={() => setActiveTab("all")}
         >
           <FileTextIcon className="h-4 w-4" />
-          Todos os Orçamentos
+          Orçamentos
         </Button>
       </div>
 

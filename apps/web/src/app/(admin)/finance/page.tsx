@@ -10,6 +10,7 @@ import { QuickStats } from "./_components/quick-stats";
 import { TransactionFilters } from "./_components/transaction-filters";
 import { TransactionRow } from "./_components/transaction-row";
 import { TransactionType, TransactionCategory, Transaction } from "@/types/finance";
+import { AlertCircleIcon, DownloadIcon, PlusIcon } from "lucide-react";
 
 export default function FinancePage() {
   const [typeFilter, setTypeFilter] = useState<TransactionType | "all">("all");
@@ -106,7 +107,7 @@ export default function FinancePage() {
           </div>
         </div>
         <div className="alert alert-error">
-          <span className="iconify lucide--alert-circle size-5" />
+          <AlertCircleIcon className="h-5 w-5" />
           <span>Failed to load financial data. Please try again.</span>
         </div>
       </div>
@@ -125,7 +126,7 @@ export default function FinancePage() {
         </div>
         <div className="flex gap-2">
           <Button className="btn btn-ghost gap-2">
-            <span className="iconify lucide--download size-5" />
+            <DownloadIcon className="h-5 w-5" />
             Export
           </Button>
           <Button
@@ -135,7 +136,7 @@ export default function FinancePage() {
               setIsFormOpen(true);
             }}
           >
-            <span className="iconify lucide--plus size-5" />
+            <PlusIcon className="h-5 w-5" />
             New Transaction
           </Button>
         </div>

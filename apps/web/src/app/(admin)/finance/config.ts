@@ -1,15 +1,15 @@
 import type { TransactionCategory } from "@/types/finance";
 
 export const categoryConfig: Record<TransactionCategory, { label: string; icon: string }> = {
-  "project-payment": { label: "Project Payment", icon: "lucide--briefcase" },
-  salary: { label: "Salary", icon: "lucide--user" },
-  subscription: { label: "Subscription", icon: "lucide--repeat" },
-  equipment: { label: "Equipment", icon: "lucide--monitor" },
-  marketing: { label: "Marketing", icon: "lucide--megaphone" },
-  office: { label: "Office", icon: "lucide--building" },
-  software: { label: "Software", icon: "lucide--code" },
-  consultant: { label: "Consultant", icon: "lucide--user-check" },
-  other: { label: "Other", icon: "lucide--more-horizontal" },
+  "project-payment": { label: "Project Payment", icon: "BriefcaseIcon" },
+  salary: { label: "Salary", icon: "UserIcon" },
+  subscription: { label: "Subscription", icon: "RepeatIcon" },
+  equipment: { label: "Equipment", icon: "MonitorIcon" },
+  marketing: { label: "Marketing", icon: "MegaphoneIcon" },
+  office: { label: "Office", icon: "BuildingIcon" },
+  software: { label: "Software", icon: "CodeIcon" },
+  consultant: { label: "Consultant", icon: "UserCheckIcon" },
+  other: { label: "Other", icon: "MoreHorizontalIcon" },
 };
 
 export const statusConfig = {

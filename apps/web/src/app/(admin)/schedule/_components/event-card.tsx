@@ -1,6 +1,7 @@
 import type { ScheduleEvent } from "@/types/schedule";
 import { eventTypeConfig } from "./event-type-config";
 import Image from "next/image";
+import { ClockIcon, MapPinIcon } from "lucide-react";
 export function EventCard({ event }: { event: ScheduleEvent }) {
   const eventType = eventTypeConfig[event.type];
 
@@ -26,7 +27,7 @@ export function EventCard({ event }: { event: ScheduleEvent }) {
         <div className="flex items-center gap-3 mt-2 text-xs text-base-content/60">
           {event.startTime && (
             <div className="flex items-center gap-1">
-              <span className="iconify lucide--clock size-3" />
+              <ClockIcon className="h-3 w-3" />
               <span>
                 {event.startTime}
                 {event.endTime && ` - ${event.endTime}`}
@@ -35,7 +36,7 @@ export function EventCard({ event }: { event: ScheduleEvent }) {
           )}
           {event.location && (
             <div className="flex items-center gap-1">
-              <span className="iconify lucide--map-pin size-3" />
+              <MapPinIcon className="h-3 w-3" />
               <span className="truncate">{event.location}</span>
             </div>
           )}

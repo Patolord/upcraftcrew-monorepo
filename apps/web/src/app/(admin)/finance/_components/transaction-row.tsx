@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import type { Transaction } from "@/types/finance";
 import { categoryConfig, statusConfig } from "@/app/(admin)/finance/config";
+import { CircleIcon, PencilIcon, MoreHorizontalIcon, EyeIcon } from "lucide-react";
 
 export function TransactionRow({
   transaction,
@@ -13,7 +14,7 @@ export function TransactionRow({
 }) {
   const category = categoryConfig[transaction.category] || {
     label: transaction.category,
-    icon: "lucide--circle",
+    icon: "CircleIcon",
   };
   const status = statusConfig[transaction.status] || {
     label: transaction.status,
@@ -80,14 +81,14 @@ export function TransactionRow({
         <div className="flex items-center gap-1">
           {onEdit && (
             <Button className="btn btn-ghost btn-xs" onClick={() => onEdit(transaction)}>
-              <span className="iconify lucide--pencil size-4" />
+              <PencilIcon className="h-4 w-4" />
             </Button>
           )}
           <Button className="btn btn-ghost btn-xs">
-            <span className="iconify lucide--eye size-4" />
+            <EyeIcon className="h-4 w-4" />
           </Button>
           <Button className="btn btn-ghost btn-xs">
-            <span className="iconify lucide--more-horizontal size-4" />
+            <MoreHorizontalIcon className="h-4 w-4" />
           </Button>
         </div>
       </td>

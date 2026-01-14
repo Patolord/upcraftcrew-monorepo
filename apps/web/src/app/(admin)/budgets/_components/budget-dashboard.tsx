@@ -1,5 +1,7 @@
 "use client";
 
+import { CalendarCheckIcon, FileTextIcon } from "lucide-react";
+
 interface BudgetStats {
   total: number;
   draft: number;
@@ -112,7 +114,7 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
             <div className="space-y-3">
               {recentBudgets.length === 0 ? (
                 <div className="text-center py-8">
-                  <span className="iconify lucide--file-text size-12 text-base-content/20" />
+                  <FileTextIcon className="h-12 w-12 text-base-content/20" />
                   <p className="text-sm text-base-content/60 mt-2">Nenhum orçamento criado</p>
                 </div>
               ) : (
@@ -152,7 +154,7 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
             <div className="space-y-3">
               {expiringSoon.length === 0 ? (
                 <div className="text-center py-8">
-                  <span className="iconify lucide--calendar-check size-12 text-base-content/20" />
+                  <CalendarCheckIcon className="h-12 w-12 text-base-content/20" />
                   <p className="text-sm text-base-content/60 mt-8">Nenhum orçamento vencendo</p>
                 </div>
               ) : (

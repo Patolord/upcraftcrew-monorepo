@@ -1,26 +1,27 @@
 import Image from "next/image";
 import type { Project } from "@/types/project";
+import { CalendarIcon, FlagIcon } from "lucide-react";
 
 const priorityConfig = {
   low: {
     label: "Low",
     color: "text-base-content/60",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   medium: {
     label: "Medium",
     color: "text-info",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   high: {
     label: "High",
     color: "text-warning",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
   urgent: {
     label: "Urgent",
     color: "text-error",
-    icon: "lucide--flag",
+    icon: "FlagIcon",
   },
 };
 
@@ -38,7 +39,7 @@ export function KanbanCard({ project }: KanbanCardProps) {
         <div className="flex items-start justify-between gap-2">
           <h4 className="font-semibold text-sm line-clamp-2">{project.name}</h4>
           <span className={`${priority.color}`}>
-            <span className={`iconify ${priority.icon} size-4`} />
+            <FlagIcon className="h-4 w-4" />
           </span>
         </div>
 
@@ -94,7 +95,7 @@ export function KanbanCard({ project }: KanbanCardProps) {
           {/* Deadline */}
           {project.endDate && (
             <div className="flex items-center gap-1 text-xs text-base-content/60">
-              <span className="iconify lucide--calendar size-3" />
+              <CalendarIcon className="h-3 w-3" />
               <span>
                 {new Date(project.endDate).toLocaleDateString("en-US", {
                   month: "short",

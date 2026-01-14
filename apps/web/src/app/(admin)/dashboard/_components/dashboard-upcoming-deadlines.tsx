@@ -1,4 +1,5 @@
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { CalendarCheckIcon, CalendarIcon } from "lucide-react";
 
 interface Project {
   _id: Id<"projects">;
@@ -21,7 +22,7 @@ export function DashboardUpcomingDeadlines({ projects }: DashboardUpcomingDeadli
             className="btn btn-ghost btn-sm flex items-center"
             aria-label="View full schedule"
           >
-            <span className="iconify lucide--calendar size-4" aria-hidden="true" />
+            <CalendarIcon className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>
         <div className="space-y-3">
@@ -54,7 +55,7 @@ export function DashboardUpcomingDeadlines({ projects }: DashboardUpcomingDeadli
         </div>
         {projects.length === 0 && (
           <div className="text-center py-8">
-            <span className="iconify lucide--calendar-check size-12 text-base-content/20" />
+            <CalendarCheckIcon className="h-12 w-12 text-base-content/20" />
             <p className="text-sm text-base-content/60 mt-2">No upcoming deadlines</p>
           </div>
         )}

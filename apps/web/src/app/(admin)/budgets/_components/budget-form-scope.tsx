@@ -61,7 +61,13 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Opções de Escopo</Label>
-        <Button type="button" variant="outline" size="sm" onClick={addScopeOption}>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={addScopeOption}
+          className="border border-orange-500 bg-white rounded-md"
+        >
           <Plus className="h-4 w-4 mr-1" />
           Adicionar Opção
         </Button>
@@ -70,7 +76,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
       {scopeOptions.length === 0 ? (
         <div className="text-center py-8 border border-dashed border-base-300 rounded-lg">
           <p className="text-sm text-base-content/60">
-            Nenhuma opção de escopo. Adicione diferentes pacotes ou opções de serviço.
+            Adicione diferentes pacotes ou opções de serviço.
           </p>
         </div>
       ) : (
@@ -80,15 +86,16 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="text-xs text-base-content/60">Nome da Opção</Label>
+                    <Label className="text-xs text-base-content/60 pb-3">Nome da Opção</Label>
                     <Input
                       value={option.name}
                       onChange={(e) => updateScopeOption(optionIndex, "name", e.target.value)}
                       placeholder="Ex: Opção 1 - Landing Page Individual"
+                      className="border border-orange-500 rounded-md"
                     />
                   </div>
                   <div>
-                    <Label className="text-xs text-base-content/60">Valor (opcional)</Label>
+                    <Label className="text-xs text-base-content/60 pb-3">Valor (opcional)</Label>
                     <Input
                       type="number"
                       min={0}
@@ -102,6 +109,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                         )
                       }
                       placeholder="0,00"
+                      className="border border-orange-500 rounded-md"
                     />
                   </div>
                 </div>
@@ -109,7 +117,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-error mt-4"
+                  className="h-8 w-8 pt-3 text-error mt-4"
                   onClick={() => removeScopeOption(optionIndex)}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -118,16 +126,18 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
 
               {/* Features */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-xs text-base-content/60">Funcionalidades Incluídas</Label>
+                <div className="flex items-center justify-between mb-4">
+                  <Label className="text-xs text-base-content/60 pb-2">
+                    Funcionalidades Incluídas
+                  </Label>
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 text-xs"
-                    onClick={() => addFeature(optionIndex)}
+                    variant="outline"
+                    size="lg"
+                    onClick={addScopeOption}
+                    className="border border-orange-500 bg-white rounded-md"
                   >
-                    <Plus className="h-3 w-3 mr-1" />
+                    <Plus className="h-4 w-4 mr-1" />
                     Adicionar
                   </Button>
                 </div>
@@ -138,7 +148,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                         value={feature}
                         onChange={(e) => updateFeature(optionIndex, featureIndex, e.target.value)}
                         placeholder="Ex: Design responsivo"
-                        className="flex-1"
+                        className="flex-1 border border-orange-500 rounded-md"
                       />
                       {option.features.length > 1 && (
                         <Button
@@ -154,23 +164,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Selected checkbox */}
-              <div className="flex items-center gap-2 pt-2 border-t border-base-300">
-                <Checkbox
-                  id={`selected-${optionIndex}`}
-                  checked={option.isSelected}
-                  onCheckedChange={(checked) =>
-                    updateScopeOption(optionIndex, "isSelected", !!checked)
-                  }
-                />
-                <Label
-                  htmlFor={`selected-${optionIndex}`}
-                  className="text-xs text-base-content/60 cursor-pointer"
-                >
-                  Opção selecionada pelo cliente
-                </Label>
               </div>
             </div>
           ))}

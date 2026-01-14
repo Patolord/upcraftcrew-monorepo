@@ -6,6 +6,7 @@ import type { Project, ProjectStatus } from "@/types/project";
 import { KanbanBoard } from "@/app/(admin)/kanban/_components/kanban-board";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { AlertCircleIcon, InfoIcon, SearchIcon } from "lucide-react";
 
 interface Column {
   id: ProjectStatus;
@@ -74,7 +75,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
   if (convexProject === null) {
     return (
       <div className="alert alert-error">
-        <span className="iconify lucide--alert-circle size-5" />
+        <AlertCircleIcon className="h-5 w-5" />
         <span>Failed to load project. Please try again later.</span>
       </div>
     );
@@ -85,7 +86,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
       {/* Search */}
       <div className="flex items-center gap-3">
         <label className="input input-bordered flex items-center gap-2 flex-1">
-          <span className="iconify lucide--search size-4 text-base-content/60" />
+          <SearchIcon className="h-4 w-4 text-base-content/60" />
           <input
             type="text"
             className="grow"
@@ -98,7 +99,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
 
       {/* Info Alert */}
       <div className="alert alert-info">
-        <span className="iconify lucide--info size-5" />
+        <InfoIcon className="h-5 w-5" />
         <div>
           <h3 className="font-bold">Kanban do Projeto</h3>
           <p className="text-sm">

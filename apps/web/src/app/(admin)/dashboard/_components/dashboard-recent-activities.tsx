@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { ActivityIcon, ArrowRightIcon } from "lucide-react";
 
 interface Activity {
   _id: Id<"tasks">;
@@ -84,7 +85,7 @@ export function DashboardRecentActivities({ activities }: DashboardRecentActivit
 
         {activities.length === 0 && (
           <div className="text-center py-8">
-            <span className="iconify lucide--activity size-12 text-base-content/20" />
+            <ActivityIcon className="h-12 w-12 text-base-content/20" />
             <p className="text-sm text-base-content/60 mt-2">No recent activities</p>
           </div>
         )}
@@ -96,7 +97,7 @@ export function DashboardRecentActivities({ activities }: DashboardRecentActivit
               className="btn btn-ghost btn-sm w-full flex items-center justify-center gap-2"
             >
               View All Activity
-              <span className="iconify lucide--arrow-right size-4" />
+              <ArrowRightIcon className="h-4 w-4" />
             </a>
           </div>
         )}

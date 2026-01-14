@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { FolderKanbanIcon } from "lucide-react";
 
 interface Project {
   _id: Id<"projects">;
@@ -88,7 +89,7 @@ export function DashboardProjectsOverview({ projects }: DashboardProjectsOvervie
         </div>
         {projects.length === 0 && (
           <div className="text-center py-8">
-            <span className="iconify lucide--folder-kanban size-12 text-base-content/20" />
+            <FolderKanbanIcon className="h-12 w-12 text-base-content/20" />
             <p className="text-sm text-base-content/60 mt-2">No active projects</p>
           </div>
         )}

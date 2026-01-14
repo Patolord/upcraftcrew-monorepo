@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  UserRoundCogIcon,
+  WorkflowIcon,
+  PlayCircleIcon,
+  RadioIcon,
+  GitBranchIcon,
+} from "lucide-react";
 import { SECTION_IDS } from "../constants";
 import { useLandingI18n } from "../providers/landing-i18n-provider";
 
@@ -25,7 +32,7 @@ export const Features = () => {
         <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
             <div className="bg-base-200 inline-flex rounded-full p-2.5">
-              <span className="iconify lucide--workflow size-6"></span>
+              <WorkflowIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{customApps.title}</p>
             <p className="text-base-content/80 mt-0.5 text-sm">{customApps.description}</p>
@@ -56,7 +63,7 @@ export const Features = () => {
         <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
             <div className="bg-base-200 inline-flex rounded-full p-2.5">
-              <span className="iconify lucide--play-circle size-6"></span>
+              <PlayCircleIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{saas.title}</p>
             <p className="text-base-content/80 mt-0.5 text-sm">{saas.description}</p>
@@ -79,7 +86,7 @@ export const Features = () => {
         <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
             <div className="bg-base-200 inline-flex rounded-full p-2.5">
-              <span className="iconify lucide--radio size-6"></span>
+              <RadioIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{ecommerce.title}</p>
             <p className="text-base-content/80 mt-0.5 text-sm">{ecommerce.description}</p>
@@ -100,7 +107,7 @@ export const Features = () => {
         <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
             <div className="bg-base-200 inline-flex rounded-full p-2.5">
-              <span className="iconify lucide--user-round-cog size-6"></span>
+              <UserRoundCogIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{api.title}</p>
             <p className="text-base-content/80 mt-0.5 text-sm">{api.description}</p>
@@ -121,7 +128,7 @@ export const Features = () => {
         <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
             <div className="bg-base-200 inline-flex rounded-full p-2.5">
-              <span className="iconify lucide--git-branch size-6"></span>
+              <GitBranchIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{cloud.title}</p>
             <p className="text-base-content/80 mt-0.5 text-sm">{cloud.description}</p>

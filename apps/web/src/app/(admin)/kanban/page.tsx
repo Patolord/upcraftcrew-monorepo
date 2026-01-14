@@ -6,6 +6,7 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Project, ProjectStatus } from "@/types/project";
 import { KanbanBoard } from "./_components/kanban-board";
 import { KanbanHeader } from "./_components/kanban-header";
+import { AlertCircleIcon } from "lucide-react";
 
 interface Column {
   id: ProjectStatus;
@@ -71,7 +72,7 @@ export default function KanbanPage() {
       <div className="p-6 space-y-6">
         <KanbanHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <div className="alert alert-error">
-          <span className="iconify lucide--alert-circle size-5" />
+          <AlertCircleIcon className="h-5 w-5" />
           <span>Failed to load projects. Please try again later.</span>
         </div>
       </div>
