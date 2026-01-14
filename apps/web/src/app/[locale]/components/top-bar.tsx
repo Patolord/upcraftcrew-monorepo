@@ -7,8 +7,7 @@ import "simplebar-react/dist/simplebar.min.css";
 
 import { SECTION_IDS, type SectionId } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
-import { ThemeProvider } from "next-themes";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, SunIcon, MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Topbar = () => {
@@ -72,7 +71,7 @@ export const Topbar = () => {
                   htmlFor="navigation-drawer"
                   className="btn btn-sm btn-ghost btn-square drawer-button"
                 >
-                  <span className="iconify lucide--menu size-5"></span>
+                  <MenuIcon className="size-5" />
                 </label>
               </div>
               <div className="drawer-side">

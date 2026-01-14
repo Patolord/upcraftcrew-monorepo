@@ -2,6 +2,7 @@
 
 import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
+import { ArrowRightIcon } from "lucide-react";
 import { useQueryState, parseAsStringEnum } from "nuqs";
 
 interface PricingCardProps {
@@ -44,7 +45,7 @@ const PricingCard = ({
             <div className="flex items-start gap-2" key={index}>
               <span
                 className={`iconify mt-0.5 size-4.5 shrink-0 ${
-                  item.included ? "lucide--check text-success" : "lucide--x text-base-content/40"
+                  item.included ? "CheckIcon text-success" : "XIcon text-base-content/40"
                 }`}
               ></span>
               <span className={`text-sm ${item.included ? "" : "text-base-content/60"}`}>
@@ -63,7 +64,7 @@ const PricingCard = ({
         rel="noopener noreferrer"
         className="btn btn-primary mt-4 gap-2.5 rounded-full"
       >
-        <span className="iconify lucide--arrow-right size-4"></span>
+        <ArrowRightIcon className="size-4" />
         {customCta || cta}
       </a>
     </div>

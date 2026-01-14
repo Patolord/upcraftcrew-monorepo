@@ -2,25 +2,26 @@
 
 import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
+import { BuildingIcon, MapPinIcon, StarIcon } from "lucide-react";
 
 export const Testimonials = () => {
   const { messages } = useLandingI18n();
   const { testimonials } = messages;
   const statsIcons = [
     {
-      icon: "lucide--rocket",
+      icon: "RocketIcon",
       iconClass: "text-primary bg-primary/10",
     },
     {
-      icon: "lucide--heart-handshake",
+      icon: "HeartHandshakeIcon",
       iconClass: "text-orange-500 bg-orange-500/10",
     },
     {
-      icon: "lucide--users",
+      icon: "UsersIcon",
       iconClass: "text-success bg-success/10",
     },
     {
-      icon: "lucide--clock",
+      icon: "ClockIcon",
       iconClass: "text-secondary bg-secondary/10",
     },
   ] as const;
@@ -47,9 +48,9 @@ export const Testimonials = () => {
             const meta = statsIcons[index] ?? statsIcons[0];
             return (
               <div className="text-center" key={stat.title}>
-                <div className={`bg-base-200 inline-block rounded-full p-3 ${meta.iconClass}`}>
-                  <span className={`iconify ${meta.icon} block size-6`}></span>
-                </div>
+                <div
+                  className={`bg-base-200 inline-block rounded-full p-3 ${meta.iconClass}`}
+                ></div>
                 <p className="mt-1 font-medium">{stat.title}</p>
                 <p className="mt-1 text-2xl font-semibold">{stat.number}</p>
               </div>
@@ -58,11 +59,8 @@ export const Testimonials = () => {
         </div>
         <div>
           <div className="flex items-center justify-center gap-1">
-            <span className="iconify lucide--star size-9 text-orange-600/30"></span>
-            <span className="iconify lucide--star size-9 text-orange-600/30"></span>
-            <span className="iconify lucide--star size-9 text-orange-600/30"></span>
-            <span className="iconify lucide--star size-9 text-orange-600/30"></span>
-            <span className="iconify lucide--star size-9 text-orange-600/30"></span>
+            <StarIcon className="size-9 text-orange-600/30" />
+            <StarIcon className="size-9 text-orange-600/30" />
           </div>
           <div className="mt-12 grid gap-6 max-sm:gap-16 sm:grid-cols-2">
             {testimonials.list.map((testimonial) => (
@@ -81,11 +79,11 @@ export const Testimonials = () => {
                 <div className="p-4">
                   <p className="line-clamp-3 text-sm">{testimonial.comments}</p>
                   <div className="mt-5 flex items-center gap-2">
-                    <span className="iconify lucide--building size-4"></span>
+                    <BuildingIcon className="size-4" />
                     <span className="text-sm">{testimonial.company}</span>
                   </div>
                   <div className="mt-1 flex items-center gap-2">
-                    <span className="iconify lucide--map-pin size-4"></span>
+                    <MapPinIcon className="size-4" />
                     <span className="text-sm">{testimonial.location}</span>
                   </div>
                 </div>

@@ -1,5 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import {
+  LayoutDashboardIcon,
+  FolderOpenIcon,
+  RepeatIcon,
+  LogOutIcon,
+  CheckIcon,
+} from "lucide-react";
 
 export const ProfileMenu = () => {
   return (
@@ -17,13 +24,13 @@ export const ProfileMenu = () => {
           <ul className="menu w-full p-2">
             <li>
               <Link href="#">
-                <span className="iconify lucide--layout-dashboard size-4.5" />
+                <LayoutDashboardIcon className="size-4.5" />
                 <span>Project Overview</span>
               </Link>
             </li>
             <li>
               <Link href="#">
-                <span className="iconify lucide--folder-open size-4.5" />
+                <FolderOpenIcon className="size-4.5" />
                 <span>My Workspaces</span>
               </Link>
             </li>
@@ -47,7 +54,7 @@ export const ProfileMenu = () => {
                   D
                 </div>
                 <p className="grow text-sm">Design Squad</p>
-                <span className="iconify lucide--check size-4 opacity-60"></span>
+                <CheckIcon className="size-4 opacity-60" />
               </div>
             </li>
             <li>
@@ -65,13 +72,13 @@ export const ProfileMenu = () => {
           <ul className="menu w-full p-2">
             <li>
               <div>
-                <span className="iconify lucide--repeat size-4.5" />
+                <RepeatIcon className="size-4.5" />
                 <span>Switch Team</span>
               </div>
             </li>
             <li>
               <Link className="text-error hover:bg-error/10" href="#">
-                <span className="iconify lucide--log-out size-4.5" />
+                <LogOutIcon className="size-4.5" />
                 <span>Sign Out (todo)</span>
               </Link>
             </li>

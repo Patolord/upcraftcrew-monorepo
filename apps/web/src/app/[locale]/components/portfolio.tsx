@@ -6,6 +6,7 @@ import { SECTION_IDS } from "../constants";
 import { useLandingI18n } from "../providers/landing-i18n-provider";
 import { useQueryState, parseAsString } from "nuqs";
 import Link from "next/link";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
 
 const AUTO_PLAY_INTERVAL = 2300;
 const TRANSITION_MS = 320;
@@ -15,11 +16,7 @@ const accentBadgeClasses = [
   "bg-accent/10 text-accent",
 ];
 
-const accentIconClasses = [
-  "iconify lucide--sparkles",
-  "iconify lucide--rocket",
-  "iconify lucide--workflow",
-];
+const accentIconClasses = ["SparklesIcon", "RocketIcon", "WorkflowIcon"];
 
 export const Portfolio = () => {
   const { messages } = useLandingI18n();
@@ -233,7 +230,7 @@ export const Portfolio = () => {
               className="btn btn-ghost btn-sm btn-square border border-base-200/60"
               aria-label={portfolio.controls.previous}
             >
-              <span className="iconify lucide--arrow-left size-4"></span>
+              <ArrowLeftIcon className="size-4" />
             </button>
             <button
               type="button"
@@ -241,7 +238,7 @@ export const Portfolio = () => {
               className="btn btn-ghost btn-sm btn-square border border-base-200/60"
               aria-label={portfolio.controls.next}
             >
-              <span className="iconify lucide--arrow-right size-4"></span>
+              <ArrowRightIcon className="size-4" />
             </button>
           </div>
         )}
@@ -315,7 +312,7 @@ export const Portfolio = () => {
                     <ul className="space-y-2 text-sm text-base-content/70">
                       {project.highlights.map((highlight) => (
                         <li className="flex gap-2" key={highlight}>
-                          <span className="iconify lucide--check mt-0.5 size-4 text-primary"></span>
+                          <CheckIcon className="mt-0.5 size-4 text-primary" />
                           <span>{highlight}</span>
                         </li>
                       ))}
@@ -326,7 +323,7 @@ export const Portfolio = () => {
                         className="btn btn-primary btn-block group/btn"
                       >
                         <span>{portfolio.projectPage.viewMore}</span>
-                        <span className="iconify lucide--arrow-right size-4 transition-transform group-hover/btn:translate-x-1"></span>
+                        <ArrowRightIcon className="size-4 transition-transform group-hover/btn:translate-x-1" />
                       </Link>
                     </div>
                   </div>

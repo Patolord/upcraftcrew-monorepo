@@ -2,31 +2,27 @@
 
 import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
+import { ArrowRightIcon, SettingsIcon, SparklesIcon, ZapIcon, UserCogIcon } from "lucide-react";
 
 export const Process = () => {
   const { messages } = useLandingI18n();
   const { process } = messages;
   const [discovery, development, testing, support] = process.steps;
 
-  const discoveryIcons = [
-    "lucide--users",
-    "lucide--layout",
-    "lucide--calendar",
-    "lucide--file-text",
-  ] as const;
+  const discoveryIcons = ["UsersIcon", "LayoutIcon", "CalendarIcon", "FileTextIcon"] as const;
   const testingIcons = [
-    "lucide--check-circle",
-    "lucide--cloud-upload",
-    "lucide--shield-check",
-    "lucide--rocket",
+    "CheckCircleIcon",
+    "CloudUploadIcon",
+    "ShieldCheckIcon",
+    "RocketIcon",
   ] as const;
   const supportIcons = [
-    "lucide--monitor",
-    "lucide--refresh-cw",
-    "lucide--shield",
-    "lucide--help-circle",
-    "lucide--trending-up",
-    "lucide--code",
+    "MonitorIcon",
+    "RefreshCwIcon",
+    "ShieldIcon",
+    "HelpCircleIcon",
+    "TrendingUpIcon",
+    "CodeIcon",
   ] as const;
 
   return (
@@ -44,7 +40,7 @@ export const Process = () => {
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
             <div className="bg-base-200/60 border-base-200 rounded-full border p-3">
-              <span className="iconify lucide--zap block size-6"></span>
+              <ZapIcon className="size-6" />
             </div>
           </div>
           <div className="card bg-base-200/60 border-base-200 mt-4 flex-1 border p-5">
@@ -68,14 +64,14 @@ export const Process = () => {
             <p className="text-primary text-center text-xs font-semibold uppercase tracking-wider">
               {discovery.stepLabel}
             </p>
-            <span className="iconify lucide--arrow-right text-primary hidden size-5 xl:block"></span>
+            <ArrowRightIcon className="size-5 text-primary hidden xl:block" />
           </div>
         </div>
 
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
             <div className="from-primary to-secondary text-primary-content rounded-full border border-transparent bg-linear-to-br p-3">
-              <span className="iconify lucide--settings block size-6"></span>
+              <SettingsIcon className="size-6" />
             </div>
           </div>
           <div className="card from-primary to-secondary text-primary-content mt-4 flex-1 bg-linear-to-br p-5">
@@ -85,7 +81,7 @@ export const Process = () => {
             </p>
 
             <div className="mt-10 text-center">
-              <span className="iconify lucide--sparkles size-16 text-white/40"></span>
+              <SparklesIcon className="size-16 text-white/40" />
             </div>
             <div className="mt-10 flex flex-col items-center space-y-1.5 [--color-base-100:#ffffff66]">
               <div className="flex items-center gap-2">
@@ -104,7 +100,7 @@ export const Process = () => {
             <p className="text-primary text-center text-xs font-semibold uppercase tracking-wider">
               {development.stepLabel}
             </p>
-            <span className="iconify lucide--arrow-right text-primary hidden size-5 xl:block"></span>
+            <ArrowRightIcon className="size-5 text-primary hidden xl:block" />
           </div>
         </div>
 
@@ -112,7 +108,7 @@ export const Process = () => {
           <div className="flex items-center justify-center">
             <div className="from-primary to-secondary rounded-full border border-transparent bg-linear-to-br p-0.5">
               <div className="bg-base-100 rounded-full p-2.5">
-                <span className="iconify lucide--sparkles block size-6"></span>
+                <SparklesIcon className="size-6" />
               </div>
             </div>
           </div>
@@ -139,14 +135,14 @@ export const Process = () => {
             <p className="text-primary text-center text-xs font-semibold uppercase tracking-wider">
               {testing.stepLabel}
             </p>
-            <span className="iconify lucide--arrow-right text-primary hidden size-5 xl:block"></span>
+            <ArrowRightIcon className="size-5 text-primary hidden xl:block" />
           </div>
         </div>
 
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
             <div className="border-base-300 bg-base-100 rounded-full border border-dashed p-3">
-              <span className="iconify lucide--user-cog block size-6"></span>
+              <UserCogIcon className="size-6" />
             </div>
           </div>
           <div className="card border-base-300 mt-4 flex-1 border border-dashed p-5">

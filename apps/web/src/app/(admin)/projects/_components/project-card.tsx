@@ -68,7 +68,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <span className="text-xs font-medium">{project.progress}%</span>
           </div>
           <progress
-            className="progress progress-primary w-full"
+            className="progress progress-orange-500 w-full rounded-lg"
             value={project.progress}
             max="100"
           />
@@ -135,10 +135,10 @@ export function ProjectCard({ project }: { project: Project }) {
         )}
 
         {/* Actions */}
-        <div className="card-actions justify-end mt-4 pt-4 border-t border-base-300">
-          <Link href={`/projects/${project.id}`}>
-            <Button className="btn btn-primary btn-sm">
-              <EyeIcon className="h-4 w-4" />
+        <div className="card-actions justify-end mt-4 pt-4 border-t border-orange-500">
+          <Link href={`/projects/${project._id}`}>
+            <Button className="btn btn-primary btn-sm bg-orange-500 text-white border border-orange-500 rounded-md">
+              <EyeIcon className=" h-4 w-4" />
               View
             </Button>
           </Link>

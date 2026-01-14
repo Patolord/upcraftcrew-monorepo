@@ -6,6 +6,18 @@ import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
 
 import { WavePath } from "./wave-path";
+import {
+  ArrowRightIcon,
+  ArrowDownIcon,
+  CircuitBoardIcon,
+  SparklesIcon,
+  ZapIcon,
+  GaugeIcon,
+  DatabaseBackupIcon,
+  BellRingIcon,
+  BarChart3Icon,
+  TrendingUpIcon,
+} from "lucide-react";
 
 export const Hero = () => {
   const { messages } = useLandingI18n();
@@ -21,7 +33,7 @@ export const Hero = () => {
                 {hero.badge.prefix}{" "}
                 <span className="ms-1 font-medium text-orange-500">{hero.badge.highlight}</span>
                 <div className="ms-2 rounded-full bg-orange-500 p-0.5">
-                  <span className="iconify lucide--arrow-right block size-3 text-white"></span>
+                  <ArrowRightIcon className="size-3 text-white" />
                 </div>
               </div>
             </div>
@@ -41,7 +53,7 @@ export const Hero = () => {
                 {hero.primaryCta}
               </Link>
               <Link href={`#${SECTION_IDS.process}`} className="btn btn-ghost">
-                <span className="iconify lucide--arrow-down size-4"></span>
+                <ArrowDownIcon className="size-4" />
                 {hero.secondaryCta}
               </Link>
             </div>
@@ -53,7 +65,7 @@ export const Hero = () => {
               <div className="relative z-10">
                 <div className="bg-base-100 border-primary/60 group-hover:border-primary/80 rounded-box w-52 border border-dashed p-4 text-center transition-all xl:absolute xl:end-0 xl:top-20 xl:translate-x-1/2 2xl:top-44">
                   <div className="bg-primary/10 text-primary inline-block rounded-full p-2.5">
-                    <span className="iconify lucide--circuit-board block size-6"></span>
+                    <CircuitBoardIcon className="size-6" />
                   </div>
                   <p className="text-primary mt-1 font-medium">{hero.cards.left.badgeTitle}</p>
                 </div>
@@ -93,7 +105,7 @@ export const Hero = () => {
           <div className="relative mt-1 grow transition-all delay-500 duration-1000 sm:delay-2000 lg:mt-3 xl:mt-24 2xl:mt-47 starting:scale-120 starting:opacity-0 starting:blur-md">
             <div className="mt-8 flex flex-col items-center gap-4">
               <div className="bg-primary text-primary-content shadow-primary/20 inline-block rounded-full p-4 shadow-lg">
-                <span className="iconify lucide--sparkles block size-7"></span>
+                <SparklesIcon className="size-7" />
               </div>
 
               <div className="from-primary to-secondary text-primary-content rounded-box w-60 bg-linear-to-r p-4">
@@ -109,7 +121,7 @@ export const Hero = () => {
               <div className="xl:relative">
                 <div className="bg-base-100 border-secondary/60 rounded-box group-hover:border-secondary/80 w-52 border border-dashed p-4 text-center transition-all xl:absolute xl:start-0 xl:top-20 xl:-translate-x-1/2 xl:border 2xl:top-44">
                   <div className="bg-secondary/5 text-secondary inline-block rounded-full p-2.5">
-                    <span className="iconify lucide--zap block size-6"></span>
+                    <ZapIcon className="size-6" />
                   </div>
                   <p className="text-secondary mt-1 font-medium">{hero.cards.right.badgeTitle}</p>
                 </div>
@@ -143,7 +155,7 @@ export const Hero = () => {
                     ></progress>
                   </div>
                   <div className="text-base-content/80 mt-2.5 flex items-center gap-3 text-sm">
-                    <span className="iconify lucide--gauge text-secondary size-4"></span>
+                    <GaugeIcon className="size-4 text-secondary" />
                     {hero.cards.left.performance.label}{" "}
                     <span className="badge badge-ghost badge-xs ms-auto">
                       {hero.cards.left.performance.value}
@@ -158,14 +170,14 @@ export const Hero = () => {
           <div className="border-base-300/80 group hover:border-base-300 rounded-br-4xl border max-xl:hidden xl:h-120 xl:w-50 2xl:h-140 2xl:w-70">
             <div className="bg-base-100 border-base-300/60 group-hover:border-base-300 rounded-box absolute end-0 w-52 translate-x-1/2 border p-4 text-center transition-all xl:top-40 2xl:top-50">
               <div className="bg-base-200 inline-block rounded-full p-2.5">
-                <span className="iconify lucide--database-backup block size-6"></span>
+                <DatabaseBackupIcon className="size-6" />
               </div>
               <p className="mt-1 font-medium">{hero.cards.top.title}</p>
             </div>
             <div className="rounded-box card bg-base-100 absolute start-10 top-40 z-2 overflow-visible shadow max-2xl:hidden">
               <div className="flex items-center gap-3 p-3">
                 <div className="bg-base-200 rounded-full p-2">
-                  <span className="iconify lucide--bell-ring block size-4"></span>
+                  <BellRingIcon className="size-4" />
                 </div>
                 <div>
                   <p className="text-base-content/80 text-sm font-medium italic">
@@ -184,14 +196,14 @@ export const Hero = () => {
           <div className="group rounded-bl-4xl border border-teal-500/40 transition-all hover:border-teal-500/80 max-xl:hidden xl:h-120 xl:w-50 2xl:h-140 2xl:w-70">
             <div className="bg-base-100 rounded-box absolute start-0 w-52 -translate-x-1/2 border border-teal-500/60 p-4 text-center transition-all group-hover:border-teal-500/80 xl:top-40 2xl:top-50">
               <div className="inline-block rounded-full bg-teal-500/10 p-2.5 text-teal-500">
-                <span className="iconify lucide--bar-chart-3 block size-6"></span>
+                <BarChart3Icon className="size-6" />
               </div>
               <p className="mt-1 font-medium text-teal-500">{hero.cards.right.supportCard.title}</p>
             </div>
             <div className="rounded-box card bg-base-100 absolute start-10 top-40 shadow max-2xl:hidden">
               <div className="flex items-center gap-3 p-3">
                 <div className="rounded-full bg-teal-500 p-2 text-white">
-                  <span className="iconify lucide--trending-up block size-4"></span>
+                  <TrendingUpIcon className="size-4" />
                 </div>
                 <div>
                   <div className="skeleton rounded-box h-2 w-16"></div>
