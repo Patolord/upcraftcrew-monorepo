@@ -11,7 +11,6 @@ import { DashboardStatisticsChart } from "./dashboard-statistics-chart";
 import { DashboardTransactions } from "./dashboard-transactions";
 import { DashboardRecentProjectsTable } from "./dashboard-recent-projects-table";
 import { DashboardGrowth } from "./dashboard-growth";
-import { DashboardEarning } from "./dashboard-earning";
 import { DashboardErrorState } from "./dashboard-error-state";
 
 interface Project {
@@ -153,14 +152,13 @@ export function DashboardPage({
         </div>
       </div>
 
-      {/* Recent Projects Table + Growth + Earning */}
+      {/* Recent Projects Table + Growth  */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <DashboardRecentProjectsTable projects={projects} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
           <DashboardGrowth percentage={Math.round(stats.avgProgress)} />
-          <DashboardEarning totalEarning={stats.netProfit} growthPercentage={28.8} />
         </div>
       </div>
     </div>

@@ -32,51 +32,48 @@ export function DashboardHeader() {
   const userName = user?.firstName || "User";
 
   return (
-    <header className="flex items-center justify-between py-4">
+    <header className="flex items-center justify-between py-6">
       {/* Title */}
-      <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
 
-      {/* Right side - Search and User */}
-      <div className="flex items-center gap-6">
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="pl-10 w-64 h-10 rounded-lg bg-white border-gray-200"
-          />
-        </div>
-
-        {/* User Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-3 cursor-pointer outline-none">
-            <Avatar className="size-10">
-              <AvatarImage src={user?.imageUrl} alt={userName} />
-              <AvatarFallback className="bg-orange-500 text-white text-sm font-medium">
-                {userInitials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-foreground">{userName}</span>
-              <ChevronDown className="size-4 text-muted-foreground" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
-            <DropdownMenuItem className="cursor-pointer">
-              <User className="size-4" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <SignOutButton>
-              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-                <LogOut className="size-4" />
-                Sign out
-              </DropdownMenuItem>
-            </SignOutButton>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {/* Center - Search */}
+      <div className="relative flex-1 max-w-md mx-8">
+        <Input
+          type="search"
+          placeholder="Search..."
+          className="w-full h-11 pl-5 pr-12 rounded-full bg-white border-0 shadow-sm text-sm"
+        />
+        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
       </div>
+
+      {/* Right side - User */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center gap-3 cursor-pointer outline-none">
+          <Avatar className="size-10 ring-2 ring-pink-300 ring-offset-2">
+            <AvatarImage src={user?.imageUrl} alt={userName} />
+            <AvatarFallback className="bg-pink-400 text-white text-sm font-medium">
+              {userInitials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-foreground">{userName}</span>
+            <ChevronDown className="size-4 text-muted-foreground" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
+          <DropdownMenuItem className="cursor-pointer">
+            <User className="size-4" />
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <SignOutButton>
+            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+              <LogOut className="size-4" />
+              Sign out
+            </DropdownMenuItem>
+          </SignOutButton>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }
