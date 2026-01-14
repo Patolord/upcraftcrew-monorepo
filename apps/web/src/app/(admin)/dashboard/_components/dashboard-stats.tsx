@@ -1,5 +1,8 @@
 "use client";
 
+import { FolderKanban, Users, TrendingUp, DollarSign } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
 interface DashboardStatsProps {
   stats: {
     activeProjects: number;
@@ -12,54 +15,71 @@ interface DashboardStatsProps {
   totalMembers: number;
 }
 
+const statCards = [
+  {
+    key: "projects",
+    label: "Projects",
+    icon: FolderKanban,
+    iconBg: "bg-teal-500",
+    getValue: (stats: DashboardStatsProps["stats"], totalProjects: number) => totalProjects,
+    getChange: () => 55,
+  },
+  {
+    key: "members",
+    label: "Membros",
+    icon: Users,
+    iconBg: "bg-blue-500",
+    getValue: (stats: DashboardStatsProps["stats"], _: number, totalMembers: number) =>
+      totalMembers,
+    getChange: () => 8,
+  },
+  {
+    key: "revenue",
+    label: "Revenue",
+    icon: TrendingUp,
+    iconBg: "bg-orange-400",
+    getValue: (stats: DashboardStatsProps["stats"]) => `${(stats.totalRevenue / 1000).toFixed(0)}k`,
+    getChange: () => 2,
+  },
+  {
+    key: "profit",
+    label: "Profit",
+    icon: DollarSign,
+    iconBg: "bg-orange-500",
+    getValue: (stats: DashboardStatsProps["stats"]) => (stats.netProfit / 1000).toFixed(0),
+    getChange: (stats: DashboardStatsProps["stats"]) =>
+      stats.totalRevenue > 0 ? Math.round((stats.netProfit / stats.totalRevenue) * 100) : 0,
+  },
+];
+
 export function DashboardStats({ stats, totalProjects, totalMembers }: DashboardStatsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-      <div className="stats text-center border border-orange-500 rounded-md">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Projects</div>
-          <div className="stat-value text-2xl text-orange-500">{stats.activeProjects}</div>
-          <div className="stat-desc text-xs">{totalProjects} total projects</div>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {statCards.map((card) => {
+        const Icon = card.icon;
+        const value = card.getValue(stats, totalProjects, totalMembers);
+        const change = card.getChange(stats);
 
-      <div className="stats text-center border border-orange-500 rounded-md">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Team Members</div>
-          <div className="stat-value text-2xl text-orange-500">{stats.activeMembers}</div>
-          <div className="stat-desc text-xs">{totalMembers} total members</div>
-        </div>
-      </div>
+        return (
+          <Card key={card.key} className="rounded-xl bg-white shadow-sm ring-0 py-0">
+            <CardContent className="flex items-center gap-4 p-4">
+              {/* Icon */}
+              <div className={`${card.iconBg} p-3 rounded-xl`}>
+                <Icon className="size-6 text-white" />
+              </div>
 
-      <div className="stats text-center border border-orange-500 rounded-md">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Total Revenue</div>
-          <div className="stat-value text-2xl text-orange-500">
-            {(stats.totalRevenue / 1000).toFixed(0)}k
-          </div>
-          <div className="stat-desc text-xs">This period</div>
-        </div>
-      </div>
-
-      <div className="stats text-center border border-orange-500 rounded-md">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Net Profit</div>
-          <div className="stat-value text-2xl text-orange-500">
-            {(stats.netProfit / 1000).toFixed(0)}k
-          </div>
-          <div className="stat-desc text-xs">
-            {((stats.netProfit / stats.totalRevenue) * 100).toFixed(0)}% margin
-          </div>
-        </div>
-      </div>
-
-      <div className="stats text-center border border-orange-500 rounded-md">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Avg Progress</div>
-          <div className="stat-value text-2xl text-orange-500">{stats.avgProgress.toFixed(0)}%</div>
-          <div className="stat-desc text-xs">All projects</div>
-        </div>
-      </div>
+              {/* Content */}
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground">{card.label}</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-foreground">{value}</span>
+                  <span className="text-xs text-green-500 font-medium">+{change}%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

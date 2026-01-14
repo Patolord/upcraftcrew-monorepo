@@ -1,11 +1,24 @@
 "use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
+import Image from "next/image";
 
 export default function NavLogo() {
+  const { state } = useSidebar();
+
   return (
-    <div className="flex items-center justify-end w-full -mt-1">
-      <SidebarTrigger className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10" />
+    <div className="flex items-center gap-2 px-1">
+      {/* Logo Icon - Stylized sun/swirl */}
+      <div className="flex items-center justify-center size-10 shrink-0">
+        <Image src="/logo/logo-light-mini.png" alt="logo" width={100} height={100} />
+      </div>
+
+      {/* Brand Name */}
+      {state === "expanded" && (
+        <span className="text-xl font-semibold text-sidebar-foreground tracking-tight">
+          Up Craft Crew
+        </span>
+      )}
     </div>
   );
 }

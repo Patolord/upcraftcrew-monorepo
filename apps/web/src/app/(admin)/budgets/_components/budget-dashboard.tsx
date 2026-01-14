@@ -154,7 +154,6 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
             <div className="space-y-3">
               {expiringSoon.length === 0 ? (
                 <div className="text-center py-8">
-                  <CalendarCheckIcon className="h-12 w-12 text-base-content/20" />
                   <p className="text-sm text-base-content/60 mt-8">Nenhum orçamento vencendo</p>
                 </div>
               ) : (

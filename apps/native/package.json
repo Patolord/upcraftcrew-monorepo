@@ -18,7 +18,7 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/elements": "^2.8.1",
-    "@upcraftcrew-os/backend": "workspace:*",
+    "@up-craft-crew-app/backend": "workspace:*",
     "convex": "^1.27.0",
     "expo": "^54.0.23",
     "expo-constants": "~18.0.10",

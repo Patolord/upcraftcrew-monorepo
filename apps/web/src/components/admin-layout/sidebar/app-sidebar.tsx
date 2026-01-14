@@ -6,24 +6,25 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 
 import NavLogo from "./nav-logo";
 import NavMain from "./nav-main";
 import NavThird from "./nav-third";
-import NavUser from "./nav-user";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="p-2 pt-3 flex-col gap-2">
+    <Sidebar collapsible="icon" variant="floating" {...props}>
+      <SidebarHeader className="px-4 pt-5 pb-2">
         <NavLogo />
-        <NavUser />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarSeparator className="opacity-50" />
+      <SidebarContent className="py-2">
         <NavMain />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarSeparator className="opacity-50" />
+      <SidebarFooter className="pb-6">
         <NavThird />
       </SidebarFooter>
       <SidebarRail />

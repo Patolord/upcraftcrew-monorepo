@@ -10,10 +10,10 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <Providers>
-      <SidebarProvider>
+      <SidebarProvider className="bg-admin-background">
         <AppSidebar />
-        <SidebarInset>
-          <main className="flex-1 overflow-auto p-4">{children}</main>
+        <SidebarInset className="bg-admin-background">
+          {children}
           <Footer />
         </SidebarInset>
       </SidebarProvider>

@@ -28,11 +28,11 @@ export default function NavThird() {
         <SignOutButton>
           <SidebarMenuButton
             onClick={handleSignOut}
-            tooltip="Sign out"
-            className="hover:bg-white/10 group-data-[collapsible=icon]:justify-center"
+            tooltip="Logout"
+            className="text-sidebar-accent hover:bg-sidebar-accent/10 hover:text-sidebar-accent group-data-[collapsible=icon]:justify-center"
           >
-            <LogOut className="size-4" />
-            <span className="text-sm group-data-[collapsible=icon]:hidden">Sign out</span>
+            <LogOut className="size-5 text-sidebar-accent" />
+            <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">Logout</span>
           </SidebarMenuButton>
         </SignOutButton>
       </SidebarMenuItem>

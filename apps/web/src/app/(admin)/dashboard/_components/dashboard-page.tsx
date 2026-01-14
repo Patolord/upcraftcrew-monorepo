@@ -1,16 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+
+import { DashboardHeader } from "./dashboard-header";
 import { DashboardStats } from "./dashboard-stats";
-import { DashboardRecentActivities } from "./dashboard-recent-activities";
-import { DashboardUpcomingDeadlines } from "./dashboard-upcoming-deadlines";
-import { DashboardProjectsOverview } from "./dashboard-projects-overview";
-import { DashboardNewProjectModal } from "./dashboard-new-project-modal";
+import { DashboardStatisticsChart } from "./dashboard-statistics-chart";
+import { DashboardTransactions } from "./dashboard-transactions";
+import { DashboardRecentProjectsTable } from "./dashboard-recent-projects-table";
+import { DashboardGrowth } from "./dashboard-growth";
+import { DashboardEarning } from "./dashboard-earning";
 import { DashboardErrorState } from "./dashboard-error-state";
 
 interface Project {
@@ -92,8 +93,6 @@ export function DashboardPage({
   const transactions = usePreloadedQuery(preloadedTransactions) as Transaction[];
   const tasks = usePreloadedQuery(preloadedTasks) as Task[];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Calculate overview stats
   const stats = useMemo(() => {
     const activeProjects = projects.filter((p) => p.status === "in-progress").length;
@@ -119,31 +118,6 @@ export function DashboardPage({
     };
   }, [projects, teamMembers, transactions]);
 
-  // Get recent activities from tasks
-  const recentActivities = useMemo(() => {
-    return tasks
-      .filter((t) => t.status === "done")
-      .sort((a, b) => b.updatedAt - a.updatedAt)
-      .slice(0, 5);
-  }, [tasks]);
-
-  // Get upcoming deadlines from projects
-  const upcomingDeadlines = useMemo(() => {
-    const now = Date.now();
-    return projects
-      .filter((p) => p.status !== "completed" && p.endDate > now)
-      .sort((a, b) => a.endDate - b.endDate)
-      .slice(0, 5);
-  }, [projects]);
-
-  // Get projects for overview
-  const projectsForOverview = useMemo(() => {
-    return projects
-      .filter((p) => p.status !== "completed")
-      .sort((a, b) => b.progress - a.progress)
-      .slice(0, 5);
-  }, [projects]);
-
   // Error handling
   const hasError = !projects && !teamMembers && !transactions;
 
@@ -158,20 +132,9 @@ export function DashboardPage({
   }
 
   return (
-    <div className="p-2 pl-18 pr-18 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl text-orange-500 font-medium">Dashboard</h1>
-          <p className="text-base-content/60 pb-4 text-sm mt-1">
-            Welcome back! Here&apos;s what&apos;s happening today
-          </p>
-        </div>
-        <Button onClick={() => setIsModalOpen(true)} className=" bg-orange-500 gap-2 rounded-full">
-          <Plus className="h-6 w-4 " />
-          New Project
-        </Button>
-      </div>
+    <div className="p-6 space-y-6">
+      {/* Header with Search and User */}
+      <DashboardHeader />
 
       {/* Stats Cards */}
       <DashboardStats
@@ -180,21 +143,26 @@ export function DashboardPage({
         totalMembers={teamMembers.length}
       />
 
-      {/* Recent Activities + Upcoming Deadlines */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Statistics Chart + Transactions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <DashboardRecentActivities activities={recentActivities} />
+          <DashboardStatisticsChart transactions={transactions} />
         </div>
         <div>
-          <DashboardUpcomingDeadlines projects={upcomingDeadlines} />
+          <DashboardTransactions transactions={transactions} />
         </div>
       </div>
 
-      {/* Project Status */}
-      <DashboardProjectsOverview projects={projectsForOverview} />
-
-      {/* New Project Modal */}
-      <DashboardNewProjectModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+      {/* Recent Projects Table + Growth + Earning */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <DashboardRecentProjectsTable projects={projects} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+          <DashboardGrowth percentage={Math.round(stats.avgProgress)} />
+          <DashboardEarning totalEarning={stats.netProfit} growthPercentage={28.8} />
+        </div>
+      </div>
     </div>
   );
 }
