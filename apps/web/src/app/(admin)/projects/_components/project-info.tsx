@@ -100,9 +100,8 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
 
       toast.success("Projeto atualizado com sucesso!");
       setIsEditing(false);
-    } catch (error) {
-      console.error("Failed to update project:", error);
-      toast.error("Falha ao atualizar projeto. Tente novamente.");
+    } catch (err) {
+      handleError(err, "Erro ao atualizar projeto");
     } finally {
       setIsSubmitting(false);
     }
@@ -181,9 +180,8 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
       await deleteProject({ id: projectId as string as any });
       toast.success("Projeto excluído com sucesso!");
       router.push("/projects");
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-      toast.error("Falha ao excluir projeto. Tente novamente.");
+    } catch (err) {
+      handleError(err, "Erro ao excluir projeto");
     } finally {
       setIsDeleting(false);
     }
@@ -191,6 +189,8 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
 
   return (
     <div className="space-y-6">
+      {/* Error alert */}
+
       {/* Actions */}
       <div className="flex justify-between items-center">
         <Button
@@ -635,4 +635,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
       </div>
     </div>
   );
+}
+function handleError(err: unknown, arg1: string) {
+  throw new Error("Function not implemented.");
 }

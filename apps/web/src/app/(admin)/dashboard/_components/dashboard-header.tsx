@@ -34,7 +34,7 @@ export function DashboardHeader() {
   return (
     <header className="flex items-center justify-between py-6">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+      <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Dashboard</h1>
 
       {/* Center - Search */}
       <div className="relative flex-1 max-w-md mx-8">

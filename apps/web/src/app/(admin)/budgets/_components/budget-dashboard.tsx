@@ -1,6 +1,7 @@
 "use client";
 
-import { CalendarCheckIcon, FileTextIcon } from "lucide-react";
+import { FileTextIcon } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface BudgetStats {
   total: number;
@@ -108,9 +109,11 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Budgets */}
-        <div className="card bg-base-100 ">
-          <div className="card-body">
-            <h2 className="card-title text-lg mb-4 text-orange-500">Orçamentos Recentes</h2>
+        <Card className="border-orange-500">
+          <CardHeader>
+            <CardTitle className="text-lg text-orange-500">Orçamentos Recentes</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-3">
               {recentBudgets.length === 0 ? (
                 <div className="text-center py-8">
@@ -144,13 +147,15 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
                 ))
               )}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Expiring Soon */}
-        <div className="card bg-base-100 ">
-          <div className="card-body">
-            <h2 className="card-title text-lg text-orange-500 mt-8">Vencendo em Breve</h2>
+        <Card className="border-orange-500">
+          <CardHeader>
+            <CardTitle className="text-lg text-orange-500">Vencendo em Breve</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-3">
               {expiringSoon.length === 0 ? (
                 <div className="text-center py-8">
@@ -176,8 +181,8 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
                 })
               )}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

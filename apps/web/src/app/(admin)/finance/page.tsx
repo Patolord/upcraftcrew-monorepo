@@ -4,6 +4,14 @@ import { Button } from "@base-ui/react/button";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import { useState, useMemo, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { CategoryBreakdown } from "./_components/category-breakdown";
 import { FinancialSummaryCards } from "./_components/financial-summary-cards";
 import { QuickStats } from "./_components/quick-stats";
@@ -163,26 +171,26 @@ export default function FinancePage() {
           />
 
           {/* Transactions Table */}
-          <div className="overflow-x-auto bg-base-100 rounded-box border border-base-300">
-            <table className="table table-sm">
-              <thead>
-                <tr>
-                  <th>Transaction</th>
-                  <th>Category</th>
-                  <th>Client/Project</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th className="text-right">Amount</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="bg-base-100 rounded-box border border-base-300">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Transaction</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Client/Project</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredTransactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="text-center py-8">
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
                       <span className="text-base-content/60">No transactions found</span>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   filteredTransactions.map((transaction) => (
                     <TransactionRow
@@ -195,8 +203,8 @@ export default function FinancePage() {
                     />
                   ))
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
@@ -213,8 +221,8 @@ export default function FinancePage() {
       {/* Transaction Form Modal */}
       {/* TODO: Implement TransactionForm component */}
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-base-100 p-6 rounded-lg max-w-2xl w-full mx-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-base-100 p-6 rounded-lg max-w-2xl w-full mx-4 pointer-events-auto">
             <h2 className="text-xl font-bold mb-4">
               {selectedTransaction ? "Edit Transaction" : "New Transaction"}
             </h2>

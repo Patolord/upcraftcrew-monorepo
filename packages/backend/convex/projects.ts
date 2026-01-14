@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow, requireMember } from "./users";
+import { throwNotFound } from "./errors";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
@@ -170,7 +171,7 @@ export const updateProject = mutation({
 
     const existingProject = await ctx.db.get(id);
     if (!existingProject) {
-      throw new Error("Project not found");
+      throwNotFound("Project");
     }
 
     // If teamIds are being updated, update users' projectIds
@@ -210,7 +211,7 @@ export const deleteProject = mutation({
     const project = await ctx.db.get(args.id);
 
     if (!project) {
-      throw new Error("Project not found");
+      throwNotFound("Project");
     }
 
     // Remove project from team members' projectIds

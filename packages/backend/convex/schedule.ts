@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { throwNotFound } from "./errors";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
@@ -275,7 +276,7 @@ export const updateEvent = mutation({
 
     const existingEvent = await ctx.db.get(id);
     if (!existingEvent) {
-      throw new Error("Event not found");
+      throwNotFound("Event");
     }
 
     await ctx.db.patch(id, updates);
@@ -292,7 +293,7 @@ export const deleteEvent = mutation({
     const event = await ctx.db.get(args.id);
 
     if (!event) {
-      throw new Error("Event not found");
+      throwNotFound("Event");
     }
 
     await ctx.db.delete(args.id);
@@ -312,7 +313,7 @@ export const addAttendeeToEvent = mutation({
     const event = await ctx.db.get(args.eventId);
 
     if (!event) {
-      throw new Error("Event not found");
+      throwNotFound("Event");
     }
 
     // Check if user is already an attendee
@@ -339,7 +340,7 @@ export const removeAttendeeFromEvent = mutation({
     const event = await ctx.db.get(args.eventId);
 
     if (!event) {
-      throw new Error("Event not found");
+      throwNotFound("Event");
     }
 
     await ctx.db.patch(args.eventId, {

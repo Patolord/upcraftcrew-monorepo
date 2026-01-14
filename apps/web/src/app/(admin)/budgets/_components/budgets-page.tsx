@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { PlusIcon, LayoutDashboardIcon, FileTextIcon } from "lucide-react";
+import { useQueryState, parseAsStringEnum, parseAsString } from "nuqs";
 import { BudgetDashboard } from "./budget-dashboard";
 import { BudgetList } from "./budget-list";
 import { BudgetSlideOver } from "./budget-slide-over";
-import { BudgetForm } from "./budget-form";
+import { BudgetFormModal } from "./budget-form-modal";
 import { DeleteBudgetDialog } from "./delete-budget-dialog";
 
 interface Budget {
@@ -66,59 +75,68 @@ interface BudgetsPageProps {
   preloadedStats: Preloaded<typeof api.budgets.getBudgetStats>;
 }
 
-type SlideOverMode = "create" | "edit" | "view" | null;
-
 export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPageProps) {
   const budgets = usePreloadedQuery(preloadedBudgets) as Budget[];
   const stats = usePreloadedQuery(preloadedStats) as BudgetStats;
 
-  const [activeTab, setActiveTab] = useState<"dashboard" | "all">("dashboard");
-  const [slideOverMode, setSlideOverMode] = useState<SlideOverMode>(null);
+  const [view, setView] = useQueryState(
+    "view",
+    parseAsStringEnum<"dashboard" | "all">(["dashboard", "all"]).withDefault("dashboard"),
+  );
+  const [newBudget, setNewBudget] = useQueryState("new", parseAsString);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [deleteDialog, setDeleteDialog] = useState<{
     budgetId: Id<"budgets"> | null;
     title: string;
   }>({ budgetId: null, title: "" });
 
+  // Sync query string with modal state
+  useEffect(() => {
+    if (newBudget === "true" && !isModalOpen) {
+      setIsModalOpen(true);
+      setSelectedBudget(null);
+    } else if (newBudget === null && isModalOpen && !selectedBudget) {
+      setIsModalOpen(false);
+    }
+  }, [newBudget, isModalOpen, selectedBudget]);
+
   const handleCreateNew = () => {
     setSelectedBudget(null);
-    setSlideOverMode("create");
+    setNewBudget("true");
+    setIsModalOpen(true);
   };
 
   const handleView = (budget: Budget) => {
     setSelectedBudget(budget);
-    setSlideOverMode("view");
+    setIsViewOpen(true);
   };
 
   const handleEdit = (budget: Budget) => {
     setSelectedBudget(budget);
-    setSlideOverMode("edit");
+    setIsViewOpen(false);
+    setIsModalOpen(true);
   };
 
   const handleDelete = (budgetId: Id<"budgets">, title: string) => {
     setDeleteDialog({ budgetId, title });
   };
 
-  const handleCloseSlideOver = () => {
-    setSlideOverMode(null);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBudget(null);
+    setNewBudget(null);
+  };
+
+  const handleCloseView = () => {
+    setIsViewOpen(false);
     setSelectedBudget(null);
   };
 
   const handleFormSuccess = () => {
-    handleCloseSlideOver();
-  };
-
-  const getSlideOverTitle = () => {
-    switch (slideOverMode) {
-      case "create":
-        return "Novo Orçamento";
-      case "edit":
-        return "Editar Orçamento";
-      case "view":
-        return "Visualizar Orçamento";
-      default:
-        return "";
-    }
+    handleCloseModal();
   };
 
   return (
@@ -128,7 +146,7 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
         <div>
           <h1 className="text-3xl text-orange-500 font-medium pb-2">Orçamentos</h1>
         </div>
-        {activeTab === "all" && (
+        {view === "all" && (
           <Button
             onClick={handleCreateNew}
             className="gap-2 text-white bg-orange-500 border rounded-md"
@@ -139,28 +157,8 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="tabs tabs-boxed rounded-full w-fit justify-center">
-        <Button
-          type="button"
-          className={`tab bg-white rounded-full text-base-content/60 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "dashboard" ? "tab-active" : ""}`}
-          onClick={() => setActiveTab("dashboard")}
-        >
-          <LayoutDashboardIcon className=" h-4 w-4" />
-          Dashboard
-        </Button>
-        <Button
-          type="button"
-          className={`tab bg-white rounded-full text-base-content/60 hover:bg-orange-500 hover:text-white gap-2 ${activeTab === "all" ? "tab-active" : ""}`}
-          onClick={() => setActiveTab("all")}
-        >
-          <FileTextIcon className="h-4 w-4" />
-          Orçamentos
-        </Button>
-      </div>
-
       {/* Tab Content */}
-      {activeTab === "dashboard" ? (
+      {view === "dashboard" ? (
         <BudgetDashboard budgets={budgets} stats={stats} />
       ) : (
         <BudgetList
@@ -171,13 +169,17 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
         />
       )}
 
-      {/* Slide Over for Create/Edit/View */}
-      <BudgetSlideOver
-        isOpen={slideOverMode !== null}
-        onClose={handleCloseSlideOver}
-        title={getSlideOverTitle()}
-      >
-        {slideOverMode === "view" && selectedBudget ? (
+      {/* Modal for Create/Edit */}
+      <BudgetFormModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        initialData={selectedBudget || undefined}
+        onSuccess={handleFormSuccess}
+      />
+
+      {/* Slide Over for View */}
+      <BudgetSlideOver isOpen={isViewOpen} onClose={handleCloseView} title="Visualizar Orçamento">
+        {selectedBudget && (
           <div className="p-6 space-y-6">
             {/* View mode content */}
             <div className="space-y-4">
@@ -210,37 +212,37 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
               {/* Items table */}
               <div>
                 <h4 className="font-semibold mb-2">Itens</h4>
-                <div className="overflow-x-auto border border-base-300 rounded-lg">
-                  <table className="table table-sm">
-                    <thead>
-                      <tr>
-                        <th>Descrição</th>
-                        <th className="text-center">Qtd</th>
-                        <th className="text-right">Unit.</th>
-                        <th className="text-right">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                <div className="border border-base-300 rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Descrição</TableHead>
+                        <TableHead className="text-center">Qtd</TableHead>
+                        <TableHead className="text-right">Unit.</TableHead>
+                        <TableHead className="text-right">Total</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
                       {selectedBudget.items.map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.description}</td>
-                          <td className="text-center">{item.quantity}</td>
-                          <td className="text-right">
+                        <TableRow key={index}>
+                          <TableCell>{item.description}</TableCell>
+                          <TableCell className="text-center">{item.quantity}</TableCell>
+                          <TableCell className="text-right">
                             {new Intl.NumberFormat("pt-BR", {
                               style: "currency",
                               currency: selectedBudget.currency,
                             }).format(item.unitPrice)}
-                          </td>
-                          <td className="text-right font-semibold">
+                          </TableCell>
+                          <TableCell className="text-right font-semibold">
                             {new Intl.NumberFormat("pt-BR", {
                               style: "currency",
                               currency: selectedBudget.currency,
                             }).format(item.total)}
-                          </td>
-                        </tr>
+                          </TableCell>
+                        </TableRow>
                       ))}
-                    </tbody>
-                  </table>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
 
@@ -256,7 +258,7 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
 
             {/* View mode actions */}
             <div className="flex items-center justify-between pt-4 border-t border-base-300">
-              <Button variant="outline" onClick={handleCloseSlideOver}>
+              <Button variant="outline" onClick={handleCloseView}>
                 Fechar
               </Button>
               <div className="flex gap-2">
@@ -270,12 +272,6 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
               </div>
             </div>
           </div>
-        ) : (
-          <BudgetForm
-            initialData={slideOverMode === "edit" ? selectedBudget || undefined : undefined}
-            onSuccess={handleFormSuccess}
-            onCancel={handleCloseSlideOver}
-          />
         )}
       </BudgetSlideOver>
 

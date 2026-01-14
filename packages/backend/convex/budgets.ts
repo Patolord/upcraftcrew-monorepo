@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireMember } from "./users";
+import { throwNotFound } from "./errors";
 
 // Query: Get all budgets
 export const getBudgets = query({
@@ -262,7 +263,7 @@ export const updateBudget = mutation({
 
     const existingBudget = await ctx.db.get(id);
     if (!existingBudget) {
-      throw new Error("Budget not found");
+      throwNotFound("Budget");
     }
 
     // Recalculate total if items changed
@@ -288,7 +289,7 @@ export const deleteBudget = mutation({
     const budget = await ctx.db.get(args.id);
 
     if (!budget) {
-      throw new Error("Budget not found");
+      throwNotFound("Budget");
     }
 
     await ctx.db.delete(args.id);

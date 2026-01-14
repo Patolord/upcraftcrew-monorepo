@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { throwNotFound, throwAlreadyExists } from "./errors";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
@@ -108,7 +109,7 @@ export const createTeamMember = mutation({
       .first();
 
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      throwAlreadyExists("User", "email");
     }
 
     // Generate a temporary clerkUserId until they actually sign up
@@ -155,7 +156,7 @@ export const updateTeamMember = mutation({
 
     const existingMember = await ctx.db.get(id);
     if (!existingMember) {
-      throw new Error("Team member not found");
+      throwNotFound("Team member");
     }
 
     // If email is being updated, check for duplicates
@@ -167,7 +168,7 @@ export const updateTeamMember = mutation({
         .first();
 
       if (duplicateUser) {
-        throw new Error("User with this email already exists");
+        throwAlreadyExists("User", "email");
       }
     }
 
@@ -193,7 +194,7 @@ export const deleteTeamMember = mutation({
     const member = await ctx.db.get(args.id);
 
     if (!member) {
-      throw new Error("Team member not found");
+      throwNotFound("Team member");
     }
 
     // Remove member from all projects

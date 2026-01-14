@@ -7,6 +7,7 @@ import {
   query,
   type QueryCtx as QueryContext,
 } from "./_generated/server";
+import { throwUnauthenticated, throwUnauthorized } from "./errors";
 
 // ============================================================================
 // CURRENT USER QUERIES
@@ -169,7 +170,9 @@ export async function getCurrentUser(context: QueryContext) {
  */
 export async function getCurrentUserOrThrow(context: QueryContext) {
   const userRecord = await getCurrentUser(context);
-  if (!userRecord) throw new Error("Can't get current user");
+  if (!userRecord) {
+    throwUnauthenticated("User not authenticated");
+  }
   return userRecord;
 }
 
@@ -190,11 +193,11 @@ async function userByClerkUserId(context: QueryContext, clerkUserId: string) {
 export async function requireAdmin(context: QueryContext | MutationCtx): Promise<void> {
   const user = await getCurrentUser(context);
   if (!user) {
-    throw new Error("Unauthorized: Authentication required");
+    throwUnauthenticated();
   }
 
   if (user.role !== "admin") {
-    throw new Error("Unauthorized: Admin access required");
+    throwUnauthorized("Admin access required");
   }
 }
 
@@ -214,11 +217,11 @@ export async function hasWriteAccess(context: QueryContext | MutationCtx): Promi
 export async function requireWrite(context: QueryContext | MutationCtx) {
   const user = await getCurrentUser(context);
   if (!user) {
-    throw new Error("Unauthorized: Authentication required");
+    throwUnauthenticated();
   }
 
   if (user.role === "viewer") {
-    throw new Error("Unauthorized: Write access required. Viewers can only read.");
+    throwUnauthorized("Write access required. Viewers can only read.");
   }
 
   return user;

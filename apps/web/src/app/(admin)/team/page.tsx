@@ -4,6 +4,14 @@ import { useMemo, useState } from "react";
 import { useQuery } from "convex/react";
 import { Button } from "@base-ui/react/button";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { NewTeamMemberModal } from "./_components/new-team-member-modal";
 import { TeamMemberCard } from "./_components/team-member-card";
 import { TeamMemberRow } from "./_components/team-member-row";
@@ -217,24 +225,24 @@ export default function TeamPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto bg-base-100 rounded-box border border-base-300">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Contact & Skills</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th className="text-center">Projects</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="bg-base-100 rounded-box border border-base-300">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Member</TableHead>
+                <TableHead>Contact & Skills</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-center">Projects</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filteredMembers.map((member) => (
                 <TeamMemberRow key={member._id} member={member} />
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
 

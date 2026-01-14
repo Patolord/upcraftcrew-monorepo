@@ -8,6 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
@@ -56,7 +64,7 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
   const recentProjects = projects.slice(0, 6);
 
   // Transform projects to table data format
-  const tableData = recentProjects.map((project, index) => ({
+  const tableData = recentProjects.map((project) => ({
     id: project._id,
     country: project.client || "Unknown",
     flag: getCountryFlag(project.client),
@@ -88,55 +96,43 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
         </CardAction>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Country
-                </th>
-                <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Sale
-                </th>
-                <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Value
-                </th>
-                <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Bounce
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.length > 0 ? (
-                tableData.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-50 last:border-0">
-                    <td className="py-3 px-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{row.flag}</span>
-                        <span className="text-sm text-foreground">{row.country}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-2 text-sm text-foreground">{row.customer}</td>
-                    <td className="py-3 px-2 text-sm text-foreground">{row.sale}</td>
-                    <td className="py-3 px-2 text-sm text-foreground">
-                      ${row.value.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-2 text-sm text-foreground">{row.bounce}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="py-8 text-center text-sm text-muted-foreground">
-                    No projects found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="uppercase tracking-wider">Country</TableHead>
+              <TableHead className="uppercase tracking-wider">Customer</TableHead>
+              <TableHead className="uppercase tracking-wider">Sale</TableHead>
+              <TableHead className="uppercase tracking-wider">Value</TableHead>
+              <TableHead className="uppercase tracking-wider">Bounce</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableData.length > 0 ? (
+              tableData.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{row.flag}</span>
+                      <span className="text-sm text-foreground">{row.country}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm text-foreground">{row.customer}</TableCell>
+                  <TableCell className="text-sm text-foreground">{row.sale}</TableCell>
+                  <TableCell className="text-sm text-foreground">
+                    ${row.value.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-sm text-foreground">{row.bounce}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="py-8 text-center text-sm text-muted-foreground">
+                  No projects found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );

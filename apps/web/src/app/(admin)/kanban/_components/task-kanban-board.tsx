@@ -7,6 +7,7 @@ import { TaskCard } from "./task-card";
 import { toast } from "sonner";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { getErrorMessage } from "@/lib/convex-errors";
 
 type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 
@@ -74,8 +75,8 @@ export function TaskKanbanBoard({ columns }: TaskKanbanBoardProps) {
             });
             toast.success("Task atualizada!");
           } catch (error) {
-            console.error("Failed to update task status:", error);
-            toast.error("Falha ao atualizar task");
+            const message = getErrorMessage(error);
+            toast.error(message);
             // Force page reload on error instead of DOM manipulation
             window.location.reload();
           }

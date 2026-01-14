@@ -119,7 +119,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
   } catch (error) {
-    console.error("Error generating PDF:", error);
-    return NextResponse.json({ error: "Failed to generate PDF" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Failed to generate PDF";
+
+    return NextResponse.json(
+      {
+        error: "Failed to generate PDF",
+        message: errorMessage,
+        code: "PDF_GENERATION_ERROR",
+      },
+      { status: 500 },
+    );
   }
 }

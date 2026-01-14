@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, PieChart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -9,52 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ChartContainer } from "@/components/ui/chart";
 
-interface DashboardGrowthProps {
-  percentage: number;
-}
-
-function CircularProgress({ percentage }: { percentage: number }) {
-  const radius = 60;
-  const strokeWidth = 12;
-  const normalizedRadius = radius - strokeWidth / 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg height={radius * 2} width={radius * 2} className="-rotate-90">
-        {/* Background circle */}
-        <circle
-          stroke="#e5e7eb"
-          fill="transparent"
-          strokeWidth={strokeWidth}
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-        {/* Progress circle */}
-        <circle
-          stroke="#22c55e"
-          fill="transparent"
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circumference + " " + circumference}
-          style={{ strokeDashoffset }}
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-foreground">{percentage}%</span>
-        <span className="text-xs text-muted-foreground">Growth</span>
-      </div>
-    </div>
-  );
-}
-
-export function DashboardGrowth({ percentage = 78 }: DashboardGrowthProps) {
+export function DashboardGrowth() {
   return (
     <Card className="rounded-xl bg-white shadow-sm ring-0 h-full">
       <CardHeader className="flex-row items-center justify-between pb-2">
@@ -77,7 +34,15 @@ export function DashboardGrowth({ percentage = 78 }: DashboardGrowthProps) {
         </CardAction>
       </CardHeader>
       <CardContent className="flex items-center justify-center py-4">
-        <CircularProgress percentage={percentage} />
+        <ChartContainer
+          config={{
+            growth: {
+              color: "#22c55e",
+            },
+          }}
+        >
+          <PieChart className="w-full h-full" />
+        </ChartContainer>
       </CardContent>
     </Card>
   );

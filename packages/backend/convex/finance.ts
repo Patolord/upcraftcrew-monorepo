@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireMember } from "./users";
+import { throwNotFound } from "./errors";
 
 // Query: Get all transactions
 export const getTransactions = query({
@@ -237,7 +238,7 @@ export const updateTransaction = mutation({
 
     const existingTransaction = await ctx.db.get(id);
     if (!existingTransaction) {
-      throw new Error("Transaction not found");
+      throwNotFound("Transaction");
     }
 
     // If status is changing to completed and transaction is linked to a project
@@ -274,7 +275,7 @@ export const deleteTransaction = mutation({
     const transaction = await ctx.db.get(args.id);
 
     if (!transaction) {
-      throw new Error("Transaction not found");
+      throwNotFound("Transaction");
     }
 
     // If transaction was completed and linked to a project, revert budget changes

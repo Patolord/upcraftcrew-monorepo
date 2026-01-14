@@ -42,28 +42,31 @@ export function BudgetSlideOver({ isOpen, onClose, title, children }: BudgetSlid
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 backdrop-blur-sm z-40 transition-opacity"
-        onClick={onClose}
+        className="fixed inset-0 backdrop-blur-sm z-40 transition-opacity pointer-events-none"
         aria-hidden="true"
       />
 
-      {/* Slide-over panel */}
-      <div
-        className={`fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-base-100 shadow-2xl transform transition-transform duration-300 ease-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-base-300">
-          <h2 className="text-lg font-semibold">{title}</h2>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Fechar</span>
-          </Button>
-        </div>
+      {/* Slide-over wrapper to handle backdrop clicks */}
+      <div className="fixed inset-0 z-50 pointer-events-none" onClick={onClose}>
+        {/* Slide-over panel */}
+        <div
+          className={`fixed inset-y-0 right-0 w-full max-w-2xl bg-base-100 shadow-2xl transform transition-transform duration-300 ease-out pointer-events-auto ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-base-300">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Fechar</span>
+            </Button>
+          </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto h-[calc(100vh-64px)]">{children}</div>
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto h-[calc(100vh-64px)]">{children}</div>
+        </div>
       </div>
     </>
   );

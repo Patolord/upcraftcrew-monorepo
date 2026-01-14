@@ -54,9 +54,9 @@ const menuItems: MenuItem[] = [
     icon: FileText,
     prefetch: true,
     items: [
-      { title: "Overview", url: "/budgets" },
-      { title: "All Budgets", url: "/budgets/all" },
-      { title: "Create New", url: "/budgets/new" },
+      { title: "Overview", url: "/budgets?view=dashboard" },
+      { title: "All Budgets", url: "/budgets?view=all" },
+      { title: "Create New", url: "/budgets?view=all&new=true" },
     ],
   },
   {

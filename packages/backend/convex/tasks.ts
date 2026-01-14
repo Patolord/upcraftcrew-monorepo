@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { throwNotFound, throwUnauthorized } from "./errors";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
@@ -52,7 +53,7 @@ export const getTaskById = query({
     // Check if user has permission to view this task
     // Tasks without isPrivate field are treated as public (false)
     if ((task.isPrivate ?? false) && task.ownerId !== user._id) {
-      throw new Error("Unauthorized: You don't have permission to view this private task");
+      throwUnauthorized("You don't have permission to view this private task");
     }
 
     const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
@@ -197,13 +198,13 @@ export const updateTask = mutation({
 
     const existingTask = await ctx.db.get(id);
     if (!existingTask) {
-      throw new Error("Task not found");
+      throwNotFound("Task");
     }
 
     // Only owner can update private tasks
     // Tasks without isPrivate field are treated as public (false)
     if ((existingTask.isPrivate ?? false) && existingTask.ownerId !== user._id) {
-      throw new Error("Unauthorized: Only the owner can update this private task");
+      throwUnauthorized("Only the owner can update this private task");
     }
 
     await ctx.db.patch(id, {
@@ -223,13 +224,13 @@ export const deleteTask = mutation({
     const task = await ctx.db.get(args.id);
 
     if (!task) {
-      throw new Error("Task not found");
+      throwNotFound("Task");
     }
 
     // Only owner can delete private tasks
     // Tasks without isPrivate field are treated as public (false)
     if ((task.isPrivate ?? false) && task.ownerId !== user._id) {
-      throw new Error("Unauthorized: Only the owner can delete this private task");
+      throwUnauthorized("Only the owner can delete this private task");
     }
 
     await ctx.db.delete(args.id);

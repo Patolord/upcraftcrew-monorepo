@@ -20,7 +20,17 @@ import {
   SendIcon,
   FileTextIcon,
 } from "lucide-react";
-import { BudgetCard } from "./budget-card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
+import { toast } from "sonner";
+import { ErrorAlert } from "@/components/ui/error-alert";
+import { useConvexError } from "@/hooks/use-convex-error";
 
 interface Budget {
   _id: Id<"budgets">;
@@ -254,15 +264,68 @@ export function BudgetList({ budgets, onView, onEdit, onDelete }: BudgetListProp
       ) : (
         /* Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredBudgets.map((budget) => (
-            <BudgetCard
-              key={budget._id}
-              budget={budget}
-              onView={onView}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          ))}
+          {filteredBudgets.map((budget) => {
+            const isExpiringSoon =
+              budget.status === "sent" && budget.validUntil - Date.now() <= 7 * 24 * 60 * 60 * 1000;
+
+            const handleDownloadPDF = () => {
+              window.open(`/budgets/${budget._id}/pdf`, "_blank");
+            };
+
+            return (
+              <Card
+                key={budget._id}
+                className="border-orange-500 hover:shadow-lg hover:shadow-orange-500/50 transition-shadow"
+              >
+                <CardHeader>
+                  <CardTitle className="text-base line-clamp-1">{budget.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{budget.client}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 mt-2">
+                    {budget.description}
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-t pt-4 mt-2 mb-4" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Valor Total</p>
+                      <p className="text-lg font-bold">
+                        {formatCurrency(budget.totalAmount, budget.currency)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground">Válido até</p>
+                      <p className={`text-sm font-medium ${isExpiringSoon ? "text-warning" : ""}`}>
+                        {new Date(budget.validUntil).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "short",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-error"
+                    onClick={() => onDelete(budget._id, budget.title)}
+                  >
+                    <Trash2Icon className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => onView(budget)}>
+                    <EyeIcon className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleDownloadPDF}>
+                    <FileDownIcon className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
+                    <PencilIcon className="h-4 w-4 text-orange-500" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       )}
 

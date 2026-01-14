@@ -15,15 +15,21 @@ import { AlertCircleIcon, ArrowLeftIcon, InfoIcon, BarChart3Icon, KanbanIcon } f
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const projectId = params.id as Id<"projects">;
+  const projectId = params.id as string;
 
   const [activeTab, setActiveTab] = useState<"info" | "kanban" | "dashboard">("info");
 
-  // Fetch project data
-  const project = useQuery(api.projects.getProjectById, { id: projectId });
+  // Validate that we have a valid project ID (not "all" or other invalid values)
+  const isValidId = projectId && projectId !== "all" && !projectId.includes("/");
 
-  const isLoading = project === undefined;
-  const notFound = project === null;
+  // Fetch project data - only if we have a valid ID
+  const project = useQuery(
+    api.projects.getProjectById,
+    isValidId ? { id: projectId as Id<"projects"> } : "skip",
+  );
+
+  const isLoading = isValidId && project === undefined;
+  const notFound = !isValidId || project === null;
 
   if (isLoading) {
     return (
@@ -38,7 +44,7 @@ export default function ProjectDetailPage() {
 
   if (notFound) {
     return (
-      <div className="p-6 flex items-cen  ter justify-center min-h-[400px]">
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <AlertCircleIcon className="h-16 w-16 text-error mb-4" />
           <h3 className="text-lg font-medium mb-2">Projeto não encontrado</h3>
@@ -99,7 +105,7 @@ export default function ProjectDetailPage() {
 
       {/* Tab Content */}
       {activeTab === "info" && <ProjectInfo project={project as unknown as Project} />}
-      {activeTab === "kanban" && <ProjectKanban projectId={projectId} />}
+      {activeTab === "kanban" && <ProjectKanban projectId={projectId as Id<"projects">} />}
       {activeTab === "dashboard" && <ProjectDashboard project={project} />}
     </div>
   );

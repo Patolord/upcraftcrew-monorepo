@@ -6,6 +6,8 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TeamMemberStatus } from "@/types/team";
+import { useConvexError } from "@/hooks/use-convex-error";
+import { ErrorAlert } from "@/components/ui/error-alert";
 
 interface NewTeamMemberModalProps {
   isOpen: boolean;
@@ -16,6 +18,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createTeamMember = useMutation(api.team.createTeamMember);
   const formId = useId();
+  const { error, clearError, handleErrorWithMessages } = useConvexError();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -59,9 +62,15 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
       });
 
       onClose();
-    } catch (error) {
-      console.error("Failed to create team member:", error);
-      toast.error("Failed to add team member. Please try again.");
+    } catch (err) {
+      handleErrorWithMessages(
+        err,
+        {
+          ALREADY_EXISTS: "Um usuário com este email já existe",
+          UNAUTHORIZED: "Você não tem permissão para adicionar membros",
+        },
+        "Erro ao adicionar membro",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -73,6 +82,18 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
     <div className="modal modal-open">
       <div className="modal-box max-w-2xl">
         <h3 className="font-bold text-lg mb-4">Add New Team Member</h3>
+
+        {error && (
+          <div className="mb-4">
+            <ErrorAlert
+              code={error.code}
+              message={error.message}
+              title={error.title}
+              onDismiss={clearError}
+            />
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div className="form-control">

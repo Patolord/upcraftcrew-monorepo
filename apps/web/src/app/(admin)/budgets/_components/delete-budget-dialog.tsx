@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, AlertTriangle } from "lucide-react";
+import { useConvexError } from "@/hooks/use-convex-error";
+import { ErrorAlert } from "@/components/ui/error-alert";
 
 interface DeleteBudgetDialogProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ export function DeleteBudgetDialog({
 }: DeleteBudgetDialogProps) {
   const deleteBudget = useMutation(api.budgets.deleteBudget);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { error, clearError, handleError } = useConvexError();
 
   const handleDelete = async () => {
     if (!budgetId) return;
@@ -40,9 +43,8 @@ export function DeleteBudgetDialog({
       await deleteBudget({ id: budgetId });
       toast.success("Orçamento excluído com sucesso!");
       onClose();
-    } catch (error) {
-      console.error("Error deleting budget:", error);
-      toast.error("Erro ao excluir orçamento");
+    } catch (err) {
+      handleError(err, "Erro ao excluir orçamento");
     } finally {
       setIsDeleting(false);
     }
@@ -51,6 +53,16 @@ export function DeleteBudgetDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
+        {error && (
+          <div className="mb-4">
+            <ErrorAlert
+              code={error.code}
+              message={error.message}
+              title={error.title}
+              onDismiss={clearError}
+            />
+          </div>
+        )}
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-error/10">

@@ -11,7 +11,6 @@ import { DashboardStatisticsChart } from "./dashboard-statistics-chart";
 import { DashboardTransactions } from "./dashboard-transactions";
 import { DashboardRecentProjectsTable } from "./dashboard-recent-projects-table";
 import { DashboardGrowth } from "./dashboard-growth";
-import { DashboardErrorState } from "./dashboard-error-state";
 
 interface Project {
   _id: Id<"projects">;
@@ -90,7 +89,6 @@ export function DashboardPage({
   const projects = usePreloadedQuery(preloadedProjects) as Project[];
   const teamMembers = usePreloadedQuery(preloadedTeam) as TeamMember[];
   const transactions = usePreloadedQuery(preloadedTransactions) as Transaction[];
-  const tasks = usePreloadedQuery(preloadedTasks) as Task[];
 
   // Calculate overview stats
   const stats = useMemo(() => {
@@ -120,16 +118,6 @@ export function DashboardPage({
   // Error handling
   const hasError = !projects && !teamMembers && !transactions;
 
-  if (hasError) {
-    return (
-      <DashboardErrorState
-        title="Something went wrong"
-        message="We couldn't load the dashboard data. Please try again."
-        onRetry={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
     <div className="p-6 space-y-6">
       {/* Header with Search and User */}
@@ -158,7 +146,7 @@ export function DashboardPage({
           <DashboardRecentProjectsTable projects={projects} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-          <DashboardGrowth percentage={Math.round(stats.avgProgress)} />
+          <DashboardGrowth />
         </div>
       </div>
     </div>
