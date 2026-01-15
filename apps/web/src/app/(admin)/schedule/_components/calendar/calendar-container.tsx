@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { useQuery, useMutation } from "convex/react";
-import { useAuth } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 import type { EventType, ScheduleEvent } from "@/types/schedule";
 import { CalendarMonthView } from "./calendar-month-view";
 import { CalendarHeader } from "./calendar-header";
@@ -11,6 +10,7 @@ import { CalendarWeekView } from "./calendar-week-view";
 import { CalendarDayView } from "./calendar-day-view";
 import { CalendarSidebar } from "./calendar-sidebar";
 import { getEventColor } from "./calendar-utils";
+import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
 
 export type ViewMode = "month" | "week" | "day";
 
@@ -20,18 +20,8 @@ export function CalendarContainer() {
   const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(null);
   const [selectedDayForSidebar, setSelectedDayForSidebar] = useState<Date | null>(null);
 
-  // Check authentication
-  const { isSignedIn, isLoaded } = useAuth();
-  const ensureCurrentUser = useMutation(api.users.ensureCurrentUser);
-
-  // Ensure user exists in Convex when they sign in
-  useEffect(() => {
-    if (isSignedIn) {
-      ensureCurrentUser().catch((error) => {
-        console.error("Failed to ensure user:", error);
-      });
-    }
-  }, [ensureCurrentUser, isSignedIn]);
+  // Check authentication and ensure user exists
+  const { isSignedIn, isLoaded } = useEnsureCurrentUser();
 
   // Get current month/year for API
   const year = selectedDate.getFullYear();

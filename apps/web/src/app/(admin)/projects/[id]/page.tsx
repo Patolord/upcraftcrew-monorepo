@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { useAuth } from "@clerk/nextjs";
 import { Button } from "@base-ui/react/button";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
@@ -18,31 +17,22 @@ import {
   KanbanIcon,
   PencilIcon,
   Trash2Icon,
-  SaveIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
 
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.id as string;
-  const { isSignedIn } = useAuth();
+
+  useEnsureCurrentUser();
 
   const [activeTab, setActiveTab] = useState<"info" | "kanban" | "dashboard">("info");
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const ensureCurrentUser = useMutation(api.users.ensureCurrentUser);
   const deleteProject = useMutation(api.projects.deleteProject);
-
-  // Ensure user exists in Convex when they sign in
-  useEffect(() => {
-    if (isSignedIn) {
-      ensureCurrentUser().catch((error) => {
-        console.error("Failed to ensure user:", error);
-      });
-    }
-  }, [ensureCurrentUser, isSignedIn]);
 
   // Validate that we have a valid project ID (not "all" or other invalid values)
   const isValidId = projectId && projectId !== "all" && !projectId.includes("/");

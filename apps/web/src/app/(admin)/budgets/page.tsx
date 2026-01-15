@@ -7,9 +7,11 @@ export default async function Page() {
   // Get authenticated user and token
   const { token } = await requireAuthWithToken();
 
-  // Preload data with authentication
-  const preloadedBudgets = await preloadQuery(api.budgets.getBudgets, {}, { token });
-  const preloadedStats = await preloadQuery(api.budgets.getBudgetStats, {}, { token });
+  // Preload data with authentication - parallel execution
+  const [preloadedBudgets, preloadedStats] = await Promise.all([
+    preloadQuery(api.budgets.getBudgets, {}, { token }),
+    preloadQuery(api.budgets.getBudgetStats, {}, { token }),
+  ]);
 
   return <BudgetsPage preloadedBudgets={preloadedBudgets} preloadedStats={preloadedStats} />;
 }

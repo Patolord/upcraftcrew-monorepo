@@ -124,8 +124,8 @@ export async function requireAdminServer(): Promise<AuthUser> {
  * @returns Object with user and token
  */
 export async function requireAdminWithToken(): Promise<{ user: AuthUser; token: string }> {
-  const user = await getCurrentUserServer();
-  const token = await getConvexToken();
+  // Parallel execution for better performance
+  const [user, token] = await Promise.all([getCurrentUserServer(), getConvexToken()]);
 
   if (!user || !token) {
     throw new Error("Unauthorized: Authentication required");
@@ -146,8 +146,8 @@ export async function requireAdminWithToken(): Promise<{ user: AuthUser; token: 
  * @returns Object with user and token
  */
 export async function requireAuthWithToken(): Promise<{ user: AuthUser; token: string }> {
-  const user = await getCurrentUserServer();
-  const token = await getConvexToken();
+  // Parallel execution for better performance
+  const [user, token] = await Promise.all([getCurrentUserServer(), getConvexToken()]);
 
   if (!user || !token) {
     throw new Error("Unauthorized: Authentication required");

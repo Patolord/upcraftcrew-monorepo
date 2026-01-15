@@ -7,11 +7,14 @@ export default async function Dashboard() {
   // Verify admin access and get token for preloadQuery
   const { token } = await requireAdminWithToken();
 
-  // Preload data with authentication
-  const preloadedTasks = await preloadQuery(api.tasks.getTasks, {}, { token });
-  const preloadedTransactions = await preloadQuery(api.finance.getTransactions, {}, { token });
-  const preloadedTeam = await preloadQuery(api.team.getTeamMembers, {}, { token });
-  const preloadedProjects = await preloadQuery(api.projects.getProjects, {}, { token });
+  // Preload data with authentication - parallel execution
+  const [preloadedTasks, preloadedTransactions, preloadedTeam, preloadedProjects] =
+    await Promise.all([
+      preloadQuery(api.tasks.getTasks, {}, { token }),
+      preloadQuery(api.finance.getTransactions, {}, { token }),
+      preloadQuery(api.team.getTeamMembers, {}, { token }),
+      preloadQuery(api.projects.getProjects, {}, { token }),
+    ]);
 
   return (
     <DashboardPage

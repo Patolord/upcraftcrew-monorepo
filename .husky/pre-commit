@@ -1,1 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Add node to PATH if not already present
+export PATH="/opt/homebrew/bin:$PATH"
+
 lint-staged

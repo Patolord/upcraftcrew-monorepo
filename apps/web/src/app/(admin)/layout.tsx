@@ -1,5 +1,3 @@
-"use client";
-
 import { type ReactNode } from "react";
 
 import { Footer } from "@/components/admin-layout/Footer";
@@ -7,7 +5,7 @@ import { AppSidebar } from "@/components/admin-layout/sidebar/app-sidebar";
 import { Providers } from "@/components/providers";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-const Layout = ({ children }: { children: ReactNode }) => {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <Providers>
       <SidebarProvider className="bg-admin-background">
@@ -19,6 +17,4 @@ const Layout = ({ children }: { children: ReactNode }) => {
       </SidebarProvider>
     </Providers>
   );
-};
-
-export default Layout;
+}
