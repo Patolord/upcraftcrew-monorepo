@@ -7,6 +7,7 @@ import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Save, FileDown, Loader2 } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
@@ -190,7 +191,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
       <div className="px-6 py-3 border-b border-base-300 overflow-x-auto">
         <div className="flex gap-1">
           {sections.map((section) => (
-            <button
+            <Button
               key={section.id}
               type="button"
               className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
@@ -201,7 +202,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
               onClick={() => setActiveSection(section.id)}
             >
               {section.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -244,9 +245,9 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
               <Label htmlFor="description" className="pb-3">
                 Descrição
               </Label>
-              <textarea
+              <Textarea
                 id="description"
-                className="w-full min-h-[100px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
+                className="w-full min-h-[100px] resize-none border-orange-500 rounded-md focus-visible:border-orange-500"
                 value={formData.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 placeholder="Descreva brevemente o projeto..."
@@ -307,9 +308,9 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
               <Label htmlFor="notes" className="pb-3">
                 Observações
               </Label>
-              <textarea
+              <Textarea
                 id="notes"
-                className="w-full min-h-[80px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
+                className="w-full min-h-[80px] resize-none border-orange-500 rounded-md focus-visible:border-orange-500"
                 value={formData.notes || ""}
                 onChange={(e) => updateField("notes", e.target.value)}
                 placeholder="Observações adicionais..."

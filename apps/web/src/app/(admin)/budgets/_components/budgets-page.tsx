@@ -13,13 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusIcon, LayoutDashboardIcon, FileTextIcon } from "lucide-react";
 import { useQueryState, parseAsStringEnum, parseAsString } from "nuqs";
-import { BudgetDashboard } from "./budget-dashboard";
-import { BudgetList } from "./budget-list";
 import { BudgetSlideOver } from "./budget-slide-over";
 import { BudgetFormModal } from "./budget-form-modal";
 import { DeleteBudgetDialog } from "./delete-budget-dialog";
+import { BudgetHeader } from "./budget-header";
+import { BudgetDashboard } from "./budget-dashboard";
 
 interface Budget {
   _id: Id<"budgets">;
@@ -140,34 +139,9 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
   };
 
   return (
-    <div className="p-2 pl-18 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl text-orange-500 font-medium pb-2">Orçamentos</h1>
-        </div>
-        {view === "all" && (
-          <Button
-            onClick={handleCreateNew}
-            className="gap-2 text-white bg-orange-500 border rounded-md"
-          >
-            <PlusIcon className="h-4 w-4" />
-            Novo Orçamento
-          </Button>
-        )}
-      </div>
-
-      {/* Tab Content */}
-      {view === "dashboard" ? (
-        <BudgetDashboard budgets={budgets} stats={stats} />
-      ) : (
-        <BudgetList
-          budgets={budgets}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      )}
+    <div className="p-6 space-y-6">
+      <BudgetHeader />
+      <BudgetDashboard budgets={budgets} stats={stats} />
 
       {/* Modal for Create/Edit */}
       <BudgetFormModal

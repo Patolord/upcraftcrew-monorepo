@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Form, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -10,38 +11,41 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Lock, KeyRound } from "lucide-react";
 
+interface ResetPasswordFormData {
+  code: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export default function ResetPasswordPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
-  const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ResetPasswordFormData>({
+    defaultValues: {
+      code: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
+  const password = watch("password");
+
+  const onSubmit = async (data: ResetPasswordFormData) => {
     if (!isLoaded) return;
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-
-    if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
-      return;
-    }
-
-    setIsLoading(true);
 
     try {
       const result = await signIn.attemptFirstFactor({
         strategy: "reset_password_email_code",
-        code,
-        password,
+        code: data.code,
+        password: data.password,
       });
 
       if (result.status === "complete") {
@@ -53,8 +57,6 @@ export default function ResetPasswordPage() {
       console.error("Error:", err);
       const error = err as { errors?: Array<{ message: string }> };
       toast.error(error.errors?.[0]?.message || "Failed to reset password");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -63,7 +65,7 @@ export default function ResetPasswordPage() {
       <h2 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
       <p className="text-gray-600 mb-8">Enter the code sent to your email and your new password</p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <Form className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="code" className="text-sm text-gray-700">
             Verification Code
@@ -73,13 +75,18 @@ export default function ResetPasswordPage() {
               id="code"
               type="text"
               placeholder="Enter code from email"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("code", {
+                required: "Verification code is required",
+                minLength: {
+                  value: 6,
+                  message: "Code must be at least 6 characters",
+                },
+              })}
             />
             <KeyRound className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
+          {errors.code && <p className="text-sm text-red-600 mt-1">{errors.code.message}</p>}
         </div>
 
         <div className="space-y-2">
@@ -91,18 +98,26 @@ export default function ResetPasswordPage() {
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+              })}
             />
             <Button
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent border-none"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </Button>
           </div>
+          {errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -114,26 +129,31 @@ export default function ResetPasswordPage() {
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) => value === password || "Passwords do not match",
+              })}
             />
             <Button
+              type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent border-none"
             >
               {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </Button>
           </div>
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-600 mt-1">{errors.confirmPassword.message}</p>
+          )}
         </div>
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-12 bg-[#FF8E29] hover:bg-[#FF6B00] text-white font-medium rounded-full transition-colors"
         >
-          {isLoading ? "Resetting..." : "Reset Password"}
+          {isSubmitting ? "Resetting..." : "Reset Password"}
         </Button>
 
         <div className="text-center">
@@ -144,7 +164,7 @@ export default function ResetPasswordPage() {
             Back to <span className="text-[#FF8E29]">Log in</span>
           </Link>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

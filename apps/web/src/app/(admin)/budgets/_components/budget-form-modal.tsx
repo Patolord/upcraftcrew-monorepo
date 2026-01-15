@@ -7,6 +7,7 @@ import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Save, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
@@ -244,9 +245,9 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
               <Label htmlFor="description" className="text-sm font-medium mb-2 block">
                 Descrição
               </Label>
-              <textarea
+              <Textarea
                 id="description"
-                className="w-full min-h-[100px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 border border-base-300 rounded-lg"
+                className="w-full min-h-[100px] resize-none border-base-300 rounded-lg focus-visible:border-orange-500"
                 value={formData.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 placeholder="Descreva brevemente o projeto..."
@@ -402,9 +403,9 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
               <Label htmlFor="notes" className="text-sm font-medium mb-2 block">
                 Observações
               </Label>
-              <textarea
+              <Textarea
                 id="notes"
-                className="w-full min-h-[80px] px-3 py-2 text-sm bg-transparent resize-none focus:outline-none focus:ring-2 focus:ring-orange-500 border border-base-300 rounded-lg"
+                className="w-full min-h-[80px] resize-none border-base-300 rounded-lg focus-visible:border-orange-500"
                 value={formData.notes || ""}
                 onChange={(e) => updateField("notes", e.target.value)}
                 placeholder="Observações adicionais..."

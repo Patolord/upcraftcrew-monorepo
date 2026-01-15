@@ -50,7 +50,7 @@ export function BudgetFormItems({ items, onChange }: BudgetFormItemsProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Itens do Investimento</Label>
-        <Button type="button" variant="outline" size="sm" onClick={addItem}>
+        <Button variant="outline" size="sm" onClick={addItem}>
           <Plus className="h-4 w-4 mr-1" />
           Adicionar Item
         </Button>
@@ -107,7 +107,6 @@ export function BudgetFormItems({ items, onChange }: BudgetFormItemsProps) {
               </div>
               <div className="col-span-1 pt-5">
                 <Button
-                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-error"

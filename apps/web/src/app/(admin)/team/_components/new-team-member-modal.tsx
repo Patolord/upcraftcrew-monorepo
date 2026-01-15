@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useId } from "react";
+import { Form, FormSubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -14,53 +15,55 @@ interface NewTeamMemberModalProps {
   onClose: () => void;
 }
 
+interface TeamMemberFormData {
+  name: string;
+  email: string;
+  role: "admin" | "member" | "viewer";
+  department: string;
+  status: TeamMemberStatus;
+  skills: string;
+  imageUrl: string;
+}
+
 export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const createTeamMember = useMutation(api.team.createTeamMember);
   const formId = useId();
   const { error, clearError, handleErrorWithMessages } = useConvexError();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "member" as "admin" | "member" | "viewer",
-    department: "",
-    status: "offline" as TeamMemberStatus,
-    skills: "",
-    imageUrl: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<TeamMemberFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      role: "member",
+      department: "",
+      status: "offline",
+      skills: "",
+      imageUrl: "",
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: TeamMemberFormData) => {
     try {
       await createTeamMember({
-        firstName: formData.name,
-        lastName: formData.name,
-        email: formData.email,
-        role: formData.role,
-        department: formData.department,
-        skills: formData.skills
+        firstName: data.name,
+        lastName: data.name,
+        email: data.email,
+        role: data.role,
+        department: data.department,
+        skills: data.skills
           .split(",")
           .map((skill) => skill.trim())
           .filter((skill) => skill.length > 0),
-        imageUrl: formData.imageUrl || undefined,
+        imageUrl: data.imageUrl || undefined,
       });
 
       toast.success("Team member added successfully!");
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        role: "member",
-        department: "",
-        status: "offline",
-        skills: "",
-        imageUrl: "",
-      });
-
+      reset();
       onClose();
     } catch (err) {
       handleErrorWithMessages(
@@ -71,8 +74,6 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
         },
         "Erro ao adicionar membro",
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -94,7 +95,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <Form className="space-y-4">
           {/* Name */}
           <div className="form-control">
             <label htmlFor={`${formId}-name`} className="label">
@@ -104,10 +105,17 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               id={`${formId}-name`}
               type="text"
               className="input input-bordered"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
+              {...register("name", {
+                required: "Name is required",
+                minLength: {
+                  value: 2,
+                  message: "Name must be at least 2 characters",
+                },
+              })}
             />
+            {errors.name && (
+              <span className="label-text-alt text-error mt-1">{errors.name.message}</span>
+            )}
           </div>
 
           {/* Email */}
@@ -119,10 +127,17 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               id={`${formId}-email`}
               type="email"
               className="input input-bordered"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
             />
+            {errors.email && (
+              <span className="label-text-alt text-error mt-1">{errors.email.message}</span>
+            )}
           </div>
 
           {/* Role and Department */}
@@ -134,16 +149,17 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               <select
                 id={`${formId}-role`}
                 className="select select-bordered"
-                value={formData.role}
-                onChange={(e) =>
-                  setFormData({ ...formData, role: e.target.value as typeof formData.role })
-                }
-                required
+                {...register("role", {
+                  required: "Role is required",
+                })}
               >
                 <option value="viewer">Viewer</option>
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
               </select>
+              {errors.role && (
+                <span className="label-text-alt text-error mt-1">{errors.role.message}</span>
+              )}
             </div>
             <div className="form-control">
               <label htmlFor={`${formId}-department`} className="label">
@@ -152,9 +168,10 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               <select
                 id={`${formId}-department`}
                 className="select select-bordered"
-                value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                required
+                {...register("department", {
+                  required: "Department is required",
+                  validate: (value) => value !== "" || "Please select a department",
+                })}
               >
                 <option value="">Select Department</option>
                 <option value="Engineering">Engineering</option>
@@ -166,6 +183,9 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
                 <option value="Finance">Finance</option>
                 <option value="Operations">Operations</option>
               </select>
+              {errors.department && (
+                <span className="label-text-alt text-error mt-1">{errors.department.message}</span>
+              )}
             </div>
           </div>
 
@@ -177,10 +197,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
             <select
               id={`${formId}-status`}
               className="select select-bordered"
-              value={formData.status}
-              onChange={(e) =>
-                setFormData({ ...formData, status: e.target.value as typeof formData.status })
-              }
+              {...register("status")}
             >
               <option value="online">Online</option>
               <option value="offline">Offline</option>
@@ -199,8 +216,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               type="text"
               className="input input-bordered"
               placeholder="React, TypeScript, Node.js"
-              value={formData.skills}
-              onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+              {...register("skills")}
             />
           </div>
 
@@ -214,9 +230,16 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               type="url"
               className="input input-bordered"
               placeholder="https://example.com/avatar.jpg"
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+              {...register("imageUrl", {
+                pattern: {
+                  value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                  message: "Invalid URL format",
+                },
+              })}
             />
+            {errors.imageUrl && (
+              <span className="label-text-alt text-error mt-1">{errors.imageUrl.message}</span>
+            )}
           </div>
 
           {/* Actions */}
@@ -240,7 +263,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
               )}
             </Button>
           </div>
-        </form>
+        </Form>
       </div>
       <button type="button" className="modal-backdrop" onClick={onClose} aria-label="Close modal" />
     </div>

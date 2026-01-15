@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { CalendarIcon } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface ProjectDashboardProps {
   project: any;
@@ -72,14 +73,6 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
     };
   }, [project]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <span className="loading loading-spinner loading-lg" />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* Key Metrics */}
@@ -126,9 +119,11 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
       {/* Progress Bars */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Project Progress */}
-        <div className="card bg-base-100 border border-base-300">
-          <div className="card-body">
-            <h2 className="card-title text-lg mb-4">Progresso do Projeto</h2>
+        <Card className="border border-base-300">
+          <CardHeader>
+            <CardTitle className="text-lg">Progresso do Projeto</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -154,13 +149,15 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Budget Status */}
-        <div className="card bg-base-100 border border-base-300">
-          <div className="card-body">
-            <h2 className="card-title text-lg mb-4">Status do Orçamento</h2>
+        <Card className="border border-base-300">
+          <CardHeader>
+            <CardTitle className="text-lg">Status do Orçamento</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Total</span>
@@ -180,14 +177,16 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                 max="100"
               />
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Financial Summary */}
-      <div className="card bg-base-100 border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-lg mb-4">Resumo Financeiro</h2>
+      <Card className="border border-base-300">
+        <CardHeader>
+          <CardTitle className="text-lg">Resumo Financeiro</CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 bg-success/10 border border-success rounded-lg">
               <p className="text-xs text-base-content/60 mb-1">Receita</p>
@@ -221,13 +220,15 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Events Summary */}
-      <div className="card bg-base-100 border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-lg mb-4">Eventos do Projeto</h2>
+      <Card className="border border-base-300">
+        <CardHeader>
+          <CardTitle className="text-lg">Eventos do Projeto</CardTitle>
+        </CardHeader>
+        <CardContent>
           {!events || events.length === 0 ? (
             <p className="text-base-content/60 text-center py-8">
               Nenhum evento agendado para este projeto
@@ -264,8 +265,8 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
               )}
             </div>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

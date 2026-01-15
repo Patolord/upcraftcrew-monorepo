@@ -53,7 +53,7 @@ export function BudgetFormExtras({ extras, onChange }: BudgetFormExtrasProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Extras Opcionais</Label>
-        <Button type="button" variant="outline" size="sm" onClick={addExtra}>
+        <Button variant="outline" size="sm" onClick={addExtra}>
           <Plus className="h-4 w-4 mr-1" />
           Adicionar Extra
         </Button>
@@ -107,7 +107,6 @@ export function BudgetFormExtras({ extras, onChange }: BudgetFormExtrasProps) {
               </div>
               <div className="col-span-1 pt-5">
                 <Button
-                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-error"

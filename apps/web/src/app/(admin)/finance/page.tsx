@@ -17,8 +17,14 @@ import { FinancialSummaryCards } from "./_components/financial-summary-cards";
 import { QuickStats } from "./_components/quick-stats";
 import { TransactionFilters } from "./_components/transaction-filters";
 import { TransactionRow } from "./_components/transaction-row";
-import { TransactionType, TransactionCategory, Transaction } from "@/types/finance";
+import {
+  TransactionType,
+  TransactionCategory,
+  Transaction,
+  FinancialSummary,
+} from "@/types/finance";
 import { AlertCircleIcon, DownloadIcon, PlusIcon } from "lucide-react";
+import { FinanceHeader } from "./_components/finance-header";
 
 export default function FinancePage() {
   const [typeFilter, setTypeFilter] = useState<TransactionType | "all">("all");
@@ -83,40 +89,16 @@ export default function FinancePage() {
     });
   }, [transformedTransactions, typeFilter, categoryFilter, statusFilter]);
 
-  // Loading state
-  if (transactions === undefined || financialSummary === undefined) {
+  // Show loading state while data is being fetched
+  if (!summary || !financialSummary) {
     return (
       <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Finance</h1>
-            <p className="text-base-content/60 text-sm mt-1">
-              Track income, expenses, and financial performance
-            </p>
+        <FinanceHeader />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg"></div>
+            <p className="mt-4 text-base-content/60">Loading financial data...</p>
           </div>
-        </div>
-        <div className="flex items-center justify-center py-12">
-          <span className="loading loading-spinner loading-lg" />
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (!transactions || !summary) {
-    return (
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Finance</h1>
-            <p className="text-base-content/60 text-sm mt-1">
-              Track income, expenses, and financial performance
-            </p>
-          </div>
-        </div>
-        <div className="alert alert-error">
-          <AlertCircleIcon className="h-5 w-5" />
-          <span>Failed to load financial data. Please try again.</span>
         </div>
       </div>
     );
@@ -124,36 +106,12 @@ export default function FinancePage() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Finance</h1>
-          <p className="text-base-content/60 text-sm mt-1">
-            Track income, expenses, and financial performance
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button className="btn btn-ghost gap-2">
-            <DownloadIcon className="h-5 w-5" />
-            Export
-          </Button>
-          <Button
-            className="btn btn-primary gap-2"
-            onClick={() => {
-              setSelectedTransaction(null);
-              setIsFormOpen(true);
-            }}
-          >
-            <PlusIcon className="h-5 w-5" />
-            New Transaction
-          </Button>
-        </div>
-      </div>
+      <FinanceHeader />
 
       {/* Financial Summary Cards */}
       <FinancialSummaryCards
         summary={summary}
-        totalTransactions={financialSummary.transactionCount}
+        totalTransactions={financialSummary.transactionCount || 0}
         pendingTransactions={transformedTransactions.filter((t) => t.status === "pending").length}
       />
 

@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
 import { NewTeamMemberModal } from "./_components/new-team-member-modal";
 import { TeamMemberCard } from "./_components/team-member-card";
 import { TeamMemberRow } from "./_components/team-member-row";
@@ -22,8 +23,18 @@ import {
   UserPlusIcon,
   UsersRoundIcon,
   LayoutGridIcon,
-  SearchIcon,
 } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TeamHeader } from "./_components/team-header";
 
 export default function TeamPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -87,137 +98,45 @@ export default function TeamPage() {
     };
   }, [teamMembers, departments]);
 
-  // Loading state
-  if (teamMembers === undefined) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <span className="loading loading-spinner loading-lg text-primary" />
-          <p className="mt-4 text-base-content/60">Loading team members...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state (empty data)
-  if (!teamMembers) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <AlertCircleIcon className="h-16 w-16 text-error mb-4" />
-          <h3 className="text-lg font-medium mb-2">Failed to load team members</h3>
-          <p className="text-base-content/60 text-sm">Please try refreshing the page</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Team</h1>
-          <p className="text-base-content/60 text-sm mt-1">
-            Manage your team members and permissions
-          </p>
-        </div>
-        <Button className="btn btn-primary gap-2" onClick={() => setIsModalOpen(true)}>
-          <UserPlusIcon className="h-5 w-5" />
-          Add Member
-        </Button>
-      </div>
+      <TeamHeader />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stats shadow border border-base-300">
-          <div className="stat py-4">
-            <div className="stat-title text-xs">Total Members</div>
-            <div className="stat-value text-2xl">{stats.total}</div>
-          </div>
-        </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat py-4">
-            <div className="stat-title text-xs">Online</div>
-            <div className="stat-value text-2xl text-success">{stats.online}</div>
-          </div>
-        </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat py-4">
-            <div className="stat-title text-xs">Departments</div>
-            <div className="stat-value text-2xl">{stats.departments}</div>
-          </div>
-        </div>
-        <div className="stats shadow border border-base-300">
-          <div className="stat py-4">
-            <div className="stat-title text-xs">Avg Projects</div>
-            <div className="stat-value text-2xl">{stats.avgProjects}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1">
-          <label className="input input-bordered flex items-center gap-2">
-            <SearchIcon className="h-4 w-4 text-base-content/60" />
-            <input
-              type="text"
-              className="grow"
-              placeholder="Search team members..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </label>
-        </div>
-        <select
-          className="select select-bordered w-full sm:w-40"
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value as TeamMemberRole | "all")}
-        >
-          <option value="all">All Roles</option>
-          <option value="owner">Owner</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="developer">Developer</option>
-          <option value="designer">Designer</option>
-          <option value="member">Member</option>
-        </select>
-        <select
-          className="select select-bordered w-full sm:w-48"
-          value={departmentFilter}
-          onChange={(e) => setDepartmentFilter(e.target.value)}
-        >
-          <option value="all">All Departments</option>
-          {departments.map((dept) => (
-            <option key={dept} value={dept}>
-              {dept}
-            </option>
-          ))}
-        </select>
-        <div className="join">
-          <Button
-            className={`btn join-item ${viewMode === "grid" ? "btn-active" : ""}`}
-            onClick={() => setViewMode("grid")}
-          >
-            <LayoutGridIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            className={`btn join-item ${viewMode === "table" ? "btn-active" : ""}`}
-            onClick={() => setViewMode("table")}
-          >
-            <TableIcon className="h-4 w-4" />
-          </Button>
-        </div>
+        <Card size="sm" className="rounded-lg items-center justify-center">
+          <CardContent className="flex flex-col gap-1">
+            <div className="text-muted-foreground text-xs">Total Members</div>
+            <div className="text-2xl font-semibold">{stats.total}</div>
+          </CardContent>
+        </Card>
+        <Card size="sm" className="rounded-lg items-center justify-center">
+          <CardContent className="flex flex-col gap-1">
+            <div className="text-muted-foreground text-xs">Online</div>
+            <div className="text-2xl font-semibold text-green-600">{stats.online}</div>
+          </CardContent>
+        </Card>
+        <Card size="sm" className="rounded-lg items-center justify-center">
+          <CardContent className="flex flex-col gap-1">
+            <div className="text-muted-foreground text-xs">Departments</div>
+            <div className="text-2xl font-semibold">{stats.departments}</div>
+          </CardContent>
+        </Card>
+        <Card size="sm" className="rounded-lg items-center justify-center">
+          <CardContent className="flex flex-col gap-1">
+            <div className="text-muted-foreground text-xs">Avg Projects</div>
+            <div className="text-2xl font-semibold">{stats.avgProjects}</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Team Members Grid/Table */}
       {filteredMembers.length === 0 ? (
-        <div className="text-center py-12">
-          <UsersRoundIcon className="h-16 w-16 text-base-content/20 mb-4" />
-          <h3 className="text-lg font-medium mb-2">No team members found</h3>
-          <p className="text-base-content/60 text-sm">Try adjusting your search or filters</p>
-        </div>
+        <EmptyState
+          icon={UsersRoundIcon}
+          title="No team members found"
+          description="Try adjusting your search or filters"
+        />
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredMembers.map((member) => (
@@ -225,7 +144,7 @@ export default function TeamPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-base-100 rounded-box border border-base-300">
+        <Card className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -243,7 +162,7 @@ export default function TeamPage() {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       )}
 
       {/* New Team Member Modal */}

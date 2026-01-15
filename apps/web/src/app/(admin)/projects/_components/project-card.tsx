@@ -1,5 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  CardAction,
+} from "@/components/ui/card";
 import Image from "next/image";
 import type { Project } from "@/types/project";
 import { EyeIcon, FlagIcon } from "lucide-react";
@@ -43,23 +52,22 @@ export function ProjectCard({ project }: { project: Project }) {
   const priority = priorityConfig[project.priority];
 
   return (
-    <div className="card p-6 bg-base-100 border border-orange-500 rounded-md hover:shadow-lg transition-shadow">
-      <div className="card-body">
-        {/* Header */}
+    <Card className="border border-base-300 rounded-md hover:shadow-lg transition-shadow">
+      <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
-            <h3 className="card-title text-lg">{project.name}</h3>
-            {project.client && (
-              <p className="text-sm text-base-content/60 mt-1">{project.client}</p>
-            )}
+            <CardTitle className="text-lg">{project.name}</CardTitle>
+            {project.client && <CardDescription className="mt-1">{project.client}</CardDescription>}
           </div>
-          <div className="flex items-center gap-2">
+          <CardAction>
             <span className={`badge ${status.color} badge-sm`}>{status.label}</span>
-          </div>
+          </CardAction>
         </div>
+      </CardHeader>
 
+      <CardContent>
         {/* Description */}
-        <p className="text-sm text-base-content/70 mt-2 line-clamp-2">{project.description}</p>
+        <p className="text-sm text-base-content/70 line-clamp-2">{project.description}</p>
 
         {/* Progress */}
         <div className="mt-4">
@@ -133,17 +141,17 @@ export function ProjectCard({ project }: { project: Project }) {
             </div>
           </div>
         )}
+      </CardContent>
 
-        {/* Actions */}
-        <div className="card-actions justify-end mt-4 pt-4 border-t border-orange-500">
-          <Link href={`/projects/${project._id}`}>
-            <Button className="btn btn-primary btn-sm bg-orange-500 text-white border border-orange-500 rounded-md">
-              <EyeIcon className=" h-4 w-4" />
-              View
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </div>
+      {/* Actions */}
+      <CardFooter className="justify-end border-t border-orange-500">
+        <Link href={`/projects/${project._id}`}>
+          <Button className="btn btn-primary btn-sm bg-orange-500 text-white border border-orange-500 rounded-md">
+            <EyeIcon className=" h-4 w-4" />
+            View
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }

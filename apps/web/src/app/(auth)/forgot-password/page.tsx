@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Form, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -10,23 +10,30 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
 
+interface ForgotPasswordFormData {
+  email: string;
+}
+
 export default function ForgotPasswordPage() {
   const { isLoaded, signIn } = useSignIn();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<ForgotPasswordFormData>({
+    defaultValues: {
+      email: "",
+    },
+  });
 
+  const onSubmit = async (data: ForgotPasswordFormData) => {
     if (!isLoaded) return;
-
-    setIsLoading(true);
 
     try {
       await signIn.create({
         strategy: "reset_password_email_code",
-        identifier: email,
+        identifier: data.email,
       });
 
       toast.success("Reset code sent to your email");
@@ -35,8 +42,6 @@ export default function ForgotPasswordPage() {
       console.error("Error:", err);
       const error = err as { errors?: Array<{ message: string }> };
       toast.error(error.errors?.[0]?.message || "Failed to send reset email");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -47,7 +52,7 @@ export default function ForgotPasswordPage() {
         Enter your email and we'll send you a code to reset your password
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <Form className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-gray-700">
             Email
@@ -57,21 +62,26 @@ export default function ForgotPasswordPage() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
             />
             <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
+          {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
         </div>
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-12 bg-[#FF8E29] hover:bg-[#FF6B00] text-white font-medium rounded-full transition-colors"
         >
-          {isLoading ? "Sending..." : "Send Reset Code"}
+          {isSubmitting ? "Sending..." : "Send Reset Code"}
         </Button>
 
         <div className="text-center">
@@ -82,7 +92,7 @@ export default function ForgotPasswordPage() {
             Back to <span className="text-[#FF8E29]">Log in</span>
           </Link>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

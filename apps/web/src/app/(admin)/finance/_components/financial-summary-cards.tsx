@@ -1,5 +1,7 @@
 "use client";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
 interface FinancialSummary {
   totalIncome: number;
   totalExpenses: number;
@@ -26,58 +28,59 @@ export function FinancialSummaryCards({
   totalTransactions,
   pendingTransactions,
 }: FinancialSummaryCardsProps) {
+  const profitMargin =
+    summary.totalIncome > 0 ? ((summary.netProfit / summary.totalIncome) * 100).toFixed(0) : "0";
+
+  const stats = [
+    {
+      title: "Total Income",
+      value: formatLargeNumber(summary.totalIncome, (val) => val.toLocaleString()),
+      className: "text-success",
+      description: "",
+    },
+    {
+      title: "Total Expenses",
+      value: formatLargeNumber(summary.totalExpenses, (val) => val.toLocaleString()),
+      className: "text-error",
+      description: "",
+    },
+    {
+      title: "Net Profit",
+      value: formatLargeNumber(summary.netProfit, (val) => val.toLocaleString()),
+      className: summary.netProfit >= 0 ? "text-success" : "text-error",
+      description: `${summary.netProfit >= 0 ? "Profit" : "Loss"} this period`,
+    },
+    {
+      title: "Transactions",
+      value: totalTransactions.toString(),
+      className: "",
+      description: `${pendingTransactions} pending`,
+    },
+    {
+      title: "Profit Margin",
+      value: `${profitMargin}%`,
+      className: "",
+      description: "Revenue efficiency",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-      <div className="stats shadow border border-base-300">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Total Income</div>
-          <div className="stat-value text-2xl text-success"></div>
-          <div className="stat-desc text-xs"></div>
-        </div>
-      </div>
-
-      <div className="stats shadow border border-base-300">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Total Expenses</div>
-          <div className="stat-value text-2xl text-error"></div>
-          <div className="stat-desc text-xs"></div>
-        </div>
-      </div>
-
-      <div className="stats shadow border border-base-300">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Net Profit</div>
-          <div
-            className={`stat-value text-2xl ${
-              summary.netProfit >= 0 ? "text-success" : "text-error"
-            }`}
-          ></div>
-          <div className="stat-desc text-xs">
-            {summary.netProfit >= 0 ? "Profit" : "Loss"} this period
-          </div>
-        </div>
-      </div>
-
-      <div className="stats shadow border border-base-300">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Transactions</div>
-          <div className="stat-value text-2xl">{totalTransactions}</div>
-          <div className="stat-desc text-xs">{pendingTransactions} pending</div>
-        </div>
-      </div>
-
-      <div className="stats shadow border border-base-300">
-        <div className="stat py-4">
-          <div className="stat-title text-xs">Profit Margin</div>
-          <div className="stat-value text-2xl">
-            {summary.totalIncome > 0
-              ? ((summary.netProfit / summary.totalIncome) * 100).toFixed(0)
-              : "0"}
-            %
-          </div>
-          <div className="stat-desc text-xs">Revenue efficiency</div>
-        </div>
-      </div>
+      {stats.map((stat) => (
+        <Card className="border border-base-300 rounded-lg ">
+          <CardHeader>
+            <CardTitle className="text-xs text-center">{stat.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className={`text-2xl text-center ${stat.className}`}>{stat.value}</div>
+            {stat.description && (
+              <div className="text-xs text-muted-foreground mt-1 text-center">
+                {stat.description}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

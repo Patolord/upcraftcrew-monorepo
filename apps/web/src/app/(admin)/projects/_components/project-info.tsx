@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import type { Project, ProjectPriority, ProjectStatus, TeamMember } from "@/types/project";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
@@ -299,9 +300,9 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
                 <span className="text-sm font-medium">Descrição</span>
               </label>
               {isEditing ? (
-                <textarea
+                <Textarea
                   id={descriptionId}
-                  className="textarea textarea-bordered h-24 w-full border-2"
+                  className="h-24 w-full border-2"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
@@ -543,9 +544,9 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
               <label className="block mb-2" htmlFor={notesId}>
                 <span className="text-sm font-medium">Observações (opcional)</span>
               </label>
-              <textarea
+              <Textarea
                 id={notesId}
-                className="textarea textarea-bordered h-32 w-full border-2"
+                className="h-32 w-full border-2"
                 placeholder="Adicione notas sobre o projeto..."
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}

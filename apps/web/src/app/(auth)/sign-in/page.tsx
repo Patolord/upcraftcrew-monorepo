@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -10,25 +11,34 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 export default function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
+  const onSubmit = async (data: SignInFormData) => {
     if (!isLoaded) return;
-
-    setIsLoading(true);
 
     try {
       const result = await signIn.create({
-        identifier: email,
-        password,
+        identifier: data.email,
+        password: data.password,
       });
 
       if (result.status === "complete") {
@@ -39,8 +49,6 @@ export default function SignInPage() {
       console.error("Error:", err);
       const error = err as { errors?: Array<{ message: string }> };
       toast.error(error.errors?.[0]?.message || "Invalid email or password");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -48,7 +56,7 @@ export default function SignInPage() {
     <div className="w-full">
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Login</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm text-gray-700">
             Email
@@ -58,13 +66,18 @@ export default function SignInPage() {
               id="email"
               type="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
             />
             <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
+          {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
         </div>
 
         <div className="space-y-2">
@@ -76,10 +89,14 @@ export default function SignInPage() {
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
               className="h-12 pl-4 pr-12 rounded-lg border-gray-200 bg-white"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+              })}
             />
             <button
               type="button"
@@ -89,6 +106,9 @@ export default function SignInPage() {
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+          )}
         </div>
 
         <div className="text-right">
@@ -102,10 +122,10 @@ export default function SignInPage() {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-12 bg-[#FF8E29] hover:bg-[#FF6B00] text-white font-medium rounded-full transition-colors"
         >
-          {isLoading ? "Loading..." : "Log in"}
+          {isSubmitting ? "Loading..." : "Log in"}
         </Button>
 
         <p className="text-center text-sm text-gray-600">

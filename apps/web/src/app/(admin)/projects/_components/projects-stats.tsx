@@ -1,42 +1,46 @@
 import type { Project } from "@/types/project";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface ProjectsStatsProps {
   projects: Project[];
 }
 
 export function ProjectsStats({ projects }: ProjectsStatsProps) {
+  const stats = [
+    {
+      title: "Total Projects",
+      value: projects.length,
+      className: "",
+    },
+    {
+      title: "In Progress",
+      value: projects.filter((p) => p.status === "in-progress").length,
+      className: "text-primary",
+    },
+    {
+      title: "Completed",
+      value: projects.filter((p) => p.status === "completed").length,
+      className: "text-success",
+    },
+    {
+      title: "Planning",
+      value: projects.filter((p) => p.status === "planning").length,
+      className: "text-info",
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4  gap-6">
-      <div className="stats shadow border border-orange-500 rounded-md">
-        <div className="stat text-center py-4">
-          <div className="stat-title text-xs">Total Projects</div>
-          <div className="stat-value text-2xl">{projects.length}</div>
-        </div>
-      </div>
-      <div className="stats shadow border border-orange-500 rounded-md">
-        <div className="stat text-center py-4">
-          <div className="stat-title text-xs">In Progress</div>
-          <div className="stat-value text-2xl text-primary">
-            {projects.filter((p) => p.status === "in-progress").length}
-          </div>
-        </div>
-      </div>
-      <div className="stats shadow border border-orange-500 rounded-md">
-        <div className="stat text-center py-4">
-          <div className="stat-title text-xs">Completed</div>
-          <div className="stat-value text-2xl text-success">
-            {projects.filter((p) => p.status === "completed").length}
-          </div>
-        </div>
-      </div>
-      <div className="stats shadow border border-orange-500 rounded-md">
-        <div className="stat text-center py-4">
-          <div className="stat-title text-xs">Planning</div>
-          <div className="stat-value text-2xl text-info">
-            {projects.filter((p) => p.status === "planning").length}
-          </div>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {stats.map((stat) => (
+        <Card key={stat.title} className="border border-base-300 rounded-lg">
+          <CardHeader className="text-center py-2x">
+            <CardTitle className="text-xs">{stat.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center pb-4">
+            <div className={`text-2xl ${stat.className}`}>{stat.value}</div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

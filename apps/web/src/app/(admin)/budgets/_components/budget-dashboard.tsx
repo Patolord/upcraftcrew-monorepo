@@ -59,57 +59,57 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
   return (
     <div className="space-y-8">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-2">
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div className="stat-title pt-3 text-xl">Total Orçamentos</div>
-          <div className="stat-value pt-2 pb-4 text-lg">{stats?.total || 0}</div>
-        </div>
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Rascunho</div>
-            <div className="stat-value pt-2 pb-4 text-lg">{stats?.draft || 0}</div>
-          </div>
-        </div>
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Enviados</div>
-            <div className="stat-value pt-2 pb-4 text-lg">{stats?.sent || 0}</div>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+        <Card className="text-center rounded-lg">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Total Orçamentos</div>
+            <div className="text-lg font-semibold pt-2">{stats?.total || 0}</div>
+          </CardContent>
+        </Card>
 
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Rejeitados</div>
-            <div className="stat-value pt-2 pb-4 text-lg">{stats?.rejected || 0}</div>
-          </div>
-        </div>
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Aprovados</div>
-            <div className="stat-value pt-2 pb-4 text-lg">{stats?.approved || 0}</div>
-          </div>
-        </div>
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Valor Total</div>
-            <div className="stat-value pt-2 pb-4 text-lg">
+        <Card className=" text-center rounded-lg">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Rascunho</div>
+            <div className="text-lg font-semibold pt-2">{stats?.draft || 0}</div>
+          </CardContent>
+        </Card>
+
+        <Card className=" rounded-lg text-center">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Enviados</div>
+            <div className="text-lg font-semibold pt-2">{stats?.sent || 0}</div>
+          </CardContent>
+        </Card>
+
+        <Card className=" rounded-lg text-center">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Aprovados</div>
+            <div className="text-lg font-semibold pt-2">{stats?.approved || 0}</div>
+          </CardContent>
+        </Card>
+
+        <Card className=" rounded-lg text-center">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Valor Total</div>
+            <div className="text-lg font-semibold pt-2">
               {formatCurrency(stats?.totalValue || 0)}
             </div>
-          </div>
-        </div>
-        <div className="stats border text-center border-orange-500 rounded-md">
-          <div>
-            <div className="stat-title pt-3 text-xl">Valor Aprovado</div>
-            <div className="stat-value pt-2 pb-4 text-lg">
+          </CardContent>
+        </Card>
+
+        <Card className=" rounded-lg text-center">
+          <CardContent className="pt-3">
+            <div className="text-xl text-muted-foreground">Valor Aprovado</div>
+            <div className="text-lg font-semibold pt-2">
               {formatCurrency(stats?.approvedValue || 0)}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Budgets */}
-        <Card className="border-orange-500">
+        <Card className="rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg text-orange-500">Orçamentos Recentes</CardTitle>
           </CardHeader>
@@ -122,28 +122,27 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
                 </div>
               ) : (
                 recentBudgets.map((budget) => (
-                  <div
-                    key={budget._id}
-                    className="flex items-center justify-between p-3 border border-base-300 rounded-lg hover:bg-base-200 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{budget.title}</p>
-                      <p className="text-xs text-base-content/60">{budget.client}</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="font-semibold">
-                          {formatCurrency(budget.totalAmount, budget.currency)}
-                        </p>
-                        <p className="text-xs text-base-content/60">
-                          {new Date(budget.createdAt).toLocaleDateString("pt-BR")}
-                        </p>
+                  <Card key={budget._id} className="rounded-lg hover:bg-base-200 transition-colors">
+                    <CardContent className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{budget.title}</p>
+                        <p className="text-xs text-base-content/60">{budget.client}</p>
                       </div>
-                      <span className={`badge ${statusConfig[budget.status].color} badge-sm`}>
-                        {statusConfig[budget.status].label}
-                      </span>
-                    </div>
-                  </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <p className="font-semibold">
+                            {formatCurrency(budget.totalAmount, budget.currency)}
+                          </p>
+                          <p className="text-xs text-base-content/60">
+                            {new Date(budget.createdAt).toLocaleDateString("pt-BR")}
+                          </p>
+                        </div>
+                        <span className={`badge ${statusConfig[budget.status].color} badge-sm`}>
+                          {statusConfig[budget.status].label}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))
               )}
             </div>
@@ -151,9 +150,9 @@ export function BudgetDashboard({ budgets, stats }: BudgetDashboardProps) {
         </Card>
 
         {/* Expiring Soon */}
-        <Card className="border-orange-500">
+        <Card className="rounded-lg">
           <CardHeader>
-            <CardTitle className="text-lg text-orange-500">Vencendo em Breve</CardTitle>
+            <CardTitle className="text-lg text-orange-500">Follow Up</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
