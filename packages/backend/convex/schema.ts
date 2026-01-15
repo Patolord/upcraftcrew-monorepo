@@ -10,6 +10,19 @@ export default defineSchema({
     lastName: v.string(),
     imageUrl: v.optional(v.string()),
 
+    // Profile information
+    phone: v.optional(v.string()),
+    age: v.optional(v.number()),
+    location: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    socialLinks: v.optional(
+      v.object({
+        twitter: v.optional(v.string()),
+        instagram: v.optional(v.string()),
+        facebook: v.optional(v.string()),
+      }),
+    ),
+
     // Team member info
     role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
     department: v.optional(v.string()),

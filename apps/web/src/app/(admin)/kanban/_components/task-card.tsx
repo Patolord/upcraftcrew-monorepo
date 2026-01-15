@@ -1,5 +1,7 @@
-import Image from "next/image";
-import { FlagIcon, FolderIcon, LockIcon, UserIcon } from "lucide-react";
+import { MessageSquare, Paperclip, Calendar, ThumbsUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Task {
   _id: string;
@@ -20,116 +22,91 @@ interface Task {
   isPrivate?: boolean;
 }
 
-const priorityConfig = {
-  low: {
-    label: "Low",
-    color: "text-base-content/60",
-    icon: "FlagIcon",
-  },
-  medium: {
-    label: "Medium",
-    color: "text-info",
-    icon: "FlagIcon",
-  },
-  high: {
-    label: "High",
-    color: "text-warning",
-    icon: "FlagIcon",
-  },
-  urgent: {
-    label: "Urgent",
-    color: "text-error",
-    icon: "FlagIcon",
-  },
-};
-
 interface TaskCardProps {
   task: Task;
 }
 
 export function TaskCard({ task }: TaskCardProps) {
-  const priority = priorityConfig[task.priority];
-  const isOverdue = task.dueDate && task.dueDate < Date.now();
+  const isCompleted = task.status === "done";
+  // Mock data for comments and attachments (you can extend the Task interface to include these)
+  const commentCount = 3;
+  const attachmentCount = 5;
 
   return (
-    <div className="kanban-card card bg-base-100 shadow-sm hover:shadow-md transition-shadow cursor-move border border-base-300">
-      <div className="card-body p-4">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            {task.isPrivate && (
-              <span
-                className="text-warning flex-shrink-0"
-                title="Private Task"
-                aria-label="Private Task"
-              >
-                <LockIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-            )}
-            <h4 className="font-semibold text-sm line-clamp-2 flex-1">{task.title}</h4>
-          </div>
-          <span className={`${priority.color} flex-shrink-0`} title={`Priority: ${priority.label}`}>
-            <span className={`iconify ${priority.icon} size-4`} aria-hidden="true" />
-          </span>
-        </div>
+    <Card className="kanban-card cursor-move hover:shadow-md transition-shadow rounded-lg">
+      <CardContent className="p-4 space-y-3">
+        {/* Badge */}
+        <Badge variant="secondary" className="rounded-md">
+          UI Design
+        </Badge>
+
+        {/* Title */}
+        <h4 className="font-semibold text-sm line-clamp-2">{task.title}</h4>
 
         {/* Description */}
-        <p className="text-xs text-base-content/70 mt-2 line-clamp-2">{task.description}</p>
+        <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
 
-        {/* Project Badge */}
-        {task.project && (
-          <div className="mt-2">
-            <span className="badge badge-sm badge-ghost">
-              <FolderIcon className="h-3 w-3 mr-1" aria-hidden="true" />
-              {task.project.name}
-            </span>
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-base-300">
-          {/* Assigned User */}
-          {task.assignedUser ? (
-            <div className="avatar" title={`Assigned to ${task.assignedUser.name}`}>
-              <div className="w-6 rounded-full">
-                <Image
-                  src={task.assignedUser.imageUrl || "/default-avatar.png"}
-                  alt={task.assignedUser.name}
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="avatar placeholder" title="Unassigned">
-              <div className="w-6 rounded-full bg-base-300">
-                <UserIcon className="h-3 w-3" aria-hidden="true" />
-              </div>
-            </div>
+        {/* Avatar Group - Show multiple team members */}
+        <div className="flex -space-x-2">
+          {task.assignedUser && (
+            <Avatar className="size-6 border-2 border-background">
+              <AvatarImage src={task.assignedUser.imageUrl} alt={task.assignedUser.name} />
+              <AvatarFallback className="text-xs">
+                {task.assignedUser.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
           )}
-
-          {/* Due Date */}
-          {task.dueDate && (
-            <div
-              className={`flex items-center gap-1 text-xs ${
-                isOverdue ? "text-error font-medium" : "text-base-content/60"
-              }`}
-              aria-label={`Due date: ${new Date(task.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
-            >
-              <span
-                className={`${isOverdue ? "AlertCircleIcon" : "CalendarIcon"} size-3`}
-                aria-hidden="true"
-              />
-              <span>
-                {new Date(task.dueDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-            </div>
-          )}
+          {/* Additional mock avatars for demonstration */}
+          <Avatar className="size-6 border-2 border-background">
+            <AvatarFallback className="bg-blue-500 text-white text-xs">A</AvatarFallback>
+          </Avatar>
+          <Avatar className="size-6 border-2 border-background">
+            <AvatarFallback className="bg-green-500 text-white text-xs">B</AvatarFallback>
+          </Avatar>
+          <Avatar className="size-6 border-2 border-background">
+            <AvatarFallback className="bg-muted text-muted-foreground text-xs">+2</AvatarFallback>
+          </Avatar>
         </div>
-      </div>
-    </div>
+
+        {/* Footer with metadata */}
+        <div className="flex items-center justify-between pt-2 border-t">
+          <div className="flex items-center gap-3 text-muted-foreground">
+            {/* Comment Count */}
+            <div className="flex items-center gap-1">
+              <MessageSquare className="size-3.5" />
+              <span className="text-xs">{commentCount}</span>
+            </div>
+
+            {/* Attachment Count */}
+            <div className="flex items-center gap-1">
+              <Paperclip className="size-3.5" />
+              <span className="text-xs">{attachmentCount}</span>
+            </div>
+          </div>
+
+          {/* Right side - Due date or completion indicator */}
+          <div className="flex items-center gap-2">
+            {task.dueDate && (
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Calendar className="size-3.5" />
+                <span className="text-xs">
+                  {new Date(task.dueDate).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
+              </div>
+            )}
+
+            {/* Show thumbs up for completed tasks */}
+            {isCompleted && (
+              <div className="text-amber-500">
+                <ThumbsUp className="size-3.5 fill-current" />
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

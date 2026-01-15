@@ -8,6 +8,9 @@ import { toast } from "sonner";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { getErrorMessage } from "@/lib/convex-errors";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 
@@ -93,55 +96,63 @@ export function TaskKanbanBoard({ columns }: TaskKanbanBoardProps) {
   }, [updateTaskStatus]);
 
   const statusColors: Record<TaskStatus, string> = {
-    todo: "border-info",
-    "in-progress": "border-primary",
-    review: "border-warning",
-    done: "border-success",
-    blocked: "border-error",
+    todo: "border-t-blue-500",
+    "in-progress": "border-t-cyan-500",
+    review: "border-t-purple-500",
+    done: "border-t-green-500",
+    blocked: "border-t-red-500",
   };
 
-  const statusBadgeColors: Record<TaskStatus, string> = {
-    todo: "badge-info",
-    "in-progress": "badge-primary",
-    review: "badge-warning",
-    done: "badge-success",
-    blocked: "badge-error",
+  const statusBadgeVariants: Record<
+    TaskStatus,
+    "default" | "secondary" | "success" | "warning" | "destructive"
+  > = {
+    todo: "default",
+    "in-progress": "secondary",
+    review: "warning",
+    done: "success",
+    blocked: "destructive",
   };
 
   return (
     <div ref={boardRef} className="flex gap-4 overflow-x-auto pb-4">
       {columns.map((column) => (
-        <div
+        <Card
           key={column.id}
-          className={`flex flex-col min-w-[320px] max-w-[320px] bg-base-200 rounded-lg border-t-4 ${statusColors[column.id]}`}
+          className={cn(
+            "flex flex-col min-w-[320px] max-w-[320px] rounded-lg border-t-4 p-0",
+            statusColors[column.id],
+          )}
         >
           {/* Column Header */}
-          <div className="p-4 border-b border-base-300">
+          <CardHeader className="border-b">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-lg">{column.title}</h3>
-              <span className={`badge ${statusBadgeColors[column.id]} badge-sm`}>
+              <h3 className="font-semibold text-sm">{column.title}</h3>
+              <Badge variant={statusBadgeVariants[column.id]} className="rounded-full">
                 {column.tasks.length}
-              </span>
+              </Badge>
             </div>
-          </div>
+          </CardHeader>
 
           {/* Column Content - Droppable area */}
-          <div
-            className="kanban-column-content flex-1 p-4 space-y-3 overflow-y-auto min-h-[200px]"
-            data-column-id={column.id}
-          >
-            {column.tasks.map((task) => (
-              <div key={task._id} data-task-id={task._id}>
-                <TaskCard task={task} />
-              </div>
-            ))}
-            {column.tasks.length === 0 && (
-              <div className="flex items-center justify-center h-32 border-2 border-dashed border-base-300 rounded-lg text-base-content/40">
-                <p className="text-sm">No tasks</p>
-              </div>
-            )}
-          </div>
-        </div>
+          <CardContent className="flex-1 p-4">
+            <div
+              className="kanban-column-content space-y-3 min-h-[200px]"
+              data-column-id={column.id}
+            >
+              {column.tasks.map((task) => (
+                <div key={task._id} data-task-id={task._id}>
+                  <TaskCard task={task} />
+                </div>
+              ))}
+              {column.tasks.length === 0 && (
+                <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg text-muted-foreground">
+                  <p className="text-xs">No tasks</p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

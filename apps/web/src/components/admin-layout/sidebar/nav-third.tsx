@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
+import React from "react";
 
 import {
   SidebarMenu,

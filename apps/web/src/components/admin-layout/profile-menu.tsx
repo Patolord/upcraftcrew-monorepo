@@ -7,6 +7,7 @@ import {
   LogOutIcon,
   CheckIcon,
 } from "lucide-react";
+import React from "react";
 
 export const ProfileMenu = () => {
   return (

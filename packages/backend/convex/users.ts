@@ -236,6 +236,48 @@ export async function requireMember(context: QueryContext | MutationCtx) {
 }
 
 // ============================================================================
+// PROFILE MUTATIONS
+// ============================================================================
+
+/**
+ * Update current user's profile information
+ */
+export const updateProfile = mutation({
+  args: {
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    age: v.optional(v.number()),
+    location: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    socialLinks: v.optional(
+      v.object({
+        twitter: v.optional(v.string()),
+        instagram: v.optional(v.string()),
+        facebook: v.optional(v.string()),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    // Build update object with only provided fields
+    const updates: Record<string, any> = {};
+    if (args.firstName !== undefined) updates.firstName = args.firstName;
+    if (args.lastName !== undefined) updates.lastName = args.lastName;
+    if (args.phone !== undefined) updates.phone = args.phone;
+    if (args.age !== undefined) updates.age = args.age;
+    if (args.location !== undefined) updates.location = args.location;
+    if (args.bio !== undefined) updates.bio = args.bio;
+    if (args.socialLinks !== undefined) updates.socialLinks = args.socialLinks;
+
+    await ctx.db.patch(user._id, updates);
+
+    return user._id;
+  },
+});
+
+// ============================================================================
 // ADMIN QUERIES AND MUTATIONS
 // ============================================================================
 

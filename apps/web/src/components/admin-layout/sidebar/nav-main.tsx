@@ -10,10 +10,11 @@ import {
   Kanban,
   ChevronDown,
   type LucideIcon,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import {
   SidebarGroup,
@@ -53,30 +54,18 @@ const menuItems: MenuItem[] = [
     url: "/budgets",
     icon: FileText,
     prefetch: true,
-    items: [
-      { title: "Overview", url: "/budgets?view=dashboard" },
-      { title: "Create New", url: "/budgets?view=all&new=true" },
-    ],
   },
   {
     title: "Projects",
     url: "/projects",
     icon: FolderOpen,
     prefetch: true,
-    items: [
-      { title: "Overview", url: "/projects" },
-      { title: "Create New", url: "/projects/new" },
-    ],
   },
   {
     title: "Team",
     url: "/team",
     icon: Users,
     prefetch: true,
-    items: [
-      { title: "All Users", url: "/team" },
-      { title: "Add User", url: "/team/new" },
-    ],
   },
   {
     title: "Schedule",
@@ -89,10 +78,6 @@ const menuItems: MenuItem[] = [
     url: "/finance",
     icon: DollarSign,
     prefetch: true,
-    items: [
-      { title: "Overview", url: "/finance" },
-      { title: "Create New", url: "/finance/new" },
-    ],
   },
   {
     title: "Kanban",
@@ -100,11 +85,17 @@ const menuItems: MenuItem[] = [
     icon: Kanban,
     prefetch: true,
   },
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: User,
+    prefetch: true,
+  },
 ];
 
 export default function NavMain() {
   const pathname = usePathname();
-  const { setOpenMobile, state } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const isActive = (url: string) => {

@@ -8,7 +8,8 @@ export default async function Page() {
   const { token } = await requireAuthWithToken();
 
   // Preload data with authentication
-  const preloadedProjects = await preloadQuery(api.projects.getProjects, {}, { token });
+  const preloadedTasks = await preloadQuery(api.tasks.getTasks, {}, { token });
+  const preloadedTeamMembers = await preloadQuery(api.team.getTeamMembers, {}, { token });
 
-  return <KanbanPage preloadedProjects={preloadedProjects} />;
+  return <KanbanPage preloadedTasks={preloadedTasks} preloadedTeamMembers={preloadedTeamMembers} />;
 }

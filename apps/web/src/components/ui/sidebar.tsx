@@ -499,7 +499,7 @@ function SidebarMenuButton({
       },
       props,
     ),
-    render: !tooltip ? render : TooltipTrigger,
+    render,
     state: {
       slot: "sidebar-menu-button",
       sidebar: "menu-button",
@@ -520,7 +520,13 @@ function SidebarMenuButton({
 
   return (
     <Tooltip>
-      {comp}
+      <TooltipTrigger
+        render={render}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        data-active={isActive || undefined}
+      >
+        {props.children}
+      </TooltipTrigger>
       <TooltipContent
         side="right"
         align="center"

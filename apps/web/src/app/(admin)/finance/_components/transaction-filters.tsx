@@ -1,4 +1,13 @@
+"use client";
+
 import type { TransactionCategory, TransactionType } from "@/types/finance";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TransactionFiltersProps {
   typeFilter: TransactionType | "all";
@@ -19,41 +28,44 @@ export function TransactionFilters({
 }: TransactionFiltersProps) {
   return (
     <div className="flex flex-wrap gap-2">
-      <select
-        className="select select-bordered select-sm"
-        value={typeFilter}
-        onChange={(e) => onTypeFilterChange(e.target.value as TransactionType | "all")}
-      >
-        <option value="all">All Types</option>
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-      </select>
+      <Select value={typeFilter} onValueChange={onTypeFilterChange}>
+        <SelectTrigger className="w-[150px] h-9">
+          <SelectValue placeholder="All Types" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Types</SelectItem>
+          <SelectItem value="income">Income</SelectItem>
+          <SelectItem value="expense">Expense</SelectItem>
+        </SelectContent>
+      </Select>
 
-      <select
-        className="select select-bordered select-sm"
-        value={categoryFilter}
-        onChange={(e) => onCategoryFilterChange(e.target.value as TransactionCategory | "all")}
-      >
-        <option value="all">All Categories</option>
-        <option value="project-payment">Project Payment</option>
-        <option value="salary">Salary</option>
-        <option value="software">Software</option>
-        <option value="equipment">Equipment</option>
-        <option value="marketing">Marketing</option>
-        <option value="office">Office</option>
-        <option value="consultant">Consultant</option>
-        <option value="other">Other</option>
-      </select>
+      <Select value={categoryFilter} onValueChange={onCategoryFilterChange}>
+        <SelectTrigger className="w-[180px] h-9">
+          <SelectValue placeholder="All Categories" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Categories</SelectItem>
+          <SelectItem value="project-payment">Project Payment</SelectItem>
+          <SelectItem value="salary">Salary</SelectItem>
+          <SelectItem value="software">Software</SelectItem>
+          <SelectItem value="equipment">Equipment</SelectItem>
+          <SelectItem value="marketing">Marketing</SelectItem>
+          <SelectItem value="office">Office</SelectItem>
+          <SelectItem value="consultant">Consultant</SelectItem>
+          <SelectItem value="other">Other</SelectItem>
+        </SelectContent>
+      </Select>
 
-      <select
-        className="select select-bordered select-sm"
-        value={statusFilter}
-        onChange={(e) => onStatusFilterChange(e.target.value as "all" | "completed" | "pending")}
-      >
-        <option value="all">All Status</option>
-        <option value="completed">Completed</option>
-        <option value="pending">Pending</option>
-      </select>
+      <Select value={statusFilter} onValueChange={onStatusFilterChange}>
+        <SelectTrigger className="w-[150px] h-9">
+          <SelectValue placeholder="All Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Status</SelectItem>
+          <SelectItem value="completed">Completed</SelectItem>
+          <SelectItem value="pending">Pending</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }

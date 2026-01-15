@@ -6,7 +6,7 @@ import { EventDetailPanel } from "./event-detail-panel";
 import { EventBlock } from "./event-block";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
-import { formatDateISO } from "./calendar-utils";
+import React from "react";
 
 interface CalendarSidebarProps {
   selectedDate: Date;

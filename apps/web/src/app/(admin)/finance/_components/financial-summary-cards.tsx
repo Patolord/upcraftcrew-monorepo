@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface FinancialSummary {
   totalIncome: number;
@@ -35,19 +36,22 @@ export function FinancialSummaryCards({
     {
       title: "Total Income",
       value: formatLargeNumber(summary.totalIncome, (val) => val.toLocaleString()),
-      className: "text-success",
+      className: "text-green-600 dark:text-green-500",
       description: "",
     },
     {
       title: "Total Expenses",
       value: formatLargeNumber(summary.totalExpenses, (val) => val.toLocaleString()),
-      className: "text-error",
+      className: "text-red-600 dark:text-red-500",
       description: "",
     },
     {
       title: "Net Profit",
       value: formatLargeNumber(summary.netProfit, (val) => val.toLocaleString()),
-      className: summary.netProfit >= 0 ? "text-success" : "text-error",
+      className:
+        summary.netProfit >= 0
+          ? "text-green-600 dark:text-green-500"
+          : "text-red-600 dark:text-red-500",
       description: `${summary.netProfit >= 0 ? "Profit" : "Loss"} this period`,
     },
     {
@@ -67,12 +71,14 @@ export function FinancialSummaryCards({
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
       {stats.map((stat) => (
-        <Card className="border border-base-300 rounded-lg ">
+        <Card key={stat.title} className="border shadow-sm rounded-lg">
           <CardHeader>
             <CardTitle className="text-xs text-center">{stat.title}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl text-center ${stat.className}`}>{stat.value}</div>
+            <div className={cn("text-2xl text-center font-semibold", stat.className)}>
+              {stat.value}
+            </div>
             {stat.description && (
               <div className="text-xs text-muted-foreground mt-1 text-center">
                 {stat.description}

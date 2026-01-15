@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import type { Transaction, TransactionCategory } from "@/types/finance";
 import { categoryConfig } from "@/app/(admin)/finance/config";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 export function CategoryBreakdown({ transactions }: { transactions: Transaction[] }) {
   const categoryTotals = useMemo(() => {
@@ -24,7 +25,7 @@ export function CategoryBreakdown({ transactions }: { transactions: Transaction[
   const totalExpenses = categoryTotals.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <Card className="border border-base-300 rounded-lg">
+    <Card className="border shadow-sm rounded-lg">
       <CardHeader>
         <CardTitle className="text-base">Expenses by Category</CardTitle>
       </CardHeader>
@@ -41,13 +42,9 @@ export function CategoryBreakdown({ transactions }: { transactions: Transaction[
                     <span className={`iconify ${config.icon} size-4`} />
                     <span>{config.label}</span>
                   </div>
-                  <span className="font-medium">{amount.toFixed(0)}</span>
+                  <span className="font-medium">${amount.toFixed(0)}</span>
                 </div>
-                <progress
-                  className="progress progress-primary w-full"
-                  value={percentage}
-                  max="100"
-                />
+                <Progress value={percentage} className="h-2" />
               </div>
             );
           })}

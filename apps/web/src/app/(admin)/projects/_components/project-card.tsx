@@ -9,6 +9,9 @@ import {
   CardFooter,
   CardAction,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import type { Project } from "@/types/project";
 import { EyeIcon, FlagIcon } from "lucide-react";
@@ -16,34 +19,34 @@ import { EyeIcon, FlagIcon } from "lucide-react";
 const statusConfig = {
   planning: {
     label: "Planning",
-    color: "badge-info",
+    variant: "secondary" as const,
   },
   "in-progress": {
     label: "In Progress",
-    color: "badge-primary",
+    variant: "default" as const,
   },
   completed: {
     label: "Completed",
-    color: "badge-success",
+    variant: "success" as const,
   },
 };
 
 const priorityConfig = {
   low: {
     label: "Low",
-    color: "text-base-content/60",
+    color: "text-muted-foreground",
   },
   medium: {
     label: "Medium",
-    color: "text-info",
+    color: "text-blue-600",
   },
   high: {
     label: "High",
-    color: "text-warning",
+    color: "text-amber-600",
   },
   urgent: {
     label: "Urgent",
-    color: "text-error",
+    color: "text-red-600",
   },
 };
 
@@ -52,7 +55,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const priority = priorityConfig[project.priority];
 
   return (
-    <Card className="border border-base-300 rounded-md hover:shadow-lg transition-shadow">
+    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -60,38 +63,34 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.client && <CardDescription className="mt-1">{project.client}</CardDescription>}
           </div>
           <CardAction>
-            <span className={`badge ${status.color} badge-sm`}>{status.label}</span>
+            <Badge variant={status.variant}>{status.label}</Badge>
           </CardAction>
         </div>
       </CardHeader>
 
       <CardContent>
         {/* Description */}
-        <p className="text-sm text-base-content/70 line-clamp-2">{project.description}</p>
+        <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
 
         {/* Progress */}
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-base-content/60">Progress</span>
+            <span className="text-xs text-muted-foreground">Progress</span>
             <span className="text-xs font-medium">{project.progress}%</span>
           </div>
-          <progress
-            className="progress progress-orange-500 w-full rounded-lg"
-            value={project.progress}
-            max="100"
-          />
+          <Progress value={project.progress} className="h-2 bg-secondary [&>div]:bg-orange-500" />
         </div>
 
         {/* Budget & Team */}
         <div className="grid grid-cols-2 gap-3 mt-4">
           {project.budget && (
             <div>
-              <p className="text-xs text-base-content/60 mb-1">Budget</p>
+              <p className="text-xs text-muted-foreground mb-1">Budget</p>
               <p className="text-sm font-medium">{project.budget.toLocaleString()}</p>
             </div>
           )}
           <div>
-            <p className="text-xs text-base-content/60 mb-1">Timeline</p>
+            <p className="text-xs text-muted-foreground mb-1">Timeline</p>
             <p className="text-sm font-medium">
               {new Date(project.startDate).toLocaleDateString("en-US", {
                 month: "short",
@@ -110,32 +109,28 @@ export function ProjectCard({ project }: { project: Project }) {
         {project.team && project.team.length > 0 && (
           <div className="mt-4">
             <div className="flex items-center justify-between">
-              <div className="avatar-group -space-x-4">
+              <div className="flex -space-x-3">
                 {project.team.slice(0, 4).map((member) => (
-                  <div
+                  <Avatar
                     key={member.imageUrl || member.name}
-                    className="avatar border-2 border-base-100"
+                    className="w-8 h-8 border-2 border-white ring-1 ring-gray-200"
                   >
-                    <div className="w-8">
-                      <Image
-                        src={member.imageUrl || "/default-avatar.png"}
-                        alt={member.name}
-                        width={28}
-                        height={28}
-                      />
-                    </div>
-                  </div>
+                    <AvatarImage src={member.imageUrl || "/default-avatar.png"} alt={member.name} />
+                    <AvatarFallback className="text-xs">
+                      {member.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 ))}
                 {project.team.length > 4 && (
-                  <div className="avatar placeholder border-2 border-base-100">
-                    <div className="w-8 bg-base-300">
-                      <span className="text-xs">+{project.team.length - 4}</span>
-                    </div>
-                  </div>
+                  <Avatar className="w-8 h-8 border-2 border-white ring-1 ring-gray-200">
+                    <AvatarFallback className="text-xs bg-gray-100 text-gray-700">
+                      +{project.team.length - 4}
+                    </AvatarFallback>
+                  </Avatar>
                 )}
               </div>
-              <span className={`text-xs font-medium ${priority.color}`}>
-                <FlagIcon className="h-3 w-3 inline mr-1" />
+              <span className={`text-xs font-medium flex items-center gap-1 ${priority.color}`}>
+                <FlagIcon className="h-3 w-3" />
                 {priority.label}
               </span>
             </div>
@@ -146,8 +141,8 @@ export function ProjectCard({ project }: { project: Project }) {
       {/* Actions */}
       <CardFooter className="justify-end border-t border-orange-500">
         <Link href={`/projects/${project._id}`}>
-          <Button className="btn btn-primary btn-sm bg-orange-500 text-white border border-orange-500 rounded-md">
-            <EyeIcon className=" h-4 w-4" />
+          <Button className="bg-orange-500 hover:bg-orange-600 text-white border border-orange-500 rounded-md text-xs">
+            <EyeIcon className="h-4 w-4 mr-1" />
             View
           </Button>
         </Link>

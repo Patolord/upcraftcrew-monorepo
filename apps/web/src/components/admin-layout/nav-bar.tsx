@@ -1,6 +1,7 @@
 "use client";
 
 import { MenuIcon } from "lucide-react";
+import React from "react";
 
 export const NavBar = () => {
   return (

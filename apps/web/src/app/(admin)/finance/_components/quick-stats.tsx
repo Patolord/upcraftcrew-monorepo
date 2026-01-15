@@ -19,26 +19,30 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
     expenseTransactions.length > 0 ? Math.max(...expenseTransactions.map((t) => t.amount)) : 0;
 
   return (
-    <Card className="border border-base-300 rounded-lg">
+    <Card className="border shadow-sm rounded-lg">
       <CardHeader>
         <CardTitle className="text-base">Quick Stats</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-base-content/60">Avg Transaction</span>
-            <span className="font-medium">{avgTransaction.toFixed(0)}</span>
+            <span className="text-muted-foreground">Avg Transaction</span>
+            <span className="font-medium">${avgTransaction.toFixed(0)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-base-content/60">Largest Income</span>
-            <span className="font-medium text-success">{largestIncome.toFixed(0)}</span>
+            <span className="text-muted-foreground">Largest Income</span>
+            <span className="font-medium text-green-600 dark:text-green-500">
+              ${largestIncome.toFixed(0)}
+            </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-base-content/60">Largest Expense</span>
-            <span className="font-medium text-error">{largestExpense.toFixed(0)}</span>
+            <span className="text-muted-foreground">Largest Expense</span>
+            <span className="font-medium text-red-600 dark:text-red-500">
+              ${largestExpense.toFixed(0)}
+            </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-base-content/60">Active Projects</span>
+            <span className="text-muted-foreground">Active Projects</span>
             <span className="font-medium">
               {new Set(transactions.filter((t) => t.projectId).map((t) => t.projectId)).size}
             </span>
