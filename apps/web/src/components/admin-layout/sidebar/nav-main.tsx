@@ -55,7 +55,6 @@ const menuItems: MenuItem[] = [
     prefetch: true,
     items: [
       { title: "Overview", url: "/budgets?view=dashboard" },
-      { title: "All Budgets", url: "/budgets?view=all" },
       { title: "Create New", url: "/budgets?view=all&new=true" },
     ],
   },
@@ -66,7 +65,7 @@ const menuItems: MenuItem[] = [
     prefetch: true,
     items: [
       { title: "Overview", url: "/projects" },
-      { title: "All Projects", url: "/projects/all" },
+      { title: "Create New", url: "/projects/new" },
     ],
   },
   {
@@ -92,8 +91,7 @@ const menuItems: MenuItem[] = [
     prefetch: true,
     items: [
       { title: "Overview", url: "/finance" },
-      { title: "Billing", url: "/finance/billing" },
-      { title: "Invoice", url: "/finance/invoice" },
+      { title: "Create New", url: "/finance/new" },
     ],
   },
   {

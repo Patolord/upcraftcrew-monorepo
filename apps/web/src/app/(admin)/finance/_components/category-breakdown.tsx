@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { Transaction, TransactionCategory } from "@/types/finance";
 import { categoryConfig } from "@/app/(admin)/finance/config";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function CategoryBreakdown({ transactions }: { transactions: Transaction[] }) {
   const categoryTotals = useMemo(() => {
@@ -23,10 +24,12 @@ export function CategoryBreakdown({ transactions }: { transactions: Transaction[
   const totalExpenses = categoryTotals.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <div className="card bg-base-100 border border-base-300">
-      <div className="card-body">
-        <h3 className="card-title text-base">Expenses by Category</h3>
-        <div className="space-y-3 mt-2">
+    <Card className="border border-base-300 rounded-lg">
+      <CardHeader>
+        <CardTitle className="text-base">Expenses by Category</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
           {categoryTotals.slice(0, 6).map(({ category, amount }) => {
             const percentage = (amount / totalExpenses) * 100;
             const config = categoryConfig[category];
@@ -49,7 +52,7 @@ export function CategoryBreakdown({ transactions }: { transactions: Transaction[
             );
           })}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

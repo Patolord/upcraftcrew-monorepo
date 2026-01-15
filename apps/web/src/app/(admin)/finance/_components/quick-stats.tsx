@@ -1,6 +1,7 @@
 "use client";
 
 import type { Transaction } from "@/types/finance";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function QuickStats({ transactions }: { transactions: Transaction[] }) {
   const incomeTransactions = transactions.filter((t) => t.type === "income");
@@ -18,10 +19,12 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
     expenseTransactions.length > 0 ? Math.max(...expenseTransactions.map((t) => t.amount)) : 0;
 
   return (
-    <div className="card bg-base-100 border border-base-300">
-      <div className="card-body">
-        <h3 className="card-title text-base">Quick Stats</h3>
-        <div className="space-y-3 mt-2">
+    <Card className="border border-base-300 rounded-lg">
+      <CardHeader>
+        <CardTitle className="text-base">Quick Stats</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-base-content/60">Avg Transaction</span>
             <span className="font-medium">{avgTransaction.toFixed(0)}</span>
@@ -41,7 +44,7 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
             </span>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

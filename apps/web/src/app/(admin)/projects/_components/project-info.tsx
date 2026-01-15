@@ -12,9 +12,12 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { DownloadIcon, FileIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { SaveIcon } from "lucide-react";
 import { UploadIcon } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface ProjectInfoProps {
   project: Project;
+  isEditing?: boolean;
+  setIsEditing?: (editing: boolean) => void;
 }
 
 const statusConfig = {
@@ -30,7 +33,11 @@ const priorityConfig = {
   urgent: { label: "Urgent", color: "badge-error" },
 };
 
-export function ProjectInfo({ project }: ProjectInfoProps) {
+export function ProjectInfo({
+  project,
+  isEditing: isEditingProp,
+  setIsEditing: setIsEditingProp,
+}: ProjectInfoProps) {
   const router = useRouter();
   const fileUploadId = useId();
   const nameId = useId();
@@ -43,11 +50,14 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
   const progressId = useId();
   const budgetId = useId();
   const notesId = useId();
-  const [isEditing, setIsEditing] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const [internalIsEditing, setInternalIsEditing] = useState(false);
+  const isEditing = isEditingProp !== undefined ? isEditingProp : internalIsEditing;
+  const setIsEditing = setIsEditingProp || setInternalIsEditing;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const updateProject = useMutation(api.projects.updateProject);
-  const deleteProject = useMutation(api.projects.deleteProject);
 
   const projectId = (project._id || project.id) as string | undefined;
 
@@ -102,7 +112,8 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
       toast.success("Projeto atualizado com sucesso!");
       setIsEditing(false);
     } catch (err) {
-      handleError(err, "Erro ao atualizar projeto");
+      console.error("Failed to update project:", err);
+      toast.error("Erro ao atualizar projeto.");
     } finally {
       setIsSubmitting(false);
     }
@@ -170,90 +181,44 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
     return Math.round((bytes / k ** i) * 100) / 100 + " " + sizes[i];
   };
 
-  const handleDelete = async () => {
-    if (!confirm("Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita.")) {
-      return;
-    }
-
-    setIsDeleting(true);
-    try {
-      if (!projectId) return;
-      await deleteProject({ id: projectId as string as any });
-      toast.success("Projeto excluído com sucesso!");
-      router.push("/projects");
-    } catch (err) {
-      handleError(err, "Erro ao excluir projeto");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
-      {/* Error alert */}
-
-      {/* Actions */}
-      <div className="flex justify-between items-center">
-        <Button
-          className="btn text-white btn-error"
-          onClick={handleDelete}
-          disabled={isDeleting || isSubmitting}
-        >
-          {isDeleting ? (
-            <>
-              <span className="loading text-white loading-spinner loading-sm" />
-              Excluindo...
-            </>
-          ) : (
-            <>
-              <Trash2Icon className="h-4 w-4 text-white" />
-              Excluir
-            </>
-          )}
-        </Button>
-
-        <div className="flex gap-2">
-          {!isEditing ? (
-            <Button className="btn btn-primary" onClick={() => setIsEditing(true)}>
-              <PencilIcon className="h-4 w-4" />
-              Editar
-            </Button>
-          ) : (
-            <>
-              <Button
-                className="btn text-white btn-ghost"
-                onClick={handleCancel}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </Button>
-              <Button
-                className="btn text-white btn-primary"
-                onClick={handleSave}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="loading loading-spinner loading-sm" />
-                    Salvando...
-                  </>
-                ) : (
-                  <>
-                    <SaveIcon className="h-4 w-4" />
-                    Salvar
-                  </>
-                )}
-              </Button>
-            </>
-          )}
+      {/* Action Buttons - Show Cancel/Save when editing */}
+      {isEditing && (
+        <div className="flex justify-end gap-2 items-center">
+          <Button
+            className="btn rounded-lg bg-white text-orange-500 border border-orange-500 btn-ghost"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            Cancelar
+          </Button>
+          <Button
+            className="btn rounded-lg bg-white text-orange-500 border border-orange-500 btn-primary"
+            onClick={handleSave}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner loading-sm" />
+                Salvando...
+              </>
+            ) : (
+              <>
+                <SaveIcon className="h-4 w-4 text-orange-500" />
+                Salvar
+              </>
+            )}
+          </Button>
         </div>
-      </div>
+      )}
 
       {/* Main Info Card */}
-      <div className="card bg-base-100 border border-base-300">
-        <div className="card-body">
-          <h2 className="card-title text-lg mb-4">Informações do Projeto</h2>
-
+      <Card className="border border-base-300 rounded-lg">
+        <CardHeader>
+          <CardTitle className="text-lg">Informações do Projeto</CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Name */}
             <div className="form-control">
@@ -498,8 +463,8 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Team Card */}
       <div className="card bg-base-100 border border-base-300">
@@ -636,7 +601,4 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
       </div>
     </div>
   );
-}
-function handleError(err: unknown, arg1: string) {
-  throw new Error("Function not implemented.");
 }

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { useAuth } from "@clerk/nextjs";
 import type { EventType, ScheduleEvent } from "@/types/schedule";
 import { CalendarMonthView } from "./calendar-month-view";
@@ -22,6 +22,16 @@ export function CalendarContainer() {
 
   // Check authentication
   const { isSignedIn, isLoaded } = useAuth();
+  const ensureCurrentUser = useMutation(api.users.ensureCurrentUser);
+
+  // Ensure user exists in Convex when they sign in
+  useEffect(() => {
+    if (isSignedIn) {
+      ensureCurrentUser().catch((error) => {
+        console.error("Failed to ensure user:", error);
+      });
+    }
+  }, [ensureCurrentUser, isSignedIn]);
 
   // Get current month/year for API
   const year = selectedDate.getFullYear();

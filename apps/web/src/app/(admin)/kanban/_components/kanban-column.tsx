@@ -44,7 +44,7 @@ export function KanbanColumn({ column }: KanbanColumnProps) {
         data-column-id={column.id}
       >
         {column.projects.map((project) => (
-          <KanbanCard key={project.id} project={project} />
+          <KanbanCard key={project._id || project.id} project={project} />
         ))}
 
         {column.projects.length === 0 && (

@@ -25,6 +25,7 @@ import {
 } from "@/types/finance";
 import { AlertCircleIcon, DownloadIcon, PlusIcon } from "lucide-react";
 import { FinanceHeader } from "./_components/finance-header";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function FinancePage() {
   const [typeFilter, setTypeFilter] = useState<TransactionType | "all">("all");
@@ -180,17 +181,21 @@ export default function FinancePage() {
       {/* TODO: Implement TransactionForm component */}
       {isFormOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 pointer-events-none">
-          <div className="bg-base-100 p-6 rounded-lg max-w-2xl w-full mx-4 pointer-events-auto">
-            <h2 className="text-xl font-bold mb-4">
-              {selectedTransaction ? "Edit Transaction" : "New Transaction"}
-            </h2>
-            <p className="text-base-content/60 mb-4">
-              Transaction form component not yet implemented
-            </p>
-            <button className="btn btn-primary" onClick={() => setIsFormOpen(false)}>
-              Close
-            </button>
-          </div>
+          <Card className="max-w-2xl w-full mx-4 pointer-events-auto rounded-lg">
+            <CardHeader>
+              <CardTitle className="text-xl">
+                {selectedTransaction ? "Edit Transaction" : "New Transaction"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-base-content/60 mb-4">
+                Transaction form component not yet implemented
+              </p>
+              <button className="btn btn-primary" onClick={() => setIsFormOpen(false)}>
+                Close
+              </button>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

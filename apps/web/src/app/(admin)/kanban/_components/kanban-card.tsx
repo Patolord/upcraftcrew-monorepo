@@ -67,9 +67,9 @@ export function KanbanCard({ project }: KanbanCardProps) {
           {/* Team Avatars */}
           {project.team && project.team.length > 0 && (
             <div className="avatar-group -space-x-3">
-              {project.team.slice(0, 3).map((member) => (
+              {project.team.slice(0, 3).map((member, index) => (
                 <div
-                  key={member.imageUrl || member.name}
+                  key={member._id || `${member.name}-${index}`}
                   className="avatar border-2 border-base-100"
                 >
                   <div className="w-6">

@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useQuery } from "convex/react";
+import { useMemo, useState, useEffect } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "@base-ui/react/button";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import {
@@ -37,11 +38,23 @@ import {
 import { TeamHeader } from "./_components/team-header";
 
 export default function TeamPage() {
+  const { isSignedIn } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const ensureCurrentUser = useMutation(api.users.ensureCurrentUser);
+
+  // Ensure user exists in Convex when they sign in
+  useEffect(() => {
+    if (isSignedIn) {
+      ensureCurrentUser().catch((error) => {
+        console.error("Failed to ensure user:", error);
+      });
+    }
+  }, [ensureCurrentUser, isSignedIn]);
 
   // Fetch team members from Convex
   const teamMembers = useQuery(api.team.getTeamMembers);
