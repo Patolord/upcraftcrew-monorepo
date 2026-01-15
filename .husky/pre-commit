@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Add node to PATH if not already present
-export PATH="/opt/homebrew/bin:$PATH"
+# Add common node paths to PATH if node is not found
+if ! command -v node >/dev/null 2>&1; then
+  export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+fi
 
 lint-staged
