@@ -2,12 +2,9 @@
 
 import { Form, useForm } from "react-hook-form";
 import Link from "next/link";
-import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { Mail } from "lucide-react";
 import React from "react";
 
@@ -16,9 +13,6 @@ interface ForgotPasswordFormData {
 }
 
 export default function ForgotPasswordPage() {
-  const { isLoaded, signIn } = useSignIn();
-  const router = useRouter();
-
   const {
     register,
     formState: { errors, isSubmitting },
@@ -28,29 +22,11 @@ export default function ForgotPasswordPage() {
     },
   });
 
-  const onSubmit = async (data: ForgotPasswordFormData) => {
-    if (!isLoaded) return;
-
-    try {
-      await signIn.create({
-        strategy: "reset_password_email_code",
-        identifier: data.email,
-      });
-
-      toast.success("Reset code sent to your email");
-      router.push("/reset-password");
-    } catch (err) {
-      console.error("Error:", err);
-      const error = err as { errors?: Array<{ message: string }> };
-      toast.error(error.errors?.[0]?.message || "Failed to send reset email");
-    }
-  };
-
   return (
     <div className="w-full">
       <h2 className="text-3xl font-bold text-gray-900 mb-2">Forgot Password</h2>
       <p className="text-gray-600 mb-8">
-        Enter your email and we'll send you a code to reset your password
+        Enter your email and we&apos;ll send you a code to reset your password
       </p>
 
       <Form className="space-y-6">

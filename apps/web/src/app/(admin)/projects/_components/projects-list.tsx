@@ -1,6 +1,7 @@
 import type { Project } from "@/types/project";
 import { ProjectCard } from "./project-card";
 import { FolderSearchIcon } from "lucide-react";
+import React from "react";
 
 interface ProjectsListProps {
   projects: Project[];

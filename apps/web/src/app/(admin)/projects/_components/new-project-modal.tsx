@@ -18,31 +18,48 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import React from "react";
+import { Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 interface NewProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
+  teamMembers?: TeamMember[];
 }
 
 type ProjectStatus = "planning" | "in-progress" | "completed";
 type ProjectPriority = "low" | "medium" | "high" | "urgent";
+type TeamMember = Doc<"users">;
+
+type FormData = {
+  name: string;
+  client: string;
+  description: string;
+  status: ProjectStatus;
+  priority: ProjectPriority;
+  startDate: string;
+  endDate: string;
+  progress: number;
+  budgetTotal: string;
+  budgetSpent: string;
+  teamIds: Id<"users">[];
+};
 
 export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createProject = useMutation(api.projects.createProject);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     client: "",
     description: "",
-    status: "planning" as ProjectStatus,
-    priority: "medium" as ProjectPriority,
+    status: "planning",
+    priority: "medium",
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     progress: 0,
     budgetTotal: "",
     budgetSpent: "",
-    tags: "",
+    teamIds: [],
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,7 +100,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         progress: 0,
         budgetTotal: "",
         budgetSpent: "",
-        tags: "",
+        teamIds: [],
       });
 
       onClose();
@@ -247,14 +264,22 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
             />
           </div>
 
-          {/* Tags */}
+          {/* Team Members */}
           <div className="space-y-2">
-            <Label htmlFor="tags">Tags (comma separated)</Label>
-            <Input
-              id="tags"
-              placeholder="design, development, urgent"
-              value={formData.tags}
-              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+            <Label htmlFor="teamIds">Team Members</Label>
+            <Textarea
+              id="teamIds"
+              placeholder="Enter team members (comma separated IDs)"
+              value={formData.teamIds.join(", ")}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  teamIds: e.target.value
+                    .split(",")
+                    .map((id: string) => id.trim())
+                    .filter((id) => id.length > 0) as Id<"users">[],
+                })
+              }
             />
           </div>
 
