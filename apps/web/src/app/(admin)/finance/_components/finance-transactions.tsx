@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Transaction } from "@/types/finance";
 import { cn } from "@/lib/utils";
+import React from "react";
 
-interface TransactionsSidebarProps {
+interface FinanceTransactionsProps {
   transactions: Transaction[];
 }
 
-export function TransactionsSidebar({ transactions }: TransactionsSidebarProps) {
+export function FinanceTransactions({ transactions }: FinanceTransactionsProps) {
   // Get recent transactions and group by date
   const recentTransactions = transactions.slice(0, 10);
 

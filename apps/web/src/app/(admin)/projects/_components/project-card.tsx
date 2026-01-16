@@ -12,9 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
 import type { Project } from "@/types/project";
 import { EyeIcon, FlagIcon } from "lucide-react";
+import React from "react";
 
 const statusConfig = {
   planning: {

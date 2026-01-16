@@ -2,6 +2,7 @@
 
 import type { Transaction } from "@/types/finance";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import React from "react";
 
 export function QuickStats({ transactions }: { transactions: Transaction[] }) {
   const incomeTransactions = transactions.filter((t) => t.type === "income");

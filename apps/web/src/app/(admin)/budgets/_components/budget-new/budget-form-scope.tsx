@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Trash2, X } from "lucide-react";
+import { PlusIcon, Trash2Icon, XIcon } from "lucide-react";
+import React from "react";
 
 interface BudgetScopeOption {
   name: string;
@@ -37,12 +37,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
     onChange(newOptions);
   };
 
-  const addFeature = (optionIndex: number) => {
-    const newOptions = [...scopeOptions];
-    newOptions[optionIndex].features.push("");
-    onChange(newOptions);
-  };
-
   const removeFeature = (optionIndex: number, featureIndex: number) => {
     const newOptions = [...scopeOptions];
     newOptions[optionIndex].features = newOptions[optionIndex].features.filter(
@@ -68,7 +62,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
           onClick={addScopeOption}
           className="border border-orange-500 bg-white rounded-md"
         >
-          <Plus className="h-4 w-4 mr-1" />
+          <PlusIcon className="h-4 w-4 mr-1" />
           Adicionar Opção
         </Button>
       </div>
@@ -120,7 +114,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                   className="h-8 w-8 pt-3 text-error mt-4"
                   onClick={() => removeScopeOption(optionIndex)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2Icon className="h-4 w-4" />
                 </Button>
               </div>
 
@@ -137,7 +131,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                     onClick={addScopeOption}
                     className="border border-orange-500 bg-white rounded-md"
                   >
-                    <Plus className="h-4 w-4 mr-1" />
+                    <PlusIcon className="h-4 w-4 mr-1" />
                     Adicionar
                   </Button>
                 </div>
@@ -158,7 +152,7 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                           className="h-8 w-8 text-base-content/60 hover:text-error"
                           onClick={() => removeFeature(optionIndex, featureIndex)}
                         >
-                          <X className="h-4 w-4" />
+                          <XIcon className="h-4 w-4" />
                         </Button>
                       )}
                     </div>

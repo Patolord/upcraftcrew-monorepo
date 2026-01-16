@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { NewTeamMemberModal } from "./new-team-member-modal";
 import { TeamMemberRow } from "./team-member-row";
 import { UserDetailPanel } from "./user-detail-panel";
-import { UsersRoundIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { UsersRoundIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { TeamHeader } from "./team-header";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React from "react";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];
@@ -121,7 +122,7 @@ export function TeamPage({ preloadedTeam }: TeamPageProps) {
                       disabled={currentPage === 1}
                       className="gap-1"
                     >
-                      <ChevronLeft className="size-4" />
+                      <ChevronLeftIcon className="size-4" />
                       Prev
                     </Button>
                     <div className="flex items-center gap-1">
@@ -170,7 +171,7 @@ export function TeamPage({ preloadedTeam }: TeamPageProps) {
                       className="gap-1"
                     >
                       Next
-                      <ChevronRight className="size-4" />
+                      <ChevronRightIcon className="size-4" />
                     </Button>
                   </div>
                 </div>

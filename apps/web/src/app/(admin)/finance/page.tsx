@@ -2,6 +2,7 @@ import { preloadQuery } from "convex/nextjs";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { requireAuthWithToken } from "@/lib/server-auth";
 import { FinancePage } from "./_components/finance-page";
+import React from "react";
 
 export default async function Page() {
   // Get authenticated user and token

@@ -20,6 +20,7 @@ import {
   getDayOfWeekLabel,
   getMonthName,
 } from "./calendar-utils";
+import React from "react";
 
 interface CalendarHeaderProps {
   selectedDate: Date;

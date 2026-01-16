@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Project } from "@/types/project";
 import { CalendarIcon, FlagIcon } from "lucide-react";
+import React from "react";
 
 const priorityConfig = {
   low: {

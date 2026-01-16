@@ -14,9 +14,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { Loader2Icon, AlertTriangleIcon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import React from "react";
 
 interface DeleteBudgetDialogProps {
   isOpen: boolean;
@@ -66,13 +67,13 @@ export function DeleteBudgetDialog({
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-error/10">
-              <AlertTriangle className="h-5 w-5 text-error" />
+              <AlertTriangleIcon className="h-5 w-5 text-error" />
             </div>
             <DialogTitle>Excluir Orçamento</DialogTitle>
           </div>
           <DialogDescription className="pt-2">
-            Tem certeza que deseja excluir o orçamento <strong>"{budgetTitle}"</strong>? Esta ação
-            não pode ser desfeita.
+            Tem certeza que deseja excluir o orçamento <strong>&quot;{budgetTitle}&quot;</strong>?
+            Esta ação não pode ser desfeita.
           </DialogDescription>
         </DialogHeader>
 
@@ -81,7 +82,7 @@ export function DeleteBudgetDialog({
             Cancelar
           </Button>
           <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+            {isDeleting ? <Loader2Icon className="h-4 w-4 mr-2 animate-spin" /> : null}
             Excluir
           </Button>
         </DialogFooter>

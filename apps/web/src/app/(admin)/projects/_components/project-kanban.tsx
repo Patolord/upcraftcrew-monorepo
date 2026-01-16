@@ -2,17 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
-import type { Project, ProjectStatus } from "@/types/project";
-import { KanbanBoard } from "@/app/(admin)/kanban/_components/kanban-board";
+import type { ProjectStatus } from "@/types/project";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { AlertCircleIcon, InfoIcon, SearchIcon } from "lucide-react";
-
-interface Column {
-  id: ProjectStatus;
-  title: string;
-  projects: Project[];
-}
+import React from "react";
+import { Column, TaskKanbanBoard } from "../../kanban/_components/kanban-task-board";
 
 interface ProjectKanbanProps {
   projectId: Id<"projects">;
@@ -109,7 +104,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
       </div>
 
       {/* Kanban Board */}
-      <KanbanBoard columns={columns as unknown as Column[]} />
+      <TaskKanbanBoard columns={columns as unknown as Column[]} />
     </div>
   );
 }

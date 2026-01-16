@@ -1,7 +1,8 @@
 "use client";
 
-import { FolderKanban, Users, TrendingUp, DollarSign } from "lucide-react";
+import { FolderKanbanIcon, UsersIcon, TrendingUpIcon, DollarSignIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 
 interface DashboardStatsProps {
   stats: {
@@ -19,7 +20,7 @@ const statCards = [
   {
     key: "projects",
     label: "Projects",
-    icon: FolderKanban,
+    icon: FolderKanbanIcon,
     iconBg: "bg-teal-500",
     getValue: (stats: DashboardStatsProps["stats"], totalProjects: number) => totalProjects,
     getChange: () => 55,
@@ -27,7 +28,7 @@ const statCards = [
   {
     key: "members",
     label: "Membros",
-    icon: Users,
+    icon: UsersIcon,
     iconBg: "bg-blue-500",
     getValue: (stats: DashboardStatsProps["stats"], _: number, totalMembers: number) =>
       totalMembers,
@@ -36,7 +37,7 @@ const statCards = [
   {
     key: "revenue",
     label: "Revenue",
-    icon: TrendingUp,
+    icon: TrendingUpIcon,
     iconBg: "bg-orange-400",
     getValue: (stats: DashboardStatsProps["stats"]) => `${(stats.totalRevenue / 1000).toFixed(0)}k`,
     getChange: () => 2,
@@ -44,7 +45,7 @@ const statCards = [
   {
     key: "profit",
     label: "Profit",
-    icon: DollarSign,
+    icon: DollarSignIcon,
     iconBg: "bg-orange-500",
     getValue: (stats: DashboardStatsProps["stats"]) => (stats.netProfit / 1000).toFixed(0),
     getChange: (stats: DashboardStatsProps["stats"]) =>

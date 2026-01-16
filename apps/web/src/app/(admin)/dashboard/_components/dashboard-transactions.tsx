@@ -1,9 +1,16 @@
 "use client";
 
-import { MoreVertical, Wallet, CreditCard, ArrowLeftRight, CircleDollarSign } from "lucide-react";
+import {
+  MoreVerticalIcon,
+  WalletIcon,
+  CreditCardIcon,
+  ArrowLeftRightIcon,
+  CircleDollarSignIcon,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React from "react";
 
 interface Transaction {
   _id: Id<"transactions">;
@@ -19,12 +26,15 @@ interface DashboardTransactionsProps {
   transactions: Transaction[];
 }
 
-const categoryIcons: Record<string, { icon: typeof Wallet; bgColor: string; iconColor: string }> = {
-  wallet: { icon: Wallet, bgColor: "bg-purple-100", iconColor: "text-purple-600" },
-  card: { icon: CreditCard, bgColor: "bg-red-100", iconColor: "text-red-500" },
-  transfer: { icon: ArrowLeftRight, bgColor: "bg-green-100", iconColor: "text-green-600" },
-  paypal: { icon: CircleDollarSign, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
-  default: { icon: Wallet, bgColor: "bg-gray-100", iconColor: "text-gray-600" },
+const categoryIcons: Record<
+  string,
+  { icon: typeof WalletIcon; bgColor: string; iconColor: string }
+> = {
+  wallet: { icon: WalletIcon, bgColor: "bg-purple-100", iconColor: "text-purple-600" },
+  card: { icon: CreditCardIcon, bgColor: "bg-red-100", iconColor: "text-red-500" },
+  transfer: { icon: ArrowLeftRightIcon, bgColor: "bg-green-100", iconColor: "text-green-600" },
+  paypal: { icon: CircleDollarSignIcon, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
+  default: { icon: WalletIcon, bgColor: "bg-gray-100", iconColor: "text-gray-600" },
 };
 
 function getCategoryIcon(category: string) {
@@ -48,7 +58,7 @@ export function DashboardTransactions({ transactions }: DashboardTransactionsPro
         <CardTitle className="text-lg font-semibold">Transactions</CardTitle>
         <CardAction>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg">
-            <MoreVertical className="size-4 text-muted-foreground" />
+            <MoreVerticalIcon className="size-4 text-muted-foreground" />
           </Button>
         </CardAction>
       </CardHeader>
@@ -79,7 +89,7 @@ export function DashboardTransactions({ transactions }: DashboardTransactionsPro
           })
         ) : (
           <div className="py-8 text-center">
-            <Wallet className="size-10 mx-auto text-muted-foreground/30" />
+            <WalletIcon className="size-10 mx-auto text-muted-foreground/30" />
             <p className="text-sm text-muted-foreground mt-2">No recent transactions</p>
           </div>
         )}

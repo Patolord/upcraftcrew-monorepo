@@ -1,14 +1,12 @@
 "use client";
 
 import { useId } from "react";
-import { Form, FormSubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "convex/react";
-import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { Form, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { TeamMemberStatus } from "@/types/team";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import React from "react";
 
 interface NewTeamMemberModalProps {
   isOpen: boolean;
@@ -26,15 +24,12 @@ interface TeamMemberFormData {
 }
 
 export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps) {
-  const createTeamMember = useMutation(api.team.createTeamMember);
   const formId = useId();
-  const { error, clearError, handleErrorWithMessages } = useConvexError();
+  const { error, clearError } = useConvexError();
 
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<TeamMemberFormData>({
     defaultValues: {
       name: "",
@@ -46,36 +41,6 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
       imageUrl: "",
     },
   });
-
-  const onSubmit = async (data: TeamMemberFormData) => {
-    try {
-      await createTeamMember({
-        firstName: data.name,
-        lastName: data.name,
-        email: data.email,
-        role: data.role,
-        department: data.department,
-        skills: data.skills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter((skill) => skill.length > 0),
-        imageUrl: data.imageUrl || undefined,
-      });
-
-      toast.success("Team member added successfully!");
-      reset();
-      onClose();
-    } catch (err) {
-      handleErrorWithMessages(
-        err,
-        {
-          ALREADY_EXISTS: "Um usuário com este email já existe",
-          UNAUTHORIZED: "Você não tem permissão para adicionar membros",
-        },
-        "Erro ao adicionar membro",
-      );
-    }
-  };
 
   if (!isOpen) return null;
 

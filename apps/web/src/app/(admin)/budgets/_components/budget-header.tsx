@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronDown, LogOut, Search, User } from "lucide-react";
+import { ChevronDown, LogOut, Plus, Search, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from "react";
 
-export function BudgetHeader() {
+interface BudgetHeaderProps {
+  onNewBudget?: () => void;
+}
+
+export function BudgetHeader({ onNewBudget }: BudgetHeaderProps) {
   const router = useRouter();
   const { user } = useUser();
 
@@ -33,8 +39,16 @@ export function BudgetHeader() {
 
   return (
     <header className="flex items-center justify-between py-6">
-      {/* Title */}
-      <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Budgets</h1>
+      {/* Title and New Budget Button */}
+      <div className="flex items-center gap-4">
+        <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Budgets</h1>
+        {onNewBudget && (
+          <Button onClick={onNewBudget} className="gap-2">
+            <Plus className="size-4" />
+            Novo Orçamento
+          </Button>
+        )}
+      </div>
 
       {/* Center - Search */}
       <div className="relative flex-1 max-w-md mx-8">

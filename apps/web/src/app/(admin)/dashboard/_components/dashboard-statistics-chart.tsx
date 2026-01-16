@@ -1,7 +1,7 @@
 "use client";
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
-import { MoreVertical } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import React from "react";
 
 interface StatisticsChartProps {
   transactions: Array<{
@@ -70,7 +71,7 @@ export function DashboardStatisticsChart({ transactions }: StatisticsChartProps)
               render={<Button variant="ghost" size="sm" className="h-8 px-2 rounded-lg" />}
             >
               <span className="text-sm text-muted-foreground">Monthly</span>
-              <MoreVertical className="size-4 ml-1 text-muted-foreground" />
+              <MoreVerticalIcon className="size-4 ml-1 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-lg">
               <DropdownMenuItem>Daily</DropdownMenuItem>

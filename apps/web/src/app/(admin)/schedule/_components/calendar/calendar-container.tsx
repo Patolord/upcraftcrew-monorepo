@@ -11,6 +11,7 @@ import { CalendarDayView } from "./calendar-day-view";
 import { CalendarSidebar } from "./calendar-sidebar";
 import { getEventColor } from "./calendar-utils";
 import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
+import React from "react";
 
 export type ViewMode = "month" | "week" | "day";
 

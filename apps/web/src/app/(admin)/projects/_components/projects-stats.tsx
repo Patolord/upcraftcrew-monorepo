@@ -1,5 +1,6 @@
 import type { Project } from "@/types/project";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import React from "react";
 
 interface ProjectsStatsProps {
   projects: Project[];

@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface FinancialSummary {
   totalIncome: number;
@@ -17,7 +18,10 @@ interface FinancialSummaryCardsProps {
   pendingTransactions: number;
 }
 
-const formatLargeNumber = (value: number, formatFn: (val: number, opts?: any) => string) => {
+const formatLargeNumber = (
+  value: number,
+  formatFn: (val: number, opts?: Intl.NumberFormatOptions) => string,
+) => {
   if (Math.abs(value) >= 1000) {
     return `${formatFn(value / 1000, { maximumFractionDigits: 0 })}k`;
   }

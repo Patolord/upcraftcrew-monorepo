@@ -3,19 +3,20 @@
 import { useMemo } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { TaskKanbanBoard } from "./task-kanban-board";
+import { type Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { TaskKanbanBoard, type Task, type TaskStatus, type Column } from "./kanban-task-board";
 import { KanbanHeader } from "./kanban-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Zap, Star, Share2 } from "lucide-react";
+import { ZapIcon, StarIcon, Share2Icon } from "lucide-react";
+import React from "react";
 
-type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
+type TaskWithDetails = Doc<"tasks"> & {
+  assignedUser: Doc<"users"> | null;
+  project: Doc<"projects"> | null;
+};
 
-interface Column {
-  id: TaskStatus;
-  title: string;
-  tasks: any[];
-}
+type TeamMember = Doc<"users">;
 
 interface KanbanPageProps {
   preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
@@ -23,11 +24,39 @@ interface KanbanPageProps {
 }
 
 export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageProps) {
-  const tasks = usePreloadedQuery(preloadedTasks);
+  const tasksWithDetails = usePreloadedQuery(preloadedTasks) as TaskWithDetails[];
   const teamMembers = usePreloadedQuery(preloadedTeamMembers);
 
+  // Transform tasks to match the expected interface
+  const tasks = useMemo<Task[]>(() => {
+    return tasksWithDetails.map((task) => {
+      const transformed: Task = {
+        _id: task._id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        assignedUser: task.assignedUser
+          ? {
+              _id: task.assignedUser._id,
+              name: `${task.assignedUser.firstName} ${task.assignedUser.lastName}`.trim(),
+              imageUrl: task.assignedUser.imageUrl,
+            }
+          : null,
+        project: task.project
+          ? {
+              _id: task.project._id,
+              name: task.project.name,
+            }
+          : null,
+        dueDate: task.dueDate,
+      };
+      return transformed;
+    });
+  }, [tasksWithDetails]);
+
   // Group tasks by status
-  const columns = useMemo(() => {
+  const columns = useMemo<Column[]>(() => {
     const statuses: { id: TaskStatus; title: string }[] = [
       { id: "todo", title: "TODO" },
       { id: "in-progress", title: "IN WORK" },
@@ -35,11 +64,13 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       { id: "done", title: "COMPLETED" },
     ];
 
-    return statuses.map((status) => ({
-      id: status.id,
-      title: status.title,
-      tasks: tasks.filter((task: any) => task.status === status.id),
-    }));
+    return statuses.map(
+      (status): Column => ({
+        id: status.id,
+        title: status.title,
+        tasks: tasks.filter((task) => task.status === status.id),
+      }),
+    );
   }, [tasks]);
 
   return (
@@ -51,7 +82,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-semibold">Team Members</h2>
           <div className="flex -space-x-2">
-            {teamMembers.slice(0, 5).map((member: any) => {
+            {teamMembers.slice(0, 5).map((member: TeamMember) => {
               const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
               const initials = fullName
                 ? fullName
@@ -87,20 +118,20 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon-sm" className="rounded-full">
-            <Zap className="size-4" />
+            <ZapIcon className="size-4" />
           </Button>
           <Button variant="ghost" size="icon-sm" className="rounded-full">
-            <Star className="size-4" />
+            <StarIcon className="size-4" />
           </Button>
           <Button variant="outline" size="sm" className="rounded-full">
-            <Share2 className="size-4" />
+            <Share2Icon className="size-4" />
             Share
           </Button>
         </div>
       </div>
 
       {/* Kanban Board */}
-      <TaskKanbanBoard columns={columns as Column[]} />
+      <TaskKanbanBoard columns={columns} />
     </div>
   );
 }

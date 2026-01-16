@@ -13,12 +13,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQueryState, parseAsStringEnum, parseAsString } from "nuqs";
+import { useQueryState } from "nuqs";
 import { BudgetSlideOver } from "./budget-slide-over";
-import { BudgetFormModal } from "./budget-form-modal";
+import { BudgetFormModal } from "./budget-new/budget-form-modal";
 import { DeleteBudgetDialog } from "./delete-budget-dialog";
 import { BudgetHeader } from "./budget-header";
 import { BudgetDashboard } from "./budget-dashboard";
+import React from "react";
 
 interface Budget {
   _id: Id<"budgets">;
@@ -78,11 +79,7 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
   const budgets = usePreloadedQuery(preloadedBudgets) as Budget[];
   const stats = usePreloadedQuery(preloadedStats) as BudgetStats;
 
-  const [view, setView] = useQueryState(
-    "view",
-    parseAsStringEnum<"dashboard" | "all">(["dashboard", "all"]).withDefault("dashboard"),
-  );
-  const [newBudget, setNewBudget] = useQueryState("new", parseAsString);
+  const [newBudget, setNewBudget] = useQueryState("new");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
@@ -102,25 +99,10 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
     }
   }, [newBudget, isModalOpen, selectedBudget]);
 
-  const handleCreateNew = () => {
-    setSelectedBudget(null);
-    setNewBudget("true");
-    setIsModalOpen(true);
-  };
-
-  const handleView = (budget: Budget) => {
-    setSelectedBudget(budget);
-    setIsViewOpen(true);
-  };
-
   const handleEdit = (budget: Budget) => {
     setSelectedBudget(budget);
     setIsViewOpen(false);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = (budgetId: Id<"budgets">, title: string) => {
-    setDeleteDialog({ budgetId, title });
   };
 
   const handleCloseModal = () => {
@@ -138,9 +120,15 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
     handleCloseModal();
   };
 
+  const handleNewBudget = () => {
+    setSelectedBudget(null);
+    setIsModalOpen(true);
+    setNewBudget("true");
+  };
+
   return (
     <div className="p-6 space-y-6">
-      <BudgetHeader />
+      <BudgetHeader onNewBudget={handleNewBudget} />
       <BudgetDashboard budgets={budgets} stats={stats} />
 
       {/* Modal for Create/Edit */}

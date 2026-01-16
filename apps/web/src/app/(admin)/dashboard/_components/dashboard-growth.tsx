@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, PieChart } from "lucide-react";
+import { ChevronDownIcon, PieChartIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChartContainer } from "@/components/ui/chart";
+import React from "react";
 
 export function DashboardGrowth() {
   return (
@@ -22,7 +23,7 @@ export function DashboardGrowth() {
               render={<Button variant="ghost" size="sm" className="h-8 px-3 rounded-lg" />}
             >
               <span className="text-sm text-orange-500">2022</span>
-              <ChevronDown className="size-4 ml-1 text-orange-500" />
+              <ChevronDownIcon className="size-4 ml-1 text-orange-500" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-lg">
               <DropdownMenuItem>2022</DropdownMenuItem>
@@ -41,7 +42,7 @@ export function DashboardGrowth() {
             },
           }}
         >
-          <PieChart className="w-full h-full" />
+          <PieChartIcon className="w-full h-full" />
         </ChartContainer>
       </CardContent>
     </Card>

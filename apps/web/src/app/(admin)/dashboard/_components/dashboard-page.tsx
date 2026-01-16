@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React from "react";
 
 import { DashboardHeader } from "./dashboard-header";
 import { DashboardStats } from "./dashboard-stats";
@@ -58,33 +59,16 @@ interface Transaction {
   projectId?: Id<"projects">;
 }
 
-interface Task {
-  _id: Id<"tasks">;
-  title: string;
-  description: string;
-  status: "todo" | "in-progress" | "review" | "done" | "blocked";
-  priority: "low" | "medium" | "high" | "urgent";
-  assignedTo?: Id<"users">;
-  projectId?: Id<"projects">;
-  dueDate?: number;
-  createdAt: number;
-  updatedAt: number;
-  assignedUser?: TeamMember | null;
-  project?: Project | null;
-}
-
 interface DashboardPageProps {
   preloadedProjects: Preloaded<typeof api.projects.getProjects>;
   preloadedTeam: Preloaded<typeof api.team.getTeamMembers>;
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
-  preloadedTasks: Preloaded<typeof api.tasks.getTasks>;
 }
 
 export function DashboardPage({
   preloadedProjects,
   preloadedTeam,
   preloadedTransactions,
-  preloadedTasks,
 }: DashboardPageProps) {
   const projects = usePreloadedQuery(preloadedProjects) as Project[];
   const teamMembers = usePreloadedQuery(preloadedTeam) as TeamMember[];
@@ -116,7 +100,7 @@ export function DashboardPage({
   }, [projects, teamMembers, transactions]);
 
   // Error handling
-  const hasError = !projects && !teamMembers && !transactions;
+  // const hasError = !projects && !teamMembers && !transactions;
 
   return (
     <div className="p-6 space-y-6">

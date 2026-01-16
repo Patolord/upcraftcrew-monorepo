@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useMutation } from "convex/react";
 import Sortable from "sortablejs";
-import { TaskCard } from "./task-card";
+import { TaskCard } from "./kanban-task-card";
 import { toast } from "sonner";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
@@ -11,10 +11,11 @@ import { getErrorMessage } from "@/lib/convex-errors";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import React from "react";
 
-type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
+export type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 
-interface Task {
+export interface Task {
   _id: Id<"tasks">;
   title: string;
   description: string;
@@ -32,7 +33,7 @@ interface Task {
   dueDate?: number;
 }
 
-interface Column {
+export interface Column {
   id: TaskStatus;
   title: string;
   tasks: Task[];

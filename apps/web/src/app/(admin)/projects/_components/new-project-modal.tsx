@@ -15,9 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
+import React from "react";
 
 interface NewProjectModalProps {
   isOpen: boolean;
@@ -65,17 +65,8 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         startDate: new Date(formData.startDate).getTime(),
         endDate: formData.endDate ? new Date(formData.endDate).getTime() : new Date().getTime(),
         progress: formData.progress,
-        budget: {
-          total: parseFloat(formData.budgetTotal) || 0,
-          spent: parseFloat(formData.budgetSpent) || 0,
-          remaining:
-            (parseFloat(formData.budgetTotal) || 0) - (parseFloat(formData.budgetSpent) || 0),
-        },
+        budget: parseFloat(formData.budgetTotal) || 0,
         teamIds: [],
-        tags: formData.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0),
       });
 
       toast.success("Project created successfully!");
@@ -278,7 +269,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                   Creating...
                 </>
               ) : (

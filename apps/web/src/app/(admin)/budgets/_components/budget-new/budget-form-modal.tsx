@@ -9,13 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Save, FileDown, Loader2 } from "lucide-react";
+import { SaveIcon, ChevronLeftIcon, ChevronRightIcon, Loader2Icon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
-import { BudgetFormItems } from "./budget-form-items";
-import { BudgetFormObjectives } from "./budget-form-objectives";
-import { BudgetFormScope } from "./budget-form-scope";
-import { BudgetFormExtras } from "./budget-form-extras";
+import { BudgetFormItems } from "../budget-new/budget-form-items";
+import { BudgetFormObjectives } from "../budget-new/budget-form-objectives";
+import { BudgetFormScope } from "../budget-new/budget-form-scope";
+import { BudgetFormExtras } from "../budget-new/budget-form-extras";
+import { BudgetModal } from "../budget-new/budget-modal";
+import React from "react";
 
 interface BudgetItem {
   description: string;
@@ -59,10 +61,11 @@ interface BudgetFormData {
   deliveryDeadline?: string;
 }
 
-interface BudgetFormProps {
+interface BudgetFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   initialData?: BudgetFormData;
   onSuccess?: () => void;
-  onCancel?: () => void;
 }
 
 const statusOptions = [
@@ -73,13 +76,22 @@ const statusOptions = [
   { value: "expired", label: "Expirado" },
 ];
 
-export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps) {
+const steps = [
+  { id: "basic", label: "Informações" },
+  { id: "objectives", label: "Objetivos" },
+  { id: "scope", label: "Escopo" },
+  { id: "items", label: "Investimento" },
+  { id: "extras", label: "Extras" },
+  { id: "payment", label: "Pagamento" },
+];
+
+export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: BudgetFormModalProps) {
   const createBudget = useMutation(api.budgets.createBudget);
   const updateBudget = useMutation(api.budgets.updateBudget);
   const { error, clearError, handleError } = useConvexError();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("basic");
+  const [currentStep, setCurrentStep] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState<BudgetFormData>({
@@ -89,7 +101,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
     status: initialData?.status || "draft",
     currency: initialData?.currency || "BRL",
     items: initialData?.items || [{ description: "", quantity: 1, unitPrice: 0, total: 0 }],
-    validUntil: initialData?.validUntil || Date.now() + 15 * 24 * 60 * 60 * 1000, // 15 days from now
+    validUntil: initialData?.validUntil || Date.now() + 15 * 24 * 60 * 60 * 1000,
     notes: initialData?.notes || "",
     objectives: initialData?.objectives || [{ title: "", description: "" }],
     scopeOptions: initialData?.scopeOptions || [
@@ -108,13 +120,23 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
     setIsSubmitting(true);
 
     try {
       if (initialData?._id) {
-        // Update existing budget
         await updateBudget({
           id: initialData._id,
           title: formData.title,
@@ -133,7 +155,6 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
         });
         toast.success("Orçamento atualizado com sucesso!");
       } else {
-        // Create new budget
         await createBudget({
           title: formData.title,
           client: formData.client,
@@ -152,6 +173,8 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
         toast.success("Orçamento criado com sucesso!");
       }
       onSuccess?.();
+      onClose();
+      setCurrentStep(0);
     } catch (err) {
       handleError(err, "Erro ao salvar orçamento");
     } finally {
@@ -159,26 +182,25 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
     }
   };
 
-  const handleDownloadPDF = () => {
-    if (initialData?._id) {
-      window.open(`/budgets/${initialData._id}/pdf`, "_blank");
-    }
+  const handleClose = () => {
+    onClose();
+    setCurrentStep(0);
   };
 
-  const sections = [
-    { id: "basic", label: "Informações Básicas" },
-    { id: "objectives", label: "Objetivos" },
-    { id: "scope", label: "Escopo" },
-    { id: "items", label: "Investimento" },
-    { id: "extras", label: "Extras" },
-    { id: "payment", label: "Pagamento" },
-  ];
+  const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <form onSubmit={handleSubmit} className="h-full flex flex-col">
-      {/* Error alert */}
+    <BudgetModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={initialData?._id ? "Editar Orçamento" : "Novo Orçamento"}
+      subtitle="Preencha as informações do orçamento"
+      currentStep={currentStep}
+      steps={steps}
+      onStepChange={setCurrentStep}
+    >
       {error && (
-        <div className="px-6 pt-4">
+        <div className="mb-4">
           <ErrorAlert
             code={error.code}
             message={error.message}
@@ -187,34 +209,13 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
           />
         </div>
       )}
-      {/* Section tabs */}
-      <div className="px-6 py-3 border-b border-base-300 overflow-x-auto">
-        <div className="flex gap-1">
-          {sections.map((section) => (
-            <Button
-              key={section.id}
-              type="button"
-              className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
-                activeSection === section.id
-                  ? "bg-orange-500 text-white"
-                  : "bg-base-200 text-base-content/70 hover:bg-orange-500 hover:text-white"
-              }`}
-              onClick={() => setActiveSection(section.id)}
-            >
-              {section.label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {/* Form content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
         {/* Basic Information */}
-        {activeSection === "basic" && (
+        {currentStep === 0 && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="title" className="pb-3">
+                <Label htmlFor="title" className="text-sm font-medium mb-2 block">
                   Título da Proposta
                 </Label>
                 <Input
@@ -223,11 +224,11 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                   onChange={(e) => updateField("title", e.target.value)}
                   placeholder="Ex: Desenvolvimento de Website"
                   required
-                  className="border border-orange-500 rounded-md"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
                 />
               </div>
               <div>
-                <Label htmlFor="client" className="pb-3">
+                <Label htmlFor="client" className="text-sm font-medium mb-2 block">
                   Cliente
                 </Label>
                 <Input
@@ -236,18 +237,18 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                   onChange={(e) => updateField("client", e.target.value)}
                   placeholder="Nome do cliente"
                   required
-                  className="border border-orange-500 rounded-md"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="description" className="pb-3">
+              <Label htmlFor="description" className="text-sm font-medium mb-2 block">
                 Descrição
               </Label>
               <Textarea
                 id="description"
-                className="w-full min-h-[100px] resize-none border-orange-500 rounded-md focus-visible:border-orange-500"
+                className="w-full min-h-[100px] resize-none border-base-300 rounded-lg focus-visible:border-orange-500"
                 value={formData.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 placeholder="Descreva brevemente o projeto..."
@@ -257,12 +258,12 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="status" className="pb-3">
+                <Label htmlFor="status" className="text-sm font-medium mb-2 block">
                   Status
                 </Label>
                 <select
                   id="status"
-                  className="w-full h-8 px-2 text-sm border border-input rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
+                  className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={formData.status}
                   onChange={(e) =>
                     updateField("status", e.target.value as BudgetFormData["status"])
@@ -276,12 +277,12 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                 </select>
               </div>
               <div>
-                <Label htmlFor="currency" className="pb-3">
+                <Label htmlFor="currency" className="text-sm font-medium mb-2 block">
                   Moeda
                 </Label>
                 <select
                   id="currency"
-                  className="w-full h-8 px-2 text-xs bg-transparent focus:outline-none focus:ring-1 focus:ring-ring border border-orange-500 rounded-md"
+                  className="w-full h-10 px-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500 border border-base-300 rounded-lg"
                   value={formData.currency}
                   onChange={(e) => updateField("currency", e.target.value)}
                 >
@@ -291,7 +292,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                 </select>
               </div>
               <div>
-                <Label htmlFor="validUntil" className="pb-3">
+                <Label htmlFor="validUntil" className="text-sm font-medium mb-2 block">
                   Válido até
                 </Label>
                 <Input
@@ -299,63 +300,52 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                   type="date"
                   value={new Date(formData.validUntil).toISOString().split("T")[0]}
                   onChange={(e) => updateField("validUntil", new Date(e.target.value).getTime())}
-                  className="border border-orange-500 rounded-md"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
                 />
               </div>
-            </div>
-
-            <div>
-              <Label htmlFor="notes" className="pb-3">
-                Observações
-              </Label>
-              <Textarea
-                id="notes"
-                className="w-full min-h-[80px] resize-none border-orange-500 rounded-md focus-visible:border-orange-500"
-                value={formData.notes || ""}
-                onChange={(e) => updateField("notes", e.target.value)}
-                placeholder="Observações adicionais..."
-              />
             </div>
           </div>
         )}
 
         {/* Objectives */}
-        {activeSection === "objectives" && (
+        {currentStep === 1 && (
           <BudgetFormObjectives
             objectives={formData.objectives || []}
-            onChange={(objectives) => updateField("objectives", objectives)}
+            onChange={(objectives: BudgetObjective[]) => updateField("objectives", objectives)}
           />
         )}
 
         {/* Scope */}
-        {activeSection === "scope" && (
+        {currentStep === 2 && (
           <BudgetFormScope
             scopeOptions={formData.scopeOptions || []}
-            onChange={(scopeOptions) => updateField("scopeOptions", scopeOptions)}
+            onChange={(scopeOptions: BudgetScopeOption[]) =>
+              updateField("scopeOptions", scopeOptions)
+            }
           />
         )}
 
         {/* Items */}
-        {activeSection === "items" && (
+        {currentStep === 3 && (
           <BudgetFormItems
             items={formData.items}
-            onChange={(items) => updateField("items", items)}
+            onChange={(items: BudgetItem[]) => updateField("items", items)}
           />
         )}
 
         {/* Extras */}
-        {activeSection === "extras" && (
+        {currentStep === 4 && (
           <BudgetFormExtras
             extras={formData.extras || []}
-            onChange={(extras) => updateField("extras", extras)}
+            onChange={(extras: BudgetExtra[]) => updateField("extras", extras)}
           />
         )}
 
         {/* Payment Terms */}
-        {activeSection === "payment" && (
+        {currentStep === 5 && (
           <div className="space-y-4">
             <div>
-              <Label>Condições de Pagamento</Label>
+              <Label className="text-sm font-medium mb-2 block">Condições de Pagamento</Label>
               <div className="mt-2 space-y-2">
                 {(formData.paymentTerms || []).map((term, index) => (
                   <div key={index} className="flex items-center gap-2">
@@ -367,6 +357,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                         updateField("paymentTerms", newTerms);
                       }}
                       placeholder="Ex: 50% na assinatura"
+                      className="border border-base-300 rounded-lg"
                     />
                     <Button
                       type="button"
@@ -378,6 +369,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                         );
                         updateField("paymentTerms", newTerms);
                       }}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
                     >
                       ✕
                     </Button>
@@ -390,6 +382,7 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
                   onClick={() =>
                     updateField("paymentTerms", [...(formData.paymentTerms || []), ""])
                   }
+                  className="border-dashed"
                 >
                   + Adicionar condição
                 </Button>
@@ -397,40 +390,77 @@ export function BudgetForm({ initialData, onSuccess, onCancel }: BudgetFormProps
             </div>
 
             <div>
-              <Label htmlFor="deliveryDeadline">Prazo de Entrega</Label>
+              <Label htmlFor="deliveryDeadline" className="text-sm font-medium mb-2 block">
+                Prazo de Entrega
+              </Label>
               <Input
                 id="deliveryDeadline"
                 value={formData.deliveryDeadline || ""}
                 onChange={(e) => updateField("deliveryDeadline", e.target.value)}
                 placeholder="Ex: Até 15 dias úteis após aprovação"
+                className="border border-base-300 rounded-lg"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="notes" className="text-sm font-medium mb-2 block">
+                Observações
+              </Label>
+              <Textarea
+                id="notes"
+                className="w-full min-h-[80px] resize-none border-base-300 rounded-lg focus-visible:border-orange-500"
+                value={formData.notes || ""}
+                onChange={(e) => updateField("notes", e.target.value)}
+                placeholder="Observações adicionais..."
               />
             </div>
           </div>
         )}
-      </div>
 
-      {/* Footer actions */}
-      <div className="px-6 py-4 border-t border-base-300 flex items-center justify-between gap-3">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <div className="flex items-center gap-2">
-          {initialData?._id && (
-            <Button type="button" variant="outline" onClick={handleDownloadPDF}>
-              <FileDown className="h-4 w-4 mr-2" />
-              Gerar PDF
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between pt-4 border-t border-base-200">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={currentStep === 0 ? handleClose : handlePrevious}
+            className="gap-2"
+          >
+            {currentStep === 0 ? (
+              "Cancelar"
+            ) : (
+              <>
+                <ChevronLeftIcon className="h-4 w-4" />
+                Anterior
+              </>
+            )}
+          </Button>
+
+          {isLastStep ? (
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="gap-2 bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              {isSubmitting ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                <SaveIcon className="h-4 w-4" />
+              )}
+              {initialData?._id ? "Salvar Alterações" : "Criar Orçamento"}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={handleNext}
+              className="gap-2 bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              Próximo
+              <ChevronRightIcon className="h-4 w-4" />
             </Button>
           )}
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4 mr-2" />
-            )}
-            {initialData?._id ? "Salvar Alterações" : "Criar Orçamento"}
-          </Button>
         </div>
-      </div>
-    </form>
+      </form>
+    </BudgetModal>
   );
 }

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { ScheduleEvent } from "@/types/schedule";
 import { getMonthDays, formatDateISO, isToday, isSameDay, getWeekdayNames } from "./calendar-utils";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface MiniCalendarProps {
   selectedDate: Date;

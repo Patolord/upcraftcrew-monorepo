@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { roleConfig, statusConfig } from "./team-config";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 type TeamMemberWithProjects = Doc<"users"> & {
   projects: (Doc<"projects"> | null)[];

@@ -5,9 +5,12 @@ import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { CalendarIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import React from "react";
+import type { Project } from "@/types/project";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 interface ProjectDashboardProps {
-  project: any;
+  project: Project & { _id: Id<"projects"> };
 }
 
 export function ProjectDashboard({ project }: ProjectDashboardProps) {
@@ -20,8 +23,6 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
   const events = useQuery(api.schedule.getEventsByProject, {
     projectId: project._id,
   });
-
-  const isLoading = transactions === undefined || events === undefined;
 
   // Calculate financial data
   const financialData = useMemo(() => {
@@ -44,22 +45,31 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
 
   // Calculate budget usage
   const budgetUsage = useMemo(() => {
-    const percentage = (project.budget / project.budget) * 100;
-    const remaining = project.budget.remaining;
-    const isOverBudget = percentage > 100;
+    const budget = project.budget || 0;
+    const expenses = financialData.expenses;
+    const percentage = budget > 0 ? (expenses / budget) * 100 : 0;
+    const remaining = budget - expenses;
+    const isOverBudget = expenses > budget;
 
     return {
       percentage,
       remaining,
       isOverBudget,
     };
-  }, [project]);
+  }, [project, financialData]);
 
   // Calculate timeline
   const timeline = useMemo(() => {
     const now = Date.now();
-    const start = project.startDate;
-    const end = project.endDate;
+    const start =
+      typeof project.startDate === "string"
+        ? new Date(project.startDate).getTime()
+        : project.startDate;
+    const end = project.endDate
+      ? typeof project.endDate === "string"
+        ? new Date(project.endDate).getTime()
+        : project.endDate
+      : now;
     const total = end - start;
     const elapsed = now - start;
     const percentage = Math.min((elapsed / total) * 100, 100);
@@ -110,7 +120,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
         <div className="stats shadow border border-base-300">
           <div className="stat">
             <div className="stat-title text-xs">Equipe</div>
-            <div className="stat-value text-2xl">{project.team.length}</div>
+            <div className="stat-value text-2xl">{project.team?.length || 0}</div>
             <div className="stat-desc">Membros ativos</div>
           </div>
         </div>
@@ -161,15 +171,19 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Total</span>
-                <span className="text-sm font-bold">{project.budget.total}</span>
+                <span className="text-sm font-bold">{project.budget?.toLocaleString() || 0}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Gasto</span>
-                <span className="text-sm font-bold text-error">{project.budget}</span>
+                <span className="text-sm font-bold text-error">
+                  {financialData.expenses.toLocaleString()}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-base-content/60">Restante</span>
-                <span className="text-sm font-bold text-success">{project.budget.remaining}</span>
+                <span className="text-sm font-bold text-success">
+                  {budgetUsage.remaining.toLocaleString()}
+                </span>
               </div>
               <progress
                 className={`progress w-full h-4 ${budgetUsage.isOverBudget ? "progress-error" : "progress-success"}`}

@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { TransactionType, TransactionCategory, Transaction } from "@/types/finance";
+import { TransactionCategory } from "@/types/finance";
 import { FinanceHeader } from "./finance-header";
 import { PaymentMethodCard } from "./payment-method-card";
-import { InvoicesTable } from "./invoices-table";
-import { BillingInformation } from "./billing-information";
-import { TransactionsSidebar } from "./transactions-sidebar";
+import { FinanceInvoices } from "./finance-invoices";
+import { FinanceBilling } from "./finance-billing";
+import { FinanceTransactions } from "./finance-transactions";
 import { PaymentMethodsSection } from "./payment-methods-section";
+import { NewTransactionModal } from "./new-transaction-modal";
 import { Skeleton } from "@/components/ui/skeleton";
+import React from "react";
 
 interface FinancePageProps {
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
@@ -20,6 +22,7 @@ interface FinancePageProps {
 export function FinancePage({ preloadedTransactions, preloadedSummary }: FinancePageProps) {
   const transactions = usePreloadedQuery(preloadedTransactions);
   const financialSummary = usePreloadedQuery(preloadedSummary);
+  const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
 
   // Transform transactions from Convex format to UI format
   const transformedTransactions = useMemo(() => {
@@ -44,7 +47,7 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
   if (!financialSummary) {
     return (
       <div className="p-6 space-y-6">
-        <FinanceHeader />
+        <FinanceHeader onNewTransaction={() => setIsNewTransactionModalOpen(true)} />
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
             <Skeleton className="h-12 w-12 rounded-full mx-auto" />
@@ -56,9 +59,15 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
   }
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-orange-50/30 to-pink-50/30 dark:from-orange-950/10 dark:to-pink-950/10 min-h-screen">
+    <div className="p-6 space-y-6 `bg-gradient-to-br` from-orange-50/30 to-pink-50/30 dark:from-orange-950/10 dark:to-pink-950/10 min-h-screen">
       {/* Header */}
-      <FinanceHeader />
+      <FinanceHeader onNewTransaction={() => setIsNewTransactionModalOpen(true)} />
+
+      {/* New Transaction Modal */}
+      <NewTransactionModal
+        isOpen={isNewTransactionModalOpen}
+        onClose={() => setIsNewTransactionModalOpen(false)}
+      />
 
       {/* Payment Methods Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -81,16 +90,16 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         {/* Left Column - Invoices and Billing */}
         <div className="lg:col-span-2 space-y-6">
           {/* Invoices Table */}
-          <InvoicesTable />
+          <FinanceInvoices />
 
           {/* Billing Information */}
-          <BillingInformation />
+          <FinanceBilling />
         </div>
 
         {/* Right Column - Transactions and Payment Methods */}
         <div className="space-y-6">
           {/* Recent Transactions */}
-          <TransactionsSidebar transactions={transformedTransactions} />
+          <FinanceTransactions transactions={transformedTransactions} />
 
           {/* Payment Methods */}
           <PaymentMethodsSection />

@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import React from "react";
 
 interface BudgetObjective {
   title: string;
@@ -41,7 +42,7 @@ export function BudgetFormObjectives({ objectives, onChange }: BudgetFormObjecti
           onClick={addObjective}
           className="border border-orange-500 bg-white rounded-md"
         >
-          <Plus className="h-4 w-4 mr-1" />
+          <PlusIcon className="h-4 w-4 mr-1" />
           Adicionar Objetivo
         </Button>
       </div>
@@ -49,7 +50,7 @@ export function BudgetFormObjectives({ objectives, onChange }: BudgetFormObjecti
       {objectives.length === 0 ? (
         <div className="text-center py-8 border border-dashed border-base-300 rounded-lg">
           <p className="text-sm text-base-content/60">
-            Clique em "Adicionar Objetivo" para definir os objetivos do projeto.
+            Clique em &quot;Adicionar Objetivo&quot; para definir os objetivos do projeto.
           </p>
         </div>
       ) : (
@@ -75,7 +76,7 @@ export function BudgetFormObjectives({ objectives, onChange }: BudgetFormObjecti
                   className="h-8 w-8 pt-3 text-error mt-4"
                   onClick={() => removeObjective(index)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2Icon className="h-4 w-4" />
                 </Button>
               </div>
               <div>

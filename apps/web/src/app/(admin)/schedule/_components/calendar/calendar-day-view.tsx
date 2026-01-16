@@ -12,6 +12,7 @@ import {
 } from "./calendar-utils";
 import { TimeGridEventBlock } from "./event-block";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface CalendarDayViewProps {
   selectedDate: Date;

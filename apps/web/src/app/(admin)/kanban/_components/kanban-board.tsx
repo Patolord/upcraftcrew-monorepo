@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Sortable from "sortablejs";
 import type { Project, ProjectStatus } from "@/types/project";
 import { KanbanColumn } from "./kanban-column";
+import React from "react";
 
 interface Column {
   id: ProjectStatus;

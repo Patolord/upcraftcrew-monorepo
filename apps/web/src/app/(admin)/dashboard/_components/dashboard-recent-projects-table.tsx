@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { ChevronDown } from "lucide-react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React from "react";
 
 interface Project {
   _id: Id<"projects">;

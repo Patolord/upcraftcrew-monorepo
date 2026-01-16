@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import React from "react";
 
 interface BillingInfo {
   companyName: string;
@@ -10,7 +11,7 @@ interface BillingInfo {
   vatNumber: string;
 }
 
-interface BillingInformationProps {
+interface FinanceBillingProps {
   billingInfo?: BillingInfo;
   onEdit?: () => void;
 }
@@ -22,10 +23,7 @@ const defaultBillingInfo: BillingInfo = {
   vatNumber: "FRB462858254",
 };
 
-export function BillingInformation({
-  billingInfo = defaultBillingInfo,
-  onEdit,
-}: BillingInformationProps) {
+export function FinanceBilling({ billingInfo = defaultBillingInfo, onEdit }: FinanceBillingProps) {
   return (
     <Card className="border shadow-sm">
       <CardHeader className="border-b bg-muted/5">

@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import React from "react";
 
 interface BudgetItem {
   description: string;
@@ -51,7 +52,7 @@ export function BudgetFormItems({ items, onChange }: BudgetFormItemsProps) {
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Itens do Investimento</Label>
         <Button variant="outline" size="sm" onClick={addItem}>
-          <Plus className="h-4 w-4 mr-1" />
+          <PlusIcon className="h-4 w-4 mr-1" />
           Adicionar Item
         </Button>
       </div>
@@ -59,7 +60,7 @@ export function BudgetFormItems({ items, onChange }: BudgetFormItemsProps) {
       {items.length === 0 ? (
         <div className="text-center py-8 border border-dashed border-base-300 rounded-lg">
           <p className="text-sm text-base-content/60">
-            Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+            Nenhum item adicionado. Clique em &quot;Adicionar Item&quot; para começar.
           </p>
         </div>
       ) : (
@@ -112,7 +113,7 @@ export function BudgetFormItems({ items, onChange }: BudgetFormItemsProps) {
                   className="h-8 w-8 text-error"
                   onClick={() => removeItem(index)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2Icon className="h-4 w-4" />
                 </Button>
               </div>
             </div>

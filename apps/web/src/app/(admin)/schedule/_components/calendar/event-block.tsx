@@ -3,6 +3,7 @@
 import type { ScheduleEvent } from "@/types/schedule";
 import { formatTime, getEventBgColor, getEventTextColor } from "./calendar-utils";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface EventBlockProps {
   event: ScheduleEvent;

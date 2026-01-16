@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import React from "react";
 
 interface BudgetExtra {
   description: string;
@@ -54,7 +55,7 @@ export function BudgetFormExtras({ extras, onChange }: BudgetFormExtrasProps) {
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Extras Opcionais</Label>
         <Button variant="outline" size="sm" onClick={addExtra}>
-          <Plus className="h-4 w-4 mr-1" />
+          <PlusIcon className="h-4 w-4 mr-1" />
           Adicionar Extra
         </Button>
       </div>
@@ -112,7 +113,7 @@ export function BudgetFormExtras({ extras, onChange }: BudgetFormExtrasProps) {
                   className="h-8 w-8 text-error"
                   onClick={() => removeExtra(index)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2Icon className="h-4 w-4" />
                 </Button>
               </div>
             </div>

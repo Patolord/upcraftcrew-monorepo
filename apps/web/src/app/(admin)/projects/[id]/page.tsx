@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
+import React from "react";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -169,15 +170,11 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Tab Content */}
-      {activeTab === "info" && (
-        <ProjectInfo
-          project={project as unknown as Project}
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-        />
-      )}
+      {activeTab === "info" && <ProjectInfo />}
       {activeTab === "kanban" && <ProjectKanban projectId={projectId as Id<"projects">} />}
-      {activeTab === "dashboard" && <ProjectDashboard project={project} />}
+      {activeTab === "dashboard" && (
+        <ProjectDashboard project={project as unknown as Project & { _id: Id<"projects"> }} />
+      )}
     </div>
   );
 }

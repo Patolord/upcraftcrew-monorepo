@@ -1,11 +1,13 @@
 "use client";
 
-import { ChevronDown, LogOut, Search, User } from "lucide-react";
+import { ChevronDown, LogOut, Search, User, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
+import React from "react";
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +17,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function FinanceHeader() {
+interface FinanceHeaderProps {
+  onNewTransaction?: () => void;
+}
+
+export function FinanceHeader({ onNewTransaction }: FinanceHeaderProps) {
   const router = useRouter();
   const { user } = useUser();
 
@@ -34,7 +40,19 @@ export function FinanceHeader() {
   return (
     <header className="flex items-center justify-between py-6">
       {/* Title */}
-      <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Finance</h1>
+      <div className="flex items-center gap-4">
+        <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Finance</h1>
+        {onNewTransaction && (
+          <Button
+            onClick={onNewTransaction}
+            className="bg-orange-500 hover:bg-orange-600 text-white"
+            size="sm"
+          >
+            <Plus className="size-4 mr-2" />
+            Nova Transação
+          </Button>
+        )}
+      </div>
 
       {/* Center - Search */}
       <div className="relative flex-1 max-w-md mx-8">

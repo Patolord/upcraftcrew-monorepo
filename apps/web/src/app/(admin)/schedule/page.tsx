@@ -1,5 +1,6 @@
 import { CalendarContainer } from "./_components/calendar/calendar-container";
 import { ScheduleHeader } from "./_components/schedule-header";
+import React from "react";
 
 export default function SchedulePage() {
   return (

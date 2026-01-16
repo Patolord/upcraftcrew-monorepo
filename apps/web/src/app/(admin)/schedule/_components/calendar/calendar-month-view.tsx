@@ -4,6 +4,7 @@ import type { ScheduleEvent } from "@/types/schedule";
 import { getMonthDays, formatDateISO, isToday, getWeekdayNames } from "./calendar-utils";
 import { EventBlock } from "./event-block";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface CalendarMonthViewProps {
   selectedDate: Date;

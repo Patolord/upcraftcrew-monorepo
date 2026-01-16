@@ -8,8 +8,9 @@ import type { Project } from "@/types/project";
 import { ProjectsList } from "./projects-list";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { NewProjectModal } from "./new-project-modal";
+import { useState } from "react";
 
 interface ProjectsPageProps {
   preloadedProjects: Preloaded<typeof api.projects.getProjects>;

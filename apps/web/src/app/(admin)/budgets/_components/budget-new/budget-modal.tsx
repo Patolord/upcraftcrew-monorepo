@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Check } from "lucide-react";
+import { XIcon, CheckIcon } from "lucide-react";
+import React from "react";
 
 interface BudgetModalProps {
   isOpen: boolean;
@@ -77,7 +78,7 @@ export function BudgetModal({
               onClick={onClose}
               className="absolute right-4 top-4 h-8 w-8 rounded-full hover:bg-base-200"
             >
-              <X className="h-4 w-4" />
+              <XIcon className="h-4 w-4" />
               <span className="sr-only">Fechar</span>
             </Button>
 
@@ -116,7 +117,7 @@ export function BudgetModal({
                             }
                           `}
                         >
-                          {isCompleted ? <Check className="w-3 h-3" /> : index + 1}
+                          {isCompleted ? <CheckIcon className="w-3 h-3" /> : index + 1}
                         </div>
 
                         {/* Step Label */}

@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface PaymentMethodCardProps {
   name: string;

@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import React from "react";
 
-interface Invoice {
+interface FinanceInvoice {
   id: string;
   name: string;
   invoiceNumber: string;
@@ -20,36 +21,11 @@ interface Invoice {
   price: number;
 }
 
-interface InvoicesTableProps {
-  invoices?: Invoice[];
+interface FinanceInvoicesProps {
+  invoices?: FinanceInvoice[];
 }
 
-// Mock data for demonstration
-const mockInvoices: Invoice[] = [
-  {
-    id: "1",
-    name: "Watch",
-    invoiceNumber: "#EL-150255",
-    date: "2/5/2022",
-    price: 130,
-  },
-  {
-    id: "2",
-    name: "Camera",
-    invoiceNumber: "#EL-156254",
-    date: "1/5/2022",
-    price: 120,
-  },
-  {
-    id: "3",
-    name: "Mouse",
-    invoiceNumber: "#EL-158263",
-    date: "30/4/2022",
-    price: 150,
-  },
-];
-
-export function InvoicesTable({ invoices = mockInvoices }: InvoicesTableProps) {
+export function FinanceInvoices({ invoices = [] }: FinanceInvoicesProps) {
   return (
     <Card className="border shadow-sm">
       <CardHeader className="border-b bg-muted/5">

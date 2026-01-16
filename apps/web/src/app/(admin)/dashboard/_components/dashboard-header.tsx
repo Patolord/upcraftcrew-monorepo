@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronDown, LogOut, Search, User } from "lucide-react";
+import { ChevronDownIcon, LogOutIcon, SearchIcon, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
+import React from "react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -43,7 +44,7 @@ export function DashboardHeader() {
           placeholder="Search..."
           className="w-full h-11 pl-5 pr-12 rounded-full bg-white border-0 shadow-sm text-sm"
         />
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+        <SearchIcon className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
       </div>
 
       {/* Right side - User */}
@@ -57,18 +58,18 @@ export function DashboardHeader() {
           </Avatar>
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{userName}</span>
-            <ChevronDown className="size-4 text-muted-foreground" />
+            <ChevronDownIcon className="size-4 text-muted-foreground" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
           <DropdownMenuItem className="cursor-pointer">
-            <User className="size-4" />
+            <UserIcon className="size-4" />
             Profile
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <SignOutButton>
             <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-              <LogOut className="size-4" />
+              <LogOutIcon className="size-4" />
               Sign out
             </DropdownMenuItem>
           </SignOutButton>

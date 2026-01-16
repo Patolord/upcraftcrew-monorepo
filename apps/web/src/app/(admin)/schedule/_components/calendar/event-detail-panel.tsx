@@ -14,14 +14,14 @@ import {
   PencilIcon,
   UsersIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React from "react";
 
 interface EventDetailPanelProps {
   event: ScheduleEvent;
   onClose?: () => void;
 }
 
-export function EventDetailPanel({ event, onClose }: EventDetailPanelProps) {
+export function EventDetailPanel({ event }: EventDetailPanelProps) {
   const eventDate = new Date(event.startDate);
   const formattedDate = eventDate.toLocaleDateString("en-US", {
     weekday: "long",

@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { XIcon } from "lucide-react";
+import React from "react";
 
 interface BudgetSlideOverProps {
   isOpen: boolean;
@@ -59,7 +60,7 @@ export function BudgetSlideOver({ isOpen, onClose, title, children }: BudgetSlid
           <div className="flex items-center justify-between px-6 py-4 border-b border-base-300">
             <h2 className="text-lg font-semibold">{title}</h2>
             <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-              <X className="h-4 w-4" />
+              <XIcon className="h-4 w-4" />
               <span className="sr-only">Fechar</span>
             </Button>
           </div>

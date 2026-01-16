@@ -4,6 +4,7 @@ import { ChevronDown, LogOut, Search, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
+import React from "react";
 
 import { Input } from "@/components/ui/input";
 import {

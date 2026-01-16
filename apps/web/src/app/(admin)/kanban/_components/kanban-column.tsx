@@ -1,5 +1,6 @@
 import type { Project, ProjectStatus } from "@/types/project";
 import { KanbanCard } from "./kanban-card";
+import React from "react";
 
 interface Column {
   id: ProjectStatus;
