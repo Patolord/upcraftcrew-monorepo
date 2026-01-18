@@ -355,7 +355,7 @@ export function NewEventModal({ isOpen, onClose, preSelectedDate }: NewEventModa
                               isSelected ? "font-semibold text-orange-600" : "text-gray-700"
                             }
                           >
-                            {member.name}
+                            {member.firstName} {member.lastName}
                           </Text>
                         </TouchableOpacity>
                       );

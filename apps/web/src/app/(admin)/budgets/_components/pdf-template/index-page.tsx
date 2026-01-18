@@ -1,4 +1,4 @@
-import { Logo, LogoSmall } from "./logo";
+import React from "react";
 
 const tableOfContents = [
   { page: "03", title: "QUEM SOMOS" },
@@ -69,7 +69,7 @@ export function IndexPage() {
             {/* Right side - table of contents */}
             <div className="flex-1 ml-8">
               <div className="border" style={{ borderColor: "#969696" }}>
-                {tableOfContents.map((item, index) => (
+                {tableOfContents.map((item) => (
                   <div
                     key={item.page}
                     className="flex items-center border-b last:border-b-0"

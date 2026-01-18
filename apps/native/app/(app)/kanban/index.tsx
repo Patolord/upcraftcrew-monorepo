@@ -27,7 +27,8 @@ export default function KanbanPage() {
         searchQuery === "" ||
         task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        task.assignedUser?.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.assignedUser?.lastName?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesSearch;
     });
@@ -134,30 +135,21 @@ export default function KanbanPage() {
                           </Text>
                         )}
 
-                        {/* Tags */}
-                        {task.tags && task.tags.length > 0 && (
-                          <View className="mb-3 flex-row flex-wrap gap-2">
-                            {task.tags.map((tag, idx) => (
-                              <View key={idx} className="rounded bg-orange-100 px-2 py-1">
-                                <Text className="text-orange-700 text-xs">{tag}</Text>
-                              </View>
-                            ))}
-                          </View>
-                        )}
-
                         {/* Task Meta */}
                         {task.assignedUser && (
                           <View className="mt-2 flex-row items-center">
                             <View className="mr-2 h-6 w-6 items-center justify-center rounded-full bg-orange-100">
                               <Text className="font-semibold text-orange-500 text-xs">
-                                {task.assignedUser.name
+                                {task.assignedUser.firstName
                                   .split(" ")
                                   .map((n: string) => n[0])
                                   .join("")
                                   .slice(0, 2)}
                               </Text>
                             </View>
-                            <Text className="text-gray-600 text-xs">{task.assignedUser.name}</Text>
+                            <Text className="text-gray-600 text-xs">
+                              {task.assignedUser.firstName} {task.assignedUser.lastName}
+                            </Text>
                           </View>
                         )}
 

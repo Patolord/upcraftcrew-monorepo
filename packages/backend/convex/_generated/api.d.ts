@@ -9,6 +9,7 @@
  */
 
 import type * as budgets from "../budgets.js";
+import type * as errors from "../errors.js";
 import type * as finance from "../finance.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
@@ -25,6 +26,7 @@ import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server
 
 declare const fullApi: ApiFromModules<{
   budgets: typeof budgets;
+  errors: typeof errors;
   finance: typeof finance;
   healthCheck: typeof healthCheck;
   http: typeof http;

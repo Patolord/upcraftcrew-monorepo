@@ -1,35 +1,36 @@
 {
   "expo": {
-    "scheme": "upcraftcrew-os",
+    "scheme": "up-craft-crew-app",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
     "web": {
       "bundler": "metro"
     },
-    "name": "upcraftcrew-os",
-    "slug": "upcraftcrew-os",
-    "plugins": ["expo-font"],
+    "name": "up-craft-crew-app",
+    "slug": "up-craft-crew-app",
+    "plugins": ["expo-font", "expo-web-browser"],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
     "extra": {
       "eas": {
-        "projectId": "5bf98483-3e32-44f5-9c8d-8e4d96b76475"
+        "projectId": "09dbc8f7-428c-470a-92e3-56e3d4cb0561"
       }
     },
     "icon": "./assets/ios/Icon-Store-1024.png",
     "ios": {
       "icon": "./assets/ios/Icon-Store-1024.png",
-      "bundleIdentifier": "com.sqpaloma.upcraftcrewos"
+      "bundleIdentifier": "com.sqpaloma.upcraftcrewapp"
     },
     "android": {
-      "package": "com.sqpaloma.upcraftcrewos",
-      "versionCode": 6,
+      "package": "com.sqpaloma.upcraftcrewapp",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
         "backgroundColor": "#ffffff"
       }
-    }
+    },
+    "owner": "sqpaloma"
   }
 }

@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import type { TransactionType, TransactionCategory } from "@/types/finance";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React from "react";
 
 interface NewTransactionModalProps {
   isOpen: boolean;

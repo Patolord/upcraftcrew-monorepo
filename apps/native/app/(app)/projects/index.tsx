@@ -204,8 +204,7 @@ export default function ProjectsPage() {
                   </View>
                   {project.budget && (
                     <Text className="font-semibold text-gray-700 text-sm">
-                      ${project.budget.spent.toLocaleString()} / $
-                      {project.budget.total.toLocaleString()}
+                      ${project.budget.toLocaleString()} / $
                     </Text>
                   )}
                 </View>

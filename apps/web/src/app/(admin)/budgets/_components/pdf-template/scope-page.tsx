@@ -1,4 +1,5 @@
 import type { PDFTemplateProps } from "./types";
+import React from "react";
 
 function formatCurrency(value: number, currency: string = "BRL"): string {
   return new Intl.NumberFormat("pt-BR", {

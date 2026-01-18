@@ -38,7 +38,6 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     progress: 0,
     budgetTotal: "",
     budgetSpent: "",
-    tags: "",
   });
 
   const handleSubmit = async () => {
@@ -59,17 +58,8 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         startDate: new Date(formData.startDate).getTime(),
         endDate: formData.endDate ? new Date(formData.endDate).getTime() : new Date().getTime(),
         progress: formData.progress,
-        budget: {
-          total: parseFloat(formData.budgetTotal) || 0,
-          spent: parseFloat(formData.budgetSpent) || 0,
-          remaining:
-            (parseFloat(formData.budgetTotal) || 0) - (parseFloat(formData.budgetSpent) || 0),
-        },
+        budget: parseFloat(formData.budgetTotal) || 0,
         teamIds: [],
-        tags: formData.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0),
       });
 
       Alert.alert("Sucesso", "Projeto criado com sucesso!");
@@ -86,7 +76,6 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         progress: 0,
         budgetTotal: "",
         budgetSpent: "",
-        tags: "",
       });
 
       onClose();
@@ -307,8 +296,6 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 <TextInput
                   className="border border-gray-300 rounded-lg p-3 bg-white"
                   placeholder="design, development, urgent"
-                  value={formData.tags}
-                  onChangeText={(text) => setFormData({ ...formData, tags: text })}
                 />
               </View>
             </ScrollView>

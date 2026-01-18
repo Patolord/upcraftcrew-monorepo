@@ -1,4 +1,5 @@
 import type { PDFTemplateProps } from "./types";
+import React from "react";
 
 function formatCurrency(value: number, currency: string = "BRL"): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -9,7 +10,6 @@ function formatCurrency(value: number, currency: string = "BRL"): string {
 
 export function InvestmentPage({ budget }: PDFTemplateProps) {
   const paymentTerms = budget.paymentTerms || ["A VISTA"];
-  const validUntilDate = new Date(budget.validUntil).toLocaleDateString("pt-BR");
 
   return (
     <div

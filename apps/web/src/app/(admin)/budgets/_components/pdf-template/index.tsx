@@ -5,6 +5,7 @@ import { ObjectivesPage } from "./objectives-page";
 import { ScopePage } from "./scope-page";
 import { InvestmentPage } from "./investment-page";
 import type { Budget } from "./types";
+import React from "react";
 
 interface BudgetPDFTemplateProps {
   budget: Budget;

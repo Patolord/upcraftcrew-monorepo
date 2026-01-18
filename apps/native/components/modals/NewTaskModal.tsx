@@ -38,7 +38,6 @@ export function NewTaskModal({ isOpen, onClose }: NewTaskModalProps) {
     assignedTo: "",
     projectId: "",
     dueDate: "",
-    tags: "",
     isPrivate: false,
   });
 
@@ -59,10 +58,6 @@ export function NewTaskModal({ isOpen, onClose }: NewTaskModalProps) {
         assignedTo: formData.assignedTo ? (formData.assignedTo as Id<"users">) : undefined,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
-        tags: formData.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0),
         isPrivate: formData.isPrivate,
       });
 
@@ -77,7 +72,6 @@ export function NewTaskModal({ isOpen, onClose }: NewTaskModalProps) {
         assignedTo: "",
         projectId: "",
         dueDate: "",
-        tags: "",
         isPrivate: false,
       });
 
@@ -238,7 +232,7 @@ export function NewTaskModal({ isOpen, onClose }: NewTaskModalProps) {
                               : "text-gray-700"
                           }
                         >
-                          {member.name}
+                          {member.firstName} {member.lastName}
                         </Text>
                       </TouchableOpacity>
                     ))}
@@ -314,8 +308,6 @@ export function NewTaskModal({ isOpen, onClose }: NewTaskModalProps) {
                 <TextInput
                   className="border border-gray-300 rounded-lg p-3 bg-white"
                   placeholder="frontend, bug, urgent"
-                  value={formData.tags}
-                  onChangeText={(text) => setFormData({ ...formData, tags: text })}
                 />
               </View>
 

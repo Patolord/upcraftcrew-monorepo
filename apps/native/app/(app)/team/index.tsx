@@ -24,7 +24,8 @@ export default function TeamPage() {
     return teamMembers.filter((member) => {
       const matchesSearch =
         searchQuery === "" ||
-        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         member.department?.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -146,7 +147,7 @@ export default function TeamPage() {
                   <View className="relative">
                     <View className="h-14 w-14 items-center justify-center rounded-full bg-orange-100">
                       <Text className="font-bold text-lg text-orange-500">
-                        {member.name
+                        {member.firstName
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
@@ -171,7 +172,9 @@ export default function TeamPage() {
                   <View className="ml-3 flex-1">
                     <View className="flex-row items-start justify-between">
                       <View className="flex-1">
-                        <Text className="font-semibold text-gray-800 text-lg">{member.name}</Text>
+                        <Text className="font-semibold text-gray-800 text-lg">
+                          {member.firstName} {member.lastName}
+                        </Text>
                         <Text className="mt-0.5 text-gray-500 text-sm">{member.email}</Text>
                       </View>
                       <View

@@ -25,7 +25,8 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
   const createTeamMember = useMutation(api.team.createTeamMember);
 
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     role: "member" as "admin" | "member" | "viewer",
     department: "",
@@ -35,7 +36,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
   });
 
   const handleSubmit = async () => {
-    if (!formData.name || !formData.email || !formData.department) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.department) {
       Alert.alert("Erro", "Por favor, preencha todos os campos obrigatórios");
       return;
     }
@@ -44,23 +45,23 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
 
     try {
       await createTeamMember({
-        name: formData.name,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
         role: formData.role,
         department: formData.department,
-        status: formData.status,
         skills: formData.skills
           .split(",")
           .map((skill) => skill.trim())
           .filter((skill) => skill.length > 0),
-        avatar: formData.avatar || undefined,
       });
 
       Alert.alert("Sucesso", "Membro da equipe adicionado com sucesso!");
 
       // Reset form
       setFormData({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         role: "member",
         department: "",
@@ -115,8 +116,8 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
                 <TextInput
                   className="border border-gray-300 rounded-lg p-3 bg-white"
                   placeholder="Nome completo"
-                  value={formData.name}
-                  onChangeText={(text) => setFormData({ ...formData, name: text })}
+                  value={formData.firstName}
+                  onChangeText={(text) => setFormData({ ...formData, firstName: text })}
                 />
               </View>
 

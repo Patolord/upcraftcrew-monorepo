@@ -11,10 +11,14 @@ import {
   View,
 } from "react-native";
 import SalesFunnel from "./components/SalesFunnel";
+import { useAuth } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 
 export default function DashboardPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<"dashboard" | "goals" | "map">("dashboard");
+  const { signOut } = useAuth();
+  const router = useRouter();
 
   const projects = useQuery(api.projects.getProjects);
   const teamMembers = useQuery(api.team.getTeamMembers);
@@ -103,6 +107,15 @@ export default function DashboardPage() {
     setTimeout(() => setRefreshing(false), 1000);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.replace("/sign-in");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   if (projects === undefined || teamMembers === undefined || transactions === undefined) {
     return (
       <View className="flex-1 items-center justify-center bg-white pt-10">
@@ -134,7 +147,15 @@ export default function DashboardPage() {
     <View className="flex-1 bg-gray-50 pt-16">
       {/* Header */}
       <View className="border-gray-200 border-b bg-white p-4">
-        <Text className="mb-3 font-bold text-3xl text-orange-500">Dashboard</Text>
+        <View className="mb-3 flex-row items-center justify-between">
+          <Text className="font-bold text-3xl text-orange-500">Dashboard</Text>
+          <TouchableOpacity
+            onPress={handleSignOut}
+            className="h-10 w-10 items-center justify-center rounded-full bg-gray-100"
+          >
+            <Ionicons name="log-out-outline" size={20} color="#FF5722" />
+          </TouchableOpacity>
+        </View>
 
         {/* Tab Navigation */}
         <View className="flex-row gap-2">
@@ -267,15 +288,17 @@ export default function DashboardPage() {
                   >
                     <View className="h-10 w-10 items-center justify-center rounded-full bg-orange-100">
                       <Text className="font-semibold text-orange-500">
-                        {member.name
+                        {member.firstName
                           .split(" ")
-                          .map((n) => n[0])
+                          .map((n: string) => n[0])
                           .join("")
                           .slice(0, 2)}
                       </Text>
                     </View>
                     <View className="ml-3 flex-1">
-                      <Text className="font-semibold text-gray-800">{member.name}</Text>
+                      <Text className="font-semibold text-gray-800">
+                        {member.firstName} {member.lastName}
+                      </Text>
                       <Text className="text-gray-500 text-xs">{member.role}</Text>
                     </View>
                     <View

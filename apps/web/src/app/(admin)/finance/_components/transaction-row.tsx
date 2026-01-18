@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TableRow, TableCell } from "@/components/ui/table";
 import type { Transaction } from "@/types/finance";
-import { categoryConfig, statusConfig } from "@/app/(admin)/finance/config";
-import { CircleIcon, PencilIcon, MoreHorizontalIcon, EyeIcon } from "lucide-react";
+import { PencilIcon, MoreHorizontalIcon, EyeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 export function TransactionRow({
   transaction,
@@ -15,11 +15,6 @@ export function TransactionRow({
   transaction: Transaction;
   onEdit?: (transaction: Transaction) => void;
 }) {
-  const category = categoryConfig[transaction.category] || {
-    label: transaction.category,
-    icon: "CircleIcon",
-  };
-  const status = statusConfig[transaction.status];
   const isIncome = transaction.type === "income";
 
   return (
@@ -51,7 +46,7 @@ export function TransactionRow({
       </TableCell>
       <TableCell>
         <Badge variant="outline" className="text-xs">
-          {category.label}
+          {transaction.category}
         </Badge>
       </TableCell>
       <TableCell>
@@ -77,7 +72,7 @@ export function TransactionRow({
           variant={transaction.status === "completed" ? "success" : "warning"}
           className="text-xs"
         >
-          {status?.label || transaction.status}
+          {transaction.status}
         </Badge>
       </TableCell>
       <TableCell className="text-right">

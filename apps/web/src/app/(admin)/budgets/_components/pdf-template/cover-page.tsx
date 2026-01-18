@@ -1,5 +1,6 @@
 import { Logo } from "./logo";
 import type { PDFTemplateProps } from "./types";
+import React from "react";
 
 export function CoverPage({ budget }: PDFTemplateProps) {
   const currentDate = new Date().toLocaleDateString("pt-BR");
