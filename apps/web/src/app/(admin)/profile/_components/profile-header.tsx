@@ -36,7 +36,6 @@ export function ProfileHeader() {
       {/* Title */}
       <div>
         <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Profile</h1>
-        <p className="text-sm text-muted-foreground mt-1">Manage your personal information</p>
       </div>
 
       {/* Right side - User */}

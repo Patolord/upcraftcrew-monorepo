@@ -20,14 +20,16 @@ export const getProjects = query({
     await requireAuth(ctx);
     const projects = await ctx.db.query("projects").collect();
 
-    // Populate team members for each project
+    // Populate team members and manager for each project
     const projectsWithTeam = await Promise.all(
       projects.map(async (project) => {
         const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+        const manager = await ctx.db.get(project.managerId);
 
         return {
           ...project,
           team: team.filter((member) => member !== null),
+          manager,
         };
       }),
     );
@@ -47,12 +49,14 @@ export const getProjectById = query({
       return null;
     }
 
-    // Populate team members
+    // Populate team members and manager
     const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+    const manager = await ctx.db.get(project.managerId);
 
     return {
       ...project,
       team: team.filter((member) => member !== null),
+      manager,
     };
   },
 });
@@ -74,14 +78,44 @@ export const getProjectsByStatus = query({
       .filter((q) => q.eq(q.field("status"), args.status))
       .collect();
 
-    // Populate team members for each project
+    // Populate team members and manager for each project
     const projectsWithTeam = await Promise.all(
       projects.map(async (project) => {
         const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+        const manager = await ctx.db.get(project.managerId);
 
         return {
           ...project,
           team: team.filter((member) => member !== null),
+          manager,
+        };
+      }),
+    );
+
+    return projectsWithTeam;
+  },
+});
+
+// Query: Get projects by manager
+export const getProjectsByManager = query({
+  args: { managerId: v.id("users") },
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const projects = await ctx.db
+      .query("projects")
+      .withIndex("by_manager", (q) => q.eq("managerId", args.managerId))
+      .collect();
+
+    // Populate team members and manager for each project
+    const projectsWithTeam = await Promise.all(
+      projects.map(async (project) => {
+        const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+        const manager = await ctx.db.get(project.managerId);
+
+        return {
+          ...project,
+          team: team.filter((member) => member !== null),
+          manager,
         };
       }),
     );
@@ -112,17 +146,29 @@ export const createProject = mutation({
     endDate: v.number(),
     progress: v.number(),
     budget: v.optional(v.number()),
+    managerId: v.id("users"), // Required project manager
     teamIds: v.array(v.id("users")),
   },
   handler: async (ctx, args) => {
     await requireWrite(ctx);
+
+    // Verify that managerId exists
+    const manager = await ctx.db.get(args.managerId);
+    if (!manager) {
+      throw new Error("Manager not found");
+    }
+
     const projectId = await ctx.db.insert("projects", {
       ...args,
       budget: args.budget || 0,
     });
 
-    // Update team members' projectIds
-    for (const userId of args.teamIds) {
+    // Update team members' projectIds (including manager if not already in team)
+    const teamIdsToUpdate = args.teamIds.includes(args.managerId)
+      ? args.teamIds
+      : [...args.teamIds, args.managerId];
+
+    for (const userId of teamIdsToUpdate) {
       const user = await ctx.db.get(userId);
       if (user) {
         await ctx.db.patch(userId, {
@@ -152,6 +198,7 @@ export const updateProject = mutation({
     endDate: v.optional(v.number()),
     progress: v.optional(v.number()),
     budget: v.optional(v.number()),
+    managerId: v.optional(v.id("users")), // Allow changing project manager
     teamIds: v.optional(v.array(v.id("users"))),
     notes: v.optional(v.string()),
     files: v.optional(
@@ -174,6 +221,29 @@ export const updateProject = mutation({
       throwNotFound("Project");
     }
 
+    // If managerId is being updated, verify it exists and update projectIds
+    if (updates.managerId && updates.managerId !== existingProject.managerId) {
+      const newManager = await ctx.db.get(updates.managerId);
+      if (!newManager) {
+        throw new Error("Manager not found");
+      }
+
+      // Remove project from old manager if they're not in teamIds
+      const oldManager = await ctx.db.get(existingProject.managerId);
+      if (oldManager && !existingProject.teamIds.includes(existingProject.managerId)) {
+        await ctx.db.patch(existingProject.managerId, {
+          projectIds: oldManager.projectIds.filter((pid) => pid !== id),
+        });
+      }
+
+      // Add project to new manager if not already in projectIds
+      if (!newManager.projectIds.includes(id)) {
+        await ctx.db.patch(updates.managerId, {
+          projectIds: [...newManager.projectIds, id],
+        });
+      }
+    }
+
     // If teamIds are being updated, update users' projectIds
     if (updates.teamIds) {
       // Remove project from old team members
@@ -192,6 +262,17 @@ export const updateProject = mutation({
         if (user && !user.projectIds.includes(id)) {
           await ctx.db.patch(newUserId, {
             projectIds: [...user.projectIds, id],
+          });
+        }
+      }
+
+      // Ensure manager is also in projectIds if not in team
+      const currentManagerId = updates.managerId || existingProject.managerId;
+      if (!updates.teamIds.includes(currentManagerId)) {
+        const manager = await ctx.db.get(currentManagerId);
+        if (manager && !manager.projectIds.includes(id)) {
+          await ctx.db.patch(currentManagerId, {
+            projectIds: [...manager.projectIds, id],
           });
         }
       }

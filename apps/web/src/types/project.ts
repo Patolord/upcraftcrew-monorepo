@@ -21,7 +21,10 @@ export type Project = {
   budget?: number;
   progress: number; // 0-100
   client?: string;
+  managerId?: string; // ID of the project manager
+  manager?: TeamMember; // Populated manager data
   team?: TeamMember[];
+  teamIds?: string[]; // IDs of team members
   notes?: string;
   files?: Array<{
     id?: string;

@@ -79,6 +79,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2025-12-15").getTime(),
         progress: 65,
         budget: 45000,
+        managerId: userIds[0], // Alice Admin is the manager
         teamIds: [userIds[0], userIds[1], userIds[2]],
       },
       {
@@ -91,6 +92,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2026-01-30").getTime(),
         progress: 45,
         budget: 80000,
+        managerId: userIds[1], // Mike Chen is the manager
         teamIds: [userIds[1]],
       },
       {
@@ -103,6 +105,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2025-08-30").getTime(),
         progress: 100,
         budget: 25000,
+        managerId: userIds[2], // Emma Wilson is the manager
         teamIds: [userIds[0]],
       },
       {
@@ -115,6 +118,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2026-06-30").getTime(),
         progress: 10,
         budget: 120000,
+        managerId: userIds[1], // Mike Chen is the manager
         teamIds: [userIds[1]],
       },
       {
@@ -127,6 +131,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2026-02-28").getTime(),
         progress: 20,
         budget: 30000,
+        managerId: userIds[0], // Alice Admin is the manager
         teamIds: [],
       },
       {
@@ -139,6 +144,7 @@ export const seedDatabase = mutation({
         endDate: new Date("2025-11-30").getTime(),
         progress: 55,
         budget: 55000,
+        managerId: userIds[1], // Mike Chen is the manager
         teamIds: [userIds[1], userIds[2]],
       },
     ];

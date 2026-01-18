@@ -65,6 +65,7 @@ export default defineSchema({
     endDate: v.number(),
     progress: v.number(),
     budget: v.number(),
+    managerId: v.id("users"), // Project manager/owner
     teamIds: v.array(v.id("users")),
     notes: v.optional(v.string()),
     files: v.optional(
@@ -77,7 +78,7 @@ export default defineSchema({
         }),
       ),
     ),
-  }),
+  }).index("by_manager", ["managerId"]),
 
   transactions: defineTable({
     description: v.string(),

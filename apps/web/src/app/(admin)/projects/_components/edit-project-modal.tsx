@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import {
@@ -18,17 +18,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import React from "react";
-import { Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
-interface NewProjectModalProps {
+interface EditProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  teamMembers?: TeamMember[];
+  project: {
+    _id: Id<"projects">;
+    name: string;
+    client?: string;
+    description: string;
+    status: "planning" | "in-progress" | "completed";
+    priority: "low" | "medium" | "high" | "urgent";
+    progress: number;
+    budget?: number;
+    startDate: number;
+    endDate?: number;
+    managerId: Id<"users">;
+    teamIds: Id<"users">[];
+    notes?: string;
+  };
 }
 
 type ProjectStatus = "planning" | "in-progress" | "completed";
 type ProjectPriority = "low" | "medium" | "high" | "urgent";
-type TeamMember = Doc<"users">;
 
 type FormData = {
   name: string;
@@ -39,31 +52,51 @@ type FormData = {
   startDate: string;
   endDate: string;
   progress: number;
-  budgetTotal: string;
-  budgetSpent: string;
+  budget: string;
   managerId: Id<"users"> | "";
   teamIds: Id<"users">[];
+  notes: string;
 };
 
-export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
+export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const createProject = useMutation(api.projects.createProject);
+  const updateProject = useMutation(api.projects.updateProject);
   const teamMembers = useQuery(api.team.getTeamMembers) || [];
 
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    client: "",
-    description: "",
-    status: "planning",
-    priority: "medium",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: "",
-    progress: 0,
-    budgetTotal: "",
-    budgetSpent: "",
-    managerId: "",
-    teamIds: [],
+    name: project.name,
+    client: project.client || "",
+    description: project.description,
+    status: project.status,
+    priority: project.priority,
+    startDate: new Date(project.startDate).toISOString().split("T")[0],
+    endDate: project.endDate ? new Date(project.endDate).toISOString().split("T")[0] : "",
+    progress: project.progress,
+    budget: project.budget?.toString() || "",
+    managerId: project.managerId,
+    teamIds: project.teamIds,
+    notes: project.notes || "",
   });
+
+  // Update form when project changes
+  useEffect(() => {
+    if (project) {
+      setFormData({
+        name: project.name,
+        client: project.client || "",
+        description: project.description,
+        status: project.status,
+        priority: project.priority,
+        startDate: new Date(project.startDate).toISOString().split("T")[0],
+        endDate: project.endDate ? new Date(project.endDate).toISOString().split("T")[0] : "",
+        progress: project.progress,
+        budget: project.budget?.toString() || "",
+        managerId: project.managerId,
+        teamIds: project.teamIds,
+        notes: project.notes || "",
+      });
+    }
+  }, [project]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,42 +114,27 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     setIsSubmitting(true);
 
     try {
-      await createProject({
+      await updateProject({
+        id: project._id,
         name: formData.name,
         client: formData.client,
         description: formData.description,
         status: formData.status,
         priority: formData.priority,
         startDate: new Date(formData.startDate).getTime(),
-        endDate: formData.endDate ? new Date(formData.endDate).getTime() : new Date().getTime(),
+        endDate: formData.endDate ? new Date(formData.endDate).getTime() : undefined,
         progress: formData.progress,
-        budget: parseFloat(formData.budgetTotal) || 0,
+        budget: parseFloat(formData.budget) || 0,
         managerId: formData.managerId as Id<"users">,
         teamIds: formData.teamIds,
+        notes: formData.notes,
       });
 
-      toast.success("Project created successfully!");
-
-      // Reset form
-      setFormData({
-        name: "",
-        client: "",
-        description: "",
-        status: "planning",
-        priority: "medium",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: "",
-        progress: 0,
-        budgetTotal: "",
-        budgetSpent: "",
-        managerId: "",
-        teamIds: [],
-      });
-
+      toast.success("Project updated successfully!");
       onClose();
     } catch (error) {
-      console.error("Failed to create project:", error);
-      toast.error("Failed to create project. Please try again.");
+      console.error("Failed to update project:", error);
+      toast.error("Failed to update project. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -132,9 +150,9 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>Edit Project</DialogTitle>
           <DialogDescription>
-            Fill in the details below to create a new project. Required fields are marked with *.
+            Update the project details below. Required fields are marked with *.
           </DialogDescription>
         </DialogHeader>
 
@@ -256,29 +274,16 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
           </div>
 
           {/* Budget */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="budgetTotal">Total Budget</Label>
-              <Input
-                id="budgetTotal"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.budgetTotal}
-                onChange={(e) => setFormData({ ...formData, budgetTotal: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="budgetSpent">Budget Spent</Label>
-              <Input
-                id="budgetSpent"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.budgetSpent}
-                onChange={(e) => setFormData({ ...formData, budgetSpent: e.target.value })}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="budget">Budget</Label>
+            <Input
+              id="budget"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              value={formData.budget}
+              onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+            />
           </div>
 
           {/* Progress */}
@@ -327,6 +332,18 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
             </p>
           </div>
 
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea
+              id="notes"
+              placeholder="Add any additional notes..."
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              rows={3}
+            />
+          </div>
+
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
@@ -339,10 +356,10 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               {isSubmitting ? (
                 <>
                   <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                "Create Project"
+                "Update Project"
               )}
             </Button>
           </DialogFooter>

@@ -72,6 +72,25 @@ export function ProjectCard({ project }: { project: Project }) {
         {/* Description */}
         <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
 
+        {/* Manager */}
+        {project.manager && (
+          <div className="mt-3 flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Manager:</span>
+            <div className="flex items-center gap-2">
+              <Avatar className="w-6 h-6">
+                <AvatarImage
+                  src={project.manager.imageUrl || "/default-avatar.png"}
+                  alt={project.manager.name}
+                />
+                <AvatarFallback className="text-xs">
+                  {project.manager.name.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-xs font-medium">{project.manager.name}</span>
+            </div>
+          </div>
+        )}
+
         {/* Progress */}
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1">

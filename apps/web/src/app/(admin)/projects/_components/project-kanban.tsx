@@ -7,7 +7,9 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { AlertCircleIcon, InfoIcon, SearchIcon } from "lucide-react";
 import React from "react";
-import { Column, TaskKanbanBoard } from "../../kanban/_components/kanban-task-board";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface ProjectKanbanProps {
   projectId: Id<"projects">;
@@ -40,12 +42,7 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
 
   // Group by status - for this single project, we show it in its current status column
   const columns = useMemo(() => {
-    const statuses: ProjectStatus[] = [
-      "planning",
-      "in-progress",
-
-      "completed",
-    ];
+    const statuses: ProjectStatus[] = ["planning", "in-progress", "completed"];
 
     return statuses.map((status) => ({
       id: status,
@@ -56,6 +53,21 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
       projects: filteredProjects.filter((p) => p.status === status),
     }));
   }, [filteredProjects]);
+
+  const statusColors: Record<ProjectStatus, string> = {
+    planning: "border-t-blue-500",
+    "in-progress": "border-t-orange-500",
+    completed: "border-t-green-500",
+  };
+
+  const statusBadgeVariants: Record<
+    ProjectStatus,
+    "default" | "secondary" | "success" | "warning" | "destructive"
+  > = {
+    planning: "default",
+    "in-progress": "secondary",
+    completed: "success",
+  };
 
   // Loading state
   if (convexProject === undefined) {
@@ -98,13 +110,76 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
         <div>
           <h3 className="font-bold">Kanban do Projeto</h3>
           <p className="text-sm">
-            Arraste o card do projeto entre as colunas para alterar seu status.
+            Visualize o status do projeto. Para alterar, use a aba &quot;Informações&quot;.
           </p>
         </div>
       </div>
 
       {/* Kanban Board */}
-      <TaskKanbanBoard columns={columns as unknown as Column[]} />
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        {columns.map((column) => (
+          <Card
+            key={column.id}
+            className={cn(
+              "flex flex-col min-w-[320px] max-w-[320px] rounded-lg border-t-4 p-0",
+              statusColors[column.id],
+            )}
+          >
+            {/* Column Header */}
+            <CardHeader className="border-b">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm">{column.title}</h3>
+                <Badge variant={statusBadgeVariants[column.id]} className="rounded-full">
+                  {column.projects.length}
+                </Badge>
+              </div>
+            </CardHeader>
+
+            {/* Column Content */}
+            <CardContent className="flex-1 p-4">
+              <div className="space-y-3 min-h-[200px]">
+                {column.projects.length === 0 ? (
+                  <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg text-muted-foreground">
+                    <p className="text-xs">Este projeto não está neste status</p>
+                  </div>
+                ) : (
+                  column.projects.map((project) => (
+                    <Card key={project._id} className="border">
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <h4 className="font-semibold text-sm">{project.name}</h4>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {project.description}
+                          </p>
+                          {project.client && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-medium">Cliente:</span> {project.client}
+                            </p>
+                          )}
+                          {project.manager && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-medium">Responsável:</span>{" "}
+                              {project.manager.firstName} {project.manager.lastName}
+                            </p>
+                          )}
+                          <div className="flex items-center justify-between pt-2">
+                            <Badge variant={statusBadgeVariants[project.status]}>
+                              {project.status}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {project.progress}% completo
+                            </span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
