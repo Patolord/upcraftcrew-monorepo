@@ -288,11 +288,13 @@ export default function DashboardPage() {
                   >
                     <View className="h-10 w-10 items-center justify-center rounded-full bg-orange-100">
                       <Text className="font-semibold text-orange-500">
-                        {member.firstName
+                        {((member.firstName || "") + " " + (member.lastName || ""))
+                          .trim()
                           .split(" ")
-                          .map((n: string) => n[0])
+                          .filter((n) => n.length > 0)
+                          .map((n: string) => n[0].toUpperCase())
                           .join("")
-                          .slice(0, 2)}
+                          .slice(0, 2) || "?"}
                       </Text>
                     </View>
                     <View className="ml-3 flex-1">

@@ -1,4 +1,4 @@
-import { useSignUp } from "@clerk/clerk-expo";
+import { useSignUp, useOAuth } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -12,9 +12,14 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const { startOAuthFlow: googleOAuth } = useOAuth({ strategy: "oauth_google" });
+  const { startOAuthFlow: githubOAuth } = useOAuth({ strategy: "oauth_github" });
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState("");
@@ -72,6 +77,34 @@ export default function SignUpPage() {
     }
   };
 
+  const onGoogleSignUp = async () => {
+    try {
+      const { createdSessionId, setActive } = await googleOAuth();
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+        router.replace("/(app)/dashboard");
+      }
+    } catch (err: any) {
+      console.error("OAuth error:", err);
+      setError("Failed to sign up with Google");
+    }
+  };
+
+  const onGithubSignUp = async () => {
+    try {
+      const { createdSessionId, setActive } = await githubOAuth();
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+        router.replace("/(app)/dashboard");
+      }
+    } catch (err: any) {
+      console.error("OAuth error:", err);
+      setError("Failed to sign up with GitHub");
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -108,6 +141,31 @@ export default function SignUpPage() {
 
             {!pendingVerification ? (
               <>
+                {/* Social Login Buttons */}
+                <View className="space-y-3">
+                  <TouchableOpacity
+                    onPress={onGoogleSignUp}
+                    className="h-12 flex-row items-center justify-center rounded-lg border-2 border-gray-200 bg-white"
+                  >
+                    <Ionicons name="logo-google" size={20} color="#DB4437" />
+                    <Text className="ml-2 font-medium text-gray-700">Continue with Google</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={onGithubSignUp}
+                    className="h-12 flex-row items-center justify-center rounded-lg border-2 border-gray-200 bg-white"
+                  >
+                    <Ionicons name="logo-github" size={20} color="#333" />
+                    <Text className="ml-2 font-medium text-gray-700">Continue with GitHub</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Divider */}
+                <View className="flex-row items-center">
+                  <View className="h-px flex-1 bg-gray-200" />
+                  <Text className="mx-4 text-gray-500 text-sm">or continue with email</Text>
+                  <View className="h-px flex-1 bg-gray-200" />
+                </View>
                 <View className="flex-row gap-3">
                   <View className="flex-1 space-y-2">
                     <Text className="text-gray-700 text-sm font-medium">First Name</Text>
