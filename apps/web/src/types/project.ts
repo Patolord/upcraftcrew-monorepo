@@ -5,6 +5,9 @@ export type ProjectPriority = "low" | "medium" | "high" | "urgent";
 export type TeamMember = {
   _id?: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
   role: string;
   imageUrl?: string;
 };

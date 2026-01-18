@@ -13,6 +13,20 @@ async function requireWrite(ctx: any) {
   return await requireMember(ctx);
 }
 
+// Helper to transform user to team member format
+function transformUserToTeamMember(user: any) {
+  if (!user) return null;
+  return {
+    _id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    role: user.role,
+    imageUrl: user.imageUrl,
+  };
+}
+
 // Query: Get all projects
 export const getProjects = query({
   args: {},
@@ -28,8 +42,8 @@ export const getProjects = query({
 
         return {
           ...project,
-          team: team.filter((member) => member !== null),
-          manager,
+          team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+          manager: transformUserToTeamMember(manager),
         };
       }),
     );
@@ -55,8 +69,8 @@ export const getProjectById = query({
 
     return {
       ...project,
-      team: team.filter((member) => member !== null),
-      manager,
+      team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+      manager: transformUserToTeamMember(manager),
     };
   },
 });
@@ -86,8 +100,8 @@ export const getProjectsByStatus = query({
 
         return {
           ...project,
-          team: team.filter((member) => member !== null),
-          manager,
+          team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+          manager: transformUserToTeamMember(manager),
         };
       }),
     );
@@ -114,8 +128,8 @@ export const getProjectsByManager = query({
 
         return {
           ...project,
-          team: team.filter((member) => member !== null),
-          manager,
+          team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+          manager: transformUserToTeamMember(manager),
         };
       }),
     );
@@ -281,6 +295,28 @@ export const updateProject = mutation({
     await ctx.db.patch(id, updates);
 
     return id;
+  },
+});
+
+// Mutation: Update project status
+export const updateProjectStatus = mutation({
+  args: {
+    id: v.id("projects"),
+    status: v.union(v.literal("planning"), v.literal("in-progress"), v.literal("completed")),
+  },
+  handler: async (ctx, args) => {
+    await requireWrite(ctx);
+    const project = await ctx.db.get(args.id);
+
+    if (!project) {
+      throwNotFound("Project");
+    }
+
+    await ctx.db.patch(args.id, {
+      status: args.status,
+    });
+
+    return args.id;
   },
 });
 

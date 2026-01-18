@@ -10,36 +10,19 @@ interface PricingCardProps {
   price: string;
   includes: { text: string; included?: boolean }[];
   tagline: string;
-  popular?: boolean;
   cta: string;
   customCta?: string;
-  common: any;
 }
 
-const PricingCard = ({
-  title,
-  price,
-  includes,
-  tagline,
-  popular,
-  cta,
-  customCta,
-  common,
-}: PricingCardProps) => {
+const PricingCard = ({ title, price, includes, tagline, cta, customCta }: PricingCardProps) => {
   return (
     <div className="card bg-base-100 flex flex-col rounded-2xl border border-base-300 p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-2xl font-bold">{title}</h3>
-        {popular && (
-          <div className="badge badge-primary badge-sm shadow-primary/10 whitespace-nowrap shadow-lg">
-            {common.badges.mostPopular}
-          </div>
-        )}
       </div>
       <p className="mt-4 text-xl font-semibold text-primary">{price}</p>
 
       <div className="mt-6">
-        <p className="text-base-content/80 text-sm font-medium">{common.pricing.whatsIncluded}</p>
         <div className="mt-3 space-y-2">
           {includes.map((item, index) => (
             <div className="flex items-start gap-2" key={index}>
@@ -73,7 +56,7 @@ const PricingCard = ({
 
 export const Pricing = () => {
   const { messages } = useLandingI18n();
-  const { pricing, common } = messages;
+  const { pricing } = messages;
 
   const tabKeys = ["websites", "webApps", "mobileApps", "consulting"] as const;
   type TabKey = (typeof tabKeys)[number];
@@ -134,13 +117,11 @@ export const Pricing = () => {
       >
         {currentPlans.map((plan, index) => (
           <PricingCard
-            common={common}
             key={index}
             title={plan.title}
             price={plan.price}
             includes={plan.includes}
             tagline={plan.tagline}
-            popular={plan.popular}
             cta={currentCta}
             customCta={"customCta" in plan ? plan.customCta : undefined}
           />

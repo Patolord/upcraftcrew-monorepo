@@ -35,7 +35,7 @@ export function TaskCard({ task }: TaskCardProps) {
 
   return (
     <Card className="kanban-card cursor-move hover:shadow-md transition-shadow rounded-lg">
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="p-4 pt-6 space-y-3">
         {/* Badge */}
         <Badge variant="secondary" className="rounded-md">
           UI Design
@@ -49,7 +49,7 @@ export function TaskCard({ task }: TaskCardProps) {
 
         {/* Avatar Group - Show multiple team members */}
         <div className="flex -space-x-2">
-          {task.assignedUser && (
+          {task.assignedUser && task.assignedUser.name && (
             <Avatar className="size-6 border-2 border-background">
               <AvatarImage src={task.assignedUser.imageUrl} alt={task.assignedUser.name} />
               <AvatarFallback className="text-xs">

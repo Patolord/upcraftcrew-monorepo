@@ -8,6 +8,16 @@ async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
 }
 
+// Helper to transform user to assignedUser format
+function transformUserToAssignedUser(user: any) {
+  if (!user) return null;
+  return {
+    _id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    imageUrl: user.imageUrl,
+  };
+}
+
 // Query: Get all tasks
 export const getTasks = query({
   args: {},
@@ -29,7 +39,7 @@ export const getTasks = query({
 
         return {
           ...task,
-          assignedUser,
+          assignedUser: transformUserToAssignedUser(assignedUser),
           project,
         };
       }),
@@ -61,7 +71,7 @@ export const getTaskById = query({
 
     return {
       ...task,
-      assignedUser,
+      assignedUser: transformUserToAssignedUser(assignedUser),
       project,
     };
   },
@@ -106,7 +116,7 @@ export const getTasksByProject = query({
 
         return {
           ...task,
-          assignedUser,
+          assignedUser: transformUserToAssignedUser(assignedUser),
         };
       }),
     );

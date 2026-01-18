@@ -73,7 +73,7 @@ export function ProjectCard({ project }: { project: Project }) {
         <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
 
         {/* Manager */}
-        {project.manager && (
+        {project.manager && project.manager.name && (
           <div className="mt-3 flex items-center gap-2">
             <span className="text-xs text-muted-foreground">Manager:</span>
             <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export function ProjectCard({ project }: { project: Project }) {
                   >
                     <AvatarImage src={member.imageUrl || "/default-avatar.png"} alt={member.name} />
                     <AvatarFallback className="text-xs">
-                      {member.name.charAt(0).toUpperCase()}
+                      {member.name?.charAt(0).toUpperCase() || "?"}
                     </AvatarFallback>
                   </Avatar>
                 ))}

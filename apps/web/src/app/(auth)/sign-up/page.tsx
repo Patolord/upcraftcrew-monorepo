@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import { EyeIcon, EyeOffIcon, MailIcon, UserIcon } from "lucide-react";
 
 interface SignUpFormData {
   name: string;
@@ -82,7 +82,7 @@ export default function SignUpPage() {
                 },
               })}
             />
-            <User className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <UserIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
           {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>}
         </div>
@@ -105,7 +105,7 @@ export default function SignUpPage() {
                 },
               })}
             />
-            <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <MailIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
           {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>}
         </div>
@@ -133,7 +133,7 @@ export default function SignUpPage() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent border-none"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
             </Button>
           </div>
           {errors.password && (

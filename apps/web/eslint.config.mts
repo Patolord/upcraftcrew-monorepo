@@ -12,5 +12,18 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
   },
   tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  ...(pluginReact.configs.flat?.recommended ? [pluginReact.configs.flat.recommended] : []),
+  {
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      // Disable react-in-jsx-scope rule for React 17+ new JSX transform
+      "react/react-in-jsx-scope": "off",
+      // Disable unescaped entities rule
+      "react/no-unescaped-entities": "off",
+    },
+  },
 ]);

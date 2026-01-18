@@ -19,6 +19,7 @@ import {
 import { ChevronDown } from "lucide-react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 interface Project {
   _id: Id<"projects">;
@@ -62,7 +63,8 @@ function getCountryFlag(country: string): string {
 }
 
 export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjectsTableProps) {
-  const recentProjects = projects.slice(0, 6);
+  const router = useRouter();
+  const recentProjects = projects.slice(0, 4);
 
   // Transform projects to table data format
   const tableData = recentProjects.map((project) => ({
@@ -74,6 +76,10 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
     value: project.budget,
     bounce: `${(project.progress * 0.4 + 10).toFixed(2)}%`,
   }));
+
+  const handleRowClick = (projectId: Id<"projects">) => {
+    router.push(`/projects/${projectId}`);
+  };
 
   return (
     <Card className="rounded-xl bg-white shadow-sm ring-0">
@@ -110,7 +116,11 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
           <TableBody>
             {tableData.length > 0 ? (
               tableData.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => handleRowClick(row.id)}
+                >
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <span className="text-lg">{row.flag}</span>

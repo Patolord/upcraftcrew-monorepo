@@ -210,6 +210,9 @@ export default function ProjectDetailPage() {
             project={{
               ...project,
               manager: project.manager || undefined,
+              team: project.team.filter(
+                (member): member is NonNullable<typeof member> => member !== null,
+              ),
             }}
           />
         </TabsContent>

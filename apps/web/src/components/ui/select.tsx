@@ -4,18 +4,10 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-interface SelectProps extends Omit<SelectPrimitive.Root.Props, "onValueChange"> {
-  onValueChange?: (value: string) => void;
-}
+type SelectProps = SelectPrimitive.Root.Props<string, false>;
 
-function Select({ onValueChange, ...props }: SelectProps) {
-  return (
-    <SelectPrimitive.Root
-      data-slot="select"
-      onValueChange={onValueChange as SelectPrimitive.Root.Props["onValueChange"]}
-      {...props}
-    />
-  );
+function Select({ ...props }: SelectProps) {
+  return <SelectPrimitive.Root data-slot="select" {...props} />;
 }
 
 interface SelectValueProps extends SelectPrimitive.Value.Props {

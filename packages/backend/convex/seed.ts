@@ -1,13 +1,23 @@
 import { mutation } from "./_generated/server";
+import { v } from "convex/values";
 
 export const seedDatabase = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    force: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
     // Check if database already has data
     const existingUsers = await ctx.db.query("users").collect();
-    if (existingUsers.length > 0) {
+    if (existingUsers.length > 0 && !args.force) {
       console.log("Database already seeded, skipping...");
-      return { success: false, message: "Database already has data" };
+      return {
+        success: false,
+        message: "Database already has data. Use force: true to override.",
+      };
+    }
+
+    if (args.force && existingUsers.length > 0) {
+      console.log("Force mode enabled: proceeding with seed despite existing data...");
     }
 
     console.log("Starting database seed...");

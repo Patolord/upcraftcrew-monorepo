@@ -67,7 +67,7 @@ export function CalendarContainer() {
       location: event.location,
       attendees: event.attendees?.map((attendee) => ({
         id: attendee._id,
-        name: `${attendee.firstName} ${attendee.lastName}`,
+        name: attendee.name,
         imageUrl: attendee.imageUrl || "/default-avatar.png",
       })),
       projectId: event.projectId,

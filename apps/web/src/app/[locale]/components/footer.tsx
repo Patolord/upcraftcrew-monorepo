@@ -53,7 +53,7 @@ export const Footer = () => {
       } else {
         toast.error(result.error || formMessages.emailError);
       }
-    } catch (error) {
+
       toast.error(formMessages.emailError);
     } finally {
       setIsLoading(false);

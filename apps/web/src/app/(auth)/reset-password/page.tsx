@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Lock, KeyRound } from "lucide-react";
+import { EyeIcon, EyeOffIcon, KeyRoundIcon } from "lucide-react";
 
 interface ResetPasswordFormData {
   code: string;
@@ -20,12 +20,14 @@ interface ResetPasswordFormData {
 export default function ResetPasswordPage() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
 
   const {
     register,
-    handleSubmit,
+    control,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormData>({
@@ -38,7 +40,12 @@ export default function ResetPasswordPage() {
 
   const password = watch("password");
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
+  useEffect(() => {
+    const emailParam = searchParams.get("email");
+    setEmail(emailParam);
+  }, [searchParams]);
+
+  const onSubmit = async ({ data }: { data: ResetPasswordFormData }) => {
     if (!isLoaded) return;
 
     try {
@@ -50,22 +57,41 @@ export default function ResetPasswordPage() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        toast.success("Password reset successfully");
-        router.push("/reset-password-done");
+        toast.success("Password reset successfully!", {
+          description: "You can now log in with your new password.",
+        });
+        router.push("/dashboard");
       }
     } catch (err) {
       console.error("Error:", err);
-      const error = err as { errors?: Array<{ message: string }> };
-      toast.error(error.errors?.[0]?.message || "Failed to reset password");
+      const error = err as { errors?: Array<{ message: string; code?: string }> };
+
+      // Tratar erros específicos
+      if (error.errors?.[0]?.code === "form_code_incorrect") {
+        toast.error("Invalid verification code", {
+          description: "Please check the code sent to your email.",
+        });
+      } else if (error.errors?.[0]?.code === "form_password_pwned") {
+        toast.error("Password too common", {
+          description: "Please choose a more secure password.",
+        });
+      } else {
+        toast.error("Failed to reset password", {
+          description: error.errors?.[0]?.message || "Please try again.",
+        });
+      }
     }
   };
 
   return (
     <div className="w-full">
       <h2 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
-      <p className="text-gray-600 mb-8">Enter the code sent to your email and your new password</p>
+      <p className="text-gray-600 mb-8">
+        Enter the code sent to{" "}
+        {email && <span className="font-medium text-[#FF8E29]">{email}</span>} and your new password
+      </p>
 
-      <Form className="space-y-6">
+      <Form control={control} onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="code" className="text-sm text-gray-700">
             Verification Code
@@ -84,7 +110,7 @@ export default function ResetPasswordPage() {
                 },
               })}
             />
-            <KeyRound className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <KeyRoundIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
           {errors.code && <p className="text-sm text-red-600 mt-1">{errors.code.message}</p>}
         </div>
@@ -112,7 +138,7 @@ export default function ResetPasswordPage() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent border-none"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
             </Button>
           </div>
           {errors.password && (
@@ -140,7 +166,11 @@ export default function ResetPasswordPage() {
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent border-none"
             >
-              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showConfirmPassword ? (
+                <EyeOffIcon className="w-5 h-5" />
+              ) : (
+                <EyeIcon className="w-5 h-5" />
+              )}
             </Button>
           </div>
           {errors.confirmPassword && (

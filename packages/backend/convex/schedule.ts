@@ -8,6 +8,16 @@ async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
 }
 
+// Helper to transform user to attendee format
+function transformUserToAttendee(user: any) {
+  if (!user) return null;
+  return {
+    _id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    imageUrl: user.imageUrl,
+  };
+}
+
 // Query: Get all events
 export const getEvents = query({
   args: {},
@@ -24,7 +34,7 @@ export const getEvents = query({
 
         return {
           ...event,
-          attendees: attendees.filter((a) => a !== null),
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
           project,
         };
       }),
@@ -86,7 +96,7 @@ export const getEventsByMonth = query({
 
         return {
           ...event,
-          attendees: attendees.filter((a) => a !== null),
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
           project,
         };
       }),
@@ -124,7 +134,7 @@ export const getEventsByDateRange = query({
 
         return {
           ...event,
-          attendees: attendees.filter((a) => a !== null),
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
           project,
         };
       }),
@@ -151,7 +161,7 @@ export const getEventsByProject = query({
 
         return {
           ...event,
-          attendees: attendees.filter((a) => a !== null),
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
         };
       }),
     );
@@ -225,7 +235,7 @@ export const getUpcomingEvents = query({
 
         return {
           ...event,
-          attendees: attendees.filter((a) => a !== null),
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
           project,
         };
       }),
