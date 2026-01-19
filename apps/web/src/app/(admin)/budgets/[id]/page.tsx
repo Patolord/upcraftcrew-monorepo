@@ -240,8 +240,8 @@ export default function BudgetDetailPage() {
 
       {/* Budget Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="border border-orange-100 rounded-lg items-center justify-center">
+          <CardContent className="pt-2">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <UserIcon className="h-4 w-4" />
               <span className="text-sm">Cliente</span>
@@ -250,8 +250,8 @@ export default function BudgetDetailPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="border border-orange-100 rounded-lg items-center justify-center">
+          <CardContent className="pt-2">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <CalendarIcon className="h-4 w-4" />
               <span className="text-sm">Criado em</span>
@@ -262,8 +262,8 @@ export default function BudgetDetailPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-4">
+        <Card className="border border-orange-100 rounded-lg items-center justify-center">
+          <CardContent className="pt-2">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <CalendarIcon className="h-4 w-4" />
               <span className="text-sm">Válido até</span>
@@ -274,8 +274,8 @@ export default function BudgetDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-orange-50 border-orange-200">
-          <CardContent className="pt-4">
+        <Card className="border border-orange-100 rounded-lg items-center justify-center">
+          <CardContent className="pt-2">
             <div className="text-muted-foreground mb-1 text-sm">Valor Total</div>
             <p className="text-2xl font-bold text-orange-600">
               {formatCurrency(budget.totalAmount, budget.currency)}
@@ -286,7 +286,7 @@ export default function BudgetDetailPage() {
 
       {/* Description */}
       {budget.description && (
-        <Card>
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Descrição</CardTitle>
           </CardHeader>
@@ -298,7 +298,7 @@ export default function BudgetDetailPage() {
 
       {/* Objectives */}
       {budget.objectives && budget.objectives.length > 0 && (
-        <Card>
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Objetivos</CardTitle>
           </CardHeader>
@@ -320,7 +320,7 @@ export default function BudgetDetailPage() {
 
       {/* Scope Options */}
       {budget.scopeOptions && budget.scopeOptions.length > 0 && (
-        <Card>
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Escopo</CardTitle>
           </CardHeader>
@@ -368,7 +368,7 @@ export default function BudgetDetailPage() {
 
       {/* Items Table */}
       {budget.items && budget.items.length > 0 && (
-        <Card>
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Itens do Orçamento</CardTitle>
           </CardHeader>
