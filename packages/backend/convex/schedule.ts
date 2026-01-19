@@ -360,3 +360,176 @@ export const removeAttendeeFromEvent = mutation({
     return { success: true };
   },
 });
+
+// Query: Get all schedule items by month (aggregates events, projects, budgets, transactions, tasks)
+export const getAllScheduleItemsByMonth = query({
+  args: {
+    year: v.number(),
+    month: v.number(), // 1-12
+  },
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+
+    // Calculate start and end of month
+    const startDate = new Date(args.year, args.month - 1, 1).getTime();
+    const endDate = new Date(args.year, args.month, 0, 23, 59, 59).getTime();
+
+    // 1. Get events for the month
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_start_time")
+      .filter((q) =>
+        q.and(q.gte(q.field("startTime"), startDate), q.lte(q.field("startTime"), endDate)),
+      )
+      .collect();
+
+    const eventsWithDetails = await Promise.all(
+      events.map(async (event) => {
+        const attendees = await Promise.all(event.attendeeIds.map((userId) => ctx.db.get(userId)));
+        const project = event.projectId ? await ctx.db.get(event.projectId) : null;
+
+        return {
+          sourceType: "event" as const,
+          sourceId: event._id,
+          title: event.title,
+          description: event.description,
+          date: event.startTime,
+          endDate: event.endTime,
+          type: event.type,
+          priority: event.priority,
+          location: event.location,
+          attendees: attendees.map(transformUserToAttendee).filter((a) => a !== null),
+          project: project ? { _id: project._id, name: project.name } : null,
+          projectId: event.projectId,
+        };
+      }),
+    );
+
+    // 2. Get projects with endDate in this month
+    const allProjects = await ctx.db.query("projects").collect();
+    const projectsInMonth = allProjects.filter(
+      (p) => p.endDate >= startDate && p.endDate <= endDate,
+    );
+
+    const projectItems = await Promise.all(
+      projectsInMonth.map(async (project) => {
+        const manager = await ctx.db.get(project.managerId);
+        const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+
+        return {
+          sourceType: "project" as const,
+          sourceId: project._id,
+          title: `${project.name} - Deadline`,
+          description: project.description,
+          date: project.endDate,
+          endDate: project.endDate,
+          type: "deadline",
+          priority: project.priority === "urgent" ? "high" : project.priority,
+          responsible: manager ? transformUserToAttendee(manager) : null,
+          team: team.map(transformUserToAttendee).filter((t) => t !== null),
+          projectStatus: project.status,
+          projectProgress: project.progress,
+          client: project.client,
+          project: { _id: project._id, name: project.name },
+          projectId: project._id,
+        };
+      }),
+    );
+
+    // 3. Get budgets (follow-ups) with validUntil in this month (excluding approved/rejected)
+    const allBudgets = await ctx.db.query("budgets").collect();
+    const budgetsInMonth = allBudgets.filter(
+      (b) =>
+        b.validUntil >= startDate &&
+        b.validUntil <= endDate &&
+        b.status !== "approved" &&
+        b.status !== "rejected",
+    );
+
+    const budgetItems = budgetsInMonth.map((budget) => ({
+      sourceType: "budget" as const,
+      sourceId: budget._id,
+      title: `Follow-up: ${budget.title}`,
+      description: budget.description,
+      date: budget.validUntil,
+      endDate: budget.validUntil,
+      type: "reminder",
+      priority: "medium" as const,
+      budgetStatus: budget.status,
+      budgetAmount: budget.totalAmount,
+      budgetCurrency: budget.currency,
+      client: budget.client,
+      project: null,
+      projectId: budget.projectId,
+    }));
+
+    // 4. Get pending transactions with date in this month
+    const allTransactions = await ctx.db.query("transactions").collect();
+    const transactionsInMonth = allTransactions.filter(
+      (t) => t.date >= startDate && t.date <= endDate && t.status === "pending",
+    );
+
+    const transactionItems = await Promise.all(
+      transactionsInMonth.map(async (transaction) => {
+        const project = transaction.projectId ? await ctx.db.get(transaction.projectId) : null;
+
+        return {
+          sourceType: "transaction" as const,
+          sourceId: transaction._id,
+          title: `${transaction.type === "income" ? "Payment Due" : "Payment Out"}: ${transaction.description}`,
+          description: transaction.description,
+          date: transaction.date,
+          endDate: transaction.date,
+          type: transaction.type === "income" ? "milestone" : "task",
+          priority: "medium" as const,
+          transactionType: transaction.type,
+          transactionAmount: transaction.amount,
+          transactionCategory: transaction.category,
+          transactionStatus: transaction.status,
+          client: transaction.clientId,
+          project: project ? { _id: project._id, name: project.name } : null,
+          projectId: transaction.projectId,
+        };
+      }),
+    );
+
+    // 5. Get tasks with dueDate in this month
+    const allTasks = await ctx.db.query("tasks").collect();
+    const tasksInMonth = allTasks.filter(
+      (t) => t.dueDate && t.dueDate >= startDate && t.dueDate <= endDate && t.status !== "done",
+    );
+
+    const taskItems = await Promise.all(
+      tasksInMonth.map(async (task) => {
+        const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+        const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+
+        return {
+          sourceType: "task" as const,
+          sourceId: task._id,
+          title: task.title,
+          description: task.description,
+          date: task.dueDate!,
+          endDate: task.dueDate!,
+          type: "task",
+          priority: task.priority === "urgent" ? "high" : task.priority,
+          responsible: assignedUser ? transformUserToAttendee(assignedUser) : null,
+          taskStatus: task.status,
+          project: project ? { _id: project._id, name: project.name } : null,
+          projectId: task.projectId,
+        };
+      }),
+    );
+
+    // Combine all items and sort by date
+    const allItems = [
+      ...eventsWithDetails,
+      ...projectItems,
+      ...budgetItems,
+      ...transactionItems,
+      ...taskItems,
+    ].sort((a, b) => a.date - b.date);
+
+    return allItems;
+  },
+});

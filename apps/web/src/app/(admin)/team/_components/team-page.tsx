@@ -3,15 +3,14 @@
 import { useMemo, useState } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NewTeamMemberModal } from "./new-team-member-modal";
-import { TeamMemberRow } from "./team-member-row";
+import { TeamMemberCard } from "./team-member-card";
 import { UserDetailPanel } from "./user-detail-panel";
-import { UsersRoundIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { UsersRoundIcon, PlusIcon, Loader2 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { TeamHeader } from "./team-header";
+import { TeamStats } from "./team-stats";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import React from "react";
 
@@ -23,14 +22,14 @@ interface TeamPageProps {
   preloadedTeam: Preloaded<typeof api.team.getTeamMembers>;
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 3;
 
 export function TeamPage({ preloadedTeam }: TeamPageProps) {
   const teamMembers = usePreloadedQuery(preloadedTeam);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMember, setSelectedMember] = useState<TeamMemberWithProjects | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filter members based on search query
@@ -50,133 +49,84 @@ export function TeamPage({ preloadedTeam }: TeamPageProps) {
     });
   }, [teamMembers, searchQuery]);
 
-  // Paginate filtered members
-  const paginatedMembers = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return filteredMembers.slice(startIndex, endIndex);
-  }, [filteredMembers, currentPage]);
+  // Get visible members
+  const visibleMembers = useMemo(() => {
+    return filteredMembers.slice(0, visibleItems);
+  }, [filteredMembers, visibleItems]);
 
-  const totalPages = Math.ceil(filteredMembers.length / ITEMS_PER_PAGE);
+  const canLoadMore = visibleItems < filteredMembers.length;
 
-  // Reset to first page when search changes
+  // Reset visible items when search changes
   useMemo(() => {
-    setCurrentPage(1);
+    setVisibleItems(ITEMS_PER_PAGE);
   }, [searchQuery]);
 
+  const handleLoadMore = () => {
+    setVisibleItems((prev) => prev + ITEMS_PER_PAGE);
+  };
+
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-orange-50/30 to-pink-50/30 dark:from-orange-950/10 dark:to-pink-950/10 min-h-screen">
+    <div className="p-6 pl-12 pr-12 space-y-6">
       <TeamHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+
+      {/* Stats Cards */}
+      <TeamStats teamMembers={(teamMembers || []) as TeamMemberWithProjects[]} />
+
+      {/* Our Team Section Header */}
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Our Team</h2>
+        </div>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+        >
+          <PlusIcon className="h-4 w-4 mr-2" />
+          Add Member
+        </Button>
+      </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Table */}
+        {/* Left Column - Cards Grid */}
         <div className={selectedMember ? "lg:col-span-2" : "lg:col-span-3"}>
-          {filteredMembers.length === 0 ? (
-            <Card className="p-12">
+          {!teamMembers ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredMembers.length === 0 ? (
+            <div className="text-center py-12">
               <EmptyState
                 icon={UsersRoundIcon}
                 title="No team members found"
-                description="Try adjusting your search"
+                description="Try adjusting your search or add a new team member"
               />
-            </Card>
+            </div>
           ) : (
-            <Card className="p-0 overflow-hidden">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="font-semibold">Name</TableHead>
-                      <TableHead className="font-semibold">ID</TableHead>
-                      <TableHead className="font-semibold">Role</TableHead>
-                      <TableHead className="font-semibold">Country</TableHead>
-                      <TableHead className="font-semibold">Phone</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedMembers.map((member) => (
-                      <TeamMemberRow
-                        key={member._id}
-                        member={member}
-                        isSelected={selectedMember?._id === member._id}
-                        onSelect={setSelectedMember}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
+            <>
+              <div
+                className={`grid grid-cols-1 ${selectedMember ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3"} gap-4`}
+              >
+                {visibleMembers.map((member) => (
+                  <TeamMemberCard key={member._id} member={member} onSelect={setSelectedMember} />
+                ))}
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/30">
-                  <div className="text-sm text-muted-foreground">
-                    Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
-                    {Math.min(currentPage * ITEMS_PER_PAGE, filteredMembers.length)} of{" "}
-                    {filteredMembers.length} products
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      className="gap-1"
-                    >
-                      <ChevronLeftIcon className="size-4" />
-                      Prev
-                    </Button>
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: Math.min(totalPages, 3) }, (_, i) => {
-                        let pageNum: number;
-                        if (totalPages <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 2) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 1) {
-                          pageNum = totalPages - 2 + i;
-                        } else {
-                          pageNum = currentPage - 1 + i;
-                        }
-                        return (
-                          <Button
-                            key={pageNum}
-                            variant={currentPage === pageNum ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCurrentPage(pageNum)}
-                            className="min-w-9"
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      })}
-                      {totalPages > 3 && currentPage < totalPages - 1 && (
-                        <>
-                          <span className="px-2 text-muted-foreground">...</span>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setCurrentPage(totalPages)}
-                            className="min-w-9"
-                          >
-                            {totalPages}
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      className="gap-1"
-                    >
-                      Next
-                      <ChevronRightIcon className="size-4" />
-                    </Button>
-                  </div>
+              {/* Load More Button */}
+              {canLoadMore && (
+                <div className="flex justify-center pt-6">
+                  <Button onClick={handleLoadMore} variant="outline" className="min-w-[150px]">
+                    Ver Mais
+                  </Button>
                 </div>
               )}
-            </Card>
+
+              {!canLoadMore && filteredMembers.length > ITEMS_PER_PAGE && (
+                <div className="flex justify-center pt-4">
+                  <p className="text-sm text-muted-foreground">Todos os membros foram carregados</p>
+                </div>
+              )}
+            </>
           )}
         </div>
 

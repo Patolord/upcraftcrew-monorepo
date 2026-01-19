@@ -15,8 +15,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Loader2Icon } from "lucide-react";
+import {
+  Loader2Icon,
+  UsersIcon,
+  ClipboardListIcon,
+  RocketIcon,
+  CheckCircleIcon,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 import React from "react";
 import { Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
@@ -29,6 +45,19 @@ interface NewProjectModalProps {
 type ProjectStatus = "planning" | "in-progress" | "completed";
 type ProjectPriority = "low" | "medium" | "high" | "urgent";
 type TeamMember = Doc<"users">;
+
+const STATUS_OPTIONS = [
+  { value: "planning", label: "Planning", icon: ClipboardListIcon, color: "text-blue-500" },
+  { value: "in-progress", label: "In Progress", icon: RocketIcon, color: "text-amber-500" },
+  { value: "completed", label: "Completed", icon: CheckCircleIcon, color: "text-green-500" },
+] as const;
+
+const PRIORITY_OPTIONS = [
+  { value: "low", label: "Low", color: "bg-green-100 text-green-700" },
+  { value: "medium", label: "Medium", color: "bg-amber-100 text-amber-700" },
+  { value: "high", label: "High", color: "bg-red-100 text-red-700" },
+  { value: "urgent", label: "Urgent", color: "bg-purple-100 text-purple-700" },
+] as const;
 
 type FormData = {
   name: string;
@@ -128,19 +157,26 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     }
   };
 
+  const toggleTeamMember = (memberId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      teamIds: prev.teamIds.includes(memberId as Id<"users">)
+        ? prev.teamIds.filter((id) => id !== memberId)
+        : [...prev.teamIds, memberId as Id<"users">],
+    }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
-          <DialogDescription>
-            Fill in the details below to create a new project. Required fields are marked with *.
-          </DialogDescription>
+          <DialogTitle className="text-lg">Create New Project</DialogTitle>
+          <DialogDescription>Fill in the details below to create a new project</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name and Client */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="name">Project Name *</Label>
               <Input
@@ -148,6 +184,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 placeholder="Enter project name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="rounded-lg"
                 required
               />
             </div>
@@ -158,6 +195,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 placeholder="Enter client name"
                 value={formData.client}
                 onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                className="rounded-lg"
                 required
               />
             </div>
@@ -171,69 +209,87 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               placeholder="Enter project description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={3}
+              rows={2}
+              className="rounded-lg resize-none"
               required
             />
           </div>
 
           {/* Project Manager */}
           <div className="space-y-2">
-            <Label htmlFor="managerId">Project Manager *</Label>
-            <select
-              id="managerId"
+            <Label>Project Manager *</Label>
+            <Select
               value={formData.managerId}
-              onChange={(e) =>
-                setFormData({ ...formData, managerId: e.target.value as Id<"users"> | "" })
+              onValueChange={(value) =>
+                setFormData({ ...formData, managerId: value as Id<"users"> | "" })
               }
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              required
             >
-              <option value="">Select a manager</option>
-              {teamMembers.map((member) => (
-                <option key={member._id} value={member._id}>
-                  {member.firstName} {member.lastName} - {member.role}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="rounded-lg">
+                <SelectValue placeholder="Select a manager" />
+              </SelectTrigger>
+              <SelectContent>
+                {teamMembers.map((member) => (
+                  <SelectItem key={member._id} value={member._id}>
+                    {member.firstName} {member.lastName} - {member.role}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Status and Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData({ ...formData, status: e.target.value as ProjectStatus })
-                }
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
+          {/* Status */}
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {STATUS_OPTIONS.map((status) => {
+                const Icon = status.icon;
+                const isSelected = formData.status === status.value;
+                return (
+                  <button
+                    key={status.value}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, status: status.value })}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-colors",
+                      isSelected
+                        ? "border-orange-500 bg-orange-50 text-orange-700"
+                        : "border-border hover:border-orange-300 hover:bg-muted/50",
+                    )}
+                  >
+                    <Icon
+                      className={cn("h-4 w-4", isSelected ? "text-orange-500" : status.color)}
+                    />
+                    <span>{status.label}</span>
+                  </button>
+                );
+              })}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
-              <select
-                id="priority"
-                value={formData.priority}
-                onChange={(e) =>
-                  setFormData({ ...formData, priority: e.target.value as ProjectPriority })
-                }
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-              </select>
+          </div>
+
+          {/* Priority */}
+          <div className="space-y-2">
+            <Label>Priority</Label>
+            <div className="flex gap-2">
+              {PRIORITY_OPTIONS.map((priority) => (
+                <button
+                  key={priority.value}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, priority: priority.value })}
+                  className={cn(
+                    "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    formData.priority === priority.value
+                      ? priority.color
+                      : "bg-muted text-muted-foreground hover:bg-muted/80",
+                  )}
+                >
+                  {priority.label}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Dates */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="startDate">Start Date *</Label>
               <Input
@@ -241,6 +297,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                className="rounded-lg"
                 required
               />
             </div>
@@ -251,12 +308,13 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 type="date"
                 value={formData.endDate}
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="rounded-lg"
               />
             </div>
           </div>
 
           {/* Budget */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="budgetTotal">Total Budget</Label>
               <Input
@@ -266,6 +324,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 placeholder="0.00"
                 value={formData.budgetTotal}
                 onChange={(e) => setFormData({ ...formData, budgetTotal: e.target.value })}
+                className="rounded-lg"
               />
             </div>
             <div className="space-y-2">
@@ -277,6 +336,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 placeholder="0.00"
                 value={formData.budgetSpent}
                 onChange={(e) => setFormData({ ...formData, budgetSpent: e.target.value })}
+                className="rounded-lg"
               />
             </div>
           </div>
@@ -297,48 +357,64 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Team Members */}
           <div className="space-y-2">
-            <Label htmlFor="teamIds">Team Members (Optional)</Label>
-            <select
-              id="teamIds"
-              multiple
-              value={formData.teamIds}
-              onChange={(e) => {
-                const selectedOptions = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                );
-                setFormData({
-                  ...formData,
-                  teamIds: selectedOptions as Id<"users">[],
-                });
-              }}
-              className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
+            <Label>
+              <UsersIcon className="h-3.5 w-3.5 inline mr-1" />
+              Team Members ({formData.teamIds.length} selected)
+            </Label>
+            <div className="border rounded-lg max-h-32 overflow-y-auto">
               {teamMembers
                 .filter((member) => member._id !== formData.managerId)
-                .map((member) => (
-                  <option key={member._id} value={member._id}>
-                    {member.firstName} {member.lastName} - {member.department || member.role}
-                  </option>
-                ))}
-            </select>
-            <p className="text-xs text-muted-foreground">
-              Hold Ctrl/Cmd to select multiple team members
-            </p>
+                .map((member) => {
+                  const isSelected = formData.teamIds.includes(member._id);
+                  return (
+                    <div
+                      key={member._id}
+                      onClick={() => toggleTeamMember(member._id)}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors",
+                        isSelected && "bg-orange-50",
+                      )}
+                    >
+                      <Checkbox checked={isSelected} />
+                      <Image
+                        src={member.imageUrl || "/default-avatar.png"}
+                        alt={`${member.firstName} ${member.lastName}`}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                      <span className={cn("text-sm", isSelected && "text-orange-700 font-medium")}>
+                        {member.firstName} {member.lastName}
+                      </span>
+                    </div>
+                  );
+                })}
+              {teamMembers.filter((member) => member._id !== formData.managerId).length === 0 && (
+                <div className="px-3 py-4 text-center text-sm text-muted-foreground">
+                  No team members available
+                </div>
+              )}
+            </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+          <DialogFooter className="pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="rounded-lg"
+            >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-orange-500 hover:bg-orange-600 text-white"
+              className="rounded-lg bg-orange-500 hover:bg-orange-600"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
                   Creating...
                 </>
               ) : (

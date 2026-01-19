@@ -6,6 +6,7 @@ import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel"
 import { renderToHTML } from "@/lib/pdf-renderer";
 import { BudgetPDFTemplate } from "../../_components/pdf-template";
 import type { Budget } from "../../_components/pdf-template/types";
+import { getConvexToken } from "@/lib/server-auth";
 
 // HTML wrapper for the PDF template
 function getHTMLDocument(content: string): string {
@@ -50,10 +51,21 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
 
-    // Fetch budget data from Convex
-    const budgetData = await fetchQuery(api.budgets.getBudgetById, {
-      id: id as Id<"budgets">,
-    });
+    // Get authentication token
+    const token = await getConvexToken();
+    if (!token) {
+      return NextResponse.json(
+        { error: "Authentication required", code: "UNAUTHENTICATED" },
+        { status: 401 },
+      );
+    }
+
+    // Fetch budget data from Convex with authentication
+    const budgetData = await fetchQuery(
+      api.budgets.getBudgetById,
+      { id: id as Id<"budgets"> },
+      { token },
+    );
 
     if (!budgetData) {
       return NextResponse.json({ error: "Budget not found" }, { status: 404 });

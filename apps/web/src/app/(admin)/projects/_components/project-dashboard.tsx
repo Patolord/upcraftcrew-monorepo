@@ -4,10 +4,11 @@ import { useMemo } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { CalendarIcon } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import React from "react";
 import type { Project } from "@/types/project";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { Progress } from "@/components/ui/progress";
 
 interface ProjectDashboardProps {
   project: Project & { _id: Id<"projects"> };
@@ -87,49 +88,63 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
     <div className="space-y-6">
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Progresso</div>
-            <div className="stat-value text-2xl">{project.progress}%</div>
-            <div className="stat-desc">
+        <Card size="sm" className="border border-orange-100 rounded-lg">
+          <CardHeader>
+            <CardTitle>Progresso</CardTitle>
+            <CardDescription className="text-2xl font-bold">{project.progress}%</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
               {project.status === "completed" ? "Completo" : "Em andamento"}
-            </div>
-          </div>
-        </div>
+            </p>
+          </CardContent>
+        </Card>
 
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Orçamento Usado</div>
-            <div className={`stat-value text-2xl ${budgetUsage.isOverBudget ? "text-error" : ""}`}>
+        <Card size="sm" className="border border-orange-100 rounded-lg">
+          <CardHeader>
+            <CardTitle>Orçamento Usado</CardTitle>
+            <CardDescription
+              className={`text-2xl font-bold ${budgetUsage.isOverBudget ? "text-error" : ""}`}
+            >
               {budgetUsage.percentage.toFixed(0)}%
-            </div>
-            <div className="stat-desc">{budgetUsage.remaining} restante</div>
-          </div>
-        </div>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">{budgetUsage.remaining} restante</p>
+          </CardContent>
+        </Card>
 
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Timeline</div>
-            <div className={`stat-value text-2xl ${timeline.isOverdue ? "text-error" : ""}`}>
+        <Card size="sm" className="border border-orange-100 rounded-lg">
+          <CardHeader>
+            <CardTitle>Timeline</CardTitle>
+            <CardDescription
+              className={`text-xl font-bold ${timeline.isOverdue ? "text-error" : ""}`}
+            >
               {timeline.isOverdue ? "Atrasado" : `${timeline.daysRemaining}d`}
-            </div>
-            <div className="stat-desc">{timeline.percentage.toFixed(0)}% do tempo</div>
-          </div>
-        </div>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">{timeline.percentage.toFixed(0)}% do tempo</p>
+          </CardContent>
+        </Card>
 
-        <div className="stats shadow border border-base-300">
-          <div className="stat">
-            <div className="stat-title text-xs">Equipe</div>
-            <div className="stat-value text-2xl">{project.team?.length || 0}</div>
-            <div className="stat-desc">Membros ativos</div>
-          </div>
-        </div>
+        <Card size="sm" className="border border-orange-100 rounded-lg">
+          <CardHeader>
+            <CardTitle>Equipe</CardTitle>
+            <CardDescription className="text-2xl font-bold">
+              {project.team?.length || 0}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">Membros ativos</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Progress Bars */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Project Progress */}
-        <Card className="border border-base-300">
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Progresso do Projeto</CardTitle>
           </CardHeader>
@@ -140,10 +155,10 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                   <span className="text-sm font-medium">Conclusão</span>
                   <span className="text-sm font-bold">{project.progress}%</span>
                 </div>
-                <progress
-                  className="progress progress-primary w-full h-4"
+                <Progress
+                  className="w-full h-4 [&>div]:bg-orange-100"
                   value={project.progress}
-                  max="100"
+                  max={100}
                 />
               </div>
 
@@ -152,10 +167,10 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                   <span className="text-sm font-medium">Linha do Tempo</span>
                   <span className="text-sm font-bold">{timeline.percentage.toFixed(0)}%</span>
                 </div>
-                <progress
-                  className={`progress w-full h-4 ${timeline.isOverdue ? "progress-error" : "progress-info"}`}
+                <Progress
+                  className={`w-full h-4 [&>div]:bg-orange-100 ${timeline.isOverdue ? "text-red-500" : "text-blue-500"}`}
                   value={timeline.percentage}
-                  max="100"
+                  max={100}
                 />
               </div>
             </div>
@@ -163,7 +178,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
         </Card>
 
         {/* Budget Status */}
-        <Card className="border border-base-300">
+        <Card className="border border-orange-100 rounded-lg">
           <CardHeader>
             <CardTitle className="text-lg">Status do Orçamento</CardTitle>
           </CardHeader>
@@ -185,10 +200,10 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                   {budgetUsage.remaining.toLocaleString()}
                 </span>
               </div>
-              <progress
-                className={`progress w-full h-4 ${budgetUsage.isOverBudget ? "progress-error" : "progress-success"}`}
+              <Progress
+                className={`w-full h-4 [&>div]:bg-orange-100 ${budgetUsage.isOverBudget ? "text-red-500" : "text-green-500"}`}
                 value={budgetUsage.percentage}
-                max="100"
+                max={100}
               />
             </div>
           </CardContent>
@@ -196,7 +211,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
       </div>
 
       {/* Financial Summary */}
-      <Card className="border border-base-300">
+      <Card className="border border-orange-100 rounded-lg">
         <CardHeader>
           <CardTitle className="text-lg">Resumo Financeiro</CardTitle>
         </CardHeader>
@@ -238,7 +253,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
       </Card>
 
       {/* Events Summary */}
-      <Card className="border border-base-300">
+      <Card className="border border-orange-100 rounded-lg">
         <CardHeader>
           <CardTitle className="text-lg">Eventos do Projeto</CardTitle>
         </CardHeader>

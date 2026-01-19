@@ -23,10 +23,10 @@ export function CoverPage({ budget }: PDFTemplateProps) {
       {/* Main title */}
       <div className="flex-1 flex flex-col items-center justify-center px-16 -mt-20">
         <h1 className="text-6xl font-bold lowercase tracking-tight" style={{ color: "#3C3C3C" }}>
-          proposta
+          Proposta
         </h1>
         <h1 className="text-6xl font-bold lowercase tracking-tight" style={{ color: "#3C3C3C" }}>
-          comercial
+          Técnica e Comercial
         </h1>
 
         {/* Subtitle - project title */}

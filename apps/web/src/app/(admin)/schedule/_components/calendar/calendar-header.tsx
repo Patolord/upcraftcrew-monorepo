@@ -27,6 +27,7 @@ interface CalendarHeaderProps {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   onDateChange: (date: Date) => void;
+  onAddEvent: () => void;
 }
 
 export function CalendarHeader({
@@ -34,6 +35,7 @@ export function CalendarHeader({
   viewMode,
   onViewModeChange,
   onDateChange,
+  onAddEvent,
 }: CalendarHeaderProps) {
   const weekNumber = getWeekNumber(selectedDate);
   const year = selectedDate.getFullYear();
@@ -113,7 +115,11 @@ export function CalendarHeader({
             <SelectItem value="day">Day view</SelectItem>
           </SelectContent>
         </Select>
-        <Button size="sm" className="rounded-lg bg-brand hover:bg-brand/90 text-brand-foreground">
+        <Button
+          size="sm"
+          className="rounded-lg bg-brand hover:bg-brand/90 text-brand-foreground"
+          onClick={onAddEvent}
+        >
           <PlusIcon className="h-4 w-4 mr-1" />
           Add event
         </Button>

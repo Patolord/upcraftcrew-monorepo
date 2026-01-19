@@ -82,7 +82,7 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
   };
 
   return (
-    <Card className="rounded-xl bg-white shadow-sm ring-0">
+    <Card className="rounded-xl bg-white shadow-sm ring-0 h-full">
       <CardHeader className="flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold">Projetos Recentes</CardTitle>
         <CardAction>

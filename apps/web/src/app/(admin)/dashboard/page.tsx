@@ -12,17 +12,20 @@ export default async function Dashboard() {
   const { token } = await requireAdminWithToken();
 
   // Preload data with authentication - parallel execution
-  const [preloadedTransactions, preloadedTeam, preloadedProjects] = await Promise.all([
-    preloadQuery(api.finance.getTransactions, {}, { token }),
-    preloadQuery(api.team.getTeamMembers, {}, { token }),
-    preloadQuery(api.projects.getProjects, {}, { token }),
-  ]);
+  const [preloadedTransactions, preloadedTeam, preloadedProjects, preloadedBudgets] =
+    await Promise.all([
+      preloadQuery(api.finance.getTransactions, {}, { token }),
+      preloadQuery(api.team.getTeamMembers, {}, { token }),
+      preloadQuery(api.projects.getProjects, {}, { token }),
+      preloadQuery(api.budgets.getBudgets, {}, { token }),
+    ]);
 
   return (
     <DashboardPage
       preloadedProjects={preloadedProjects}
       preloadedTeam={preloadedTeam}
       preloadedTransactions={preloadedTransactions}
+      preloadedBudgets={preloadedBudgets}
     />
   );
 }

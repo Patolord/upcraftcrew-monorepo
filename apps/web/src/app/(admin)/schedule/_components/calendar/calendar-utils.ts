@@ -1,4 +1,4 @@
-import type { EventType } from "@/types/schedule";
+import type { EventType, SourceType } from "@/types/schedule";
 
 // Get the week number for a given date
 export function getWeekNumber(date: Date): number {
@@ -220,4 +220,109 @@ export function navigatePeriod(
 // Get the day of week label
 export function getDayOfWeekLabel(date: Date, locale = "en-US"): string {
   return date.toLocaleDateString(locale, { weekday: "long" });
+}
+
+// Source type color mapping (main color)
+export function getSourceTypeColor(sourceType: SourceType): string {
+  const colorMap: Record<SourceType, string> = {
+    event: "#3b82f6", // blue
+    project: "#8b5cf6", // purple
+    budget: "#f97316", // orange
+    transaction: "#10b981", // green (for income), we'll handle expense separately
+    task: "#14b8a6", // teal
+  };
+  return colorMap[sourceType];
+}
+
+// Get transaction color based on type
+export function getTransactionColor(transactionType: "income" | "expense"): string {
+  return transactionType === "income" ? "#10b981" : "#ef4444"; // green for income, red for expense
+}
+
+// Source type background color classes
+export function getSourceTypeBgColor(
+  sourceType: SourceType,
+  transactionType?: "income" | "expense",
+): string {
+  if (sourceType === "transaction" && transactionType === "expense") {
+    return "bg-red-50 border-red-200";
+  }
+
+  const colorMap: Record<SourceType, string> = {
+    event: "bg-blue-50 border-blue-200",
+    project: "bg-purple-50 border-purple-200",
+    budget: "bg-orange-50 border-orange-200",
+    transaction: "bg-emerald-50 border-emerald-200",
+    task: "bg-teal-50 border-teal-200",
+  };
+  return colorMap[sourceType];
+}
+
+// Source type text color classes
+export function getSourceTypeTextColor(
+  sourceType: SourceType,
+  transactionType?: "income" | "expense",
+): string {
+  if (sourceType === "transaction" && transactionType === "expense") {
+    return "text-red-700";
+  }
+
+  const colorMap: Record<SourceType, string> = {
+    event: "text-blue-700",
+    project: "text-purple-700",
+    budget: "text-orange-700",
+    transaction: "text-emerald-700",
+    task: "text-teal-700",
+  };
+  return colorMap[sourceType];
+}
+
+// Source type icon color classes (for lucide icons)
+export function getSourceTypeIconColor(
+  sourceType: SourceType,
+  transactionType?: "income" | "expense",
+): string {
+  if (sourceType === "transaction" && transactionType === "expense") {
+    return "text-red-500";
+  }
+
+  const colorMap: Record<SourceType, string> = {
+    event: "text-blue-500",
+    project: "text-purple-500",
+    budget: "text-orange-500",
+    transaction: "text-emerald-500",
+    task: "text-teal-500",
+  };
+  return colorMap[sourceType];
+}
+
+// Source type badge color classes
+export function getSourceTypeBadgeColor(
+  sourceType: SourceType,
+  transactionType?: "income" | "expense",
+): string {
+  if (sourceType === "transaction" && transactionType === "expense") {
+    return "bg-red-100 text-red-700";
+  }
+
+  const colorMap: Record<SourceType, string> = {
+    event: "bg-blue-100 text-blue-700",
+    project: "bg-purple-100 text-purple-700",
+    budget: "bg-orange-100 text-orange-700",
+    transaction: "bg-emerald-100 text-emerald-700",
+    task: "bg-teal-100 text-teal-700",
+  };
+  return colorMap[sourceType];
+}
+
+// Get source type label for display
+export function getSourceTypeLabel(sourceType: SourceType): string {
+  const labelMap: Record<SourceType, string> = {
+    event: "Event",
+    project: "Project Deadline",
+    budget: "Follow-up",
+    transaction: "Payment",
+    task: "Task",
+  };
+  return labelMap[sourceType];
 }

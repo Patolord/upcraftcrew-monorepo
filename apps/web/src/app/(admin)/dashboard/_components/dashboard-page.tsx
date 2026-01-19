@@ -11,7 +11,7 @@ import { DashboardStats } from "./dashboard-stats";
 import { DashboardStatisticsChart } from "./dashboard-statistics-chart";
 import { DashboardTransactions } from "./dashboard-transactions";
 import { DashboardRecentProjectsTable } from "./dashboard-recent-projects-table";
-import { DashboardGrowth } from "./dashboard-growth";
+import { DashboardFollowUp } from "./dashboard-follow-up";
 
 interface Project {
   _id: Id<"projects">;
@@ -59,20 +59,34 @@ interface Transaction {
   projectId?: Id<"projects">;
 }
 
+interface Budget {
+  _id: Id<"budgets">;
+  title: string;
+  client: string;
+  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  totalAmount: number;
+  currency: string;
+  validUntil: number;
+  createdAt: number;
+}
+
 interface DashboardPageProps {
   preloadedProjects: Preloaded<typeof api.projects.getProjects>;
   preloadedTeam: Preloaded<typeof api.team.getTeamMembers>;
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
+  preloadedBudgets: Preloaded<typeof api.budgets.getBudgets>;
 }
 
 export function DashboardPage({
   preloadedProjects,
   preloadedTeam,
   preloadedTransactions,
+  preloadedBudgets,
 }: DashboardPageProps) {
   const projects = usePreloadedQuery(preloadedProjects) as Project[];
   const teamMembers = usePreloadedQuery(preloadedTeam) as TeamMember[];
   const transactions = usePreloadedQuery(preloadedTransactions) as Transaction[];
+  const budgets = usePreloadedQuery(preloadedBudgets) as Budget[];
 
   // Calculate overview stats
   const stats = useMemo(() => {
@@ -124,13 +138,13 @@ export function DashboardPage({
         </div>
       </div>
 
-      {/* Recent Projects Table + Growth  */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Recent Projects Table + Follow Up */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         <div className="lg:col-span-2">
           <DashboardRecentProjectsTable projects={projects} />
         </div>
-        <div>
-          <DashboardGrowth transactions={transactions} />
+        <div className="h-full">
+          <DashboardFollowUp budgets={budgets} />
         </div>
       </div>
     </div>
