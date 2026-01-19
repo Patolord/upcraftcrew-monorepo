@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getCurrentUserOrThrow, requireMember } from "./users";
 import { throwNotFound } from "./errors";
+import { paginationOptsValidator } from "convex/server";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
@@ -49,6 +50,37 @@ export const getProjects = query({
     );
 
     return projectsWithTeam;
+  },
+});
+
+// Query: Get paginated projects
+export const getProjectsPaginated = query({
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const paginatedResult = await ctx.db
+      .query("projects")
+      .order("desc")
+      .paginate(args.paginationOpts);
+
+    // Populate team members and manager for each project in the page
+    const projectsWithTeam = await Promise.all(
+      paginatedResult.page.map(async (project) => {
+        const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+        const manager = await ctx.db.get(project.managerId);
+
+        return {
+          ...project,
+          team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+          manager: transformUserToTeamMember(manager),
+        };
+      }),
+    );
+
+    return {
+      ...paginatedResult,
+      page: projectsWithTeam,
+    };
   },
 });
 

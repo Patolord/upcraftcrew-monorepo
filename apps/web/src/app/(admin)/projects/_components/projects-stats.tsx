@@ -34,10 +34,10 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       {stats.map((stat) => (
         <Card key={stat.title} className="border border-border rounded-lg">
-          <CardHeader className="text-center py-2">
+          <CardHeader className="text-center">
             <CardTitle className="text-xs">{stat.title}</CardTitle>
           </CardHeader>
-          <CardContent className="text-center pb-4">
+          <CardContent className="text-center">
             <div className={`text-2xl font-bold ${stat.className}`}>{stat.value}</div>
           </CardContent>
         </Card>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Form, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
@@ -17,7 +17,7 @@ interface ResetPasswordFormData {
   confirmPassword: string;
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -196,5 +196,20 @@ export default function ResetPasswordPage() {
         </div>
       </Form>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
+          <p className="text-gray-600 mb-8">Loading...</p>
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

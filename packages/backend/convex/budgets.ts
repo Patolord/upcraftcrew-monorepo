@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireMember } from "./users";
 import { throwNotFound } from "./errors";
+import { paginationOptsValidator } from "convex/server";
 
 // Query: Get all budgets
 export const getBudgets = query({
@@ -29,6 +30,38 @@ export const getBudgets = query({
     );
 
     return budgetsWithProject;
+  },
+});
+
+// Query: Get paginated budgets
+export const getBudgetsPaginated = query({
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+    const paginatedResult = await ctx.db
+      .query("budgets")
+      .withIndex("by_created_at")
+      .order("desc")
+      .paginate(args.paginationOpts);
+
+    // Populate project data if exists for each budget in the page
+    const budgetsWithProject = await Promise.all(
+      paginatedResult.page.map(async (budget) => {
+        if (budget.projectId) {
+          const project = await ctx.db.get(budget.projectId);
+          return {
+            ...budget,
+            project,
+          };
+        }
+        return budget;
+      }),
+    );
+
+    return {
+      ...paginatedResult,
+      page: budgetsWithProject,
+    };
   },
 });
 

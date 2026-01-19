@@ -28,11 +28,11 @@ export const Process = () => {
   return (
     <div className="group container py-8 md:py-12 lg:py-12 2xl:py-2" id={SECTION_IDS.process}>
       <div className="flex items-center justify-center gap-1.5">
-        <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+        <div className="bg-orange-500 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
         <p className="text-base-content/60 group-hover:text-primary font-mono text-sm font-medium transition-all">
           {process.eyebrow}
         </p>
-        <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+        <div className="bg-orange-500 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
       </div>
       <p className="mt-2 text-center text-2xl font-semibold sm:text-3xl">{process.title}</p>
 

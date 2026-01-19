@@ -1,24 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePreloadedQuery, type Preloaded } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useQueryState } from "nuqs";
-import { BudgetSlideOver } from "./budget-slide-over";
 import { BudgetFormModal } from "./budget-new/budget-form-modal";
 import { DeleteBudgetDialog } from "./delete-budget-dialog";
 import { BudgetHeader } from "./budget-header";
 import { BudgetDashboard } from "./budget-dashboard";
+import { BudgetCard } from "./budget-card";
+import { PlusIcon, FileTextIcon, Loader2 } from "lucide-react";
 import React from "react";
 
 interface Budget {
@@ -70,19 +63,21 @@ interface BudgetStats {
   conversionRate: number;
 }
 
-interface BudgetsPageProps {
-  preloadedBudgets: Preloaded<typeof api.budgets.getBudgets>;
-  preloadedStats: Preloaded<typeof api.budgets.getBudgetStats>;
-}
+export function BudgetsPage() {
+  // Query paginada para exibir os budgets na lista
+  const { results, status, loadMore, isLoading } = usePaginatedQuery(
+    api.budgets.getBudgetsPaginated,
+    {},
+    { initialNumItems: 3 },
+  );
+  const budgets = (results || []) as Budget[];
 
-export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPageProps) {
-  const budgets = usePreloadedQuery(preloadedBudgets) as Budget[];
-  const stats = usePreloadedQuery(preloadedStats) as BudgetStats;
+  // Query para estatísticas (precisa de todos os dados)
+  const stats = useQuery(api.budgets.getBudgetStats) as BudgetStats | undefined;
 
   const [newBudget, setNewBudget] = useQueryState("new");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [deleteDialog, setDeleteDialog] = useState<{
     budgetId: Id<"budgets"> | null;
@@ -99,21 +94,10 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
     }
   }, [newBudget, isModalOpen, selectedBudget]);
 
-  const handleEdit = (budget: Budget) => {
-    setSelectedBudget(budget);
-    setIsViewOpen(false);
-    setIsModalOpen(true);
-  };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedBudget(null);
     setNewBudget(null);
-  };
-
-  const handleCloseView = () => {
-    setIsViewOpen(false);
-    setSelectedBudget(null);
   };
 
   const handleFormSuccess = () => {
@@ -127,9 +111,86 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <BudgetHeader onNewBudget={handleNewBudget} />
-      <BudgetDashboard budgets={budgets} stats={stats} />
+    <div className="p-6 pl-12 pr-12 space-y-6">
+      <BudgetHeader />
+
+      <BudgetDashboard
+        stats={
+          stats || {
+            total: 0,
+            draft: 0,
+            sent: 0,
+            approved: 0,
+            rejected: 0,
+            totalValue: 0,
+            approvedValue: 0,
+            conversionRate: 0,
+          }
+        }
+      />
+
+      {/* Our Budgets Section Header */}
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Nossos Orçamentos</h2>
+        </div>
+        <Button
+          onClick={handleNewBudget}
+          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+        >
+          <PlusIcon className="h-4 w-4 mr-2" />
+          Novo Orçamento
+        </Button>
+      </div>
+
+      {/* Budgets Grid */}
+      {isLoading && results === undefined ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : budgets.length === 0 ? (
+        <div className="text-center py-12">
+          <FileTextIcon className="h-16 w-16 text-muted-foreground/20 mb-4 mx-auto" />
+          <h3 className="text-lg font-medium mb-2">Nenhum orçamento encontrado</h3>
+          <p className="text-muted-foreground text-sm">
+            Crie seu primeiro orçamento clicando no botão acima
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {budgets.map((budget) => (
+              <BudgetCard key={budget._id} budget={budget} />
+            ))}
+          </div>
+
+          {/* Load More Button */}
+          {status === "CanLoadMore" && (
+            <div className="flex justify-center pt-4">
+              <Button
+                onClick={() => loadMore(3)}
+                variant="outline"
+                className="min-w-[150px]"
+                disabled={status !== "CanLoadMore"}
+              >
+                Ver Mais
+              </Button>
+            </div>
+          )}
+
+          {status === "LoadingMore" && (
+            <div className="flex justify-center pt-4">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          )}
+
+          {status === "Exhausted" && budgets.length > 3 && (
+            <div className="flex justify-center pt-4">
+              <p className="text-sm text-muted-foreground">Todos os orçamentos foram carregados</p>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Modal for Create/Edit */}
       <BudgetFormModal
@@ -138,104 +199,6 @@ export function BudgetsPage({ preloadedBudgets, preloadedStats }: BudgetsPagePro
         initialData={selectedBudget || undefined}
         onSuccess={handleFormSuccess}
       />
-
-      {/* Slide Over for View */}
-      <BudgetSlideOver isOpen={isViewOpen} onClose={handleCloseView} title="Visualizar Orçamento">
-        {selectedBudget && (
-          <div className="p-6 space-y-6">
-            {/* View mode content */}
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold">{selectedBudget.title}</h3>
-                <p className="text-sm text-base-content/60">Cliente: {selectedBudget.client}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-base-200 p-4 rounded-lg">
-                  <p className="text-xs text-base-content/60 mb-1">Valor Total</p>
-                  <p className="text-xl font-bold">
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: selectedBudget.currency,
-                    }).format(selectedBudget.totalAmount)}
-                  </p>
-                </div>
-                <div className="bg-base-200 p-4 rounded-lg">
-                  <p className="text-xs text-base-content/60 mb-1">Status</p>
-                  <p className="text-xl font-bold capitalize">{selectedBudget.status}</p>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Descrição</h4>
-                <p className="text-sm text-base-content/80">{selectedBudget.description}</p>
-              </div>
-
-              {/* Items table */}
-              <div>
-                <h4 className="font-semibold mb-2">Itens</h4>
-                <div className="border border-base-300 rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Descrição</TableHead>
-                        <TableHead className="text-center">Qtd</TableHead>
-                        <TableHead className="text-right">Unit.</TableHead>
-                        <TableHead className="text-right">Total</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {selectedBudget.items.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.description}</TableCell>
-                          <TableCell className="text-center">{item.quantity}</TableCell>
-                          <TableCell className="text-right">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: selectedBudget.currency,
-                            }).format(item.unitPrice)}
-                          </TableCell>
-                          <TableCell className="text-right font-semibold">
-                            {new Intl.NumberFormat("pt-BR", {
-                              style: "currency",
-                              currency: selectedBudget.currency,
-                            }).format(item.total)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-
-              {selectedBudget.notes && (
-                <div>
-                  <h4 className="font-semibold mb-2">Observações</h4>
-                  <p className="text-sm text-base-content/80 whitespace-pre-wrap">
-                    {selectedBudget.notes}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* View mode actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-base-300">
-              <Button variant="outline" onClick={handleCloseView}>
-                Fechar
-              </Button>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => window.open(`/budgets/${selectedBudget._id}/pdf`, "_blank")}
-                >
-                  Gerar PDF
-                </Button>
-                <Button onClick={() => handleEdit(selectedBudget)}>Editar</Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </BudgetSlideOver>
 
       {/* Delete Dialog */}
       <DeleteBudgetDialog

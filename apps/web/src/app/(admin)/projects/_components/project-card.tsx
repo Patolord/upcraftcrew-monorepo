@@ -97,7 +97,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <span className="text-xs text-muted-foreground">Progress</span>
             <span className="text-xs font-medium">{project.progress}%</span>
           </div>
-          <Progress value={project.progress} className="h-2 bg-secondary [&>div]:bg-orange-500" />
+          <Progress value={project.progress} className="h-2 [&>div]:bg-base-300" />
         </div>
 
         {/* Budget & Team */}
@@ -158,9 +158,9 @@ export function ProjectCard({ project }: { project: Project }) {
       </CardContent>
 
       {/* Actions */}
-      <CardFooter className="justify-end border-t border-orange-500">
+      <CardFooter className="justify-end">
         <Link href={`/projects/${project._id}`}>
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white border border-orange-500 rounded-md text-xs">
+          <Button className="bg-orange-500 text-white rounded-md text-xs">
             <EyeIcon className="h-4 w-4 mr-1" />
             View
           </Button>

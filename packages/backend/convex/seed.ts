@@ -425,6 +425,349 @@ export const seedDatabase = mutation({
 
     console.log(`Seeded ${eventIds.length} events`);
 
+    // Seed Budgets
+    const budgets = [
+      {
+        title: "Website Redesign - Proposta Completa",
+        client: "Tech Corp",
+        description:
+          "Proposta para redesign completo do site institucional com foco em performance e experiência do usuário.",
+        status: "approved" as const,
+        totalAmount: 45000,
+        currency: "BRL",
+        validUntil: new Date("2026-02-28").getTime(),
+        createdAt: new Date("2025-09-01").getTime(),
+        updatedAt: new Date("2025-09-15").getTime(),
+        projectId: projectIds[0],
+        items: [
+          {
+            description: "Design UI/UX",
+            quantity: 1,
+            unitPrice: 15000,
+            total: 15000,
+          },
+          {
+            description: "Desenvolvimento Frontend",
+            quantity: 1,
+            unitPrice: 20000,
+            total: 20000,
+          },
+          {
+            description: "Testes e Deploy",
+            quantity: 1,
+            unitPrice: 10000,
+            total: 10000,
+          },
+        ],
+        objectives: [
+          {
+            title: "Melhorar Performance",
+            description: "Aumentar a velocidade de carregamento em 50%",
+          },
+          {
+            title: "Design Responsivo",
+            description: "Garantir experiência perfeita em todos os dispositivos",
+          },
+        ],
+        scopeOptions: [
+          {
+            name: "Básico",
+            features: ["Design responsivo", "5 páginas", "SEO básico"],
+            value: 25000,
+            isSelected: false,
+          },
+          {
+            name: "Profissional",
+            features: [
+              "Design responsivo",
+              "10 páginas",
+              "SEO avançado",
+              "Blog integrado",
+              "Analytics",
+            ],
+            value: 45000,
+            isSelected: true,
+          },
+          {
+            name: "Enterprise",
+            features: [
+              "Design responsivo",
+              "Páginas ilimitadas",
+              "SEO completo",
+              "E-commerce",
+              "Suporte 24/7",
+            ],
+            value: 80000,
+            isSelected: false,
+          },
+        ],
+        paymentTerms: [
+          "30% na aprovação do orçamento",
+          "40% na entrega do design",
+          "30% na entrega final",
+        ],
+        deliveryDeadline: "90 dias após aprovação",
+      },
+      {
+        title: "App Mobile - MVP",
+        client: "Retail Solutions Inc",
+        description:
+          "Desenvolvimento de aplicativo mobile para iOS e Android com funcionalidades essenciais para o MVP.",
+        status: "sent" as const,
+        totalAmount: 80000,
+        currency: "BRL",
+        validUntil: new Date("2026-01-31").getTime(),
+        createdAt: new Date("2025-08-10").getTime(),
+        updatedAt: new Date("2025-08-10").getTime(),
+        projectId: projectIds[1],
+        items: [
+          {
+            description: "Análise e Prototipação",
+            quantity: 1,
+            unitPrice: 10000,
+            total: 10000,
+          },
+          {
+            description: "Desenvolvimento iOS",
+            quantity: 1,
+            unitPrice: 30000,
+            total: 30000,
+          },
+          {
+            description: "Desenvolvimento Android",
+            quantity: 1,
+            unitPrice: 30000,
+            total: 30000,
+          },
+          {
+            description: "Backend e API",
+            quantity: 1,
+            unitPrice: 10000,
+            total: 10000,
+          },
+        ],
+        objectives: [
+          {
+            title: "Lançamento Rápido",
+            description: "Entregar MVP funcional em 4 meses",
+          },
+          {
+            title: "Engajamento do Usuário",
+            description: "Implementar notificações push e gamificação",
+          },
+        ],
+        paymentTerms: [
+          "20% na aprovação",
+          "30% no milestone 1",
+          "30% no milestone 2",
+          "20% na entrega",
+        ],
+        deliveryDeadline: "120 dias após aprovação",
+      },
+      {
+        title: "Identidade Visual Completa",
+        client: "StartUp XYZ",
+        description:
+          "Criação de identidade visual completa incluindo logo, paleta de cores, tipografia e manual de marca.",
+        status: "approved" as const,
+        totalAmount: 25000,
+        currency: "BRL",
+        validUntil: new Date("2025-07-30").getTime(),
+        createdAt: new Date("2025-05-15").getTime(),
+        updatedAt: new Date("2025-06-01").getTime(),
+        projectId: projectIds[2],
+        items: [
+          {
+            description: "Pesquisa e Conceituação",
+            quantity: 1,
+            unitPrice: 5000,
+            total: 5000,
+          },
+          {
+            description: "Design de Logo",
+            quantity: 1,
+            unitPrice: 8000,
+            total: 8000,
+          },
+          {
+            description: "Manual de Marca",
+            quantity: 1,
+            unitPrice: 7000,
+            total: 7000,
+          },
+          {
+            description: "Aplicações",
+            quantity: 1,
+            unitPrice: 5000,
+            total: 5000,
+          },
+        ],
+        paymentTerms: ["50% na aprovação", "50% na entrega"],
+        deliveryDeadline: "60 dias após aprovação",
+      },
+      {
+        title: "E-commerce Fashion Outlet",
+        client: "Fashion Outlet",
+        description:
+          "Plataforma completa de e-commerce com gestão de produtos, pagamentos e logística integrada.",
+        status: "draft" as const,
+        totalAmount: 120000,
+        currency: "BRL",
+        validUntil: new Date("2026-03-31").getTime(),
+        createdAt: new Date("2026-01-10").getTime(),
+        updatedAt: new Date("2026-01-10").getTime(),
+        projectId: projectIds[3],
+        items: [
+          {
+            description: "Design UX/UI",
+            quantity: 1,
+            unitPrice: 25000,
+            total: 25000,
+          },
+          {
+            description: "Desenvolvimento Plataforma",
+            quantity: 1,
+            unitPrice: 60000,
+            total: 60000,
+          },
+          {
+            description: "Integrações (Pagamento/Frete)",
+            quantity: 1,
+            unitPrice: 20000,
+            total: 20000,
+          },
+          {
+            description: "Treinamento e Suporte",
+            quantity: 1,
+            unitPrice: 15000,
+            total: 15000,
+          },
+        ],
+        scopeOptions: [
+          {
+            name: "Starter",
+            features: ["Até 100 produtos", "Gateway de pagamento", "Frete básico"],
+            value: 60000,
+            isSelected: false,
+          },
+          {
+            name: "Business",
+            features: [
+              "Até 1000 produtos",
+              "Multi-gateway",
+              "Frete integrado",
+              "Relatórios avançados",
+            ],
+            value: 120000,
+            isSelected: true,
+          },
+          {
+            name: "Enterprise",
+            features: ["Produtos ilimitados", "Marketplace", "ERP integrado", "Suporte dedicado"],
+            value: 200000,
+            isSelected: false,
+          },
+        ],
+        paymentTerms: [
+          "25% na aprovação",
+          "25% no design aprovado",
+          "25% no desenvolvimento",
+          "25% no go-live",
+        ],
+        deliveryDeadline: "180 dias após aprovação",
+      },
+      {
+        title: "Campanha Marketing Digital Q1",
+        client: "Local Business",
+        description:
+          "Gestão completa de campanha de marketing digital para o primeiro trimestre de 2026.",
+        status: "rejected" as const,
+        totalAmount: 30000,
+        currency: "BRL",
+        validUntil: new Date("2025-12-15").getTime(),
+        createdAt: new Date("2025-10-20").getTime(),
+        updatedAt: new Date("2025-11-05").getTime(),
+        items: [
+          {
+            description: "Gestão de Mídia Paga",
+            quantity: 3,
+            unitPrice: 5000,
+            total: 15000,
+          },
+          {
+            description: "Criação de Conteúdo",
+            quantity: 3,
+            unitPrice: 3000,
+            total: 9000,
+          },
+          {
+            description: "Relatórios e Analytics",
+            quantity: 3,
+            unitPrice: 2000,
+            total: 6000,
+          },
+        ],
+        notes: "Cliente optou por agência com foco em redes sociais específicas.",
+      },
+      {
+        title: "Sistema CRM Interno",
+        client: "UpCraft Crew",
+        description:
+          "Desenvolvimento de CRM customizado para gestão interna de clientes e projetos.",
+        status: "sent" as const,
+        totalAmount: 55000,
+        currency: "BRL",
+        validUntil: new Date("2026-01-15").getTime(),
+        createdAt: new Date("2025-09-10").getTime(),
+        updatedAt: new Date("2025-09-10").getTime(),
+        projectId: projectIds[5],
+        items: [
+          {
+            description: "Levantamento de Requisitos",
+            quantity: 1,
+            unitPrice: 8000,
+            total: 8000,
+          },
+          {
+            description: "Desenvolvimento Core",
+            quantity: 1,
+            unitPrice: 30000,
+            total: 30000,
+          },
+          {
+            description: "Dashboard e Relatórios",
+            quantity: 1,
+            unitPrice: 12000,
+            total: 12000,
+          },
+          {
+            description: "Migração de Dados",
+            quantity: 1,
+            unitPrice: 5000,
+            total: 5000,
+          },
+        ],
+        extras: [
+          {
+            description: "Manutenção Mensal",
+            value: 2000,
+            recurrence: "Mensal",
+          },
+          {
+            description: "Treinamento Adicional",
+            value: 3000,
+            recurrence: "Único",
+          },
+        ],
+        paymentTerms: ["40% na aprovação", "30% no desenvolvimento", "30% na entrega"],
+        deliveryDeadline: "75 dias após aprovação",
+      },
+    ];
+
+    const budgetIds = await Promise.all(budgets.map((budget) => ctx.db.insert("budgets", budget)));
+
+    console.log(`Seeded ${budgetIds.length} budgets`);
+
     console.log("Database seed completed successfully!");
 
     return {
@@ -435,6 +778,7 @@ export const seedDatabase = mutation({
         projects: projectIds.length,
         transactions: transactionIds.length,
         events: eventIds.length,
+        budgets: budgetIds.length,
       },
     };
   },

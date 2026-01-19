@@ -1,18 +1,13 @@
-import { preloadQuery } from "convex/nextjs";
-import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { requireAuthWithToken } from "@/lib/server-auth";
 import { BudgetsPage } from "./_components/budgets-page";
 import React from "react";
 
+// Force dynamic rendering since we need auth at runtime
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   // Get authenticated user and token
-  const { token } = await requireAuthWithToken();
+  await requireAuthWithToken();
 
-  // Preload data with authentication - parallel execution
-  const [preloadedBudgets, preloadedStats] = await Promise.all([
-    preloadQuery(api.budgets.getBudgets, {}, { token }),
-    preloadQuery(api.budgets.getBudgetStats, {}, { token }),
-  ]);
-
-  return <BudgetsPage preloadedBudgets={preloadedBudgets} preloadedStats={preloadedStats} />;
+  return <BudgetsPage />;
 }

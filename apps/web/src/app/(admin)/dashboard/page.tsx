@@ -4,6 +4,9 @@ import { requireAdminWithToken } from "@/lib/server-auth";
 import { DashboardPage } from "./_components/dashboard-page";
 import React from "react";
 
+// Force dynamic rendering since we need auth at runtime
+export const dynamic = "force-dynamic";
+
 export default async function Dashboard() {
   // Verify admin access and get token for preloadQuery
   const { token } = await requireAdminWithToken();

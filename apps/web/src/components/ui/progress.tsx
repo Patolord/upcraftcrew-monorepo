@@ -24,7 +24,7 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       >
         <ProgressPrimitive.Track className="h-full w-full">
           <ProgressPrimitive.Indicator
-            className="h-full bg-primary transition-all duration-300 ease-in-out"
+            className="h-full bg-orange-500 transition-all duration-300 ease-in-out"
             style={{ width: `${percentage}%` }}
           />
         </ProgressPrimitive.Track>
