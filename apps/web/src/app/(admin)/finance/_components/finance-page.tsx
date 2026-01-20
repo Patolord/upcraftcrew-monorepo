@@ -5,13 +5,15 @@ import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { TransactionCategory } from "@/types/finance";
 import { FinanceHeader } from "./finance-header";
-import { PaymentMethodCard } from "./payment-method-card";
-import { FinanceInvoices } from "./finance-invoices";
-import { FinanceBilling } from "./finance-billing";
-import { FinanceTransactions } from "./finance-transactions";
-import { PaymentMethodsSection } from "./payment-methods-section";
+import { FinanceStats } from "./finance-stats";
+import { FinanceBalanceCard } from "./finance-balance-card";
+import { FinanceTransfersCard } from "./finance-transfers-card";
+import { FinanceCreditCard } from "./finance-credit-card";
+import { FinanceSpentCard } from "./finance-spent-card";
 import { NewTransactionModal } from "./new-transaction-modal";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 import React from "react";
 
 interface FinancePageProps {
@@ -44,30 +46,11 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
     }));
   }, [transactions]);
 
-  // Filter transactions based on search query
-  const filteredTransactions = useMemo(() => {
-    if (!searchQuery.trim()) return transformedTransactions;
-
-    const query = searchQuery.toLowerCase();
-    return transformedTransactions.filter((transaction) => {
-      return (
-        transaction.description?.toLowerCase().includes(query) ||
-        transaction.category?.toLowerCase().includes(query) ||
-        transaction.projectName?.toLowerCase().includes(query) ||
-        transaction.type?.toLowerCase().includes(query)
-      );
-    });
-  }, [transformedTransactions, searchQuery]);
-
   // Show loading state while data is being fetched
   if (!financialSummary) {
     return (
-      <div className="p-6 space-y-6">
-        <FinanceHeader
-          onNewTransaction={() => setIsNewTransactionModalOpen(true)}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+      <div className="p-6 pl-12 pr-12 space-y-6">
+        <FinanceHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
             <Skeleton className="h-12 w-12 rounded-full mx-auto" />
@@ -79,56 +62,64 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
   }
 
   return (
-    <div className="p-6 space-y-6 `bg-gradient-to-br` from-orange-50/30 to-pink-50/30 dark:from-orange-950/10 dark:to-pink-950/10 min-h-screen">
+    <div className="p-4 pl-12 pr-12 space-y-6">
       {/* Header */}
-      <FinanceHeader
-        onNewTransaction={() => setIsNewTransactionModalOpen(true)}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+      <FinanceHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+
+      {/* Stats Section */}
+      <FinanceStats
+        summary={{
+          totalIncome: financialSummary.totalIncome,
+          totalExpenses: financialSummary.totalExpense,
+          netProfit: financialSummary.totalExpense,
+          pendingIncome: financialSummary.pendingIncome,
+          pendingExpenses: financialSummary.pendingExpense,
+        }}
+        totalTransactions={transformedTransactions.length}
       />
+
+      {/* Add Transaction Button */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold text-foreground mb-2">All transactions</h2>
+        </div>
+        <Button
+          onClick={() => setIsNewTransactionModalOpen(true)}
+          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+        >
+          <PlusIcon className="h-4 w-4 mr-2" />
+          Add New
+        </Button>
+      </div>
+
+      {/* Dashboard Cards Grid 2x2 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        {/* Balance Card - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <FinanceBalanceCard
+            totalIncome={financialSummary.totalIncome}
+            netProfit={financialSummary.totalExpense}
+          />
+        </div>
+        {/* Transfers Card */}
+        <div className="lg:col-span-1">
+          <FinanceTransfersCard />
+        </div>
+        {/* Credit Balance Card */}
+        <div className="lg:col-span-1">
+          <FinanceCreditCard balance={financialSummary.totalExpense} />
+        </div>
+        {/* Total Spent Card - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <FinanceSpentCard totalSpent={financialSummary.totalExpense} />
+        </div>
+      </div>
 
       {/* New Transaction Modal */}
       <NewTransactionModal
         isOpen={isNewTransactionModalOpen}
         onClose={() => setIsNewTransactionModalOpen(false)}
       />
-
-      {/* Payment Methods Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <PaymentMethodCard
-          name="Salary"
-          type="salary"
-          amount={2000}
-          description="Belong Interactive"
-        />
-        <PaymentMethodCard
-          name="Paypal"
-          type="paypal"
-          amount={4000}
-          description="Freelance payment"
-        />
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Invoices and Billing */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Invoices Table */}
-          <FinanceInvoices />
-
-          {/* Billing Information */}
-          <FinanceBilling />
-        </div>
-
-        {/* Right Column - Transactions and Payment Methods */}
-        <div className="space-y-6">
-          {/* Recent Transactions */}
-          <FinanceTransactions transactions={filteredTransactions} />
-
-          {/* Payment Methods */}
-          <PaymentMethodsSection />
-        </div>
-      </div>
     </div>
   );
 }
