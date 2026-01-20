@@ -31,16 +31,40 @@ export const getTasks = query({
       (task) => !(task.isPrivate ?? false) || task.ownerId === user._id,
     );
 
-    // Populate assigned user and project
+    // Populate assigned user, project, labels, and subtask stats
     const tasksWithDetails = await Promise.all(
       tasks.map(async (task) => {
         const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
+        // Get labels
+        const labels = task.labelIds
+          ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
+          : [];
+
+        // Get subtask stats
+        const subtasks = await ctx.db
+          .query("subtasks")
+          .withIndex("by_task", (q) => q.eq("taskId", task._id))
+          .collect();
+        const subtaskStats = {
+          total: subtasks.length,
+          completed: subtasks.filter((s) => s.completed).length,
+        };
+
+        // Get comment count
+        const comments = await ctx.db
+          .query("taskComments")
+          .withIndex("by_task", (q) => q.eq("taskId", task._id))
+          .collect();
+
         return {
           ...task,
           assignedUser: transformUserToAssignedUser(assignedUser),
           project,
+          labels: labels.filter(Boolean),
+          subtaskStats,
+          commentCount: comments.length,
         };
       }),
     );
@@ -49,7 +73,7 @@ export const getTasks = query({
   },
 });
 
-// Query: Get task by ID
+// Query: Get task by ID (with full details)
 export const getTaskById = query({
   args: { id: v.id("tasks") },
   handler: async (ctx, args) => {
@@ -69,10 +93,34 @@ export const getTaskById = query({
     const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
     const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
+    // Get labels
+    const labels = task.labelIds
+      ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
+      : [];
+
+    // Get subtask stats
+    const subtasks = await ctx.db
+      .query("subtasks")
+      .withIndex("by_task", (q) => q.eq("taskId", task._id))
+      .collect();
+    const subtaskStats = {
+      total: subtasks.length,
+      completed: subtasks.filter((s) => s.completed).length,
+    };
+
+    // Get comment count
+    const comments = await ctx.db
+      .query("taskComments")
+      .withIndex("by_task", (q) => q.eq("taskId", task._id))
+      .collect();
+
     return {
       ...task,
       assignedUser: transformUserToAssignedUser(assignedUser),
       project,
+      labels: labels.filter(Boolean),
+      subtaskStats,
+      commentCount: comments.length,
     };
   },
 });
@@ -161,6 +209,7 @@ export const createTask = mutation({
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
     isPrivate: v.optional(v.boolean()),
+    labelIds: v.optional(v.array(v.id("taskLabels"))),
   },
   handler: async (ctx, args) => {
     const user = await requireWrite(ctx);
@@ -201,6 +250,7 @@ export const updateTask = mutation({
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
     isPrivate: v.optional(v.boolean()),
+    labelIds: v.optional(v.array(v.id("taskLabels"))),
   },
   handler: async (ctx, args) => {
     const user = await requireWrite(ctx);

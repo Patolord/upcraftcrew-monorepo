@@ -3,17 +3,35 @@
 import { useMemo, useState } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { type Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { type Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { TaskKanbanBoard, type Task, type TaskStatus, type Column } from "./kanban-task-board";
+import { TaskDetailModal } from "./task-detail-modal";
+import { NewTaskModal } from "./new-task-modal";
 import { KanbanHeader } from "./kanban-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ZapIcon, StarIcon, Share2Icon } from "lucide-react";
+import { ZapIcon, StarIcon, Share2Icon, PlusIcon } from "lucide-react";
 import React from "react";
 
+interface TaskLabel {
+  _id: Id<"taskLabels">;
+  name: string;
+  color: string;
+}
+
 type TaskWithDetails = Doc<"tasks"> & {
-  assignedUser: Doc<"users"> | null;
+  assignedUser: {
+    _id: Id<"users">;
+    name: string;
+    imageUrl?: string;
+  } | null;
   project: Doc<"projects"> | null;
+  labels?: TaskLabel[];
+  subtaskStats?: {
+    total: number;
+    completed: number;
+  };
+  commentCount?: number;
 };
 
 type TeamMember = Doc<"users">;
@@ -28,10 +46,16 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   const teamMembers = usePreloadedQuery(preloadedTeamMembers);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Modal states
+  const [selectedTaskId, setSelectedTaskId] = useState<Id<"tasks"> | null>(null);
+  const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
+  const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
+  const [newTaskDefaultStatus, setNewTaskDefaultStatus] = useState<TaskStatus>("todo");
+
   // Transform tasks to match the expected interface
   const tasks = useMemo<Task[]>(() => {
-    return tasksWithDetails.map((task) => {
-      const transformed: Task = {
+    return tasksWithDetails.map(
+      (task): Task => ({
         _id: task._id,
         title: task.title,
         description: task.description,
@@ -40,7 +64,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         assignedUser: task.assignedUser
           ? {
               _id: task.assignedUser._id,
-              name: `${task.assignedUser.firstName} ${task.assignedUser.lastName}`.trim(),
+              name: task.assignedUser.name,
               imageUrl: task.assignedUser.imageUrl,
             }
           : null,
@@ -51,9 +75,11 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
             }
           : null,
         dueDate: task.dueDate,
-      };
-      return transformed;
-    });
+        labels: task.labels,
+        subtaskStats: task.subtaskStats,
+        commentCount: task.commentCount,
+      }),
+    );
   }, [tasksWithDetails]);
 
   // Filter tasks based on search query
@@ -68,7 +94,8 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         task.project?.name?.toLowerCase().includes(query) ||
         task.assignedUser?.name?.toLowerCase().includes(query) ||
         task.priority?.toLowerCase().includes(query) ||
-        task.status?.toLowerCase().includes(query)
+        task.status?.toLowerCase().includes(query) ||
+        task.labels?.some((label) => label.name.toLowerCase().includes(query))
       );
     });
   }, [tasks, searchQuery]);
@@ -76,10 +103,10 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   // Group tasks by status
   const columns = useMemo<Column[]>(() => {
     const statuses: { id: TaskStatus; title: string }[] = [
-      { id: "todo", title: "TODO" },
-      { id: "in-progress", title: "IN WORK" },
-      { id: "review", title: "QA" },
-      { id: "done", title: "COMPLETED" },
+      { id: "todo", title: "To Do" },
+      { id: "in-progress", title: "In Progress" },
+      { id: "review", title: "Review" },
+      { id: "done", title: "Completed" },
     ];
 
     return statuses.map(
@@ -90,6 +117,31 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       }),
     );
   }, [filteredTasks]);
+
+  // Handlers
+  const handleTaskClick = (taskId: Id<"tasks">) => {
+    setSelectedTaskId(taskId);
+    setIsTaskDetailOpen(true);
+  };
+
+  const handleAddTask = (status: TaskStatus) => {
+    setNewTaskDefaultStatus(status);
+    setIsNewTaskOpen(true);
+  };
+
+  const handleNewTaskOpenChange = (open: boolean) => {
+    setIsNewTaskOpen(open);
+    if (!open) {
+      setNewTaskDefaultStatus("todo");
+    }
+  };
+
+  const handleTaskDetailOpenChange = (open: boolean) => {
+    setIsTaskDetailOpen(open);
+    if (!open) {
+      setSelectedTaskId(null);
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -117,7 +169,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
                   className="size-10 border-2 border-background ring-2 ring-pink-300"
                 >
                   <AvatarImage src={member.imageUrl} alt={fullName} />
-                  <AvatarFallback className="bg-pink-400 text-white text-xs font-medium">
+                  <AvatarFallback className="bg-gradient-to-br from-orange-400 to-pink-500 text-white text-xs font-medium">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -135,6 +187,15 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
+          <Button
+            variant="default"
+            size="sm"
+            className="rounded-full"
+            onClick={() => handleAddTask("todo")}
+          >
+            <PlusIcon className="size-4 mr-1" />
+            New Task
+          </Button>
           <Button variant="ghost" size="icon-sm" className="rounded-full">
             <ZapIcon className="size-4" />
           </Button>
@@ -142,14 +203,28 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
             <StarIcon className="size-4" />
           </Button>
           <Button variant="outline" size="sm" className="rounded-full">
-            <Share2Icon className="size-4" />
+            <Share2Icon className="size-4 mr-1" />
             Share
           </Button>
         </div>
       </div>
 
       {/* Kanban Board */}
-      <TaskKanbanBoard columns={columns} />
+      <TaskKanbanBoard columns={columns} onTaskClick={handleTaskClick} onAddTask={handleAddTask} />
+
+      {/* Task Detail Modal */}
+      <TaskDetailModal
+        taskId={selectedTaskId}
+        open={isTaskDetailOpen}
+        onOpenChange={handleTaskDetailOpenChange}
+      />
+
+      {/* New Task Modal */}
+      <NewTaskModal
+        open={isNewTaskOpen}
+        onOpenChange={handleNewTaskOpenChange}
+        defaultStatus={newTaskDefaultStatus}
+      />
     </div>
   );
 }

@@ -15,13 +15,7 @@ export function AboutPage() {
       {/* Header with logo */}
       <div className="pt-8 px-12 flex justify-end">
         <div className="flex items-center gap-2">
-          <svg
-            width={40}
-            height={40}
-            viewBox="0 0 64 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width={40} height={40} viewBox="0 0 64 64" fill="none" xmlns="/logo/logo-light.png">
             <path d="M32 8L52 24L32 40L12 24L32 8Z" fill="#F2994A" />
             <path d="M32 24L52 40L32 56L12 40L32 24Z" fill="#E07A2F" />
           </svg>

@@ -203,10 +203,40 @@ export default defineSchema({
     updatedAt: v.number(),
     isPrivate: v.optional(v.boolean()),
     ownerId: v.optional(v.id("users")),
+    labelIds: v.optional(v.array(v.id("taskLabels"))),
   })
     .index("by_status", ["status"])
     .index("by_assigned", ["assignedTo"])
     .index("by_project", ["projectId"])
     .index("by_created_at", ["createdAt"])
     .index("by_owner", ["ownerId"]),
+
+  // Subtasks for tasks (checklist items)
+  subtasks: defineTable({
+    taskId: v.id("tasks"),
+    title: v.string(),
+    completed: v.boolean(),
+    order: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_task", ["taskId"])
+    .index("by_task_order", ["taskId", "order"]),
+
+  // Comments on tasks
+  taskComments: defineTable({
+    taskId: v.id("tasks"),
+    userId: v.id("users"),
+    content: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_task", ["taskId"])
+    .index("by_task_created", ["taskId", "createdAt"]),
+
+  // Reusable labels for tasks
+  taskLabels: defineTable({
+    name: v.string(),
+    color: v.string(),
+    ownerId: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_owner", ["ownerId"]),
 });

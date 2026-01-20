@@ -161,7 +161,17 @@ export async function getCurrentUser(context: QueryContext) {
   if (identity === null) {
     return null;
   }
-  return await userByClerkUserId(context, identity.subject);
+  const user = await userByClerkUserId(context, identity.subject);
+
+  // Override imageUrl with the latest from Clerk
+  if (user && identity.pictureUrl) {
+    return {
+      ...user,
+      imageUrl: identity.pictureUrl,
+    };
+  }
+
+  return user;
 }
 
 /**
@@ -312,5 +322,155 @@ export const setRole = mutation({
     await ctx.db.patch(args.userId, {
       role: args.role,
     });
+  },
+});
+
+// ============================================================================
+// PROFILE PAGE QUERIES
+// ============================================================================
+
+// Helper to transform user to team member format
+function transformUserToTeamMember(user: any) {
+  if (!user) return null;
+  return {
+    _id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    role: user.role,
+    imageUrl: user.imageUrl,
+  };
+}
+
+/**
+ * Get tasks assigned to the current user (not done, limit 3)
+ */
+export const getMyTasks = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_assigned", (q) => q.eq("assignedTo", user._id))
+      .collect();
+
+    // Filter out completed tasks and limit to 3
+    const pendingTasks = tasks.filter((task) => task.status !== "done").slice(0, 3);
+
+    // Populate project data
+    const tasksWithProject = await Promise.all(
+      pendingTasks.map(async (task) => {
+        const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+        return {
+          ...task,
+          project: project ? { _id: project._id, name: project.name } : null,
+        };
+      }),
+    );
+
+    return tasksWithProject;
+  },
+});
+
+/**
+ * Get budgets from user's projects (not approved/rejected)
+ */
+export const getMyBudgets = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    // Get all budgets
+    const allBudgets = await ctx.db.query("budgets").collect();
+
+    // Filter budgets that are linked to user's projects and not approved/rejected
+    const userBudgets = await Promise.all(
+      allBudgets.map(async (budget) => {
+        // Skip approved/rejected budgets
+        if (budget.status === "approved" || budget.status === "rejected") {
+          return null;
+        }
+
+        // Check if budget is linked to one of user's projects
+        if (budget.projectId && user.projectIds.includes(budget.projectId)) {
+          const project = await ctx.db.get(budget.projectId);
+          return {
+            ...budget,
+            project: project ? { _id: project._id, name: project.name } : null,
+          };
+        }
+
+        return null;
+      }),
+    );
+
+    return userBudgets.filter((b) => b !== null);
+  },
+});
+
+/**
+ * Get upcoming events for the current user
+ */
+export const getMyUpcomingEvents = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    const now = Date.now();
+
+    const events = await ctx.db
+      .query("events")
+      .withIndex("by_start_time")
+      .filter((q) => q.gte(q.field("startTime"), now))
+      .order("asc")
+      .collect();
+
+    // Filter events where user is an attendee
+    const userEvents = events.filter((event) => event.attendeeIds.includes(user._id));
+
+    // Populate project data
+    const eventsWithProject = await Promise.all(
+      userEvents.map(async (event) => {
+        const project = event.projectId ? await ctx.db.get(event.projectId) : null;
+        return {
+          ...event,
+          project: project ? { _id: project._id, name: project.name } : null,
+        };
+      }),
+    );
+
+    return eventsWithProject;
+  },
+});
+
+/**
+ * Get projects for the current user
+ */
+export const getMyProjects = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    // Get all projects the user is part of
+    const projects = await Promise.all(user.projectIds.map((projectId) => ctx.db.get(projectId)));
+
+    // Filter out nulls and populate team/manager data
+    const projectsWithTeam = await Promise.all(
+      projects
+        .filter((project) => project !== null)
+        .map(async (project) => {
+          const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
+          const manager = await ctx.db.get(project.managerId);
+
+          return {
+            ...project,
+            team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+            manager: transformUserToTeamMember(manager),
+          };
+        }),
+    );
+
+    return projectsWithTeam;
   },
 });

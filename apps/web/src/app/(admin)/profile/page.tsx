@@ -11,8 +11,23 @@ export default async function Page() {
   // Get authenticated user and token
   const { token } = await requireAuthWithToken();
 
-  // Preload current user data
-  const preloadedUser = await preloadQuery(api.users.current, {}, { token });
+  // Preload all profile page data
+  const [preloadedUser, preloadedTasks, preloadedBudgets, preloadedEvents, preloadedProjects] =
+    await Promise.all([
+      preloadQuery(api.users.current, {}, { token }),
+      preloadQuery(api.users.getMyTasks, {}, { token }),
+      preloadQuery(api.users.getMyBudgets, {}, { token }),
+      preloadQuery(api.users.getMyUpcomingEvents, {}, { token }),
+      preloadQuery(api.users.getMyProjects, {}, { token }),
+    ]);
 
-  return <ProfilePage preloadedUser={preloadedUser} />;
+  return (
+    <ProfilePage
+      preloadedUser={preloadedUser}
+      preloadedTasks={preloadedTasks}
+      preloadedBudgets={preloadedBudgets}
+      preloadedEvents={preloadedEvents}
+      preloadedProjects={preloadedProjects}
+    />
+  );
 }

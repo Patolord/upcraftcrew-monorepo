@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { getErrorMessage } from "@/lib/convex-errors";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PlusIcon } from "lucide-react";
 import React from "react";
 import {
   DndContext,
@@ -33,6 +33,12 @@ import { CSS } from "@dnd-kit/utilities";
 
 export type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 
+interface TaskLabel {
+  _id: Id<"taskLabels">;
+  name: string;
+  color: string;
+}
+
 export interface Task {
   _id: Id<"tasks">;
   title: string;
@@ -49,6 +55,12 @@ export interface Task {
     name: string;
   } | null;
   dueDate?: number;
+  labels?: TaskLabel[];
+  subtaskStats?: {
+    total: number;
+    completed: number;
+  };
+  commentCount?: number;
 }
 
 export interface Column {
@@ -59,14 +71,17 @@ export interface Column {
 
 interface TaskKanbanBoardProps {
   columns: Column[];
+  onTaskClick?: (taskId: Id<"tasks">) => void;
+  onAddTask?: (status: TaskStatus) => void;
 }
 
 // Draggable Task Card Component
 interface DraggableTaskCardProps {
   task: Task;
+  onClick?: () => void;
 }
 
-function DraggableTaskCard({ task }: DraggableTaskCardProps) {
+function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task._id,
   });
@@ -77,90 +92,142 @@ function DraggableTaskCard({ task }: DraggableTaskCardProps) {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Handle click separately from drag
+  const handleClick = (e: React.MouseEvent) => {
+    // Only trigger click if it's not a drag
+    if (!isDragging && onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} onClick={handleClick}>
       <TaskCard task={task} />
     </div>
   );
 }
 
+// Column header colors based on status
+const columnStyles: Record<TaskStatus, { bg: string; text: string; badge: string }> = {
+  todo: {
+    bg: "bg-blue-500",
+    text: "text-white",
+    badge: "bg-blue-600/30 text-white",
+  },
+  "in-progress": {
+    bg: "bg-violet-500",
+    text: "text-white",
+    badge: "bg-violet-600/30 text-white",
+  },
+  review: {
+    bg: "bg-orange-500",
+    text: "text-white",
+    badge: "bg-orange-600/30 text-white",
+  },
+  done: {
+    bg: "bg-emerald-500",
+    text: "text-white",
+    badge: "bg-emerald-600/30 text-white",
+  },
+  blocked: {
+    bg: "bg-red-500",
+    text: "text-white",
+    badge: "bg-red-600/30 text-white",
+  },
+};
+
 // Droppable Column Component
 interface DroppableColumnProps {
   column: Column;
-  statusColors: Record<TaskStatus, string>;
-  statusBadgeVariants: Record<
-    TaskStatus,
-    "default" | "secondary" | "success" | "warning" | "destructive"
-  >;
+  onTaskClick?: (taskId: Id<"tasks">) => void;
+  onAddTask?: () => void;
 }
 
-function DroppableColumn({ column, statusColors, statusBadgeVariants }: DroppableColumnProps) {
+function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `column-${column.id}`,
   });
 
+  const style = columnStyles[column.id];
+
   return (
-    <Card
+    <div
       ref={setNodeRef}
       className={cn(
-        "flex flex-col min-w-[320px] max-w-[320px] rounded-lg border-t-4 p-0 transition-colors",
-        statusColors[column.id],
+        "flex flex-col min-w-[320px] max-w-[320px] rounded-2xl transition-all duration-200",
         isOver && "ring-2 ring-primary ring-offset-2",
       )}
     >
       {/* Column Header */}
-      <CardHeader className="border-b">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-sm">{column.title}</h3>
-          <Badge variant={statusBadgeVariants[column.id]} className="rounded-full">
+      <div
+        className={cn(
+          "flex items-center justify-between px-4 py-3 rounded-2xl",
+          style.bg,
+          style.text,
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "flex items-center justify-center size-6 text-xs font-bold rounded-full",
+              style.badge,
+            )}
+          >
             {column.tasks.length}
-          </Badge>
+          </span>
+          <h3 className="font-semibold text-sm">{column.title}</h3>
         </div>
-      </CardHeader>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="text-white/80 hover:text-white hover:bg-white/20"
+          onClick={onAddTask}
+        >
+          <PlusIcon className="size-4" />
+        </Button>
+      </div>
 
       {/* Column Content - Droppable area */}
-      <CardContent className="flex-1 p-4">
+      <div className="flex-1 pt-4 pb-2">
         <SortableContext
           items={column.tasks.map((t) => t._id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-3 min-h-[200px]">
             {column.tasks.length === 0 ? (
-              <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg text-muted-foreground">
-                <p className="text-xs">No tasks</p>
+              <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/20 rounded-xl text-muted-foreground mx-1">
+                <p className="text-xs">No tasks yet</p>
               </div>
             ) : (
-              column.tasks.map((task) => <DraggableTaskCard key={task._id} task={task} />)
+              column.tasks.map((task) => (
+                <DraggableTaskCard
+                  key={task._id}
+                  task={task}
+                  onClick={() => onTaskClick?.(task._id)}
+                />
+              ))
             )}
           </div>
         </SortableContext>
-      </CardContent>
-    </Card>
+
+        {/* Add Task Button at bottom */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full mt-3 text-muted-foreground hover:text-foreground justify-start"
+          onClick={onAddTask}
+        >
+          <PlusIcon className="size-4 mr-2" />
+          Add a task
+        </Button>
+      </div>
+    </div>
   );
 }
 
-export function TaskKanbanBoard({ columns }: TaskKanbanBoardProps) {
+export function TaskKanbanBoard({ columns, onTaskClick, onAddTask }: TaskKanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const updateTaskStatus = useMutation(api.tasks.updateTaskStatus);
-
-  const statusColors: Record<TaskStatus, string> = {
-    todo: "border-t-blue-500",
-    "in-progress": "border-t-cyan-500",
-    review: "border-t-purple-500",
-    done: "border-t-green-500",
-    blocked: "border-t-red-500",
-  };
-
-  const statusBadgeVariants: Record<
-    TaskStatus,
-    "default" | "secondary" | "success" | "warning" | "destructive"
-  > = {
-    todo: "default",
-    "in-progress": "secondary",
-    review: "warning",
-    done: "success",
-    blocked: "destructive",
-  };
 
   // DnD Kit sensors
   const sensors = useSensors(
@@ -208,7 +275,7 @@ export function TaskKanbanBoard({ columns }: TaskKanbanBoardProps) {
           id: activeTask._id,
           status: targetStatus,
         });
-        toast.success("Task atualizada!");
+        toast.success("Task updated!");
       } catch (error) {
         const message = getErrorMessage(error);
         toast.error(message);
@@ -226,20 +293,20 @@ export function TaskKanbanBoard({ columns }: TaskKanbanBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="flex gap-6 overflow-x-auto pb-4">
         {columns.map((column) => (
           <DroppableColumn
             key={column.id}
             column={column}
-            statusColors={statusColors}
-            statusBadgeVariants={statusBadgeVariants}
+            onTaskClick={onTaskClick}
+            onAddTask={() => onAddTask?.(column.id)}
           />
         ))}
       </div>
 
       <DragOverlay>
         {activeId && activeTask ? (
-          <div className="cursor-move">
+          <div className="cursor-move rotate-3 scale-105">
             <TaskCard task={activeTask} />
           </div>
         ) : null}
