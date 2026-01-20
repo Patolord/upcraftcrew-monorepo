@@ -19,9 +19,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface FinanceHeaderProps {
   onNewTransaction?: () => void;
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
 }
 
-export function FinanceHeader({ onNewTransaction }: FinanceHeaderProps) {
+export function FinanceHeader({
+  onNewTransaction,
+  searchQuery = "",
+  onSearchChange,
+}: FinanceHeaderProps) {
   const router = useRouter();
   const { user } = useUser();
 
@@ -59,9 +65,11 @@ export function FinanceHeader({ onNewTransaction }: FinanceHeaderProps) {
         <Input
           type="search"
           placeholder="Search..."
-          className="w-full h-11 pl-5 pr-12 rounded-full bg-white border-0 shadow-sm text-sm"
+          value={searchQuery}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          className="w-full h-11 pl-5 pr-12 rounded-full bg-white dark:bg-muted/50 border-0 shadow-sm text-sm"
         />
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground pointer-events-none" />
       </div>
 
       {/* Right side - User */}

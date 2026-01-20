@@ -1,12 +1,11 @@
 "use client";
 
-import { ChevronDownIcon, LogOutIcon, SearchIcon, UserIcon } from "lucide-react";
+import { ChevronDownIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import React from "react";
 
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,19 +32,9 @@ export function DashboardHeader() {
   const userName = user?.firstName || "User";
 
   return (
-    <header className="flex items-center justify-between py-6">
+    <header className="flex items-center justify-between py-2">
       {/* Title */}
       <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Dashboard</h1>
-
-      {/* Center - Search */}
-      <div className="relative flex-1 max-w-md mx-8">
-        <Input
-          type="search"
-          placeholder="Search..."
-          className="w-full h-11 pl-5 pr-12 rounded-full bg-white border-0 shadow-sm text-sm"
-        />
-        <SearchIcon className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-      </div>
 
       {/* Right side - User */}
       <DropdownMenu>

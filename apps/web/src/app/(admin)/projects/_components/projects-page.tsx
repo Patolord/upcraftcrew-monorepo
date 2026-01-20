@@ -6,11 +6,11 @@ import { ProjectHeader } from "./project-header";
 import { ProjectsStats } from "./projects-stats";
 import type { Project } from "@/types/project";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, Loader2 } from "lucide-react";
-import React from "react";
+import { PlusIcon, Loader2, FolderOpenIcon } from "lucide-react";
+import React, { useMemo, useState } from "react";
 import { NewProjectModal } from "./new-project-modal";
-import { useState } from "react";
 import { ProjectCard } from "./project-card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function ProjectsPage() {
   // Query paginada para exibir os projetos na lista
@@ -23,10 +23,27 @@ export function ProjectsPage() {
   // Query simples para calcular as estatísticas (precisa de todos os projetos)
   const allProjects = useQuery(api.projects.getProjects);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter projects based on search query
+  const filteredProjects = useMemo(() => {
+    if (!results) return [];
+    if (!searchQuery.trim()) return results as unknown as Project[];
+
+    const query = searchQuery.toLowerCase();
+    return (results as unknown as Project[]).filter((project) => {
+      return (
+        project.name?.toLowerCase().includes(query) ||
+        project.client?.toLowerCase().includes(query) ||
+        project.status?.toLowerCase().includes(query) ||
+        project.description?.toLowerCase().includes(query)
+      );
+    });
+  }, [results, searchQuery]);
 
   return (
     <div className="p-6 pl-12 pr-12 space-y-6">
-      <ProjectHeader />
+      <ProjectHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       <ProjectsStats projects={(allProjects || []) as unknown as Project[]} />
 
@@ -49,19 +66,28 @@ export function ProjectsPage() {
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
+      ) : filteredProjects.length === 0 ? (
+        <div className="text-center py-12">
+          <EmptyState
+            icon={FolderOpenIcon}
+            title="No projects found"
+            description={
+              searchQuery
+                ? "Try adjusting your search"
+                : "Create your first project by clicking the button above"
+            }
+          />
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(results || []).map((project) => (
-              <ProjectCard
-                key={(project as unknown as Project)._id}
-                project={project as unknown as Project}
-              />
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project._id} project={project} />
             ))}
           </div>
 
-          {/* Load More Button */}
-          {status === "CanLoadMore" && (
+          {/* Load More Button - only show when not filtering */}
+          {!searchQuery && status === "CanLoadMore" && (
             <div className="flex justify-center pt-4">
               <Button
                 onClick={() => loadMore(3)}
@@ -74,13 +100,13 @@ export function ProjectsPage() {
             </div>
           )}
 
-          {status === "LoadingMore" && (
+          {!searchQuery && status === "LoadingMore" && (
             <div className="flex justify-center pt-4">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           )}
 
-          {status === "Exhausted" && results && results.length > 3 && (
+          {!searchQuery && status === "Exhausted" && results && results.length > 3 && (
             <div className="flex justify-center pt-4">
               <p className="text-sm text-muted-foreground">Todos os projetos foram carregados</p>
             </div>

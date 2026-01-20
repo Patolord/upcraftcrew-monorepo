@@ -74,12 +74,7 @@ export function KanbanCard({ project }: KanbanCardProps) {
                   className="avatar border-2 border-base-100"
                 >
                   <div className="w-6">
-                    <Image
-                      src={member.imageUrl || "/default-avatar.png"}
-                      alt={member.name}
-                      width={24}
-                      height={24}
-                    />
+                    <Image src={member.imageUrl || ""} alt={member.name} width={24} height={24} />
                   </div>
                 </div>
               ))}

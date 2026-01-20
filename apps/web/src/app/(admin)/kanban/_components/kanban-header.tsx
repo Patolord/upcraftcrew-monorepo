@@ -16,7 +16,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function KanbanHeader() {
+interface KanbanHeaderProps {
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+}
+
+export function KanbanHeader({ searchQuery = "", onSearchChange }: KanbanHeaderProps) {
   const router = useRouter();
   const { user } = useUser();
 
@@ -42,9 +47,11 @@ export function KanbanHeader() {
         <Input
           type="search"
           placeholder="Search..."
-          className="w-full h-11 pl-5 pr-12 rounded-full bg-white border-0 shadow-sm text-sm"
+          value={searchQuery}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          className="w-full h-11 pl-5 pr-12 rounded-full bg-white dark:bg-muted/50 border-0 shadow-sm text-sm"
         />
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+        <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground pointer-events-none" />
       </div>
 
       {/* Right side - User */}

@@ -377,7 +377,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                     >
                       <Checkbox checked={isSelected} />
                       <Image
-                        src={member.imageUrl || "/default-avatar.png"}
+                        src={member.imageUrl || ""}
                         alt={`${member.firstName} ${member.lastName}`}
                         width={24}
                         height={24}

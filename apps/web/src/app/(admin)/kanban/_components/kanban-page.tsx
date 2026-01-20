@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { type Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
@@ -26,6 +26,7 @@ interface KanbanPageProps {
 export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageProps) {
   const tasksWithDetails = usePreloadedQuery(preloadedTasks) as TaskWithDetails[];
   const teamMembers = usePreloadedQuery(preloadedTeamMembers);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Transform tasks to match the expected interface
   const tasks = useMemo<Task[]>(() => {
@@ -55,6 +56,23 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
     });
   }, [tasksWithDetails]);
 
+  // Filter tasks based on search query
+  const filteredTasks = useMemo(() => {
+    if (!searchQuery.trim()) return tasks;
+
+    const query = searchQuery.toLowerCase();
+    return tasks.filter((task) => {
+      return (
+        task.title?.toLowerCase().includes(query) ||
+        task.description?.toLowerCase().includes(query) ||
+        task.project?.name?.toLowerCase().includes(query) ||
+        task.assignedUser?.name?.toLowerCase().includes(query) ||
+        task.priority?.toLowerCase().includes(query) ||
+        task.status?.toLowerCase().includes(query)
+      );
+    });
+  }, [tasks, searchQuery]);
+
   // Group tasks by status
   const columns = useMemo<Column[]>(() => {
     const statuses: { id: TaskStatus; title: string }[] = [
@@ -68,14 +86,14 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       (status): Column => ({
         id: status.id,
         title: status.title,
-        tasks: tasks.filter((task) => task.status === status.id),
+        tasks: filteredTasks.filter((task) => task.status === status.id),
       }),
     );
-  }, [tasks]);
+  }, [filteredTasks]);
 
   return (
     <div className="p-6 space-y-6">
-      <KanbanHeader />
+      <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       {/* Team Members Section */}
       <div className="flex items-center justify-between">

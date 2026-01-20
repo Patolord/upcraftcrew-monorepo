@@ -73,7 +73,7 @@ export function TeamMemberCard({ member, onSelect }: TeamMemberCardProps) {
           <div className="flex items-center gap-3">
             <div className="relative">
               <Avatar className="w-12 h-12">
-                <AvatarImage src={member.imageUrl || "/default-avatar.png"} alt={fullName} />
+                <AvatarImage src={member.imageUrl} alt={fullName} />
                 <AvatarFallback className="text-sm font-medium">{initials}</AvatarFallback>
               </Avatar>
               <div

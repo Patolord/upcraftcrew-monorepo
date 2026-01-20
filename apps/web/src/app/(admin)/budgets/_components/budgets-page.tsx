@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
@@ -79,10 +79,26 @@ export function BudgetsPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [deleteDialog, setDeleteDialog] = useState<{
     budgetId: Id<"budgets"> | null;
     title: string;
   }>({ budgetId: null, title: "" });
+
+  // Filter budgets based on search query
+  const filteredBudgets = useMemo(() => {
+    if (!searchQuery.trim()) return budgets;
+
+    const query = searchQuery.toLowerCase();
+    return budgets.filter((budget) => {
+      return (
+        budget.title?.toLowerCase().includes(query) ||
+        budget.client?.toLowerCase().includes(query) ||
+        budget.status?.toLowerCase().includes(query) ||
+        budget.description?.toLowerCase().includes(query)
+      );
+    });
+  }, [budgets, searchQuery]);
 
   // Sync query string with modal state
   useEffect(() => {
@@ -112,7 +128,7 @@ export function BudgetsPage() {
 
   return (
     <div className="p-6 pl-12 pr-12 space-y-6">
-      <BudgetHeader />
+      <BudgetHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       <BudgetDashboard
         stats={
@@ -148,24 +164,26 @@ export function BudgetsPage() {
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
-      ) : budgets.length === 0 ? (
+      ) : filteredBudgets.length === 0 ? (
         <div className="text-center py-12">
           <FileTextIcon className="h-16 w-16 text-muted-foreground/20 mb-4 mx-auto" />
           <h3 className="text-lg font-medium mb-2">Nenhum orçamento encontrado</h3>
           <p className="text-muted-foreground text-sm">
-            Crie seu primeiro orçamento clicando no botão acima
+            {searchQuery
+              ? "Tente ajustar sua busca"
+              : "Crie seu primeiro orçamento clicando no botão acima"}
           </p>
         </div>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {budgets.map((budget) => (
+            {filteredBudgets.map((budget) => (
               <BudgetCard key={budget._id} budget={budget} />
             ))}
           </div>
 
-          {/* Load More Button */}
-          {status === "CanLoadMore" && (
+          {/* Load More Button - only show when not filtering */}
+          {!searchQuery && status === "CanLoadMore" && (
             <div className="flex justify-center pt-4">
               <Button
                 onClick={() => loadMore(3)}
@@ -178,13 +196,13 @@ export function BudgetsPage() {
             </div>
           )}
 
-          {status === "LoadingMore" && (
+          {!searchQuery && status === "LoadingMore" && (
             <div className="flex justify-center pt-4">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           )}
 
-          {status === "Exhausted" && budgets.length > 3 && (
+          {!searchQuery && status === "Exhausted" && budgets.length > 3 && (
             <div className="flex justify-center pt-4">
               <p className="text-sm text-muted-foreground">Todos os orçamentos foram carregados</p>
             </div>

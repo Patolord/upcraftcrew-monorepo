@@ -78,10 +78,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <span className="text-xs text-muted-foreground">Manager:</span>
             <div className="flex items-center gap-2">
               <Avatar className="w-6 h-6">
-                <AvatarImage
-                  src={project.manager.imageUrl || "/default-avatar.png"}
-                  alt={project.manager.name}
-                />
+                <AvatarImage src={project.manager.imageUrl} alt={project.manager.name} />
                 <AvatarFallback className="text-xs">
                   {project.manager.name.charAt(0).toUpperCase()}
                 </AvatarFallback>
@@ -129,12 +126,12 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div className="flex -space-x-3">
-                {project.team.slice(0, 4).map((member) => (
+                {project.team.slice(0, 4).map((member, index) => (
                   <Avatar
-                    key={member.imageUrl || member.name}
+                    key={member.imageUrl || member.name || index}
                     className="w-8 h-8 border-2 border-white ring-1 ring-gray-200"
                   >
-                    <AvatarImage src={member.imageUrl || "/default-avatar.png"} alt={member.name} />
+                    <AvatarImage src={member.imageUrl} alt={member.name} />
                     <AvatarFallback className="text-xs">
                       {member.name?.charAt(0).toUpperCase() || "?"}
                     </AvatarFallback>

@@ -90,7 +90,7 @@ export function CalendarContainer() {
             (attendee: { _id: string; name: string; imageUrl?: string }) => ({
               id: attendee._id,
               name: attendee.name,
-              imageUrl: attendee.imageUrl || "/default-avatar.png",
+              imageUrl: attendee.imageUrl,
             }),
           ),
         };
@@ -103,13 +103,13 @@ export function CalendarContainer() {
             ? {
                 id: item.responsible._id,
                 name: item.responsible.name,
-                imageUrl: item.responsible.imageUrl || "/default-avatar.png",
+                imageUrl: item.responsible.imageUrl,
               }
             : undefined,
           team: item.team?.map((member: { _id: string; name: string; imageUrl?: string }) => ({
             id: member._id,
             name: member.name,
-            imageUrl: member.imageUrl || "/default-avatar.png",
+            imageUrl: member.imageUrl,
           })),
           projectStatus: item.projectStatus,
           projectProgress: item.projectProgress,
@@ -142,7 +142,7 @@ export function CalendarContainer() {
             ? {
                 id: item.responsible._id,
                 name: item.responsible.name,
-                imageUrl: item.responsible.imageUrl || "/default-avatar.png",
+                imageUrl: item.responsible.imageUrl,
               }
             : undefined,
           taskStatus: item.taskStatus,
