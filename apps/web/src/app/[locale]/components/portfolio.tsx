@@ -227,7 +227,7 @@ export const Portfolio = () => {
               variant="ghost"
               size="icon"
               onClick={handlePrevious}
-              className="size-9 border border-border"
+              className="size-9"
               aria-label={portfolio.controls.previous}
             >
               <ArrowLeftIcon className="size-4" />
@@ -236,7 +236,7 @@ export const Portfolio = () => {
               variant="ghost"
               size="icon"
               onClick={handleNext}
-              className="size-9 border border-border"
+              className="size-9"
               aria-label={portfolio.controls.next}
             >
               <ArrowRightIcon className="size-4" />
@@ -266,13 +266,13 @@ export const Portfolio = () => {
                 style={{ flex: `0 0 ${slideWidth}%` }}
               >
                 <div className="group/card bg-card border border-border flex h-full grow flex-col rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-xl">
-                  <div className="relative overflow-hidden rounded-t-3xl">
+                  <div className="relative overflow-hidden rounded-t-3xl h-48">
                     <Image
                       src={project.image}
                       alt={project.alt}
-                      className="size-full object-cover transition-transform duration-700 ease-out hover:scale-110"
-                      width={200}
-                      height={100}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-110"
+                      width={400}
+                      height={192}
                     />
                     <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4">
                       <Badge
@@ -346,11 +346,11 @@ export const Portfolio = () => {
               const isActive = index === activeDotIndex;
               return (
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="icon"
                   onClick={() => handleDotSelect(index)}
                   key={`${project.name}-${project.year}-dot-${index}`}
-                  className="transition-all size-4"
+                  className="transition-all size-4 border-0"
                   aria-label={`${project.name} - ${index + 1}`}
                 >
                   <span

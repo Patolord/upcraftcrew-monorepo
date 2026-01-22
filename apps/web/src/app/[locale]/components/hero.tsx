@@ -31,7 +31,7 @@ export const Hero = () => {
   return (
     <>
       <div className="relative z-2 overflow-hidden lg:h-screen" id={SECTION_IDS.hero}>
-        <div className="container flex items-center justify-center pt-20 md:pt-28 xl:pt-36 2xl:pt-48">
+        <div className="container flex items-center justify-center pt-14 md:pt-16 xl:pt-24 2xl:pt-32">
           <div className="w-100 text-center md:w-120 xl:w-160 2xl:w-200">
             <div className="flex justify-center">
               <div className="inline-flex items-center rounded-full border border-orange-500/20 bg-orange-500/5 py-0.5 ps-2.5 pe-1 text-sm">
@@ -223,7 +223,7 @@ export const Hero = () => {
         <div className="absolute end-0 -top-20 -z-1 size-100 rounded-full bg-teal-300/5 blur-[150px] max-lg:hidden dark:bg-teal-200/5"></div>
       </div>
 
-      <div className="from-primary to-secondary mb-8 h-1 w-full bg-linear-to-r max-xl:mt-6 md:mb-12 xl:mb-16 2xl:mb-28"></div>
+      <div className="from-orange-300 to-orange-600 mb-8 h-1 w-full bg-linear-to-r max-xl:mt-6 md:mb-8 xl:mb-16 2xl:mb-28"></div>
     </>
   );
 };

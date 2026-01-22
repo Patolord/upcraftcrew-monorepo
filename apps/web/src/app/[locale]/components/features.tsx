@@ -20,7 +20,7 @@ export const Features = () => {
       className="group/section container scroll-mt-12 py-8 md:py-12 lg:py-16 2xl:py-28"
       id={SECTION_IDS.features}
     >
-      <div className="flex items-center justify-center gap-1.5">
+      <div className="flex items-center pl-10 justify-center gap-1.5">
         <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
         <p className="text-muted-foreground group-hover/section:text-primary font-mono text-sm font-medium transition-all">
           {features.eyebrow}
