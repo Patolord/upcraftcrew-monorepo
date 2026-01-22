@@ -18,7 +18,7 @@ interface PricingCardProps {
 
 const PricingCard = ({ title, price, includes, tagline, cta, customCta }: PricingCardProps) => {
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex flex-col border-t rounded-2xl border border-border p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-2xl font-bold">{title}</h3>
       </div>
@@ -43,16 +43,17 @@ const PricingCard = ({ title, price, includes, tagline, cta, customCta }: Pricin
 
       <p className="text-muted-foreground mt-auto pt-6 text-center text-sm italic">{tagline}</p>
 
-      <Button className="mt-4 gap-2.5 rounded-full">
-        <a
-          href="https://api.whatsapp.com/send/?phone=11914246379&text&type=phone_number&app_absent=0"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <ArrowRightIcon className="size-4" />
-          {customCta || cta}
-        </a>
-      </Button>
+      <a
+        href="https://api.whatsapp.com/send/?phone=11914246379&text&type=phone_number&app_absent=0"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full"
+      >
+        <Button className="w-full group/btn mt-4 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-all">
+          <span>{customCta || cta}</span>
+          <ArrowRightIcon className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
+        </Button>
+      </a>
     </div>
   );
 };
@@ -74,7 +75,7 @@ export const Pricing = () => {
 
   return (
     <div
-      className="group/section container py-8 md:py-12 lg:py-16 2xl:py-28"
+      className="group/section container bg-muted/25 py-8 md:py-12 lg:py-16 2xl:py-28"
       id={SECTION_IDS.pricing}
     >
       <div className="flex items-center justify-center gap-1.5">
@@ -87,9 +88,13 @@ export const Pricing = () => {
       <p className="mt-2 text-center text-2xl font-semibold sm:text-3xl">{pricing.title}</p>
 
       {/* Tabs */}
-      <div className="mt-8 flex justify-center">
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabKey)}>
-          <TabsList className="inline-flex flex-wrap gap-1.5 rounded-full bg-muted p-1.5 h-auto">
+      <div className="flex justify-center items-center mt-8">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as TabKey)}
+          className="w-fit"
+        >
+          <TabsList className="flex flex-wrap justify-center gap-1.5 rounded-full p-1.5 h-auto">
             {tabKeys.map((tabKey) => (
               <TabsTrigger
                 key={tabKey}

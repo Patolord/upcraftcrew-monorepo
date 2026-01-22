@@ -4,31 +4,46 @@ import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRightIcon, SettingsIcon, SparklesIcon, ZapIcon, UserCogIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  SettingsIcon,
+  SparklesIcon,
+  ZapIcon,
+  UserCogIcon,
+  UsersIcon,
+  LayoutIcon,
+  CalendarIcon,
+  FileTextIcon,
+  CheckCircleIcon,
+  CloudUploadIcon,
+  ShieldCheckIcon,
+  RocketIcon,
+  MonitorIcon,
+  RefreshCwIcon,
+  ShieldIcon,
+  HelpCircleIcon,
+  TrendingUpIcon,
+  CodeIcon,
+} from "lucide-react";
 
 export const Process = () => {
   const { messages } = useLandingI18n();
   const { process } = messages;
   const [discovery, development, testing, support] = process.steps;
 
-  const discoveryIcons = ["UsersIcon", "LayoutIcon", "CalendarIcon", "FileTextIcon"] as const;
-  const testingIcons = [
-    "CheckCircleIcon",
-    "CloudUploadIcon",
-    "ShieldCheckIcon",
-    "RocketIcon",
-  ] as const;
+  const discoveryIcons = [UsersIcon, LayoutIcon, CalendarIcon, FileTextIcon];
+  const testingIcons = [CheckCircleIcon, CloudUploadIcon, ShieldCheckIcon, RocketIcon];
   const supportIcons = [
-    "MonitorIcon",
-    "RefreshCwIcon",
-    "ShieldIcon",
-    "HelpCircleIcon",
-    "TrendingUpIcon",
-    "CodeIcon",
-  ] as const;
+    MonitorIcon,
+    RefreshCwIcon,
+    ShieldIcon,
+    HelpCircleIcon,
+    TrendingUpIcon,
+    CodeIcon,
+  ];
 
   return (
-    <div className="group container py-8 md:py-12 lg:py-12 2xl:py-2" id={SECTION_IDS.process}>
+    <div className="group container pb-20 py-8 md:py-12 lg:py-12 2xl:py-2" id={SECTION_IDS.process}>
       <div className="flex items-center justify-center gap-1.5">
         <div className="bg-orange-500 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
         <p className="text-muted-foreground group-hover:text-primary font-mono text-sm font-medium transition-all">
@@ -41,25 +56,28 @@ export const Process = () => {
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-12 lg:mt-16 xl:grid-cols-4 2xl:mt-16">
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
-            <div className="bg-muted/60 border-orange-500 rounded-full border p-3">
+            <div className=" border-orange-500 rounded-full border p-3">
               <ZapIcon className="size-6" />
             </div>
           </div>
-          <div className="rounded-lg bg-muted/60 border-border mt-4 flex-1 border p-5">
+          <div className="rounded-lg border-border mt-4 flex-1 border p-5">
             <p className="text-center text-lg font-medium">{discovery.title}</p>
             <p className="text-muted-foreground mt-1 text-center text-sm italic">
               {discovery.subtitle}
             </p>
             <div className="mt-6 space-y-1.5 space-x-1.5">
-              {discovery.items?.map((item, index) => (
-                <div
-                  key={item}
-                  className="bg-background rounded-lg border-border inline-flex items-center gap-2 border px-3 py-1.5"
-                >
-                  <span className={`iconify ${discoveryIcons[index]} size-4`}></span>
-                  {item}
-                </div>
-              ))}
+              {discovery.items?.map((item, index) => {
+                const Icon = discoveryIcons[index];
+                return (
+                  <div
+                    key={item}
+                    className="bg-background rounded-lg border-border inline-flex items-center gap-2 border px-3 py-1.5"
+                  >
+                    {Icon && <Icon className="size-4" />}
+                    {item}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="mt-3 flex items-center justify-center gap-2">
@@ -99,16 +117,16 @@ export const Process = () => {
             </div>
           </div>
           <div className="mt-3 flex items-center justify-center gap-2">
-            <p className="text-primary text-center text-xs font-semibold uppercase tracking-wider">
+            <p className="text-orange-500 text-center text-xs font-semibold uppercase tracking-wider">
               {development.stepLabel}
             </p>
-            <ArrowRightIcon className="size-5 text-primary hidden xl:block" />
+            <ArrowRightIcon className="size-5 text-orange-500 hidden xl:block" />
           </div>
         </div>
 
         <div className="flex flex-col">
           <div className="flex items-center justify-center">
-            <div className="from-orange-500 to-orange-600 rounded-full border border-transparent bg-linear-to-br p-0.5">
+            <div className="from-orange-500 to-orange-600 rounded-full border border-orange-500 bg-linear-to-br">
               <div className="bg-background rounded-full p-2.5">
                 <SparklesIcon className="size-6" />
               </div>
@@ -121,15 +139,18 @@ export const Process = () => {
                 {testing.subtitle}
               </p>
               <div className="mt-5 space-y-2 space-x-2">
-                {testing.items?.map((item, index) => (
-                  <div
-                    key={item}
-                    className="border-border rounded-lg inline-flex items-center gap-2 border px-2.5 py-1"
-                  >
-                    <span className={`iconify ${testingIcons[index]} size-4`}></span>
-                    {item}
-                  </div>
-                ))}
+                {testing.items?.map((item, index) => {
+                  const Icon = testingIcons[index];
+                  return (
+                    <div
+                      key={item}
+                      className="border-border rounded-lg inline-flex items-center gap-2 border px-2.5 py-1"
+                    >
+                      {Icon && <Icon className="size-4" />}
+                      {item}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -154,19 +175,20 @@ export const Process = () => {
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2.5">
-              {support.items?.map((item, index) => (
-                <Button
-                  key={item}
-                  size="sm"
-                  variant={index < supportIcons.length ? "secondary" : "ghost"}
-                  className="gap-2"
-                >
-                  {index < supportIcons.length ? (
-                    <span className={`iconify ${supportIcons[index]} size-4`}></span>
-                  ) : null}
-                  {item}
-                </Button>
-              ))}
+              {support.items?.map((item, index) => {
+                const Icon = supportIcons[index];
+                return (
+                  <Button
+                    key={item}
+                    size="sm"
+                    variant={index < supportIcons.length ? "secondary" : "ghost"}
+                    className="gap-2 rounded-md bg-orange-500/5"
+                  >
+                    {Icon && <Icon className="size-4" />}
+                    {item}
+                  </Button>
+                );
+              })}
             </div>
           </div>
           <p className="text-orange-500 mt-3 text-center text-xs font-semibold uppercase tracking-wider">

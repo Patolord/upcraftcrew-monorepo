@@ -6,7 +6,14 @@ import { SECTION_IDS } from "../constants";
 import { useLandingI18n } from "../providers/landing-i18n-provider";
 import { useQueryState, parseAsString } from "nuqs";
 import Link from "next/link";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  SparklesIcon,
+  RocketIcon,
+  WorkflowIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,7 +27,7 @@ const accentBadgeClasses = [
   "bg-accent/10 text-accent",
 ];
 
-const accentIconClasses = ["SparklesIcon", "RocketIcon", "WorkflowIcon"];
+const accentIconClasses = [SparklesIcon, RocketIcon, WorkflowIcon];
 
 export const Portfolio = () => {
   const { messages, locale } = useLandingI18n();
@@ -203,7 +210,7 @@ export const Portfolio = () => {
           onValueChange={(value) => setSelectedIndustry(value)}
           className="w-fit"
         >
-          <TabsList className="flex flex-wrap justify-center gap-1.5 rounded-full bg-muted p-1.5 h-auto">
+          <TabsList className="flex flex-wrap justify-center gap-1.5 rounded-full p-1.5 h-auto">
             {industries.map((industry) => (
               <TabsTrigger
                 key={industry}
@@ -291,7 +298,10 @@ export const Portfolio = () => {
                       <div
                         className={`inline-flex size-11 items-center justify-center rounded-2xl ${accentBadgeClasses[accentIndex]}`}
                       >
-                        <span className={`${accentIconClasses[accentIndex]} size-5`}></span>
+                        {(() => {
+                          const Icon = accentIconClasses[accentIndex];
+                          return Icon ? <Icon className="size-5" /> : null;
+                        })()}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold">{project.name}</h3>

@@ -21,17 +21,17 @@ export const Features = () => {
       id={SECTION_IDS.features}
     >
       <div className="flex items-center pl-10 justify-center gap-1.5">
-        <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
+        <div className="bg-orange-500 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
         <p className="text-muted-foreground group-hover/section:text-primary font-mono text-sm font-medium transition-all">
           {features.eyebrow}
         </p>
-        <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
+        <div className="bg-orange-500 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
       </div>
       <p className="mt-2 text-center text-2xl font-semibold sm:text-3xl">{features.title}</p>
       <div className="mt-8 grid gap-6 md:mt-12 md:grid-cols-2 lg:mt-16 xl:grid-cols-3 2xl:mt-16">
         <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-muted inline-flex rounded-full p-2.5">
+            <div className="bg-orange-500/5 text-orange-500 inline-flex rounded-full p-2.5">
               <WorkflowIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{customApps.title}</p>
@@ -62,7 +62,7 @@ export const Features = () => {
         </div>
         <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-muted inline-flex rounded-full p-2.5">
+            <div className="bg-orange-500/5 text-orange-500 inline-flex rounded-full p-2.5">
               <PlayCircleIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{saas.title}</p>
@@ -85,7 +85,7 @@ export const Features = () => {
         </div>
         <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-muted inline-flex rounded-full p-2.5">
+            <div className="bg-orange-500/5 text-orange-500 inline-flex rounded-full p-2.5">
               <RadioIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{ecommerce.title}</p>
@@ -106,7 +106,7 @@ export const Features = () => {
         </div>
         <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-muted inline-flex rounded-full p-2.5">
+            <div className="bg-orange-500/5 text-orange-500 inline-flex rounded-full p-2.5">
               <UserRoundCogIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{api.title}</p>
@@ -127,7 +127,7 @@ export const Features = () => {
         </div>
         <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-muted inline-flex rounded-full p-2.5">
+            <div className="bg-orange-500/5 text-orange-500 inline-flex rounded-full p-2.5">
               <GitBranchIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{cloud.title}</p>
@@ -157,7 +157,7 @@ export const Features = () => {
             <p className="text-lg font-medium">{support.title}</p>
             <p className="text-sm opacity-80">{support.description}</p>
             <div className="mt-9 flex items-center justify-between">
-              <p className="text-sm opacity-40 transition-all group-hover:opacity-80">
+              <p className="text-sm text-orange-500 transition-all group-hover:opacity-80">
                 {support.cta}
               </p>
             </div>
