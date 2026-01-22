@@ -22,21 +22,21 @@ export const Features = () => {
     >
       <div className="flex items-center justify-center gap-1.5">
         <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
-        <p className="text-base-content/60 group-hover/section:text-primary font-mono text-sm font-medium transition-all">
+        <p className="text-muted-foreground group-hover/section:text-primary font-mono text-sm font-medium transition-all">
           {features.eyebrow}
         </p>
         <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
       </div>
       <p className="mt-2 text-center text-2xl font-semibold sm:text-3xl">{features.title}</p>
       <div className="mt-8 grid gap-6 md:mt-12 md:grid-cols-2 lg:mt-16 xl:grid-cols-3 2xl:mt-16">
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-base-200 inline-flex rounded-full p-2.5">
+            <div className="bg-muted inline-flex rounded-full p-2.5">
               <WorkflowIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{customApps.title}</p>
-            <p className="text-base-content/80 mt-0.5 text-sm">{customApps.description}</p>
-            <div className="*:fill-base-content/5 absolute -end-6 top-4.5 flex rotate-45 items-center justify-center space-x-1.5 transition-all *:transition-all group-hover:-end-5 group-hover:top-3.5 group-hover:-space-x-3.5 group-hover:*:fill-orange-400">
+            <p className="text-muted-foreground mt-0.5 text-sm">{customApps.description}</p>
+            <div className="*:fill-foreground/5 absolute -end-6 top-4.5 flex rotate-45 items-center justify-center space-x-1.5 transition-all *:transition-all group-hover:-end-5 group-hover:top-3.5 group-hover:-space-x-3.5 group-hover:*:fill-orange-400">
               <svg
                 className="h-9 group-hover:h-11"
                 viewBox="0 0 198 122"
@@ -53,24 +53,24 @@ export const Features = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <g>
-                  <rect width="164" height="122" className="fill-base-100" />
+                  <rect width="164" height="122" className="fill-card" />
                   <path d="M-24.9984 83.628C-24.9981 83.1024 -25.1014 82.5818 -25.3024 82.0961C-25.5035 81.6104 -25.7983 81.1691 -26.17 80.7974C-26.5417 80.4257 -26.983 80.1309 -27.4687 79.9298C-27.9544 79.7288 -28.475 79.6255 -29.0006 79.6258H-58.9396L-58.9395 42.3754H-29.0006C-27.9392 42.3754 -26.9212 41.9537 -26.1706 41.2032C-25.4201 40.4526 -24.9984 39.4346 -24.9984 38.3732C-24.9984 37.3117 -25.4201 36.2937 -26.1706 35.5432C-26.9212 34.7926 -27.9392 34.3709 -29.0006 34.3709H-58.9395L-58.9396 4.43203C-58.9396 3.37058 -59.3612 2.35259 -60.1118 1.60203C-60.8623 0.851466 -61.8803 0.42981 -62.9418 0.42981C-64.0032 0.42981 -65.0212 0.851472 -65.7718 1.60203C-66.5223 2.3526 -66.944 3.37058 -66.944 4.43204V17.4004L-103.912 17.4004C-107.589 17.4002 -111.23 18.1243 -114.627 19.5315C-118.025 20.9386 -121.112 23.0012 -123.712 25.6014C-126.312 28.2016 -128.375 31.2885 -129.782 34.6859C-131.189 38.0833 -131.913 41.7246 -131.913 45.4018L-131.913 56.9984L-216.079 56.9984C-217.14 56.9984 -218.158 57.4201 -218.909 58.1706C-219.659 58.9212 -220.081 59.9392 -220.081 61.0006C-220.081 62.0621 -219.659 63.0801 -218.909 63.8306C-218.158 64.5812 -217.14 65.0028 -216.079 65.0028L-131.913 65.0028L-131.913 76.5994C-131.913 80.2766 -131.189 83.9179 -129.782 87.3153C-128.375 90.7126 -126.312 93.7996 -123.712 96.3998C-121.112 99 -118.025 101.063 -114.627 102.47C-111.23 103.877 -107.589 104.601 -103.912 104.601L-66.944 104.601L-66.944 117.569C-66.944 118.631 -66.5223 119.649 -65.7718 120.399C-65.0212 121.15 -64.0032 121.571 -62.9418 121.571C-61.8803 121.571 -60.8623 121.15 -60.1118 120.399C-59.3612 119.649 -58.9395 118.631 -58.9395 117.569L-58.9396 87.6302H-29.0006C-28.475 87.6305 -27.9544 87.5272 -27.4687 87.3262C-26.983 87.1252 -26.5417 86.8304 -26.17 86.4587C-25.7983 86.087 -25.5035 85.6457 -25.3025 85.16C-25.1014 84.6743 -24.9981 84.1537 -24.9984 83.628ZM-103.933 96.6176C-109.236 96.6168 -114.322 94.5097 -118.072 90.7597C-121.822 87.0097 -123.929 81.9239 -123.93 76.6206L-123.909 45.4018C-123.908 40.0985 -121.801 35.0127 -118.051 31.2627C-114.301 27.5127 -109.215 25.4056 -103.912 25.4048L-66.944 25.4048L-66.944 96.5964L-103.933 96.6176ZM162.08 61.0006C162.08 60.475 161.977 59.9544 161.776 59.4687C161.575 58.983 161.28 58.5417 160.908 58.17C160.537 57.7983 160.095 57.5035 159.61 57.3025C159.124 57.1014 158.603 56.9981 158.078 56.9984L73.9117 56.9984L73.9117 45.4018C73.9119 41.7246 73.1877 38.0833 71.7806 34.6859C70.3735 31.2885 68.3109 28.2016 65.7107 25.6014C63.1105 23.0012 60.0235 20.9386 56.6262 19.5315C53.2288 18.1243 49.5875 17.4002 45.9103 17.4004L8.9427 17.4004V4.43204C8.9427 3.37058 8.52104 2.3526 7.77047 1.60204C7.01991 0.851477 6.00193 0.42981 4.94048 0.42981C3.87902 0.42981 2.86103 0.851477 2.11047 1.60204C1.35991 2.3526 0.938245 3.37059 0.938245 4.43204L0.938251 117.569C0.938251 118.631 1.35991 119.649 2.11048 120.399C2.86104 121.15 3.87902 121.571 4.94048 121.571C6.00193 121.571 7.01992 121.15 7.77048 120.399C8.52104 119.649 8.9427 118.631 8.9427 117.569L8.94273 104.601L45.9103 104.601C49.5875 104.601 53.2288 103.877 56.6262 102.47C60.0235 101.063 63.1105 99 65.7107 96.3998C68.3109 93.7996 70.3734 90.7126 71.7806 87.3153C73.1877 83.9179 73.9119 80.2766 73.9117 76.5994L73.9117 65.0028L158.078 65.0028C158.603 65.0031 159.124 64.8998 159.61 64.6988C160.095 64.4978 160.537 64.203 160.908 63.8313C161.28 63.4596 161.575 63.0183 161.776 62.5326C161.977 62.0469 162.08 61.5263 162.08 61.0006ZM60.0524 90.7415C58.1996 92.6044 55.9956 94.0811 53.568 95.0861C51.1405 96.0911 48.5376 96.6044 45.9103 96.5963L8.94273 96.5964L8.9427 25.4048L45.9103 25.4048C51.2135 25.4056 56.2994 27.5127 60.0494 31.2627C63.7994 35.0127 65.9064 40.0985 65.9072 45.4018L65.9072 76.5994C65.9159 79.2268 65.4028 81.8298 64.3977 84.2575C63.3927 86.6851 61.9157 88.889 60.0524 90.7415Z" />
                 </g>
               </svg>
             </div>
           </div>
         </div>
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-base-200 inline-flex rounded-full p-2.5">
+            <div className="bg-muted inline-flex rounded-full p-2.5">
               <PlayCircleIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{saas.title}</p>
-            <p className="text-base-content/80 mt-0.5 text-sm">{saas.description}</p>
+            <p className="text-muted-foreground mt-0.5 text-sm">{saas.description}</p>
             <div className="absolute end-1 top-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="text-base-content/10 h-14 transition-all duration-300 *:stroke-[1px] group-hover:h-16 group-hover:text-orange-400 group-hover:*:stroke-[1px]"
+                className="text-foreground/10 h-14 transition-all duration-300 *:stroke-[1px] group-hover:h-16 group-hover:text-orange-400 group-hover:*:stroke-[1px]"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -83,16 +83,16 @@ export const Features = () => {
             </div>
           </div>
         </div>
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-base-200 inline-flex rounded-full p-2.5">
+            <div className="bg-muted inline-flex rounded-full p-2.5">
               <RadioIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{ecommerce.title}</p>
-            <p className="text-base-content/80 mt-0.5 text-sm">{ecommerce.description}</p>
+            <p className="text-muted-foreground mt-0.5 text-sm">{ecommerce.description}</p>
             <div className="absolute end-3.5 top-3.5">
               <svg
-                className="group-hover:animate-vibrate text-base-content/5 h-10 stroke-[1.5px] transition-all group-hover:h-11 group-hover:text-orange-400"
+                className="group-hover:animate-vibrate text-foreground/5 h-10 stroke-[1.5px] transition-all group-hover:h-11 group-hover:text-orange-400"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -104,17 +104,17 @@ export const Features = () => {
             </div>
           </div>
         </div>
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-base-200 inline-flex rounded-full p-2.5">
+            <div className="bg-muted inline-flex rounded-full p-2.5">
               <UserRoundCogIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{api.title}</p>
-            <p className="text-base-content/80 mt-0.5 text-sm">{api.description}</p>
+            <p className="text-muted-foreground mt-0.5 text-sm">{api.description}</p>
             <div className="absolute end-3.5 top-3.5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="group-hover:animate-wave text-base-content/5 h-10 stroke-[1.5px] transition-all group-hover:h-11 group-hover:text-orange-400"
+                className="group-hover:animate-wave text-foreground/5 h-10 stroke-[1.5px] transition-all group-hover:h-11 group-hover:text-orange-400"
                 viewBox="0 0 24 24"
               >
                 <g fill="none" stroke="currentColor">
@@ -125,17 +125,17 @@ export const Features = () => {
             </div>
           </div>
         </div>
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow transition-all hover:shadow-lg">
           <div className="p-5">
-            <div className="bg-base-200 inline-flex rounded-full p-2.5">
+            <div className="bg-muted inline-flex rounded-full p-2.5">
               <GitBranchIcon className="size-6" />
             </div>
             <p className="mt-3 text-lg font-medium">{cloud.title}</p>
-            <p className="text-base-content/80 mt-0.5 text-sm">{cloud.description}</p>
+            <p className="text-muted-foreground mt-0.5 text-sm">{cloud.description}</p>
             <div className="absolute end-3.5 top-3.5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="text-base-content/5 h-10 transition-all group-hover:h-11 group-hover:text-orange-400"
+                className="text-foreground/5 h-10 transition-all group-hover:h-11 group-hover:text-orange-400"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -152,7 +152,7 @@ export const Features = () => {
             </div>
           </div>
         </div>
-        <div className="bg-base-100 card group relative cursor-pointer overflow-hidden shadow">
+        <div className="bg-card rounded-lg border group relative cursor-pointer overflow-hidden shadow">
           <div className="p-5">
             <p className="text-lg font-medium">{support.title}</p>
             <p className="text-sm opacity-80">{support.description}</p>

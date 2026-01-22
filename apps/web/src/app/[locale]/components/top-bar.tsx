@@ -9,10 +9,15 @@ import { SECTION_IDS, type SectionId } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
 import { MoonIcon, SunIcon, MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useTheme } from "@/hooks/use-theme";
 
 export const Topbar = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { locale, messages, switchLocale } = useLandingI18n();
+  const { theme, toggleTheme, mounted } = useTheme();
   const {
     topbar: { menu, mobileNavigationLabel, languageSwitch },
   } = messages;
@@ -56,73 +61,68 @@ export const Topbar = () => {
     };
   }, [handleScroll]);
 
+  const handleMenuItemClick = () => {
+    setIsSheetOpen(false);
+  };
+
   return (
     <div
       className="group fixed start-0 end-0 top-0 z-10 flex justify-center md:top-4"
       data-at-top={scrollPosition < 30}
     >
-      <div className="md:bg-base-100 bg-base-100/90 flex h-16 items-center gap-20 px-4 backdrop-blur-xs transition-all duration-500 group-data-[at-top=false]:shadow group-data-[at-top=true]:bg-transparent hover:group-data-[at-top=false]:shadow-lg max-md:grow max-md:justify-between md:rounded-full md:px-8">
+      <div className="md:bg-background bg-background/90 flex h-16 items-center gap-20 px-4 backdrop-blur-sm transition-all duration-500 group-data-[at-top=false]:shadow group-data-[at-top=true]:bg-transparent hover:group-data-[at-top=false]:shadow-lg max-md:grow max-md:justify-between md:rounded-full md:px-8">
         <div className="flex items-center gap-2">
+          {/* Mobile Menu */}
           <div className="md:hidden">
-            <div className="drawer">
-              <input id="navigation-drawer" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                <label
-                  htmlFor="navigation-drawer"
-                  className="btn btn-sm btn-ghost btn-square drawer-button"
-                >
-                  <MenuIcon className="size-5" />
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label
-                  htmlFor="navigation-drawer"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
-                <div className="bg-base-100 flex h-screen w-60 flex-col items-start px-3 py-4">
-                  <div className="flex justify-start">
-                    <a href={`/${locale}`}>
-                      <Image
-                        src="/logo/logo-dark.png"
-                        alt="logo-dark"
-                        width={120}
-                        height={60}
-                        className="hidden h-15 w-auto dark:block"
-                      />
-                      <Image
-                        src="/logo/logo-light.png"
-                        alt="logo-light"
-                        width={120}
-                        height={60}
-                        className="block h-15 w-auto dark:hidden"
-                      />
-                    </a>
-                  </div>
-                  <div className="min-h-0 grow">
-                    <SimpleBar className="mt-5 size-full">
-                      <p className="text-base-content/60 mx-3 text-sm font-medium">
-                        {mobileNavigationLabel}
-                      </p>
-                      <ul className="menu mt-1 w-full p-0">
-                        {menuItems.map((item, index) => (
-                          <li key={index}>
-                            <a
-                              key={index}
-                              href={item.href}
-                              className="hover:bg-base-200 rounded-box block px-3 py-1.5 text-sm"
-                            >
-                              {item.title}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </SimpleBar>
-                  </div>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+              <SheetTrigger className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground">
+                <MenuIcon className="size-5" />
+                <span className="sr-only">Open menu</span>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-60 p-0">
+                <SheetHeader className="p-4">
+                  <SheetTitle className="sr-only">Navigation</SheetTitle>
+                  <a href={`/${locale}`} onClick={handleMenuItemClick}>
+                    <Image
+                      src="/logo/logo-dark.png"
+                      alt="logo-dark"
+                      width={120}
+                      height={60}
+                      className="hidden h-15 w-auto dark:block"
+                    />
+                    <Image
+                      src="/logo/logo-light.png"
+                      alt="logo-light"
+                      width={120}
+                      height={60}
+                      className="block h-15 w-auto dark:hidden"
+                    />
+                  </a>
+                </SheetHeader>
+                <div className="min-h-0 grow">
+                  <SimpleBar className="size-full px-3">
+                    <p className="mx-3 text-sm font-medium text-muted-foreground">
+                      {mobileNavigationLabel}
+                    </p>
+                    <nav className="mt-1 flex flex-col gap-1">
+                      {menuItems.map((item, index) => (
+                        <a
+                          key={index}
+                          href={item.href}
+                          onClick={handleMenuItemClick}
+                          className="hover:bg-muted rounded-lg block px-3 py-2 text-sm transition-colors"
+                        >
+                          {item.title}
+                        </a>
+                      ))}
+                    </nav>
+                  </SimpleBar>
                 </div>
-              </div>
-            </div>
+              </SheetContent>
+            </Sheet>
           </div>
+
+          {/* Logo */}
           <a href={`/${locale}`}>
             <Image
               src="/logo/logo-dark.png"
@@ -140,50 +140,61 @@ export const Topbar = () => {
             />
           </a>
         </div>
-        <div className="hidden items-center gap-1 md:flex">
+
+        {/* Desktop Menu */}
+        <nav className="hidden items-center gap-1 md:flex">
           {menuItems.map((item, index) => (
             <a
               href={item.href}
-              className="hover:bg-base-200 rounded-box block px-3 py-1.5 text-sm"
+              className="hover:bg-muted rounded-lg block px-3 py-1.5 text-sm transition-colors"
               key={index}
             >
               {item.title}
             </a>
           ))}
-        </div>
+        </nav>
 
+        {/* Right Side Controls */}
         <div className="flex items-center gap-2">
+          {/* Language Switch */}
           <span id={`${languageToggleId}-label`} className="sr-only">
             {languageSwitch.ariaLabel}
           </span>
-          <div className="flex items-center gap-2 rounded-full bg-base-100/90 px-2 py-1">
+          <div className="flex items-center gap-2 rounded-full bg-background/90 px-2 py-1">
             <span
-              className="text-xs font-medium uppercase text-base-content/70"
+              className="text-xs font-medium uppercase text-muted-foreground"
               title={languageSwitch.options["pt-BR"]}
             >
               {localeAbbreviations.pt}
             </span>
-            <input
-              className="toggle toggle-sm toggle-primary"
+            <Switch
               id={languageToggleId}
-              type="checkbox"
-              role="switch"
-              aria-labelledby={`${languageToggleId}-label`}
+              size="sm"
               checked={locale === "en"}
-              onChange={handleToggleLocale}
+              onCheckedChange={handleToggleLocale}
+              aria-labelledby={`${languageToggleId}-label`}
             />
             <span
-              className="text-xs font-medium uppercase text-base-content/70"
+              className="text-xs font-medium uppercase text-muted-foreground"
               title={languageSwitch.options.en}
             >
               {localeAbbreviations.en}
             </span>
           </div>
-          <Button variant="ghost" size="sm" className="btn-circle">
-            <SunIcon className="size-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="btn-circle">
-            <MoonIcon className="size-4" />
+
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="size-9 rounded-full"
+            aria-label="Toggle Theme"
+          >
+            {mounted && theme === "dark" ? (
+              <SunIcon className="size-4" />
+            ) : (
+              <MoonIcon className="size-4" />
+            )}
           </Button>
         </div>
       </div>

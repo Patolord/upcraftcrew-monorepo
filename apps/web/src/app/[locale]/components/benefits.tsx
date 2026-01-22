@@ -52,14 +52,14 @@ export const Benefits = () => {
 
   return (
     <div
-      className="group bg-base-200/25 container scroll-mt-12 rounded-2xl py-8 md:py-12 lg:py-16 2xl:py-28"
+      className="group bg-muted/25 container scroll-mt-12 rounded-2xl py-8 md:py-12 lg:py-16 2xl:py-28"
       id={SECTION_IDS.benefits}
     >
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 2xl:gap-12">
         <div>
           <div className="flex items-center gap-1.5 max-lg:justify-center">
             <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-            <p className="text-base-content/60 group-hover:text-primary font-mono text-sm font-medium transition-all">
+            <p className="text-muted-foreground group-hover:text-primary font-mono text-sm font-medium transition-all">
               {benefits.eyebrow}
             </p>
             <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
@@ -68,7 +68,7 @@ export const Benefits = () => {
             {benefits.title}
           </p>
           <div className="mt-2 flex max-lg:justify-center max-lg:text-center">
-            <p className="text-base-content/80 max-w-lg">{benefits.description}</p>
+            <p className="text-muted-foreground max-w-lg">{benefits.description}</p>
           </div>
         </div>
         <motion.div
@@ -83,14 +83,14 @@ export const Benefits = () => {
             return (
               <motion.div
                 variants={featureVariants}
-                className="card bg-base-100 p-4 shadow"
+                className="rounded-lg border bg-card p-4 shadow"
                 key={item.title}
               >
-                <div className={`rounded-box w-fit p-1.5 ${iconClass}`}>
+                <div className={`rounded-lg w-fit p-1.5 ${iconClass}`}>
                   <span className={`iconify ${icon} block size-5`}></span>
                 </div>
                 <p className="mt-2 font-medium">{item.title}</p>
-                <p className="text-base-content/80 text-sm">{item.description}</p>
+                <p className="text-muted-foreground text-sm">{item.description}</p>
               </motion.div>
             );
           })}

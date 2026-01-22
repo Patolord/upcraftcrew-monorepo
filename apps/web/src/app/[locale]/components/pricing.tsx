@@ -2,7 +2,9 @@
 
 import { SECTION_IDS } from "@/app/[locale]/constants";
 import { useLandingI18n } from "@/app/[locale]/providers/landing-i18n-provider";
-import { ArrowRightIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowRightIcon, CheckIcon, XIcon } from "lucide-react";
 import { useQueryState, parseAsStringEnum } from "nuqs";
 
 interface PricingCardProps {
@@ -16,7 +18,7 @@ interface PricingCardProps {
 
 const PricingCard = ({ title, price, includes, tagline, cta, customCta }: PricingCardProps) => {
   return (
-    <div className="card bg-base-100 flex flex-col rounded-2xl border border-base-300 p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-2xl font-bold">{title}</h3>
       </div>
@@ -26,12 +28,12 @@ const PricingCard = ({ title, price, includes, tagline, cta, customCta }: Pricin
         <div className="mt-3 space-y-2">
           {includes.map((item, index) => (
             <div className="flex items-start gap-2" key={index}>
-              <span
-                className={`iconify mt-0.5 size-4.5 shrink-0 ${
-                  item.included ? "CheckIcon text-success" : "XIcon text-base-content/40"
-                }`}
-              ></span>
-              <span className={`text-sm ${item.included ? "" : "text-base-content/60"}`}>
+              {item.included ? (
+                <CheckIcon className="mt-0.5 size-4.5 shrink-0 text-green-600 dark:text-green-400" />
+              ) : (
+                <XIcon className="mt-0.5 size-4.5 shrink-0 text-muted-foreground/40" />
+              )}
+              <span className={`text-sm ${item.included ? "" : "text-muted-foreground"}`}>
                 {item.text}
               </span>
             </div>
@@ -39,17 +41,18 @@ const PricingCard = ({ title, price, includes, tagline, cta, customCta }: Pricin
         </div>
       </div>
 
-      <p className="text-base-content/70 mt-auto pt-6 text-center text-sm italic">{tagline}</p>
+      <p className="text-muted-foreground mt-auto pt-6 text-center text-sm italic">{tagline}</p>
 
-      <a
-        href="https://api.whatsapp.com/send/?phone=11914246379&text&type=phone_number&app_absent=0"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-primary mt-4 gap-2.5 rounded-full"
-      >
-        <ArrowRightIcon className="size-4" />
-        {customCta || cta}
-      </a>
+      <Button className="mt-4 gap-2.5 rounded-full">
+        <a
+          href="https://api.whatsapp.com/send/?phone=11914246379&text&type=phone_number&app_absent=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ArrowRightIcon className="size-4" />
+          {customCta || cta}
+        </a>
+      </Button>
     </div>
   );
 };
@@ -76,7 +79,7 @@ export const Pricing = () => {
     >
       <div className="flex items-center justify-center gap-1.5">
         <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
-        <p className="text-base-content/60 group-hover/section:text-primary font-mono text-sm font-medium transition-all">
+        <p className="text-muted-foreground group-hover/section:text-primary font-mono text-sm font-medium transition-all">
           {pricing.eyebrow}
         </p>
         <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
@@ -85,26 +88,19 @@ export const Pricing = () => {
 
       {/* Tabs */}
       <div className="mt-8 flex justify-center">
-        <div
-          role="tablist"
-          className="tabs bg-gray-200/50 tabs-boxed inline-flex flex-wrap gap-1.5 rounded-full p-1.5"
-        >
-          {tabKeys.map((tabKey) => (
-            <button
-              key={tabKey}
-              role="tab"
-              aria-selected={activeTab === tabKey}
-              onClick={() => setActiveTab(tabKey)}
-              className={`tab rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                activeTab === tabKey
-                  ? "tab-active bg-primary text-primary-content shadow-sm"
-                  : "hover:bg-base-300/50"
-              }`}
-            >
-              {pricing.tabs[tabKey]}
-            </button>
-          ))}
-        </div>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabKey)}>
+          <TabsList className="inline-flex flex-wrap gap-1.5 rounded-full bg-muted p-1.5 h-auto">
+            {tabKeys.map((tabKey) => (
+              <TabsTrigger
+                key={tabKey}
+                value={tabKey}
+                className="rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                {pricing.tabs[tabKey]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Cards Grid */}

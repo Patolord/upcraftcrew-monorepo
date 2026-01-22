@@ -43,7 +43,6 @@ import {
 } from "lucide-react";
 import React from "react";
 
-type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 type TaskPriority = "low" | "medium" | "high" | "urgent";
 
 interface TaskDetailModalProps {
@@ -299,7 +298,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         {/* Action Bar */}
         <div className="flex flex-wrap gap-2 p-4 border-b">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="outline" size="sm">
                 <PlusIcon className="size-4 mr-1" /> Add
               </Button>
@@ -312,7 +311,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="outline" size="sm">
                 <TagIcon className="size-4 mr-1" /> Labels
               </Button>
@@ -368,7 +367,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="outline" size="sm">
                 <CalendarIcon className="size-4 mr-1" /> Dates
               </Button>
@@ -400,7 +399,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </Button>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="outline" size="sm">
                 <UsersIcon className="size-4 mr-1" /> Members
               </Button>
@@ -443,11 +442,11 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
               <div className="flex flex-wrap gap-1">
                 {task.labels.map((label) => (
                   <Badge
-                    key={label._id}
-                    style={{ backgroundColor: label.color }}
+                    key={label?._id}
+                    style={{ backgroundColor: label?.color }}
                     className="text-white"
                   >
-                    {label.name}
+                    {label?.name}
                   </Badge>
                 ))}
               </div>
@@ -619,7 +618,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                       {formatDate(comment.createdAt)}
                     </span>
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger>
                         <Button
                           variant="ghost"
                           size="icon-sm"

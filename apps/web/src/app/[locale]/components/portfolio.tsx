@@ -7,6 +7,10 @@ import { useLandingI18n } from "../providers/landing-i18n-provider";
 import { useQueryState, parseAsString } from "nuqs";
 import Link from "next/link";
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
 const AUTO_PLAY_INTERVAL = 2300;
 const TRANSITION_MS = 320;
@@ -19,7 +23,7 @@ const accentBadgeClasses = [
 const accentIconClasses = ["SparklesIcon", "RocketIcon", "WorkflowIcon"];
 
 export const Portfolio = () => {
-  const { messages } = useLandingI18n();
+  const { messages, locale } = useLandingI18n();
   const { portfolio } = messages;
   const allProjects = portfolio.projects;
 
@@ -182,12 +186,10 @@ export const Portfolio = () => {
     <section
       className="group/section container scroll-mt-12 py-8 md:py-8 lg:py-8 2xl:py-4"
       id={SECTION_IDS.portfolio}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <div className="flex items-center justify-center gap-1.5">
         <div className="bg-primary/80 h-4 w-0.5 translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
-        <p className="text-base-content/60 group-hover/section:text-primary font-mono text-sm font-medium transition-all">
+        <p className="text-muted-foreground group-hover/section:text-primary font-mono text-sm font-medium transition-all">
           {portfolio.eyebrow}
         </p>
         <div className="bg-primary/80 h-4 w-0.5 -translate-x-1.5 rounded-full opacity-0 transition-all group-hover/section:translate-x-0 group-hover/section:opacity-100" />
@@ -195,51 +197,50 @@ export const Portfolio = () => {
       <p className="mt-2 text-center text-2xl font-semibold sm:text-3xl">{portfolio.title}</p>
 
       {/* Industry Filter */}
-      <div className="mt-8 flex justify-center">
-        <div
-          role="tablist"
-          className="tabs bg-gray-200/50 tabs-boxed inline-flex flex-wrap gap-1.5 rounded-full p-1.5"
+      <div className="flex justify-center items-center mt-8">
+        <Tabs
+          value={selectedIndustry}
+          onValueChange={(value) => setSelectedIndustry(value)}
+          className="w-fit"
         >
-          {industries.map((industry) => (
-            <button
-              key={industry}
-              role="tab"
-              aria-selected={selectedIndustry === industry}
-              onClick={() => setSelectedIndustry(industry)}
-              className={`tab rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                selectedIndustry === industry
-                  ? "tab-active bg-primary text-primary-content shadow-sm"
-                  : "hover:bg-base-300/50"
-              }`}
-            >
-              {industry}
-            </button>
-          ))}
-        </div>
+          <TabsList className="flex flex-wrap justify-center gap-1.5 rounded-full bg-muted p-1.5 h-auto">
+            {industries.map((industry) => (
+              <TabsTrigger
+                key={industry}
+                value={industry}
+                className="rounded-full px-4 py-2 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                {industry}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
 
       <div className="mt-10 flex items-center justify-between gap-4">
-        <span className="text-xs uppercase tracking-[0.3em] text-base-content/60">
+        <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
           {portfolio.controls.previous}
         </span>
         {canNavigate && (
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handlePrevious}
-              className="btn btn-ghost btn-sm btn-square border border-base-200/60"
+              className="size-9 border border-border"
               aria-label={portfolio.controls.previous}
             >
               <ArrowLeftIcon className="size-4" />
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handleNext}
-              className="btn btn-ghost btn-sm btn-square border border-base-200/60"
+              className="size-9 border border-border"
               aria-label={portfolio.controls.next}
             >
               <ArrowRightIcon className="size-4" />
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -264,19 +265,23 @@ export const Portfolio = () => {
                 className="flex px-4"
                 style={{ flex: `0 0 ${slideWidth}%` }}
               >
-                <div className="group/card bg-base-100 border border-base-200/70 flex h-full grow flex-col rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-xl">
+                <div className="group/card bg-card border border-border flex h-full grow flex-col rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-xl">
                   <div className="relative overflow-hidden rounded-t-3xl">
-                    <img
+                    <Image
                       src={project.image}
                       alt={project.alt}
-                      className="h-56 w-full object-cover transition-transform duration-700 ease-out hover:scale-110"
-                      loading="lazy"
+                      className="size-full object-cover transition-transform duration-700 ease-out hover:scale-110"
+                      width={200}
+                      height={100}
                     />
                     <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4">
-                      <span className="badge badge-outline bg-base-100/80 text-[0.65rem] uppercase tracking-[0.2em] text-base-content/70 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
+                      <Badge
+                        variant="outline"
+                        className="bg-card/80 text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+                      >
                         {project.industry}
-                      </span>
-                      <span className="rounded-full bg-base-100/80 px-2 py-0.5 text-xs font-medium text-base-content/70">
+                      </Badge>
+                      <span className="rounded-full bg-card/80 px-2 py-0.5 text-xs font-medium text-muted-foreground">
                         {project.year}
                       </span>
                     </div>
@@ -290,7 +295,7 @@ export const Portfolio = () => {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold">{project.name}</h3>
-                        <p className="text-xs uppercase tracking-[0.2em] text-base-content/60">
+                        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                           <span>{project.year}</span>
                           <span className="ms-2 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
                             {project.industry}
@@ -298,18 +303,18 @@ export const Portfolio = () => {
                         </p>
                       </div>
                     </div>
-                    <p className="text-base-content/70 text-sm">{project.tagline}</p>
+                    <p className="text-muted-foreground text-sm">{project.tagline}</p>
                     <div className="flex flex-wrap gap-2">
                       {project.stack.map((tech) => (
-                        <span className="badge badge-ghost" key={tech}>
+                        <Badge variant="secondary" key={tech}>
                           {tech}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
-                    <p className="text-base-content/70 text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       {project.description}
                     </p>
-                    <ul className="space-y-2 text-sm text-base-content/70">
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                       {project.highlights.map((highlight) => (
                         <li className="flex gap-2" key={highlight}>
                           <CheckIcon className="mt-0.5 size-4 text-primary" />
@@ -319,11 +324,13 @@ export const Portfolio = () => {
                     </ul>
                     <div className="mt-auto pt-4">
                       <Link
-                        href={`/portfolio/${encodeURIComponent(project.name.toLowerCase().replace(/\s+/g, "-"))}`}
-                        className="btn btn-primary btn-block group/btn"
+                        href={`/${locale}/portfolio/${encodeURIComponent(project.name.toLowerCase().replace(/\s+/g, "-"))}`}
+                        className="w-full"
                       >
-                        <span>{portfolio.projectPage.viewMore}</span>
-                        <ArrowRightIcon className="size-4 transition-transform group-hover/btn:translate-x-1" />
+                        <Button className="w-full group/btn rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-all">
+                          <span>{portfolio.projectPage.viewMore}</span>
+                          <ArrowRightIcon className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
+                        </Button>
                       </Link>
                     </div>
                   </div>
@@ -338,19 +345,20 @@ export const Portfolio = () => {
             {projects.map((project, index) => {
               const isActive = index === activeDotIndex;
               return (
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={() => handleDotSelect(index)}
                   key={`${project.name}-${project.year}-dot-${index}`}
-                  className="transition-all"
+                  className="transition-all size-4"
                   aria-label={`${project.name} - ${index + 1}`}
                 >
                   <span
-                    className={`block h-1.5 rounded-full bg-orange-400 ${
-                      isActive ? "w-8 bg-orange-600" : "w-4 bg-base-200"
+                    className={`block h-1.5 rounded-full transition-all ${
+                      isActive ? "w-8 bg-orange-600" : "w-4 bg-muted"
                     }`}
                   ></span>
-                </button>
+                </Button>
               );
             })}
           </div>

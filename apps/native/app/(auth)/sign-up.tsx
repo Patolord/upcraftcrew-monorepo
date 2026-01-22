@@ -296,7 +296,7 @@ export default function SignUpPage() {
 
             <View className="flex-row items-center justify-center">
               <Text className="text-center text-gray-600 text-sm">Already have an account? </Text>
-              <Link href="/sign-in" asChild>
+              <Link href="/sign-in">
                 <TouchableOpacity>
                   <Text className="font-semibold text-orange-500 text-sm">Sign in</Text>
                 </TouchableOpacity>
