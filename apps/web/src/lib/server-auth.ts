@@ -59,6 +59,7 @@ export async function getCurrentUserServer(): Promise<AuthUser | null> {
   const { userId } = await clerkAuth();
 
   if (!userId) {
+    console.log("[getCurrentUserServer] No Clerk userId found");
     return null;
   }
 
@@ -66,7 +67,7 @@ export async function getCurrentUserServer(): Promise<AuthUser | null> {
     const token = await getConvexToken();
 
     if (!token) {
-      console.error("Failed to get Clerk token for Convex");
+      console.error("[getCurrentUserServer] Failed to get Clerk token for Convex");
       return null;
     }
 
@@ -77,12 +78,17 @@ export async function getCurrentUserServer(): Promise<AuthUser | null> {
     const user = preloaded._valueJSON as unknown as AuthUser;
 
     if (!user) {
+      console.error(
+        `[getCurrentUserServer] User not found in Convex database for Clerk userId: ${userId}. ` +
+          "This usually means the Clerk webhook hasn't synced the user yet. " +
+          "Try calling api.users.ensureCurrentUser mutation from the client.",
+      );
       return null;
     }
 
     return user as AuthUser;
   } catch (error) {
-    console.error("Error fetching user from Convex:", error);
+    console.error("[getCurrentUserServer] Error fetching user from Convex:", error);
     return null;
   }
 }
@@ -124,15 +130,30 @@ export async function requireAdminServer(): Promise<AuthUser> {
  * @returns Object with user and token
  */
 export async function requireAdminWithToken(): Promise<{ user: AuthUser; token: string }> {
-  // Parallel execution for better performance
-  const [user, token] = await Promise.all([getCurrentUserServer(), getConvexToken()]);
+  const { userId } = await clerkAuth();
 
-  if (!user || !token) {
-    throw new Error("Unauthorized: Authentication required");
+  if (!userId) {
+    throw new Error("Unauthorized: Not authenticated with Clerk");
+  }
+
+  const token = await getConvexToken();
+
+  if (!token) {
+    throw new Error("Unauthorized: Failed to get Convex authentication token");
+  }
+
+  const user = await getCurrentUserServer();
+
+  if (!user) {
+    throw new Error(
+      `Unauthorized: User not found in database (Clerk ID: ${userId}). ` +
+        "The user record may not have been synced from Clerk yet. " +
+        "Please refresh the page or contact support if the issue persists.",
+    );
   }
 
   if (user.role !== "admin") {
-    throw new Error("Unauthorized: Admin access required");
+    throw new Error(`Unauthorized: Admin access required (current role: ${user.role})`);
   }
 
   return { user, token };
@@ -146,11 +167,26 @@ export async function requireAdminWithToken(): Promise<{ user: AuthUser; token: 
  * @returns Object with user and token
  */
 export async function requireAuthWithToken(): Promise<{ user: AuthUser; token: string }> {
-  // Parallel execution for better performance
-  const [user, token] = await Promise.all([getCurrentUserServer(), getConvexToken()]);
+  const { userId } = await clerkAuth();
 
-  if (!user || !token) {
-    throw new Error("Unauthorized: Authentication required");
+  if (!userId) {
+    throw new Error("Unauthorized: Not authenticated with Clerk");
+  }
+
+  const token = await getConvexToken();
+
+  if (!token) {
+    throw new Error("Unauthorized: Failed to get Convex authentication token");
+  }
+
+  const user = await getCurrentUserServer();
+
+  if (!user) {
+    throw new Error(
+      `Unauthorized: User not found in database (Clerk ID: ${userId}). ` +
+        "The user record may not have been synced from Clerk yet. " +
+        "Please refresh the page or contact support if the issue persists.",
+    );
   }
 
   return { user, token };

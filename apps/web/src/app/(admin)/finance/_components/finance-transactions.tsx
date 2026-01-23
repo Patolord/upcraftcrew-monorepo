@@ -67,7 +67,7 @@ export function FinanceTransactions({ transactions }: FinanceTransactionsProps) 
               key={transaction.id}
               className="border border-gray-200 shadow-sm hover:shadow-md transition-all rounded-xl bg-white"
             >
-              <CardContent className="p-5">
+              <CardContent className="p-3">
                 <div className="flex items-center justify-between gap-4">
                   {/* Left: Avatar + Info */}
                   <div className="flex items-center gap-4 flex-1 min-w-0">

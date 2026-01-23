@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as admin from "../admin.js";
 import type * as budgets from "../budgets.js";
 import type * as errors from "../errors.js";
 import type * as finance from "../finance.js";
@@ -28,6 +29,7 @@ import type * as users from "../users.js";
 import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
   budgets: typeof budgets;
   errors: typeof errors;
   finance: typeof finance;

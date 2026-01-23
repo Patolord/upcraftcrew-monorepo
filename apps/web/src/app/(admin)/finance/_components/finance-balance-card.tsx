@@ -62,7 +62,7 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
     <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white overflow-hidden">
       <CardContent>
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <h3 className="text-xl font-semibold text-gray-900">Balance</h3>
             <Badge className="bg-emerald-50 text-emerald-600 border-0 gap-1 px-2 py-1">
@@ -83,9 +83,9 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
         </div>
 
         {/* Stats Row */}
-        <div className="flex gap-3 mb-2">
+        <div className="flex gap-3">
           {/* Saves */}
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
+          <div className="flex-1 bg-gray-50 rounded-xl p-2">
             <p className="text-sm text-emerald-600 font-medium mb-1">Saves</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900">{savingsPercentage}%</span>
@@ -96,8 +96,8 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
           </div>
 
           {/* Balance */}
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <p className="text-sm text-violet-600 font-medium mb-1">Balance</p>
+          <div className="flex-1 bg-gray-50 rounded-xl">
+            <p className="text-sm text-violet-600 font-medium">Balance</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900">${profit.toLocaleString()}</span>
               <Badge className="bg-rose-100 text-rose-600 border-0 text-xs">{balanceChange}%</Badge>
@@ -106,7 +106,7 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
         </div>
 
         {/* Chart */}
-        <div className="mt-2">
+        <div>
           <BalanceChart />
         </div>
       </CardContent>

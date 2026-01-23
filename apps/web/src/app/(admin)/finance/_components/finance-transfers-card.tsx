@@ -52,7 +52,7 @@ export function FinanceTransfersCard({ transfers = mockTransfers }: FinanceTrans
     <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white h-full">
       <CardContent>
         {/* Header */}
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">Your Transfers</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Your Transfers</h3>
 
         {/* Transfers List */}
         <div className="space-y-5">
@@ -87,7 +87,7 @@ export function FinanceTransfersCard({ transfers = mockTransfers }: FinanceTrans
         {/* View All Link */}
         <Link
           href="/finance/transfers"
-          className="flex items-center justify-end gap-2 mt-6 text-emerald-600 hover:text-emerald-700 font-medium text-sm transition-colors"
+          className="flex items-center justify-end gap-2 mt-4 text-emerald-600 hover:text-emerald-700 font-medium text-sm transition-colors"
         >
           View all
           <ArrowRightIcon className="size-4" />
