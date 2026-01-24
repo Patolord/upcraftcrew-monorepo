@@ -209,12 +209,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
 
           {/* Actions */}
           <div className="modal-action">
-            <Button
-              type="button"
-              className="btn btn-ghost"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
+            <Button className="btn btn-ghost" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
             <Button type="submit" className="btn btn-primary" disabled={isSubmitting}>
@@ -230,7 +225,7 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
           </div>
         </Form>
       </div>
-      <button type="button" className="modal-backdrop" onClick={onClose} aria-label="Close modal" />
+      <button className="modal-backdrop" onClick={onClose} aria-label="Close modal" />
     </div>
   );
 }

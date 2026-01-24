@@ -99,7 +99,6 @@ export function BudgetModal({
                     return (
                       <Button
                         key={step.id}
-                        type="button"
                         onClick={() => onStepChange?.(index)}
                         className="flex items-center gap-2 group bg-orange-500"
                       >

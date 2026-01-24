@@ -360,7 +360,6 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
                       className="border border-base-300 rounded-lg"
                     />
                     <Button
-                      type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => {
@@ -376,7 +375,6 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
                   </div>
                 ))}
                 <Button
-                  type="button"
                   variant="outline"
                   size="sm"
                   onClick={() =>
@@ -420,7 +418,6 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
         {/* Navigation Buttons */}
         <div className="flex items-center justify-between pt-4 border-t border-base-200">
           <Button
-            type="button"
             variant="outline"
             onClick={currentStep === 0 ? handleClose : handlePrevious}
             className="gap-2"
@@ -437,7 +434,6 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
 
           {isLastStep ? (
             <Button
-              type="button"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="gap-2 bg-orange-500 hover:bg-orange-600 text-white"
@@ -451,7 +447,6 @@ export function BudgetFormModal({ isOpen, onClose, initialData, onSuccess }: Bud
             </Button>
           ) : (
             <Button
-              type="button"
               onClick={handleNext}
               className="gap-2 bg-orange-500 hover:bg-orange-600 text-white"
             >

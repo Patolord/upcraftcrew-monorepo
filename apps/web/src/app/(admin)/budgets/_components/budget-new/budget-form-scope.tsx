@@ -56,7 +56,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Opções de Escopo</Label>
         <Button
-          type="button"
           variant="outline"
           size="lg"
           onClick={addScopeOption}
@@ -108,7 +107,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                   </div>
                 </div>
                 <Button
-                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 pt-3 text-error mt-4"
@@ -125,7 +123,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                     Funcionalidades Incluídas
                   </Label>
                   <Button
-                    type="button"
                     variant="outline"
                     size="lg"
                     onClick={addScopeOption}
@@ -146,7 +143,6 @@ export function BudgetFormScope({ scopeOptions, onChange }: BudgetFormScopeProps
                       />
                       {option.features.length > 1 && (
                         <Button
-                          type="button"
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-base-content/60 hover:text-error"

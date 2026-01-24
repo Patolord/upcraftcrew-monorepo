@@ -261,7 +261,7 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
+            <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancelar
             </Button>
             <Button

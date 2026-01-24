@@ -185,7 +185,6 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
 
           {/* Toggle Advanced Options */}
           <Button
-            type="button"
             variant="ghost"
             size="sm"
             className="w-full"
@@ -222,7 +221,10 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
                 <Select
                   value={formData.assignedTo || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, assignedTo: value === "none" ? "" : value })
+                    setFormData({
+                      ...formData,
+                      assignedTo: value === "none" ? "" : (value as Id<"users">),
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -256,7 +258,10 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
                 <Select
                   value={formData.projectId || "none"}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, projectId: value === "none" ? "" : value })
+                    setFormData({
+                      ...formData,
+                      projectId: value === "none" ? "" : (value as Id<"projects">),
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -290,7 +295,6 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
 
           <DialogFooter className="pt-4">
             <Button
-              type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}

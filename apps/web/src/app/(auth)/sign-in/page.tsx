@@ -98,13 +98,13 @@ export default function SignInPage() {
                 },
               })}
             />
-            <button
-              type="button"
+            <Button
+              variant="ghost"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
               {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
-            </button>
+            </Button>
           </div>
           {errors.password && (
             <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>

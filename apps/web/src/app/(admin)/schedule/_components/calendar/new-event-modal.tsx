@@ -42,6 +42,7 @@ interface NewEventModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   preSelectedDate?: Date;
+  projectId: string;
 }
 
 const EVENT_TYPES = [
@@ -190,7 +191,6 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
                 return (
                   <button
                     key={type.value}
-                    type="button"
                     onClick={() => setFormData({ ...formData, type: type.value })}
                     className={cn(
                       "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-colors",
@@ -263,7 +263,6 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
               {PRIORITIES.map((priority) => (
                 <button
                   key={priority.value}
-                  type="button"
                   onClick={() => setFormData({ ...formData, priority: priority.value })}
                   className={cn(
                     "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -282,8 +281,8 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
           <div className="space-y-2">
             <Label>Projeto (opcional)</Label>
             <Select
-              value={formData.projectId}
-              onValueChange={(value) => setFormData({ ...formData, projectId: value })}
+              value={formData.projectId || ""}
+              onValueChange={(value) => setFormData({ ...formData, projectId: value || "" })}
             >
               <SelectTrigger className="rounded-lg">
                 <SelectValue placeholder="Selecione um projeto" />
@@ -354,7 +353,6 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
 
           <DialogFooter className="pt-4">
             <Button
-              type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}

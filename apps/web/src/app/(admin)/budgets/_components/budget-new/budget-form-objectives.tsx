@@ -36,7 +36,6 @@ export function BudgetFormObjectives({ objectives, onChange }: BudgetFormObjecti
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">Objetivos do Projeto</Label>
         <Button
-          type="button"
           variant="outline"
           size="lg"
           onClick={addObjective}
@@ -70,7 +69,6 @@ export function BudgetFormObjectives({ objectives, onChange }: BudgetFormObjecti
                   />
                 </div>
                 <Button
-                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 pt-3 text-error mt-4"

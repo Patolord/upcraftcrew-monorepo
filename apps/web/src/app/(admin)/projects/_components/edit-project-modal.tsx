@@ -265,7 +265,6 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
                 return (
                   <button
                     key={status.value}
-                    type="button"
                     onClick={() => setFormData({ ...formData, status: status.value })}
                     className={cn(
                       "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition-colors",
@@ -291,7 +290,6 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               {PRIORITY_OPTIONS.map((priority) => (
                 <button
                   key={priority.value}
-                  type="button"
                   onClick={() => setFormData({ ...formData, priority: priority.value })}
                   className={cn(
                     "flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -416,7 +414,6 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           <DialogFooter className="pt-4">
             <Button
-              type="button"
               variant="outline"
               onClick={handleClose}
               disabled={isSubmitting}

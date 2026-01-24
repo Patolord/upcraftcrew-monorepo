@@ -10,7 +10,8 @@ import { NewTaskModal } from "./new-task-modal";
 import { KanbanHeader } from "./kanban-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ZapIcon, StarIcon, Share2Icon, PlusIcon } from "lucide-react";
+import { ZapIcon, StarIcon, Share2Icon, ColumnsIcon } from "lucide-react";
+import { toast } from "sonner";
 import React from "react";
 
 interface TaskLabel {
@@ -143,74 +144,82 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
     }
   };
 
+  const handleAddColumn = () => {
+    toast.info("New column feature coming soon!");
+  };
+
   return (
-    <div className="p-6 space-y-6">
-      <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Fixed Header Section */}
+      <div className="shrink-0 p-6 pb-4 space-y-6">
+        <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-      {/* Team Members Section */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h2 className="text-lg font-semibold">Team Members</h2>
-          <div className="flex -space-x-2">
-            {teamMembers.slice(0, 5).map((member: TeamMember) => {
-              const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
-              const initials = fullName
-                ? fullName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 2)
-                : "U";
+        {/* Team Members Section */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-semibold">Team Members</h2>
+            <div className="flex -space-x-2">
+              {teamMembers.slice(0, 5).map((member: TeamMember) => {
+                const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
+                const initials = fullName
+                  ? fullName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)
+                  : "U";
 
-              return (
-                <Avatar
-                  key={member._id}
-                  className="size-10 border-2 border-background ring-2 ring-pink-300"
-                >
-                  <AvatarImage src={member.imageUrl} alt={fullName} />
-                  <AvatarFallback className="bg-gradient-to-br from-orange-400 to-pink-500 text-white text-xs font-medium">
-                    {initials}
+                return (
+                  <Avatar
+                    key={member._id}
+                    className="size-10 border-2 border-background ring-2 ring-pink-300"
+                  >
+                    <AvatarImage src={member.imageUrl} alt={fullName} />
+                    <AvatarFallback className="bg-linear-to-br from-orange-400 to-pink-500 text-white text-xs font-medium">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                );
+              })}
+              {teamMembers.length > 5 && (
+                <Avatar className="size-10 border-2 border-background">
+                  <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                    +{teamMembers.length - 5}
                   </AvatarFallback>
                 </Avatar>
-              );
-            })}
-            {teamMembers.length > 5 && (
-              <Avatar className="size-10 border-2 border-background">
-                <AvatarFallback className="bg-muted text-muted-foreground text-xs">
-                  +{teamMembers.length - 5}
-                </AvatarFallback>
-              </Avatar>
-            )}
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="default"
-            size="sm"
-            className="rounded-full"
-            onClick={() => handleAddTask("todo")}
-          >
-            <PlusIcon className="size-4 mr-1" />
-            New Task
-          </Button>
-          <Button variant="ghost" size="icon-sm" className="rounded-full">
-            <ZapIcon className="size-4" />
-          </Button>
-          <Button variant="ghost" size="icon-sm" className="rounded-full">
-            <StarIcon className="size-4" />
-          </Button>
-          <Button variant="outline" size="sm" className="rounded-full">
-            <Share2Icon className="size-4 mr-1" />
-            Share
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            <Button variant="default" size="sm" className="rounded-full" onClick={handleAddColumn}>
+              <ColumnsIcon className="size-4 mr-1" />
+              New Column
+            </Button>
+            <Button variant="ghost" size="icon-sm" className="rounded-full">
+              <ZapIcon className="size-4" />
+            </Button>
+            <Button variant="ghost" size="icon-sm" className="rounded-full">
+              <StarIcon className="size-4" />
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-full">
+              <Share2Icon className="size-4 mr-1" />
+              Share
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <TaskKanbanBoard columns={columns} onTaskClick={handleTaskClick} onAddTask={handleAddTask} />
+      {/* Scrollable Kanban Board */}
+      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-auto px-6 pb-6">
+        <TaskKanbanBoard
+          columns={columns}
+          onTaskClick={handleTaskClick}
+          onAddTask={handleAddTask}
+        />
+      </div>
 
       {/* Task Detail Modal */}
       <TaskDetailModal
