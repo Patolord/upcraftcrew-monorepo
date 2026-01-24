@@ -78,7 +78,7 @@ export function CalendarContainer() {
         projectId: item.projectId,
         projectName: item.project?.name,
         color,
-        client: item.client,
+        client: "client" in item ? item.client : undefined,
       };
 
       // Add source-specific fields based on sourceType
@@ -259,6 +259,7 @@ export function CalendarContainer() {
         open={isNewEventModalOpen}
         onOpenChange={setIsNewEventModalOpen}
         preSelectedDate={selectedDayForSidebar || selectedDate}
+        projectId={selectedEvent?.projectId ?? ""}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, FileQuestionIcon } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function NotFound() {
   return (
@@ -19,16 +20,20 @@ export default function NotFound() {
         </p>
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button size="lg" className="bg-orange-500 text-white hover:bg-orange-600" asChild>
-            <Link href="/#portfolio">
-              <ArrowLeftIcon className="mr-2 size-4" />
-              Back to Portfolio
-            </Link>
-          </Button>
+          <Link
+            href="/#portfolio"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "bg-orange-500 text-white hover:bg-orange-600",
+            )}
+          >
+            <ArrowLeftIcon className="mr-2 size-4" />
+            Back to Portfolio
+          </Link>
 
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/">Go to Home</Link>
-          </Button>
+          <Link href="/" className={buttonVariants({ size: "lg", variant: "outline" })}>
+            Go to Home
+          </Link>
         </div>
       </div>
     </div>

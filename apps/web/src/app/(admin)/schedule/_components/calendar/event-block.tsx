@@ -12,7 +12,6 @@ import {
   CalendarIcon,
   FolderIcon,
   FileTextIcon,
-  DollarSignIcon,
   CheckSquareIcon,
   TrendingUpIcon,
   TrendingDownIcon,

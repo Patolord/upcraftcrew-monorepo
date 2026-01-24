@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { EyeIcon, MailIcon, PhoneIcon, MapPinIcon } from "lucide-react";
+import { EyeIcon, MailIcon, PhoneIcon } from "lucide-react";
 import React from "react";
 
 type TeamMemberWithProjects = Doc<"users"> & {
@@ -104,12 +104,6 @@ export function TeamMemberCard({ member, onSelect }: TeamMemberCardProps) {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <PhoneIcon className="h-4 w-4" />
               <span>{member.phone}</span>
-            </div>
-          )}
-          {member.country && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPinIcon className="h-4 w-4" />
-              <span>{member.country}</span>
             </div>
           )}
         </div>

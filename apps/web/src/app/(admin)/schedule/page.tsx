@@ -80,7 +80,7 @@ export default function SchedulePage() {
         projectId: item.projectId,
         projectName: item.project?.name,
         color,
-        client: item.client,
+        client: "client" in item ? item.client : undefined,
       };
 
       // Add source-specific fields based on sourceType
@@ -280,6 +280,7 @@ export default function SchedulePage() {
             open={isNewEventModalOpen}
             onOpenChange={setIsNewEventModalOpen}
             preSelectedDate={selectedDayForSidebar || selectedDate}
+            projectId={selectedEvent?.projectId ?? ""}
           />
         </div>
       </div>

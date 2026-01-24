@@ -93,7 +93,7 @@ function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
   };
 
   // Handle click separately from drag
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     // Only trigger click if it's not a drag
     if (!isDragging && onClick) {
       onClick();

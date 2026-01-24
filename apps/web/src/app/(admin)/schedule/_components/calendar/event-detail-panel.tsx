@@ -14,8 +14,6 @@ import {
   UserIcon,
   FolderIcon,
   FileTextIcon,
-  DollarSignIcon,
-  CheckSquareIcon,
   ExternalLinkIcon,
   TrendingUpIcon,
   TrendingDownIcon,
