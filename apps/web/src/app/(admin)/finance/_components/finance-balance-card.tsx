@@ -59,8 +59,8 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
   const balanceChange = -4.75; // Mock
 
   return (
-    <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white overflow-hidden">
-      <CardContent>
+    <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white overflow-hidden h-[290px]">
+      <CardContent className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -106,7 +106,7 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
         </div>
 
         {/* Chart */}
-        <div>
+        <div className="mt-auto">
           <BalanceChart />
         </div>
       </CardContent>
