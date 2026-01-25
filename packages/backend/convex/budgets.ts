@@ -180,10 +180,12 @@ export const createSimpleBudget = mutation({
       v.literal("expired"),
     ),
     validUntil: v.number(),
+    budgetDate: v.optional(v.number()), // Allow retroactive date
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);
     const now = Date.now();
+    const createdAt = args.budgetDate || now;
 
     const budgetId = await ctx.db.insert("budgets", {
       type: "budget",
@@ -195,7 +197,7 @@ export const createSimpleBudget = mutation({
       currency: args.currency || "BRL",
       items: [],
       validUntil: args.validUntil,
-      createdAt: now,
+      createdAt,
       updatedAt: now,
     });
 
@@ -258,6 +260,7 @@ export const createBudget = mutation({
     ),
     paymentTerms: v.optional(v.array(v.string())),
     deliveryDeadline: v.optional(v.string()),
+    budgetDate: v.optional(v.number()), // Allow retroactive date
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);
@@ -265,12 +268,14 @@ export const createBudget = mutation({
     const totalAmount = args.items.reduce((sum, item) => sum + item.total, 0);
 
     const now = Date.now();
+    const { budgetDate, ...restArgs } = args;
+    const createdAt = budgetDate || now;
 
     const budgetId = await ctx.db.insert("budgets", {
-      ...args,
+      ...restArgs,
       type: "proposal",
       totalAmount,
-      createdAt: now,
+      createdAt,
       updatedAt: now,
     });
 

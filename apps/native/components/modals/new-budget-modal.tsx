@@ -38,11 +38,12 @@ export function NewBudgetModal({ isOpen, onClose }: NewBudgetModalProps) {
     client: "",
     description: "",
     status: "draft" as "draft" | "sent" | "approved" | "rejected" | "expired",
-    currency: "USD",
+    currency: "BRL",
     items: [] as BudgetItem[],
     validUntil: "",
     projectId: "",
     notes: "",
+    budgetDate: "", // Data do orçamento (retroativa)
   });
 
   const addItem = () => {
@@ -112,10 +113,37 @@ export function NewBudgetModal({ isOpen, onClose }: NewBudgetModalProps) {
         currency: formData.currency,
         items,
         validUntil: formData.validUntil
-          ? new Date(formData.validUntil).getTime()
+          ? (() => {
+              // Parse DD/MM/YYYY format
+              const parts = formData.validUntil.split("/");
+              if (parts.length === 3) {
+                const [day, month, year] = parts;
+                return new Date(
+                  parseInt(year, 10),
+                  parseInt(month, 10) - 1,
+                  parseInt(day, 10),
+                ).getTime();
+              }
+              return Date.now() + 30 * 24 * 60 * 60 * 1000;
+            })()
           : Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         notes: formData.notes || undefined,
+        budgetDate: formData.budgetDate
+          ? (() => {
+              // Parse DD/MM/YYYY format
+              const parts = formData.budgetDate.split("/");
+              if (parts.length === 3) {
+                const [day, month, year] = parts;
+                return new Date(
+                  parseInt(year, 10),
+                  parseInt(month, 10) - 1,
+                  parseInt(day, 10),
+                ).getTime();
+              }
+              return undefined;
+            })()
+          : undefined, // Data retroativa opcional
       });
 
       Alert.alert("Sucesso", "Orçamento criado com sucesso!");
@@ -126,11 +154,12 @@ export function NewBudgetModal({ isOpen, onClose }: NewBudgetModalProps) {
         client: "",
         description: "",
         status: "draft",
-        currency: "USD",
+        currency: "BRL",
         items: [],
         validUntil: "",
         projectId: "",
         notes: "",
+        budgetDate: "",
       });
 
       onClose();
@@ -202,6 +231,32 @@ export function NewBudgetModal({ isOpen, onClose }: NewBudgetModalProps) {
                 />
               </View>
 
+              {/* Budget Date - Retroactive */}
+              <View className="mb-4">
+                <Text className="mb-2 font-medium text-gray-700">Data do Orçamento</Text>
+                <TextInput
+                  className="border border-gray-300 rounded-lg p-3 bg-white"
+                  placeholder="DD/MM/AAAA (deixe vazio para data atual)"
+                  value={formData.budgetDate}
+                  onChangeText={(text) => {
+                    // Auto-format as DD/MM/YYYY
+                    let formatted = text.replace(/\D/g, "");
+                    if (formatted.length > 2) {
+                      formatted = `${formatted.slice(0, 2)}/${formatted.slice(2)}`;
+                    }
+                    if (formatted.length > 5) {
+                      formatted = `${formatted.slice(0, 5)}/${formatted.slice(5, 9)}`;
+                    }
+                    setFormData({ ...formData, budgetDate: formatted });
+                  }}
+                  keyboardType="numeric"
+                  maxLength={10}
+                />
+                <Text className="mt-1 text-xs text-gray-500">
+                  Use para registrar orçamentos retroativos e manter o histórico
+                </Text>
+              </View>
+
               {/* Status */}
               <View className="mb-4">
                 <Text className="mb-2 font-medium text-gray-700">Status</Text>
@@ -237,9 +292,21 @@ export function NewBudgetModal({ isOpen, onClose }: NewBudgetModalProps) {
                 <Text className="mb-2 font-medium text-gray-700">Válido até (opcional)</Text>
                 <TextInput
                   className="border border-gray-300 rounded-lg p-3 bg-white"
-                  placeholder="YYYY-MM-DD"
+                  placeholder="DD/MM/AAAA"
                   value={formData.validUntil}
-                  onChangeText={(text) => setFormData({ ...formData, validUntil: text })}
+                  onChangeText={(text) => {
+                    // Auto-format as DD/MM/YYYY
+                    let formatted = text.replace(/\D/g, "");
+                    if (formatted.length > 2) {
+                      formatted = `${formatted.slice(0, 2)}/${formatted.slice(2)}`;
+                    }
+                    if (formatted.length > 5) {
+                      formatted = `${formatted.slice(0, 5)}/${formatted.slice(5, 9)}`;
+                    }
+                    setFormData({ ...formData, validUntil: formatted });
+                  }}
+                  keyboardType="numeric"
+                  maxLength={10}
                 />
               </View>
 

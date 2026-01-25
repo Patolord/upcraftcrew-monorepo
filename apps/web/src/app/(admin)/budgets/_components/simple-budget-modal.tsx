@@ -37,6 +37,7 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
     totalAmount: 0,
     status: "draft" as "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired",
     validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000, // 15 days from now
+    budgetDate: "", // Data retroativa opcional
   });
 
   // Reset form when modal opens
@@ -48,6 +49,7 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
         totalAmount: 0,
         status: "draft",
         validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000,
+        budgetDate: "",
       });
       clearError();
     }
@@ -88,6 +90,7 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
         totalAmount: formData.totalAmount,
         status: formData.status,
         validUntil: formData.validUntil,
+        budgetDate: formData.budgetDate ? new Date(formData.budgetDate).getTime() : undefined,
       });
       toast.success("Orçamento criado com sucesso!");
       onSuccess?.();
@@ -134,9 +137,6 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
             {/* Title */}
             <div>
               <h2 className="text-xl font-semibold text-base-content">Novo Orçamento</h2>
-              <p className="text-sm text-base-content/60 mt-1">
-                Cadastre um orçamento simples para acompanhamento
-              </p>
             </div>
           </div>
 
@@ -202,6 +202,27 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
                   required
                   className="border border-base-300 rounded-lg focus:border-orange-500"
                 />
+              </div>
+
+              <div>
+                <Label htmlFor="budgetDate" className="text-sm font-medium mb-2 block">
+                  Data do Orçamento
+                </Label>
+                <Input
+                  id="budgetDate"
+                  type="date"
+                  value={formData.budgetDate}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      budgetDate: e.target.value,
+                    }))
+                  }
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                />
+                <p className="text-xs text-base-content/50 mt-1">
+                  Deixe vazio para usar a data atual. Use para registrar orçamentos retroativos.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
