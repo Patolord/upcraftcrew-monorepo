@@ -54,6 +54,12 @@ next-env.d.ts
 # Other
 dev-dist
 
+# PWA Service Worker (generated)
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker-*.js
+/public/workbox-*.js
+
 .wrangler
 .dev.vars*
 
