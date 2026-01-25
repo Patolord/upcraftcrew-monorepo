@@ -409,3 +409,65 @@ export const deleteProject = mutation({
     return { success: true };
   },
 });
+
+// Mutation: Create project from approved budget
+export const createProjectFromBudget = mutation({
+  args: {
+    budgetId: v.id("budgets"),
+  },
+  handler: async (ctx, args) => {
+    const user = await requireWrite(ctx);
+
+    // Get the budget
+    const budget = await ctx.db.get(args.budgetId);
+    if (!budget) {
+      throw new Error("Orçamento não encontrado");
+    }
+
+    // Check if budget is approved
+    if (budget.status !== "approved") {
+      throw new Error("Apenas orçamentos aprovados podem ser convertidos em projetos");
+    }
+
+    // Check if project already exists for this budget
+    const existingProject = await ctx.db
+      .query("projects")
+      .filter((q) => q.eq(q.field("budgetId"), args.budgetId))
+      .first();
+
+    if (existingProject) {
+      throw new Error("Já existe um projeto criado a partir deste orçamento");
+    }
+
+    // Create the project from budget data
+    const now = Date.now();
+    const thirtyDaysFromNow = now + 30 * 24 * 60 * 60 * 1000;
+
+    const projectId = await ctx.db.insert("projects", {
+      name: budget.title,
+      client: budget.client,
+      description: budget.description || "",
+      status: "planning",
+      priority: "medium",
+      startDate: now,
+      endDate: thirtyDaysFromNow,
+      progress: 0,
+      budget: budget.totalAmount,
+      managerId: user._id,
+      teamIds: [user._id],
+      budgetId: args.budgetId, // Link to the original budget
+    });
+
+    // Update user's projectIds
+    await ctx.db.patch(user._id, {
+      projectIds: [...user.projectIds, projectId],
+    });
+
+    // Update budget with project reference
+    await ctx.db.patch(args.budgetId, {
+      projectId: projectId,
+    });
+
+    return projectId;
+  },
+});

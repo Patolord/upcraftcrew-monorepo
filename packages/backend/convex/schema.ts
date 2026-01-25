@@ -78,6 +78,7 @@ export default defineSchema({
         }),
       ),
     ),
+    budgetId: v.optional(v.id("budgets")), // Reference to the budget this project was created from
   }).index("by_manager", ["managerId"]),
 
   transactions: defineTable({

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,10 +13,21 @@ import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import React from "react";
 
+interface BudgetData {
+  _id: Id<"budgets">;
+  title: string;
+  client: string;
+  totalAmount: number;
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
+  validUntil: number;
+  createdAt?: number;
+}
+
 interface SimpleBudgetModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  initialData?: BudgetData; // For editing existing budget
 }
 
 const statusOptions = [
@@ -26,9 +38,17 @@ const statusOptions = [
   { value: "cancelled", label: "Cancelado" },
 ];
 
-export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetModalProps) {
+export function SimpleBudgetModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  initialData,
+}: SimpleBudgetModalProps) {
   const createSimpleBudget = useMutation(api.budgets.createSimpleBudget);
+  const updateSimpleBudget = useMutation(api.budgets.updateSimpleBudget);
   const { error, clearError, handleError } = useConvexError();
+
+  const isEditing = !!initialData;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,20 +60,35 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
     budgetDate: "", // Data retroativa opcional
   });
 
-  // Reset form when modal opens
+  // Reset form when modal opens or initialData changes
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        title: "",
-        client: "",
-        totalAmount: 0,
-        status: "draft",
-        validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000,
-        budgetDate: "",
-      });
+      if (initialData) {
+        // Editing mode: populate with existing data
+        setFormData({
+          title: initialData.title,
+          client: initialData.client,
+          totalAmount: initialData.totalAmount,
+          status: initialData.status,
+          validUntil: initialData.validUntil,
+          budgetDate: initialData.createdAt
+            ? new Date(initialData.createdAt).toISOString().split("T")[0]
+            : "",
+        });
+      } else {
+        // Create mode: reset form
+        setFormData({
+          title: "",
+          client: "",
+          totalAmount: 0,
+          status: "draft",
+          validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000,
+          budgetDate: "",
+        });
+      }
       clearError();
     }
-  }, [isOpen, clearError]);
+  }, [isOpen, initialData, clearError]);
 
   // Handle escape key
   useEffect(() => {
@@ -84,19 +119,33 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
     setIsSubmitting(true);
 
     try {
-      await createSimpleBudget({
-        title: formData.title,
-        client: formData.client,
-        totalAmount: formData.totalAmount,
-        status: formData.status,
-        validUntil: formData.validUntil,
-        budgetDate: formData.budgetDate ? new Date(formData.budgetDate).getTime() : undefined,
-      });
-      toast.success("Orçamento criado com sucesso!");
+      if (isEditing && initialData) {
+        // Update existing budget
+        await updateSimpleBudget({
+          id: initialData._id,
+          title: formData.title,
+          client: formData.client,
+          totalAmount: formData.totalAmount,
+          status: formData.status,
+          validUntil: formData.validUntil,
+        });
+        toast.success("Orçamento atualizado com sucesso!");
+      } else {
+        // Create new budget
+        await createSimpleBudget({
+          title: formData.title,
+          client: formData.client,
+          totalAmount: formData.totalAmount,
+          status: formData.status,
+          validUntil: formData.validUntil,
+          budgetDate: formData.budgetDate ? new Date(formData.budgetDate).getTime() : undefined,
+        });
+        toast.success("Orçamento criado com sucesso!");
+      }
       onSuccess?.();
       onClose();
     } catch (err) {
-      handleError(err, "Erro ao criar orçamento");
+      handleError(err, isEditing ? "Erro ao atualizar orçamento" : "Erro ao criar orçamento");
     } finally {
       setIsSubmitting(false);
     }
@@ -136,7 +185,9 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
 
             {/* Title */}
             <div>
-              <h2 className="text-xl font-semibold text-base-content">Novo Orçamento</h2>
+              <h2 className="text-xl font-semibold text-base-content">
+                {isEditing ? "Editar Orçamento" : "Novo Orçamento"}
+              </h2>
             </div>
           </div>
 
@@ -204,26 +255,29 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
                 />
               </div>
 
-              <div>
-                <Label htmlFor="budgetDate" className="text-sm font-medium mb-2 block">
-                  Data do Orçamento
-                </Label>
-                <Input
-                  id="budgetDate"
-                  type="date"
-                  value={formData.budgetDate}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      budgetDate: e.target.value,
-                    }))
-                  }
-                  className="border border-base-300 rounded-lg focus:border-orange-500"
-                />
-                <p className="text-xs text-base-content/50 mt-1">
-                  Deixe vazio para usar a data atual. Use para registrar orçamentos retroativos.
-                </p>
-              </div>
+              {/* Only show budgetDate field when creating new budget */}
+              {!isEditing && (
+                <div>
+                  <Label htmlFor="budgetDate" className="text-sm font-medium mb-2 block">
+                    Data do Orçamento
+                  </Label>
+                  <Input
+                    id="budgetDate"
+                    type="date"
+                    value={formData.budgetDate}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        budgetDate: e.target.value,
+                      }))
+                    }
+                    className="border border-base-300 rounded-lg focus:border-orange-500"
+                  />
+                  <p className="text-xs text-base-content/50 mt-1">
+                    Deixe vazio para usar a data atual. Use para registrar orçamentos retroativos.
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -283,7 +337,7 @@ export function SimpleBudgetModal({ isOpen, onClose, onSuccess }: SimpleBudgetMo
                   ) : (
                     <SaveIcon className="h-4 w-4" />
                   )}
-                  Criar Orçamento
+                  {isEditing ? "Salvar Alterações" : "Criar Orçamento"}
                 </Button>
               </div>
             </form>

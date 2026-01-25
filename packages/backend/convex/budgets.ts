@@ -205,6 +205,44 @@ export const createSimpleBudget = mutation({
   },
 });
 
+// Mutation: Update simple budget (basic fields only)
+export const updateSimpleBudget = mutation({
+  args: {
+    id: v.id("budgets"),
+    title: v.string(),
+    client: v.string(),
+    totalAmount: v.number(),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("sent"),
+      v.literal("approved"),
+      v.literal("rejected"),
+      v.literal("cancelled"),
+      v.literal("expired"),
+    ),
+    validUntil: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+
+    const budget = await ctx.db.get(args.id);
+    if (!budget) {
+      throw new Error("Orçamento não encontrado");
+    }
+
+    await ctx.db.patch(args.id, {
+      title: args.title,
+      client: args.client,
+      totalAmount: args.totalAmount,
+      status: args.status,
+      validUntil: args.validUntil,
+      updatedAt: Date.now(),
+    });
+
+    return args.id;
+  },
+});
+
 // Mutation: Create proposal (full budget with PDF support)
 export const createBudget = mutation({
   args: {

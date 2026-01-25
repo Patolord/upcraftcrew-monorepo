@@ -1,13 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  FileTextIcon,
-  SendIcon,
-  CheckCircleIcon,
-  DollarSignIcon,
-  TrendingUpIcon,
-} from "lucide-react";
+import { FileTextIcon, CheckCircleIcon, DollarSignIcon, TrendingUpIcon } from "lucide-react";
 import React from "react";
 
 interface BudgetStats {
@@ -43,15 +37,6 @@ const statCards = [
     iconBg: "bg-teal-500",
     getValue: (stats: BudgetStats) => stats.total,
     getChange: () => 12,
-  },
-
-  {
-    key: "sent",
-    label: "Enviados",
-    icon: SendIcon,
-    iconBg: "bg-blue-500",
-    getValue: (stats: BudgetStats) => stats.sent,
-    getChange: () => 18,
   },
   {
     key: "approved",
@@ -93,7 +78,7 @@ export function BudgetDashboard({ stats }: BudgetDashboardProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {statCards.map((card) => {
         const Icon = card.icon;
         const value = card.getValue(safeStats);

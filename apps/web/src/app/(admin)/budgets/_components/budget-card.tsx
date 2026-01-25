@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { EyeIcon, CalendarIcon, ChevronDownIcon } from "lucide-react";
+import {
+  EyeIcon,
+  CalendarIcon,
+  ChevronDownIcon,
+  Trash2Icon,
+  PencilIcon,
+  FolderPlusIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { toast } from "sonner";
 import React from "react";
 
@@ -88,10 +108,19 @@ function formatDate(timestamp: number | undefined): string {
 }
 
 export function BudgetCard({ budget }: { budget: Budget }) {
+  const router = useRouter();
   const updateBudgetStatus = useMutation(api.budgets.updateBudgetStatus);
+  const deleteBudget = useMutation(api.budgets.deleteBudget);
+  const createProjectFromBudget = useMutation(api.projects.createProjectFromBudget);
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
+
   const status = statusConfig[budget.status];
   const isExpired = budget.validUntil < Date.now() && budget.status === "sent";
   const isProposal = budget.type === "proposal" || budget.type === undefined; // Legacy budgets are treated as proposals
+  const isApproved = budget.status === "approved";
 
   const handleStatusChange = async (
     newStatus: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired",
@@ -108,8 +137,36 @@ export function BudgetCard({ budget }: { budget: Budget }) {
     }
   };
 
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteBudget({ id: budget._id });
+      toast.success("Orçamento excluído com sucesso!");
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error("Failed to delete budget:", error);
+      toast.error("Erro ao excluir orçamento");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleConvertToProject = async () => {
+    setIsConverting(true);
+    try {
+      const projectId = await createProjectFromBudget({ budgetId: budget._id });
+      toast.success("Projeto criado com sucesso!");
+      router.push(`/projects/${projectId}`);
+    } catch (error) {
+      console.error("Failed to convert to project:", error);
+      toast.error("Erro ao criar projeto");
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
   return (
-    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow">
+    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full">
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -160,7 +217,7 @@ export function BudgetCard({ budget }: { budget: Budget }) {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex-1">
         {/* Description - only show for proposals with description */}
         {budget.description && (
           <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{budget.description}</p>
@@ -195,15 +252,122 @@ export function BudgetCard({ budget }: { budget: Budget }) {
         </div>
       </CardContent>
 
-      {/* Actions */}
-      <CardFooter className="justify-end">
-        <Link href={`/budgets/${budget._id}`}>
-          <Button className="bg-orange-500 text-white rounded-md text-xs">
-            <EyeIcon className="h-4 w-4 mr-1" />
-            Visualizar
-          </Button>
-        </Link>
+      {/* Actions - Always at bottom */}
+      <CardFooter className="justify-end mt-auto gap-2">
+        {/* Delete Button */}
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <Button
+                {...props}
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg"
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                <Trash2Icon className="h-4 w-4" />
+              </Button>
+            )}
+          />
+          <TooltipContent>
+            <p>Excluir</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Edit Button */}
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <Button
+                {...props}
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
+                onClick={() => router.push(`/budgets/${budget._id}`)}
+              >
+                <PencilIcon className="h-4 w-4" />
+              </Button>
+            )}
+          />
+          <TooltipContent>
+            <p>Editar</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Convert to Project Button - Only for approved budgets */}
+        {isApproved && (
+          <Tooltip>
+            <TooltipTrigger
+              render={(props) => (
+                <Button
+                  {...props}
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                  onClick={handleConvertToProject}
+                  disabled={isConverting}
+                >
+                  {isConverting ? (
+                    <Loader2Icon className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FolderPlusIcon className="h-4 w-4" />
+                  )}
+                </Button>
+              )}
+            />
+            <TooltipContent>
+              <p>Criar Projeto</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* View Button */}
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <Button
+                {...props}
+                className="bg-orange-500 text-white rounded-md text-xs h-8"
+                onClick={() => router.push(`/budgets/${budget._id}`)}
+              >
+                <EyeIcon className="h-4 w-4 mr-1" />
+                Visualizar
+              </Button>
+            )}
+          />
+          <TooltipContent>
+            <p>Ver detalhes</p>
+          </TooltipContent>
+        </Tooltip>
       </CardFooter>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente o orçamento &quot;
+              {budget.title}&quot;.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting} className="bg-white rounded-lg">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={isDeleting} className="">
+              {isDeleting ? (
+                <>
+                  <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

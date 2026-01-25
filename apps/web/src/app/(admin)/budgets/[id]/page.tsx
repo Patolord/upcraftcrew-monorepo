@@ -7,6 +7,7 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { useParams, useRouter } from "next/navigation";
 import { BudgetFormModal } from "../_components/budget-new/budget-form-modal";
+import { SimpleBudgetModal } from "../_components/simple-budget-modal";
 import {
   ArrowLeftIcon,
   InfoIcon,
@@ -17,6 +18,7 @@ import {
   CalendarIcon,
   UserIcon,
   CheckCircleIcon,
+  Settings2Icon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
@@ -93,6 +95,7 @@ export default function BudgetDetailPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showSimpleEditModal, setShowSimpleEditModal] = useState(false);
 
   const deleteBudget = useMutation(api.budgets.deleteBudget);
 
@@ -241,8 +244,19 @@ export default function BudgetDetailPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setShowSimpleEditModal(true)}
+            className="border-teal-200 text-teal-600 rounded-md hover:bg-teal-50 hover:text-teal-700"
+            title="Edição rápida (campos básicos)"
+          >
+            <Settings2Icon className="h-4 w-4" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowEditModal(true)}
             className="border-orange-200 text-orange-600 rounded-md hover:bg-orange-50 hover:text-orange-700"
+            title="Edição completa (proposta)"
           >
             <PencilIcon className="h-4 w-4" />
           </Button>
@@ -512,7 +526,7 @@ export default function BudgetDetailPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit Budget Modal */}
+      {/* Edit Budget Modal (Full - for proposals) */}
       {showEditModal && (
         <BudgetFormModal
           isOpen={showEditModal}
@@ -521,6 +535,22 @@ export default function BudgetDetailPage() {
           onSuccess={() => setShowEditModal(false)}
         />
       )}
+
+      {/* Simple Edit Modal (Basic fields only) */}
+      <SimpleBudgetModal
+        isOpen={showSimpleEditModal}
+        onClose={() => setShowSimpleEditModal(false)}
+        initialData={{
+          _id: budget._id,
+          title: budget.title,
+          client: budget.client,
+          totalAmount: budget.totalAmount,
+          status: budget.status,
+          validUntil: budget.validUntil,
+          createdAt: budget.createdAt,
+        }}
+        onSuccess={() => setShowSimpleEditModal(false)}
+      />
     </div>
   );
 }
