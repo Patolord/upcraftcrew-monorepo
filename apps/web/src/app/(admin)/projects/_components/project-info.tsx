@@ -18,17 +18,17 @@ import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 const statusConfig = {
   planning: {
-    label: "Planning",
+    label: "Executar",
     variant: "secondary" as const,
     color: "bg-blue-100 text-blue-700 border-blue-200",
   },
   "in-progress": {
-    label: "In Progress",
+    label: "Em Progresso",
     variant: "default" as const,
     color: "bg-orange-100 text-orange-700 border-orange-200",
   },
   completed: {
-    label: "Completed",
+    label: "Concluído",
     variant: "success" as const,
     color: "bg-green-100 text-green-700 border-green-200",
   },
@@ -36,19 +36,19 @@ const statusConfig = {
 
 const priorityConfig = {
   low: {
-    label: "Low",
+    label: "Baixa",
     color: "text-gray-600",
   },
   medium: {
-    label: "Medium",
+    label: "Média",
     color: "text-blue-600",
   },
   high: {
-    label: "High",
+    label: "Alta",
     color: "text-amber-600",
   },
   urgent: {
-    label: "Urgent",
+    label: "Urgente",
     color: "text-red-600",
   },
 };
@@ -126,7 +126,7 @@ export function ProjectInfo({ project }: ProjectInfoProps) {
         {/* Priority Card */}
         <Card className="border border-orange-100 rounded-lg">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Priority</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Prioridade</CardTitle>
           </CardHeader>
           <CardContent>
             <div className={`flex items-center gap-2 ${priority.color} font-medium`}>

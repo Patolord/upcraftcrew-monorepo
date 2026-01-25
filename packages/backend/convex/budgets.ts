@@ -94,6 +94,7 @@ export const getBudgetsByStatus = query({
       v.literal("sent"),
       v.literal("approved"),
       v.literal("rejected"),
+      v.literal("cancelled"),
       v.literal("expired"),
     ),
   },
@@ -131,15 +132,22 @@ export const getBudgetStats = query({
 
     const total = budgets.length;
     const draft = budgets.filter((b) => b.status === "draft").length;
-    const sent = budgets.filter((b) => b.status === "sent").length;
+
+    // "Sent" includes all budgets that have been sent, including those that
+    // later received a response (approved/rejected). Once sent, always sent.
+    const sentStatuses = ["sent", "approved", "rejected"];
+    const sent = budgets.filter((b) => sentStatuses.includes(b.status)).length;
+
     const approved = budgets.filter((b) => b.status === "approved").length;
     const rejected = budgets.filter((b) => b.status === "rejected").length;
+    const cancelled = budgets.filter((b) => b.status === "cancelled").length;
 
     const totalValue = budgets.reduce((sum, b) => sum + b.totalAmount, 0);
     const approvedValue = budgets
       .filter((b) => b.status === "approved")
       .reduce((sum, b) => sum + b.totalAmount, 0);
 
+    // Conversion rate: percentage of sent budgets that were approved
     const conversionRate = sent > 0 ? (approved / sent) * 100 : 0;
 
     return {
@@ -148,6 +156,7 @@ export const getBudgetStats = query({
       sent,
       approved,
       rejected,
+      cancelled,
       totalValue,
       approvedValue,
       conversionRate,
@@ -155,7 +164,46 @@ export const getBudgetStats = query({
   },
 });
 
-// Mutation: Create budget
+// Mutation: Create simple budget (no PDF, minimal fields)
+export const createSimpleBudget = mutation({
+  args: {
+    title: v.string(),
+    client: v.string(),
+    totalAmount: v.number(),
+    currency: v.optional(v.string()),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("sent"),
+      v.literal("approved"),
+      v.literal("rejected"),
+      v.literal("cancelled"),
+      v.literal("expired"),
+    ),
+    validUntil: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+    const now = Date.now();
+
+    const budgetId = await ctx.db.insert("budgets", {
+      type: "budget",
+      title: args.title,
+      client: args.client,
+      description: "",
+      status: args.status,
+      totalAmount: args.totalAmount,
+      currency: args.currency || "BRL",
+      items: [],
+      validUntil: args.validUntil,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return budgetId;
+  },
+});
+
+// Mutation: Create proposal (full budget with PDF support)
 export const createBudget = mutation({
   args: {
     title: v.string(),
@@ -166,6 +214,7 @@ export const createBudget = mutation({
       v.literal("sent"),
       v.literal("approved"),
       v.literal("rejected"),
+      v.literal("cancelled"),
       v.literal("expired"),
     ),
     currency: v.string(),
@@ -180,7 +229,6 @@ export const createBudget = mutation({
     validUntil: v.number(),
     projectId: v.optional(v.id("projects")),
     notes: v.optional(v.string()),
-    // New fields
     objectives: v.optional(
       v.array(
         v.object({
@@ -220,6 +268,7 @@ export const createBudget = mutation({
 
     const budgetId = await ctx.db.insert("budgets", {
       ...args,
+      type: "proposal",
       totalAmount,
       createdAt: now,
       updatedAt: now,
@@ -242,6 +291,7 @@ export const updateBudget = mutation({
         v.literal("sent"),
         v.literal("approved"),
         v.literal("rejected"),
+        v.literal("cancelled"),
         v.literal("expired"),
       ),
     ),
@@ -340,6 +390,7 @@ export const updateBudgetStatus = mutation({
       v.literal("sent"),
       v.literal("approved"),
       v.literal("rejected"),
+      v.literal("cancelled"),
       v.literal("expired"),
     ),
   },

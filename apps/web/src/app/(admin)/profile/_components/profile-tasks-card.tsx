@@ -30,22 +30,22 @@ const statusConfig = {
     color: "bg-gray-100 text-gray-700",
   },
   "in-progress": {
-    label: "In Progress",
+    label: "Em Progresso",
     icon: Clock,
     color: "bg-blue-100 text-blue-700",
   },
   review: {
-    label: "Review",
+    label: "Revisão",
     icon: AlertCircle,
     color: "bg-yellow-100 text-yellow-700",
   },
   done: {
-    label: "Done",
+    label: "Concluído",
     icon: CheckCircle2,
     color: "bg-green-100 text-green-700",
   },
   blocked: {
-    label: "Blocked",
+    label: "Bloqueado",
     icon: Ban,
     color: "bg-red-100 text-red-700",
   },

@@ -60,16 +60,21 @@ type ProjectStatus = "planning" | "in-progress" | "completed";
 type ProjectPriority = "low" | "medium" | "high" | "urgent";
 
 const STATUS_OPTIONS = [
-  { value: "planning", label: "Planning", icon: ClipboardListIcon, color: "text-blue-500" },
-  { value: "in-progress", label: "In Progress", icon: RocketIcon, color: "text-amber-500" },
-  { value: "completed", label: "Completed", icon: CheckCircleIcon, color: "text-green-500" },
+  {
+    value: "planning",
+    label: "Executar",
+    icon: ClipboardListIcon,
+    color: "text - blue - 500",
+  },
+  { value: "in-progress", label: "Em Progresso", icon: RocketIcon, color: "text-amber-500" },
+  { value: "completed", label: "Concluído", icon: CheckCircleIcon, color: "text-green-500" },
 ] as const;
 
 const PRIORITY_OPTIONS = [
-  { value: "low", label: "Low", color: "bg-green-100 text-green-700" },
-  { value: "medium", label: "Medium", color: "bg-amber-100 text-amber-700" },
-  { value: "high", label: "High", color: "bg-red-100 text-red-700" },
-  { value: "urgent", label: "Urgent", color: "bg-purple-100 text-purple-700" },
+  { value: "low", label: "Baixa", color: "bg-green-100 text-green-700" },
+  { value: "medium", label: "Média", color: "bg-amber-100 text-amber-700" },
+  { value: "high", label: "Alta", color: "bg-red-100 text-red-700" },
+  { value: "urgent", label: "Urgente", color: "bg-purple-100 text-purple-700" },
 ] as const;
 
 type FormData = {

@@ -40,7 +40,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="projects"
         options={{
-          title: "Projects",
+          title: "Projetos",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="briefcase-outline" size={size} color={color} />
           ),
@@ -49,7 +49,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="team"
         options={{
-          title: "Team",
+          title: "Equipe",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="people-outline" size={size} color={color} />
           ),
@@ -58,7 +58,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="schedule"
         options={{
-          title: "Schedule",
+          title: "Agenda",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
@@ -76,7 +76,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="finance"
         options={{
-          title: "Finance",
+          title: "Finanças",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cash-outline" size={size} color={color} />
           ),
@@ -85,7 +85,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="budgets"
         options={{
-          title: "Budgets",
+          title: "Orçamentos",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="document-text-outline" size={size} color={color} />
           ),

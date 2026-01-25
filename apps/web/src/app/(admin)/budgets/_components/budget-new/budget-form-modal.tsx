@@ -49,7 +49,7 @@ interface BudgetFormData {
   title: string;
   client: string;
   description: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   currency: string;
   items: BudgetItem[];
   validUntil: number;
@@ -73,6 +73,7 @@ const statusOptions = [
   { value: "sent", label: "Enviado" },
   { value: "approved", label: "Aprovado" },
   { value: "rejected", label: "Rejeitado" },
+  { value: "cancelled", label: "Cancelado" },
   { value: "expired", label: "Expirado" },
 ];
 

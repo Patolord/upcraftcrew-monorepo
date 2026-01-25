@@ -19,7 +19,7 @@ interface DashboardStatsProps {
 const statCards = [
   {
     key: "projects",
-    label: "Projects",
+    label: "Projetos",
     icon: FolderKanbanIcon,
     iconBg: "bg-teal-500",
     getValue: (stats: DashboardStatsProps["stats"], totalProjects: number) => totalProjects,
@@ -36,7 +36,7 @@ const statCards = [
   },
   {
     key: "revenue",
-    label: "Revenue",
+    label: "Receitas",
     icon: TrendingUpIcon,
     iconBg: "bg-orange-400",
     getValue: (stats: DashboardStatsProps["stats"]) => `${(stats.totalRevenue / 1000).toFixed(0)}k`,
@@ -44,7 +44,7 @@ const statCards = [
   },
   {
     key: "profit",
-    label: "Profit",
+    label: "Lucro",
     icon: DollarSignIcon,
     iconBg: "bg-orange-500",
     getValue: (stats: DashboardStatsProps["stats"]) => (stats.netProfit / 1000).toFixed(0),

@@ -101,10 +101,10 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   // Group tasks by status
   const columns = useMemo<Column[]>(() => {
     const statuses: { id: TaskStatus; title: string }[] = [
-      { id: "todo", title: "To Do" },
-      { id: "in-progress", title: "In Progress" },
-      { id: "review", title: "Review" },
-      { id: "done", title: "Completed" },
+      { id: "todo", title: "Para Fazer" },
+      { id: "in-progress", title: "Em Progresso" },
+      { id: "review", title: "Revisão" },
+      { id: "done", title: "Concluído" },
     ];
 
     return statuses.map(

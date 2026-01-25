@@ -1,11 +1,14 @@
 "use client";
 
-import { useId } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useId, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { TeamMemberStatus } from "@/types/team";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { XIcon, Loader2Icon, UserPlusIcon } from "lucide-react";
 import React from "react";
 
 interface NewTeamMemberModalProps {
@@ -29,6 +32,8 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
 
   const {
     register,
+    handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<TeamMemberFormData>({
     defaultValues: {
@@ -42,190 +47,271 @@ export function NewTeamMemberModal({ isOpen, onClose }: NewTeamMemberModalProps)
     },
   });
 
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      reset();
+      clearError();
+    }
+  }, [isOpen, reset, clearError]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
+  // Lock body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  const onSubmit = (data: TeamMemberFormData) => {
+    // TODO: Implement actual team member creation
+    console.log("Form data:", data);
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box max-w-2xl">
-        <h3 className="font-bold text-lg mb-4">Add New Team Member</h3>
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/50 z-40 transition-opacity pointer-events-none"
+        aria-hidden="true"
+      />
 
-        {error && (
-          <div className="mb-4">
-            <ErrorAlert
-              code={error.code}
-              message={error.message}
-              title={error.title}
-              onDismiss={clearError}
-            />
-          </div>
-        )}
-
-        <Form className="space-y-4">
-          {/* Name */}
-          <div className="form-control">
-            <label htmlFor={`${formId}-name`} className="label">
-              <span className="label-text">Full Name *</span>
-            </label>
-            <input
-              id={`${formId}-name`}
-              type="text"
-              className="input input-bordered"
-              {...register("name", {
-                required: "Name is required",
-                minLength: {
-                  value: 2,
-                  message: "Name must be at least 2 characters",
-                },
-              })}
-            />
-            {errors.name && (
-              <span className="label-text-alt text-error mt-1">{errors.name.message}</span>
-            )}
-          </div>
-
-          {/* Email */}
-          <div className="form-control">
-            <label htmlFor={`${formId}-email`} className="label">
-              <span className="label-text">Email *</span>
-            </label>
-            <input
-              id={`${formId}-email`}
-              type="email"
-              className="input input-bordered"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
-            />
-            {errors.email && (
-              <span className="label-text-alt text-error mt-1">{errors.email.message}</span>
-            )}
-          </div>
-
-          {/* Role and Department */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="form-control">
-              <label htmlFor={`${formId}-role`} className="label">
-                <span className="label-text">Permission Level *</span>
-              </label>
-              <select
-                id={`${formId}-role`}
-                className="select select-bordered"
-                {...register("role", {
-                  required: "Role is required",
-                })}
-              >
-                <option value="viewer">Viewer</option>
-                <option value="member">Member</option>
-                <option value="admin">Admin</option>
-              </select>
-              {errors.role && (
-                <span className="label-text-alt text-error mt-1">{errors.role.message}</span>
-              )}
-            </div>
-            <div className="form-control">
-              <label htmlFor={`${formId}-department`} className="label">
-                <span className="label-text">Department *</span>
-              </label>
-              <select
-                id={`${formId}-department`}
-                className="select select-bordered"
-                {...register("department", {
-                  required: "Department is required",
-                  validate: (value) => value !== "" || "Please select a department",
-                })}
-              >
-                <option value="">Select Department</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Design">Design</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Sales">Sales</option>
-                <option value="Product">Product</option>
-                <option value="HR">HR</option>
-                <option value="Finance">Finance</option>
-                <option value="Operations">Operations</option>
-              </select>
-              {errors.department && (
-                <span className="label-text-alt text-error mt-1">{errors.department.message}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Status */}
-          <div className="form-control">
-            <label htmlFor={`${formId}-status`} className="label">
-              <span className="label-text">Initial Status</span>
-            </label>
-            <select
-              id={`${formId}-status`}
-              className="select select-bordered"
-              {...register("status")}
+      {/* Modal */}
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+        onClick={onClose}
+      >
+        <div
+          className="relative w-full max-w-lg bg-admin-background rounded-2xl shadow-2xl transform transition-all duration-300 ease-out animate-in fade-in zoom-in-95 overflow-hidden pointer-events-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="relative px-6 pt-6 pb-4 bg-admin-background border-b border-border">
+            {/* Close Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="absolute right-4 top-4 h-8 w-8 rounded-full hover:bg-base-200"
             >
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-              <option value="away">Away</option>
-              <option value="busy">Busy</option>
-            </select>
+              <XIcon className="h-4 w-4" />
+              <span className="sr-only">Fechar</span>
+            </Button>
+
+            {/* Title */}
+            <div>
+              <h2 className="text-xl font-semibold text-base-content">Novo Membro da Equipe</h2>
+              <p className="text-sm text-base-content/60 mt-1">
+                Adicione um novo membro à sua equipe
+              </p>
+            </div>
           </div>
 
-          {/* Skills */}
-          <div className="form-control">
-            <label htmlFor={`${formId}-skills`} className="label">
-              <span className="label-text">Skills (comma separated)</span>
-            </label>
-            <input
-              id={`${formId}-skills`}
-              type="text"
-              className="input input-bordered"
-              placeholder="React, TypeScript, Node.js"
-              {...register("skills")}
-            />
-          </div>
-
-          {/* Avatar URL */}
-          <div className="form-control">
-            <label htmlFor={`${formId}-imageUrl`} className="label">
-              <span className="label-text">Avatar URL (optional)</span>
-            </label>
-            <input
-              id={`${formId}-imageUrl`}
-              type="url"
-              className="input input-bordered"
-              placeholder="https://example.com/avatar.jpg"
-              {...register("imageUrl", {
-                pattern: {
-                  value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-                  message: "Invalid URL format",
-                },
-              })}
-            />
-            {errors.imageUrl && (
-              <span className="label-text-alt text-error mt-1">{errors.imageUrl.message}</span>
+          {/* Content */}
+          <div className="px-6 py-6 max-h-[70vh] overflow-y-auto">
+            {error && (
+              <div className="mb-4">
+                <ErrorAlert
+                  code={error.code}
+                  message={error.message}
+                  title={error.title}
+                  onDismiss={clearError}
+                />
+              </div>
             )}
-          </div>
 
-          {/* Actions */}
-          <div className="modal-action">
-            <Button className="btn btn-ghost" onClick={onClose} disabled={isSubmitting}>
-              Cancel
-            </Button>
-            <Button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <span className="loading loading-spinner loading-sm" />
-                  Adding...
-                </>
-              ) : (
-                "Add Team Member"
-              )}
-            </Button>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Name */}
+              <div>
+                <Label htmlFor={`${formId}-name`} className="text-sm font-medium mb-2 block">
+                  Nome Completo *
+                </Label>
+                <Input
+                  id={`${formId}-name`}
+                  type="text"
+                  placeholder="João Silva"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                  {...register("name", {
+                    required: "Nome é obrigatório",
+                    minLength: {
+                      value: 2,
+                      message: "Nome deve ter pelo menos 2 caracteres",
+                    },
+                  })}
+                />
+                {errors.name && (
+                  <span className="text-sm text-error mt-1">{errors.name.message}</span>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <Label htmlFor={`${formId}-email`} className="text-sm font-medium mb-2 block">
+                  Email *
+                </Label>
+                <Input
+                  id={`${formId}-email`}
+                  type="email"
+                  placeholder="joao@empresa.com"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                  {...register("email", {
+                    required: "Email é obrigatório",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Email inválido",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <span className="text-sm text-error mt-1">{errors.email.message}</span>
+                )}
+              </div>
+
+              {/* Role and Department */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor={`${formId}-role`} className="text-sm font-medium mb-2 block">
+                    Nível de Permissão *
+                  </Label>
+                  <select
+                    id={`${formId}-role`}
+                    className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    {...register("role", {
+                      required: "Nível é obrigatório",
+                    })}
+                  >
+                    <option value="viewer">Visualizador</option>
+                    <option value="member">Membro</option>
+                    <option value="admin">Administrador</option>
+                  </select>
+                  {errors.role && (
+                    <span className="text-sm text-error mt-1">{errors.role.message}</span>
+                  )}
+                </div>
+                <div>
+                  <Label
+                    htmlFor={`${formId}-department`}
+                    className="text-sm font-medium mb-2 block"
+                  >
+                    Departamento *
+                  </Label>
+                  <select
+                    id={`${formId}-department`}
+                    className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    {...register("department", {
+                      required: "Departamento é obrigatório",
+                      validate: (value) => value !== "" || "Selecione um departamento",
+                    })}
+                  >
+                    <option value="">Selecione</option>
+                    <option value="Engineering">Engenharia</option>
+                    <option value="Design">Design</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Sales">Vendas</option>
+                    <option value="Product">Produto</option>
+                    <option value="HR">RH</option>
+                    <option value="Finance">Financeiro</option>
+                    <option value="Operations">Operações</option>
+                  </select>
+                  {errors.department && (
+                    <span className="text-sm text-error mt-1">{errors.department.message}</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Status */}
+              <div>
+                <Label htmlFor={`${formId}-status`} className="text-sm font-medium mb-2 block">
+                  Status Inicial
+                </Label>
+                <select
+                  id={`${formId}-status`}
+                  className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  {...register("status")}
+                >
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                  <option value="away">Ausente</option>
+                  <option value="busy">Ocupado</option>
+                </select>
+              </div>
+
+              {/* Skills */}
+              <div>
+                <Label htmlFor={`${formId}-skills`} className="text-sm font-medium mb-2 block">
+                  Habilidades (separadas por vírgula)
+                </Label>
+                <Input
+                  id={`${formId}-skills`}
+                  type="text"
+                  placeholder="React, TypeScript, Node.js"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                  {...register("skills")}
+                />
+              </div>
+
+              {/* Avatar URL */}
+              <div>
+                <Label htmlFor={`${formId}-imageUrl`} className="text-sm font-medium mb-2 block">
+                  URL do Avatar (opcional)
+                </Label>
+                <Input
+                  id={`${formId}-imageUrl`}
+                  type="url"
+                  placeholder="https://exemplo.com/avatar.jpg"
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                  {...register("imageUrl", {
+                    pattern: {
+                      value: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                      message: "URL inválida",
+                    },
+                  })}
+                />
+                {errors.imageUrl && (
+                  <span className="text-sm text-error mt-1">{errors.imageUrl.message}</span>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-base-200">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="gap-2 bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  {isSubmitting ? (
+                    <Loader2Icon className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <UserPlusIcon className="h-4 w-4" />
+                  )}
+                  Adicionar Membro
+                </Button>
+              </div>
+            </form>
           </div>
-        </Form>
+        </div>
       </div>
-      <button className="modal-backdrop" onClick={onClose} aria-label="Close modal" />
-    </div>
+    </>
   );
 }

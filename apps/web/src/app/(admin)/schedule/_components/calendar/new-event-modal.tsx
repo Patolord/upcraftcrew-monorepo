@@ -10,7 +10,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -162,10 +161,9 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-admin-background">
         <DialogHeader>
           <DialogTitle className="text-lg">Novo Evento</DialogTitle>
-          <DialogDescription>Adicione um novo evento ao calendário</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

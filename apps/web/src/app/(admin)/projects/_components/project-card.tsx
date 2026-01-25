@@ -18,34 +18,34 @@ import React from "react";
 
 const statusConfig = {
   planning: {
-    label: "Planning",
+    label: "Executar",
     variant: "secondary" as const,
   },
   "in-progress": {
-    label: "In Progress",
+    label: "Em Progresso",
     variant: "default" as const,
   },
   completed: {
-    label: "Completed",
+    label: "Concluído",
     variant: "success" as const,
   },
 };
 
 const priorityConfig = {
   low: {
-    label: "Low",
+    label: "Baixa",
     color: "text-muted-foreground",
   },
   medium: {
-    label: "Medium",
+    label: "Média",
     color: "text-blue-600",
   },
   high: {
-    label: "High",
+    label: "Alta",
     color: "text-amber-600",
   },
   urgent: {
-    label: "Urgent",
+    label: "Urgente",
     color: "text-red-600",
   },
 };
@@ -55,7 +55,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const priority = priorityConfig[project.priority];
 
   return (
-    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow">
+    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full">
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -68,7 +68,7 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex-1">
         {/* Description */}
         <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
 
@@ -91,7 +91,7 @@ export function ProjectCard({ project }: { project: Project }) {
         {/* Progress */}
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs text-muted-foreground">Progress</span>
+            <span className="text-xs text-muted-foreground">Progresso</span>
             <span className="text-xs font-medium">{project.progress}%</span>
           </div>
           <Progress value={project.progress} className="h-2 [&>div]:bg-base-300" />
@@ -101,12 +101,12 @@ export function ProjectCard({ project }: { project: Project }) {
         <div className="grid grid-cols-2 gap-3 mt-4">
           {project.budget && (
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Budget</p>
+              <p className="text-xs text-muted-foreground mb-1">Orçamento</p>
               <p className="text-sm font-medium">{project.budget.toLocaleString()}</p>
             </div>
           )}
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Timeline</p>
+            <p className="text-xs text-muted-foreground mb-1">Cronograma</p>
             <p className="text-sm font-medium">
               {new Date(project.startDate).toLocaleDateString("en-US", {
                 month: "short",
@@ -155,11 +155,11 @@ export function ProjectCard({ project }: { project: Project }) {
       </CardContent>
 
       {/* Actions */}
-      <CardFooter className="justify-end">
+      <CardFooter className="justify-end mt-auto">
         <Link href={`/projects/${project._id}`}>
           <Button className="bg-orange-500 text-white rounded-md text-xs">
             <EyeIcon className="h-4 w-4 mr-1" />
-            View
+            Visualizar
           </Button>
         </Link>
       </CardFooter>

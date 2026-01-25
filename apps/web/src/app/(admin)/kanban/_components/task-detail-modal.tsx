@@ -70,10 +70,10 @@ const LABEL_COLORS = [
 ];
 
 const priorityLabels: Record<TaskPriority, { label: string; color: string }> = {
-  low: { label: "Low Priority", color: "#84cc16" },
-  medium: { label: "Medium", color: "#f59e0b" },
-  high: { label: "High Priority", color: "#f97316" },
-  urgent: { label: "Urgent", color: "#ef4444" },
+  low: { label: "Baixa", color: "#84cc16" },
+  medium: { label: "Média", color: "#f59e0b" },
+  high: { label: "Alta", color: "#f97316" },
+  urgent: { label: "Urgente", color: "#ef4444" },
 };
 
 export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalProps) {
@@ -262,10 +262,14 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto p-0">
+      <SheetContent
+        side="right"
+        className="bg-admin-background rounded-lg shadow-sm overflow-y-auto p-0"
+        style={{ width: "60vw", maxWidth: "none" }}
+      >
         {/* Header */}
         <SheetHeader className="p-4 pb-0">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+          <div className="flex items-center gap-2 text-xs text-brand mb-2">
             <CircleIcon className="size-3" />
             <span>{task.status.replace("-", " ").toUpperCase()}</span>
           </div>
@@ -279,10 +283,10 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                 className="text-lg font-semibold"
               />
               <Button size="sm" onClick={handleUpdateTitle}>
-                Save
+                Salvar
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setIsEditingTitle(false)}>
-                Cancel
+                Cancelar
               </Button>
             </div>
           ) : (
@@ -299,21 +303,29 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         <div className="flex flex-wrap gap-2 p-4 border-b">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
-                <PlusIcon className="size-4 mr-1" /> Add
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background"
+              >
+                <PlusIcon className="size-4 mr-1 text-brand" /> Adicionar
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => setShowSubtaskInput(true)}>
-                <CheckSquareIcon className="size-4 mr-2" /> Subtask
+                <CheckSquareIcon className="size-4 mr-2 text-brand" /> Subtarefa
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
-                <TagIcon className="size-4 mr-1" /> Labels
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background"
+              >
+                <TagIcon className="size-4 mr-1 text-brand" /> Labels
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -351,16 +363,16 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                   </div>
                   <div className="flex gap-1">
                     <Button size="sm" className="flex-1" onClick={handleCreateLabel}>
-                      Create
+                      Criar
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => setShowLabelCreator(false)}>
-                      Cancel
+                      Cancelar
                     </Button>
                   </div>
                 </div>
               ) : (
                 <DropdownMenuItem onClick={() => setShowLabelCreator(true)}>
-                  <PlusIcon className="size-4 mr-2" /> Create new label
+                  <PlusIcon className="size-4 mr-2" /> Criar nova label
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -368,8 +380,12 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
 
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
-                <CalendarIcon className="size-4 mr-1" /> Dates
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background"
+              >
+                <CalendarIcon className="size-4 mr-1 text-brand" /> Datas
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -394,19 +410,28 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="outline" size="sm" onClick={() => setShowSubtaskInput(true)}>
-            <CheckSquareIcon className="size-4 mr-1" /> Checklist
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-md border-brand bg-admin-background"
+            onClick={() => setShowSubtaskInput(true)}
+          >
+            <CheckSquareIcon className="size-4 mr-1 text-brand" /> Checklist
           </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
-                <UsersIcon className="size-4 mr-1" /> Members
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background  "
+              >
+                <UsersIcon className="size-4 mr-1 text-brand" /> Atribuir para
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => handleUpdateAssignee("none")}>
-                <span className="text-muted-foreground">Unassigned</span>
+                <span className="text-muted-foreground">Não atribuído</span>
               </DropdownMenuItem>
               {teamMembers?.map((member) => (
                 <DropdownMenuItem
@@ -453,9 +478,9 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             )}
 
             {/* Priority */}
-            <div className="space-y-2">
+            <div className="space-y-2 p-2">
               <h4 className="text-sm font-medium flex items-center gap-2">
-                <TagIcon className="size-4" /> Priority
+                <TagIcon className="size-4 text-brand" /> Prioridade
               </h4>
               <Select
                 value={task.priority}
@@ -478,27 +503,27 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </div>
 
             {/* Description */}
-            <div className="space-y-2">
+            <div className="space-y-2 p-2">
               <h4 className="text-sm font-medium flex items-center gap-2">
-                <AlignLeftIcon className="size-4" /> Description
+                <AlignLeftIcon className="size-4 text-brand" /> Descrição
               </h4>
               <Textarea
-                placeholder="Add a more detailed description..."
+                placeholder="Adicione uma descrição mais detalhada..."
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 onBlur={handleUpdateDescription}
-                className="min-h-24"
+                className="min-h-24 rounded-md p-2"
               />
             </div>
 
             {/* Subtasks/Checklist */}
-            <div className="space-y-3">
+            <div className="space-y-3 p-2">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium flex items-center gap-2">
-                  <CheckSquareIcon className="size-4" /> Checklist
+                  <CheckSquareIcon className="size-4 text-brand" /> Checklist
                 </h4>
                 <Button variant="ghost" size="sm" onClick={() => setShowSubtaskInput(true)}>
-                  <PlusIcon className="size-4" />
+                  <PlusIcon className="size-4 text-brand" />
                 </Button>
               </div>
 
@@ -515,12 +540,15 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                         <Checkbox
                           checked={subtask.completed}
                           onCheckedChange={() => handleToggleSubtask(subtask._id)}
+                          className="data-checked:bg-white data-checked:text-brand data-checked:border-brand border-brand rounded-xs"
                         />
                         <span
                           className={`flex-1 text-sm ${subtask.completed ? "line-through text-muted-foreground" : ""}`}
                         >
                           {subtask.title}
                         </span>
+
+                        {/* Delete Subtask */}
                         <Button
                           variant="ghost"
                           size="icon-sm"
@@ -538,14 +566,14 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
               {showSubtaskInput && (
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Add an item..."
+                    placeholder="Adicione um item..."
                     value={newSubtaskTitle}
                     onChange={(e) => setNewSubtaskTitle(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddSubtask()}
                     autoFocus
                   />
                   <Button size="sm" onClick={handleAddSubtask}>
-                    Add
+                    Adicionar
                   </Button>
                   <Button
                     size="sm"
@@ -555,7 +583,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                       setNewSubtaskTitle("");
                     }}
                   >
-                    Cancel
+                    Cancelar
                   </Button>
                 </div>
               )}
@@ -567,36 +595,36 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                   className="w-full"
                   onClick={() => setShowSubtaskInput(true)}
                 >
-                  <PlusIcon className="size-4 mr-1" /> Add an item
+                  <PlusIcon className="size-4 mr-1 text-brand" /> Adicionar um item
                 </Button>
               )}
             </div>
           </div>
 
           {/* Right Column - Comments & Activity */}
-          <div className="md:col-span-2 space-y-4">
+          <div className="md:col-span-2 space-y-4 p-4">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium flex items-center gap-2">
-                <MessageSquareIcon className="size-4" /> Comments and activity
+                <MessageSquareIcon className="size-4 text-brand" /> Comentários e atividades
               </h4>
             </div>
 
             {/* Comment Input */}
             <div className="flex gap-2">
               <Textarea
-                placeholder="Write a comment..."
+                placeholder="Escreva um comentário..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="min-h-16"
+                className="min-h-16 rounded-md p-2"
               />
             </div>
             <Button
               size="sm"
               onClick={handleAddComment}
               disabled={!newComment.trim()}
-              className="w-full"
+              className="w-full rounded-md border-brand bg-white text-brand hover:bg-brand hover:text-white"
             >
-              <SendIcon className="size-4 mr-1" /> Send
+              <SendIcon className="size-4 mr-1 text-brand" /> Enviar
             </Button>
 
             {/* Comments List */}

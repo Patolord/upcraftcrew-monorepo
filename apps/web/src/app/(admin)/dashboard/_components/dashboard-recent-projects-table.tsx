@@ -106,11 +106,11 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="uppercase tracking-wider">Country</TableHead>
-              <TableHead className="uppercase tracking-wider">Customer</TableHead>
-              <TableHead className="uppercase tracking-wider">Sale</TableHead>
-              <TableHead className="uppercase tracking-wider">Value</TableHead>
-              <TableHead className="uppercase tracking-wider">Bounce</TableHead>
+              <TableHead className="uppercase tracking-wider">País</TableHead>
+              <TableHead className="uppercase tracking-wider">Cliente</TableHead>
+              <TableHead className="uppercase tracking-wider">Venda</TableHead>
+              <TableHead className="uppercase tracking-wider">Valor</TableHead>
+              <TableHead className="uppercase tracking-wider">Lucro</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -138,7 +138,7 @@ export function DashboardRecentProjectsTable({ projects }: DashboardRecentProjec
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="py-8 text-center text-sm text-muted-foreground">
-                  No projects found
+                  Não há projetos encontrados
                 </TableCell>
               </TableRow>
             )}

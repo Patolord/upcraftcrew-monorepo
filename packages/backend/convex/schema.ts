@@ -108,6 +108,9 @@ export default defineSchema({
     .index("by_project", ["projectId"]),
 
   budgets: defineTable({
+    // Type: "budget" (simple) or "proposal" (full with PDF)
+    type: v.optional(v.union(v.literal("budget"), v.literal("proposal"))),
+
     // Basic info
     title: v.string(),
     client: v.string(),
@@ -117,6 +120,7 @@ export default defineSchema({
       v.literal("sent"),
       v.literal("approved"),
       v.literal("rejected"),
+      v.literal("cancelled"),
       v.literal("expired"),
     ),
 
@@ -178,7 +182,8 @@ export default defineSchema({
   })
     .index("by_status", ["status"])
     .index("by_client", ["client"])
-    .index("by_created_at", ["createdAt"]),
+    .index("by_created_at", ["createdAt"])
+    .index("by_type", ["type"]),
 
   tasks: defineTable({
     title: v.string(),

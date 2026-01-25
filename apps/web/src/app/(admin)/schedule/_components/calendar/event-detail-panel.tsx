@@ -87,7 +87,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
           )}
         >
           {event.projectStatus === "in-progress"
-            ? "In Progress"
+            ? "Em Progresso"
             : event.projectStatus.charAt(0).toUpperCase() + event.projectStatus.slice(1)}
         </span>
       );
@@ -129,7 +129,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
           )}
         >
           {event.taskStatus === "in-progress"
-            ? "In Progress"
+            ? "Em Progresso"
             : event.taskStatus.charAt(0).toUpperCase() + event.taskStatus.slice(1)}
         </span>
       );
@@ -177,7 +177,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
             {/* Reminder - only for events */}
             <div className="flex items-start gap-2">
               <BellIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
-              <p className="text-xs text-foreground">10 min before</p>
+              <p className="text-xs text-foreground">10 min antes</p>
             </div>
           </>
         )}
@@ -203,7 +203,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
           <div className="pt-1">
             <div className="flex items-center gap-1.5 mb-2">
               <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="text-xs font-medium text-foreground">Responsible</span>
+              <span className="text-xs font-medium text-foreground">Responsável</span>
             </div>
             <div className="flex items-center gap-2">
               <Image
@@ -224,7 +224,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
             <div className="flex items-center gap-1.5 mb-2">
               <UsersIcon className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="text-xs font-medium text-foreground">
-                {event.attendees.length} guests
+                {event.attendees.length} convidados
               </span>
             </div>
 
@@ -262,7 +262,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
             <div className="flex items-center gap-1.5 mb-2">
               <UsersIcon className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="text-xs font-medium text-foreground">
-                {event.team.length} team members
+                {event.team.length} membros da equipe
               </span>
             </div>
 
@@ -299,7 +299,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
           <div className="flex items-start gap-2">
             <PercentIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
             <div className="flex-1">
-              <p className="text-xs text-foreground mb-1">{event.projectProgress}% complete</p>
+              <p className="text-xs text-foreground mb-1">{event.projectProgress}% completo</p>
               <div className="w-full bg-muted rounded-full h-1.5">
                 <div
                   className="bg-purple-500 h-1.5 rounded-full"
@@ -348,7 +348,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
         {/* Description */}
         {event.description && (
           <div className="pt-2 border-t border-border">
-            <h4 className="text-xs font-medium text-foreground mb-1">About</h4>
+            <h4 className="text-xs font-medium text-foreground mb-1">Sobre</h4>
             <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">
               {event.description}
             </p>
@@ -373,7 +373,7 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
             <Link href={sourceLink}>
               <Button variant="outline" size="sm" className="w-full h-7 text-xs rounded-lg">
                 <ExternalLinkIcon className="h-3 w-3 mr-1" />
-                View {getSourceTypeLabel(event.sourceType)}
+                Visualizar {getSourceTypeLabel(event.sourceType)}
               </Button>
             </Link>
           </div>

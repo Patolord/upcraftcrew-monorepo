@@ -6,7 +6,6 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -47,16 +46,16 @@ type ProjectPriority = "low" | "medium" | "high" | "urgent";
 type TeamMember = Doc<"users">;
 
 const STATUS_OPTIONS = [
-  { value: "planning", label: "Planning", icon: ClipboardListIcon, color: "text-blue-500" },
-  { value: "in-progress", label: "In Progress", icon: RocketIcon, color: "text-amber-500" },
-  { value: "completed", label: "Completed", icon: CheckCircleIcon, color: "text-green-500" },
+  { value: "planning", label: "Executar", icon: ClipboardListIcon, color: "text - blue - 500" },
+  { value: "in-progress", label: "Em Progresso", icon: RocketIcon, color: "text-amber-500" },
+  { value: "completed", label: "Concluído", icon: CheckCircleIcon, color: "text-green-500" },
 ] as const;
 
 const PRIORITY_OPTIONS = [
-  { value: "low", label: "Low", color: "bg-green-100 text-green-700" },
-  { value: "medium", label: "Medium", color: "bg-amber-100 text-amber-700" },
-  { value: "high", label: "High", color: "bg-red-100 text-red-700" },
-  { value: "urgent", label: "Urgent", color: "bg-purple-100 text-purple-700" },
+  { value: "low", label: "Baixa", color: "bg-green-100 text-green-700" },
+  { value: "medium", label: "Média", color: "bg-amber-100 text-amber-700" },
+  { value: "high", label: "Alta", color: "bg-red-100 text-red-700" },
+  { value: "urgent", label: "Urgente", color: "bg-purple-100 text-purple-700" },
 ] as const;
 
 type FormData = {
@@ -98,12 +97,12 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     e.preventDefault();
 
     if (!formData.name || !formData.client || !formData.description) {
-      toast.error("Please fill in all required fields");
+      toast.error("Por favor, preencha todos os campos obrigatórios");
       return;
     }
 
     if (!formData.managerId) {
-      toast.error("Please select a project manager");
+      toast.error("Por favor, selecione um gerente de projeto");
       return;
     }
 
@@ -124,7 +123,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         teamIds: formData.teamIds,
       });
 
-      toast.success("Project created successfully!");
+      toast.success("Projeto criado com sucesso!");
 
       // Reset form
       setFormData({
@@ -144,8 +143,8 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
       onClose();
     } catch (error) {
-      console.error("Failed to create project:", error);
-      toast.error("Failed to create project. Please try again.");
+      console.error("Falha ao criar projeto:", error);
+      toast.error("Falha ao criar projeto. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -168,20 +167,19 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] bg-admin-background overflow-y-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-lg">Create New Project</DialogTitle>
-          <DialogDescription>Fill in the details below to create a new project</DialogDescription>
+          <DialogTitle className="text-lg">Criar Novo Projeto</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name and Client */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="name">Project Name *</Label>
+              <Label htmlFor="name">Nome do Projeto *</Label>
               <Input
                 id="name"
-                placeholder="Enter project name"
+                placeholder="Digite o nome do projeto"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="rounded-lg"
@@ -189,10 +187,10 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="client">Client *</Label>
+              <Label htmlFor="client">Cliente *</Label>
               <Input
                 id="client"
-                placeholder="Enter client name"
+                placeholder="Digite o nome do cliente"
                 value={formData.client}
                 onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                 className="rounded-lg"
@@ -203,10 +201,10 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description *</Label>
+            <Label htmlFor="description">Descrição *</Label>
             <Textarea
               id="description"
-              placeholder="Enter project description"
+              placeholder="Digite a descrição do projeto"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
@@ -217,7 +215,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Project Manager */}
           <div className="space-y-2">
-            <Label>Project Manager *</Label>
+            <Label>Gerente do Projeto *</Label>
             <Select
               value={formData.managerId}
               onValueChange={(value) =>
@@ -225,7 +223,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               }
             >
               <SelectTrigger className="rounded-lg">
-                <SelectValue placeholder="Select a manager" />
+                <SelectValue placeholder="Selecione um gerente" />
               </SelectTrigger>
               <SelectContent>
                 {teamMembers.map((member) => (
@@ -239,7 +237,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Status */}
           <div className="space-y-2">
-            <Label>Status</Label>
+            <Label>Status do Projeto</Label>
             <div className="grid grid-cols-3 gap-2">
               {STATUS_OPTIONS.map((status) => {
                 const Icon = status.icon;
@@ -267,7 +265,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Priority */}
           <div className="space-y-2">
-            <Label>Priority</Label>
+            <Label>Prioridade do Projeto</Label>
             <div className="flex gap-2">
               {PRIORITY_OPTIONS.map((priority) => (
                 <button
@@ -289,7 +287,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
           {/* Dates */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date *</Label>
+              <Label htmlFor="startDate">Data de Início *</Label>
               <Input
                 id="startDate"
                 type="date"
@@ -300,7 +298,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
+              <Label htmlFor="endDate">Data de Término</Label>
               <Input
                 id="endDate"
                 type="date"
@@ -314,7 +312,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
           {/* Budget */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="budgetTotal">Total Budget</Label>
+              <Label htmlFor="budgetTotal">Total do Orçamento</Label>
               <Input
                 id="budgetTotal"
                 type="number"
@@ -326,7 +324,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="budgetSpent">Budget Spent</Label>
+              <Label htmlFor="budgetSpent">Orçamento Gasto</Label>
               <Input
                 id="budgetSpent"
                 type="number"
@@ -341,7 +339,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
           {/* Progress */}
           <div className="space-y-2">
-            <Label htmlFor="progress">Progress: {formData.progress}%</Label>
+            <Label htmlFor="progress">Progresso: {formData.progress}%</Label>
             <Input
               id="progress"
               type="range"
@@ -357,7 +355,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
           <div className="space-y-2">
             <Label>
               <UsersIcon className="h-3.5 w-3.5 inline mr-1" />
-              Team Members ({formData.teamIds.length} selected)
+              Membros da Equipe ({formData.teamIds.length} selecionados)
             </Label>
             <div className="border rounded-lg max-h-32 overflow-y-auto">
               {teamMembers
@@ -389,7 +387,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                 })}
               {teamMembers.filter((member) => member._id !== formData.managerId).length === 0 && (
                 <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                  No team members available
+                  Nenhum membro da equipe disponível.
                 </div>
               )}
             </div>
@@ -402,7 +400,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               disabled={isSubmitting}
               className="rounded-lg"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
@@ -412,10 +410,10 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
               {isSubmitting ? (
                 <>
                   <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
-                  Creating...
+                  Criando...
                 </>
               ) : (
-                "Create Project"
+                "Criar Projeto"
               )}
             </Button>
           </DialogFooter>

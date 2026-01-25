@@ -23,7 +23,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
   const statCards = [
     {
       key: "total",
-      label: "Total Projects",
+      label: "Total de Projetos",
       icon: FolderKanbanIcon,
       iconBg: "bg-teal-500",
       value: totalProjects,
@@ -31,7 +31,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
     },
     {
       key: "inProgress",
-      label: "In Progress",
+      label: "Em Progresso",
       icon: PlayCircleIcon,
       iconBg: "bg-blue-500",
       value: inProgress,
@@ -39,7 +39,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
     },
     {
       key: "completed",
-      label: "Completed",
+      label: "Concluído",
       icon: CheckCircle2Icon,
       iconBg: "bg-emerald-500",
       value: completed,
@@ -47,7 +47,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
     },
     {
       key: "planning",
-      label: "Planning",
+      label: "Executar",
       icon: ClipboardListIcon,
       iconBg: "bg-orange-400",
       value: planning,

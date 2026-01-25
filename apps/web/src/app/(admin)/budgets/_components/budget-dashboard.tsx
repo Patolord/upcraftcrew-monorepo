@@ -16,6 +16,7 @@ interface BudgetStats {
   sent: number;
   approved: number;
   rejected: number;
+  cancelled: number;
   totalValue: number;
   approvedValue: number;
   conversionRate: number;
@@ -85,6 +86,7 @@ export function BudgetDashboard({ stats }: BudgetDashboardProps) {
     sent: 0,
     approved: 0,
     rejected: 0,
+    cancelled: 0,
     totalValue: 0,
     approvedValue: 0,
     conversionRate: 0,

@@ -59,6 +59,10 @@ const statusConfig = {
     label: "Rejeitado",
     variant: "destructive" as const,
   },
+  cancelled: {
+    label: "Cancelado",
+    variant: "secondary" as const,
+  },
   expired: {
     label: "Expirado",
     variant: "outline" as const,

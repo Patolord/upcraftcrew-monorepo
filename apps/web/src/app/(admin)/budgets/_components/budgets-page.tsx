@@ -7,6 +7,7 @@ import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel"
 import { Button } from "@/components/ui/button";
 import { useQueryState } from "nuqs";
 import { BudgetFormModal } from "./budget-new/budget-form-modal";
+import { SimpleBudgetModal } from "./simple-budget-modal";
 import { DeleteBudgetDialog } from "./delete-budget-dialog";
 import { BudgetHeader } from "./budget-header";
 import { BudgetDashboard } from "./budget-dashboard";
@@ -16,10 +17,11 @@ import React from "react";
 
 interface Budget {
   _id: Id<"budgets">;
+  type?: "budget" | "proposal";
   title: string;
   client: string;
   description: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;
   validUntil: number;
@@ -58,6 +60,7 @@ interface BudgetStats {
   sent: number;
   approved: number;
   rejected: number;
+  cancelled: number;
   totalValue: number;
   approvedValue: number;
   conversionRate: number;
@@ -77,7 +80,8 @@ export function BudgetsPage() {
 
   const [newBudget, setNewBudget] = useQueryState("new");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  const [isSimpleBudgetModalOpen, setIsSimpleBudgetModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -100,30 +104,44 @@ export function BudgetsPage() {
     });
   }, [budgets, searchQuery]);
 
-  // Sync query string with modal state
+  // Sync query string with modal state (for proposal modal)
   useEffect(() => {
-    if (newBudget === "true" && !isModalOpen) {
-      setIsModalOpen(true);
+    if (newBudget === "proposal" && !isProposalModalOpen) {
+      setIsProposalModalOpen(true);
       setSelectedBudget(null);
-    } else if (newBudget === null && isModalOpen && !selectedBudget) {
-      setIsModalOpen(false);
+    } else if (newBudget === null && isProposalModalOpen && !selectedBudget) {
+      setIsProposalModalOpen(false);
     }
-  }, [newBudget, isModalOpen, selectedBudget]);
+  }, [newBudget, isProposalModalOpen, selectedBudget]);
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseProposalModal = () => {
+    setIsProposalModalOpen(false);
     setSelectedBudget(null);
     setNewBudget(null);
   };
 
-  const handleFormSuccess = () => {
-    handleCloseModal();
+  const handleCloseSimpleBudgetModal = () => {
+    setIsSimpleBudgetModalOpen(false);
   };
 
-  const handleNewBudget = () => {
+  const handleProposalFormSuccess = () => {
+    handleCloseProposalModal();
+  };
+
+  const handleSimpleBudgetSuccess = () => {
+    handleCloseSimpleBudgetModal();
+  };
+
+  // Opens the full proposal modal (with PDF support)
+  const handleNewProposal = () => {
     setSelectedBudget(null);
-    setIsModalOpen(true);
-    setNewBudget("true");
+    setIsProposalModalOpen(true);
+    setNewBudget("proposal");
+  };
+
+  // Opens the simple budget modal (no PDF)
+  const handleNewSimpleBudget = () => {
+    setIsSimpleBudgetModalOpen(true);
   };
 
   return (
@@ -138,6 +156,7 @@ export function BudgetsPage() {
             sent: 0,
             approved: 0,
             rejected: 0,
+            cancelled: 0,
             totalValue: 0,
             approvedValue: 0,
             conversionRate: 0,
@@ -150,23 +169,33 @@ export function BudgetsPage() {
         <div className="flex-1">
           <h2 className="text-xl font-semibold text-foreground mb-2">Nossos Orçamentos</h2>
         </div>
-        <Button
-          onClick={handleNewBudget}
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
-        >
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Novo Orçamento
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={handleNewSimpleBudget}
+            variant="outline"
+            className="border-orange-500 text-orange-500 hover:bg-orange-50 rounded-md px-6"
+          >
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Novo Orçamento
+          </Button>
+          <Button
+            onClick={handleNewProposal}
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+          >
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Nova Proposta
+          </Button>
+        </div>
       </div>
 
       {/* Budgets Grid */}
       {isLoading && results === undefined ? (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center  p-4 py-12">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : filteredBudgets.length === 0 ? (
-        <div className="text-center py-12">
-          <FileTextIcon className="h-16 w-16 text-muted-foreground/20 mb-4 mx-auto" />
+        <div className="text-center py-12 bg-white rounded-lg shadow-sm p-4">
+          <FileTextIcon className="h-16 w-16 text-brand mb-4 mx-auto" />
           <h3 className="text-lg font-medium mb-2">Nenhum orçamento encontrado</h3>
           <p className="text-muted-foreground text-sm">
             {searchQuery
@@ -210,12 +239,19 @@ export function BudgetsPage() {
         </>
       )}
 
-      {/* Modal for Create/Edit */}
+      {/* Modal for Create/Edit Proposal (full budget with PDF) */}
       <BudgetFormModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        isOpen={isProposalModalOpen}
+        onClose={handleCloseProposalModal}
         initialData={selectedBudget || undefined}
-        onSuccess={handleFormSuccess}
+        onSuccess={handleProposalFormSuccess}
+      />
+
+      {/* Modal for Simple Budget (no PDF) */}
+      <SimpleBudgetModal
+        isOpen={isSimpleBudgetModalOpen}
+        onClose={handleCloseSimpleBudgetModal}
+        onSuccess={handleSimpleBudgetSuccess}
       />
 
       {/* Delete Dialog */}

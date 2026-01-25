@@ -55,7 +55,7 @@ export function DashboardTransactions({ transactions }: DashboardTransactionsPro
   return (
     <Card className="rounded-xl bg-white shadow-sm ring-0 h-full">
       <CardHeader className="flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-semibold">Transactions</CardTitle>
+        <CardTitle className="text-lg font-semibold">Transações</CardTitle>
         <CardAction>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg">
             <MoreVerticalIcon className="size-4 text-muted-foreground" />
@@ -90,7 +90,7 @@ export function DashboardTransactions({ transactions }: DashboardTransactionsPro
         ) : (
           <div className="py-8 text-center">
             <WalletIcon className="size-10 mx-auto text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground mt-2">No recent transactions</p>
+            <p className="text-sm text-muted-foreground mt-2">Não há transações recentes</p>
           </div>
         )}
       </CardContent>
