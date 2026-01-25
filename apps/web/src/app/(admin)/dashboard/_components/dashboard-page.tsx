@@ -63,7 +63,7 @@ interface Budget {
   _id: Id<"budgets">;
   title: string;
   client: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;
   validUntil: number;

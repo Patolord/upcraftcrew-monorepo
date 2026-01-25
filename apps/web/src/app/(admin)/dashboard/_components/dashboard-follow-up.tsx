@@ -25,7 +25,7 @@ interface Budget {
   _id: Id<"budgets">;
   title: string;
   client: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;
   validUntil: number;
@@ -60,6 +60,11 @@ const statusConfig = {
   expired: {
     label: "Expirado",
     color: "bg-amber-100 text-amber-700",
+    icon: AlertCircle,
+  },
+  cancelled: {
+    label: "Cancelado",
+    color: "bg-gray-100 text-gray-500",
     icon: AlertCircle,
   },
 };

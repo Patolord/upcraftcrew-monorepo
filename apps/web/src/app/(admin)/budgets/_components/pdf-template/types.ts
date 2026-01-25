@@ -30,7 +30,7 @@ export interface Budget {
   title: string;
   client: string;
   description: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;
   items: BudgetItem[];

@@ -70,11 +70,11 @@ export function ProjectsPage() {
         <div className="text-center py-12">
           <EmptyState
             icon={FolderOpenIcon}
-            title="No projects found"
+            title="Nenhum projeto encontrado. Crie seu primeiro projeto clicando no botão acima."
             description={
               searchQuery
-                ? "Try adjusting your search"
-                : "Create your first project by clicking the button above"
+                ? "Tente ajustar sua busca"
+                : "Crie seu primeiro projeto clicando no botão acima"
             }
           />
         </div>

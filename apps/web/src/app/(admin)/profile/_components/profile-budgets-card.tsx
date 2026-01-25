@@ -10,7 +10,7 @@ interface Budget {
   _id: Id<"budgets">;
   title: string;
   client: string;
-  status: "draft" | "sent" | "approved" | "rejected" | "expired";
+  status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;
   validUntil: number;
@@ -49,6 +49,11 @@ const statusConfig = {
     label: "Expired",
     icon: AlertTriangle,
     color: "bg-yellow-100 text-yellow-700",
+  },
+  cancelled: {
+    label: "Cancelled",
+    icon: AlertTriangle,
+    color: "bg-gray-100 text-gray-500",
   },
 };
 
