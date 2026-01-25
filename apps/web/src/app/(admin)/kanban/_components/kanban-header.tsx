@@ -60,7 +60,7 @@ export function KanbanHeader({ searchQuery = "", onSearchChange }: KanbanHeaderP
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
               <User className="size-4" />
               Profile
             </DropdownMenuItem>

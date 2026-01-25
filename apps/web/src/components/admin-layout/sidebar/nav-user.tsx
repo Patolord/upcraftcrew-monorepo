@@ -76,7 +76,7 @@ export default function NavUser() {
             side="bottom"
             sideOffset={8}
           >
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
               <User className="size-4" />
               Profile
             </DropdownMenuItem>
