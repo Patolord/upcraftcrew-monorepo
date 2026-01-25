@@ -76,6 +76,13 @@ function formatCurrency(value: number, currency: string = "BRL"): string {
   }).format(value);
 }
 
+function formatDate(timestamp: number | undefined): string {
+  if (!timestamp || isNaN(timestamp)) return "—";
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("pt-BR");
+}
+
 export default function BudgetDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -260,9 +267,7 @@ export default function BudgetDetailPage() {
               <CalendarIcon className="h-4 w-4" />
               <span className="text-sm">Criado em</span>
             </div>
-            <p className="font-semibold">
-              {new Date(budget.createdAt).toLocaleDateString("pt-BR")}
-            </p>
+            <p className="font-semibold">{formatDate(budget.createdAt)}</p>
           </CardContent>
         </Card>
 
@@ -273,7 +278,7 @@ export default function BudgetDetailPage() {
               <span className="text-sm">Válido até</span>
             </div>
             <p className={`font-semibold ${isExpired ? "text-destructive" : ""}`}>
-              {new Date(budget.validUntil).toLocaleDateString("pt-BR")}
+              {formatDate(budget.validUntil)}
             </p>
           </CardContent>
         </Card>

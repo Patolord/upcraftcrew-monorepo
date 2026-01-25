@@ -38,14 +38,25 @@ export const getProjects = query({
     // Populate team members and manager for each project
     const projectsWithTeam = await Promise.all(
       projects.map(async (project) => {
-        const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
-        const manager = await ctx.db.get(project.managerId);
+        try {
+          const team = await Promise.all(
+            (project.teamIds || []).map((userId) => ctx.db.get(userId)),
+          );
+          const manager = project.managerId ? await ctx.db.get(project.managerId) : null;
 
-        return {
-          ...project,
-          team: team.filter((member) => member !== null).map(transformUserToTeamMember),
-          manager: transformUserToTeamMember(manager),
-        };
+          return {
+            ...project,
+            team: team.filter((member) => member !== null).map(transformUserToTeamMember),
+            manager: transformUserToTeamMember(manager),
+          };
+        } catch (error) {
+          console.error(`Error processing project ${project._id}:`, error);
+          return {
+            ...project,
+            team: [],
+            manager: null,
+          };
+        }
       }),
     );
 

@@ -80,6 +80,13 @@ function formatCurrency(value: number, currency: string = "BRL"): string {
   }).format(value);
 }
 
+function formatDate(timestamp: number | undefined): string {
+  if (!timestamp || isNaN(timestamp)) return "—";
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("pt-BR");
+}
+
 export function BudgetCard({ budget }: { budget: Budget }) {
   const updateBudgetStatus = useMutation(api.budgets.updateBudgetStatus);
   const status = statusConfig[budget.status];
@@ -173,7 +180,7 @@ export function BudgetCard({ budget }: { budget: Budget }) {
             <p className="text-xs text-muted-foreground mb-1">Criado em</p>
             <p className="text-sm font-medium flex items-center gap-1">
               <CalendarIcon className="h-3 w-3" />
-              {new Date(budget.createdAt).toLocaleDateString("pt-BR")}
+              {formatDate(budget.createdAt)}
             </p>
           </div>
           <div>
@@ -182,7 +189,7 @@ export function BudgetCard({ budget }: { budget: Budget }) {
               className={`text-sm font-medium flex items-center gap-1 ${isExpired ? "text-destructive" : ""}`}
             >
               <CalendarIcon className="h-3 w-3" />
-              {new Date(budget.validUntil).toLocaleDateString("pt-BR")}
+              {formatDate(budget.validUntil)}
             </p>
           </div>
         </div>
