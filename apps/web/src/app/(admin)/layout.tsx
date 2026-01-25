@@ -1,6 +1,5 @@
 import { type ReactNode } from "react";
 
-import { Footer } from "@/components/admin-layout/Footer";
 import { AppSidebar } from "@/components/admin-layout/sidebar/app-sidebar";
 import { Providers } from "@/components/providers";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -13,10 +12,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <EnsureUserSynced />
       <SidebarProvider className="bg-admin-background">
         <AppSidebar />
-        <SidebarInset className="bg-admin-background">
-          {children}
-          <Footer />
-        </SidebarInset>
+        <SidebarInset className="bg-admin-background">{children}</SidebarInset>
       </SidebarProvider>
     </Providers>
   );
