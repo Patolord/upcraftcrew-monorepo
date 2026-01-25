@@ -303,7 +303,7 @@ export function BudgetCard({ budget }: { budget: Budget }) {
                   {...props}
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="h-8 w-8 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg"
                   onClick={handleConvertToProject}
                   disabled={isConverting}
                 >
