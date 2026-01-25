@@ -34,18 +34,18 @@ export function DashboardHeader() {
   return (
     <header className="flex items-center justify-between py-2">
       {/* Title */}
-      <h1 className="text-3xl font-medium text-shadow-sm text-foreground">Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">Dashboard</h1>
 
       {/* Right side - User */}
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-3 cursor-pointer outline-none">
-          <Avatar className="size-10 ring-2 ring-pink-300 ring-offset-2">
+        <DropdownMenuTrigger className="flex items-center gap-2 md:gap-3 cursor-pointer outline-none">
+          <Avatar className="size-9 md:size-10 ring-2 ring-pink-300 ring-offset-2">
             <AvatarImage src={user?.imageUrl} alt={userName} />
             <AvatarFallback className="bg-pink-400 text-white text-sm font-medium">
               {userInitials}
             </AvatarFallback>
           </Avatar>
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{userName}</span>
             <ChevronDownIcon className="size-4 text-muted-foreground" />
           </div>

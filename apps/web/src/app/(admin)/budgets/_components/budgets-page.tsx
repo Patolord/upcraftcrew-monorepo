@@ -145,7 +145,7 @@ export function BudgetsPage() {
   };
 
   return (
-    <div className="p-6 pl-12 pr-12 space-y-6">
+    <div className="p-4 md:p-6 md:pl-12 md:pr-12 space-y-4 md:space-y-6">
       <BudgetHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       <BudgetDashboard
@@ -165,22 +165,24 @@ export function BudgetsPage() {
       />
 
       {/* Our Budgets Section Header */}
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6">
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-foreground mb-2">Nossos Orçamentos</h2>
+          <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+            Nossos Orçamentos
+          </h2>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
           <Button
             onClick={handleNewSimpleBudget}
             variant="outline"
-            className="border-orange-500 text-orange-500 hover:bg-orange-50 rounded-md px-6"
+            className="border-orange-500 text-orange-500 hover:bg-orange-50 rounded-md px-4 sm:px-6 text-sm"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
             Novo Orçamento
           </Button>
           <Button
             onClick={handleNewProposal}
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-4 sm:px-6 text-sm"
           >
             <PlusIcon className="h-4 w-4 mr-2" />
             Nova Proposta

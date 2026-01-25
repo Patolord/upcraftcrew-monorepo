@@ -167,23 +167,23 @@ export function BudgetCard({ budget }: { budget: Budget }) {
 
   return (
     <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
+      <CardHeader className="p-4 md:p-6">
+        <div className="flex items-start justify-between gap-2 md:gap-3">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Badge
                 variant="outline"
                 className={
                   isProposal
-                    ? "text-xs border-orange-300 text-orange-600 bg-orange-50"
-                    : "text-xs border-blue-300 text-blue-600 bg-blue-50"
+                    ? "text-[10px] md:text-xs border-orange-300 text-orange-600 bg-orange-50"
+                    : "text-[10px] md:text-xs border-blue-300 text-blue-600 bg-blue-50"
                 }
               >
                 {isProposal ? "Proposta" : "Orçamento"}
               </Badge>
             </div>
-            <CardTitle className="text-lg">{budget.title}</CardTitle>
-            <CardDescription className="mt-1">{budget.client}</CardDescription>
+            <CardTitle className="text-base md:text-lg truncate">{budget.title}</CardTitle>
+            <CardDescription className="mt-1 text-sm truncate">{budget.client}</CardDescription>
           </div>
           <CardAction>
             {/* Status Dropdown */}
@@ -192,7 +192,7 @@ export function BudgetCard({ budget }: { budget: Budget }) {
                 <Button variant="ghost" size="sm" className="h-auto p-0 hover:bg-transparent">
                   <Badge
                     variant={isExpired ? "outline" : status.variant}
-                    className="cursor-pointer flex items-center gap-1"
+                    className="cursor-pointer flex items-center gap-1 text-[10px] md:text-xs"
                   >
                     {isExpired ? "Expirado" : status.label}
                     <ChevronDownIcon className="h-3 w-3" />
@@ -217,43 +217,45 @@ export function BudgetCard({ budget }: { budget: Budget }) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1">
+      <CardContent className="flex-1 p-4 md:p-6 pt-0 md:pt-0">
         {/* Description - only show for proposals with description */}
         {budget.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{budget.description}</p>
+          <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 mb-3 md:mb-4">
+            {budget.description}
+          </p>
         )}
 
         {/* Value */}
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Valor Total</p>
-          <p className="text-2xl font-bold text-orange-500">
+          <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Valor Total</p>
+          <p className="text-xl md:text-2xl font-bold text-orange-500">
             {formatCurrency(budget.totalAmount, budget.currency)}
           </p>
         </div>
 
         {/* Dates */}
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="grid grid-cols-2 gap-2 md:gap-3 mt-3 md:mt-4">
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Criado em</p>
-            <p className="text-sm font-medium flex items-center gap-1">
-              <CalendarIcon className="h-3 w-3" />
-              {formatDate(budget.createdAt)}
+            <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Criado em</p>
+            <p className="text-xs md:text-sm font-medium flex items-center gap-1">
+              <CalendarIcon className="h-3 w-3 shrink-0" />
+              <span className="truncate">{formatDate(budget.createdAt)}</span>
             </p>
           </div>
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Válido até</p>
+            <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Válido até</p>
             <p
-              className={`text-sm font-medium flex items-center gap-1 ${isExpired ? "text-destructive" : ""}`}
+              className={`text-xs md:text-sm font-medium flex items-center gap-1 ${isExpired ? "text-destructive" : ""}`}
             >
-              <CalendarIcon className="h-3 w-3" />
-              {formatDate(budget.validUntil)}
+              <CalendarIcon className="h-3 w-3 shrink-0" />
+              <span className="truncate">{formatDate(budget.validUntil)}</span>
             </p>
           </div>
         </div>
       </CardContent>
 
       {/* Actions - Always at bottom */}
-      <CardFooter className="justify-end mt-auto gap-2">
+      <CardFooter className="justify-end mt-auto gap-1 md:gap-2 p-4 md:p-6 pt-0 md:pt-0 flex-wrap">
         {/* Delete Button */}
         <Tooltip>
           <TooltipTrigger
@@ -262,10 +264,10 @@ export function BudgetCard({ budget }: { budget: Budget }) {
                 {...props}
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg"
+                className="h-7 w-7 md:h-8 md:w-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg"
                 onClick={() => setShowDeleteDialog(true)}
               >
-                <Trash2Icon className="h-4 w-4" />
+                <Trash2Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
             )}
           />
@@ -282,10 +284,10 @@ export function BudgetCard({ budget }: { budget: Budget }) {
                 {...props}
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
+                className="h-7 w-7 md:h-8 md:w-8 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg"
                 onClick={() => router.push(`/budgets/${budget._id}`)}
               >
-                <PencilIcon className="h-4 w-4" />
+                <PencilIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
             )}
           />
@@ -303,14 +305,14 @@ export function BudgetCard({ budget }: { budget: Budget }) {
                   {...props}
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg"
+                  className="h-7 w-7 md:h-8 md:w-8 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg"
                   onClick={handleConvertToProject}
                   disabled={isConverting}
                 >
                   {isConverting ? (
-                    <Loader2Icon className="h-4 w-4 animate-spin" />
+                    <Loader2Icon className="h-3.5 w-3.5 md:h-4 md:w-4 animate-spin" />
                   ) : (
-                    <FolderPlusIcon className="h-4 w-4" />
+                    <FolderPlusIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   )}
                 </Button>
               )}
@@ -327,11 +329,12 @@ export function BudgetCard({ budget }: { budget: Budget }) {
             render={(props) => (
               <Button
                 {...props}
-                className="bg-orange-500 text-white rounded-md text-xs h-8"
+                className="bg-orange-500 text-white rounded-md text-[10px] md:text-xs h-7 md:h-8 px-2 md:px-3"
                 onClick={() => router.push(`/budgets/${budget._id}`)}
               >
-                <EyeIcon className="h-4 w-4 mr-1" />
-                Visualizar
+                <EyeIcon className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1" />
+                <span className="hidden sm:inline">Visualizar</span>
+                <span className="sm:hidden">Ver</span>
               </Button>
             )}
           />

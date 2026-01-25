@@ -144,13 +144,13 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Fixed Header Section */}
-      <div className="shrink-0 p-6 pb-4 space-y-6">
+      <div className="shrink-0 p-4 md:p-6 pb-4 space-y-4 md:space-y-6">
         <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
         {/* Team Members Section */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg font-semibold">Membros da Equipe</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <h2 className="text-base md:text-lg font-semibold">Membros da Equipe</h2>
             <div className="flex -space-x-2">
               {teamMembers.slice(0, 5).map((member: TeamMember) => {
                 const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
@@ -166,18 +166,18 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
                 return (
                   <Avatar
                     key={member._id}
-                    className="size-10 border-2 border-background ring-2 ring-pink-300"
+                    className="size-8 md:size-10 border-2 border-background ring-2 ring-pink-300"
                   >
                     <AvatarImage src={member.imageUrl} alt={fullName} />
-                    <AvatarFallback className="bg-linear-to-br from-orange-400 to-pink-500 text-white text-xs font-medium">
+                    <AvatarFallback className="bg-linear-to-br from-orange-400 to-pink-500 text-white text-[10px] md:text-xs font-medium">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                 );
               })}
               {teamMembers.length > 5 && (
-                <Avatar className="size-10 border-2 border-background">
-                  <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                <Avatar className="size-8 md:size-10 border-2 border-background">
+                  <AvatarFallback className="bg-muted text-muted-foreground text-[10px] md:text-xs">
                     +{teamMembers.length - 5}
                   </AvatarFallback>
                 </Avatar>
@@ -188,7 +188,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       </div>
 
       {/* Scrollable Kanban Board */}
-      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-auto px-6 pb-6">
+      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-auto px-4 md:px-6 pb-6">
         <TaskKanbanBoard
           columns={columns}
           onTaskClick={handleTaskClick}

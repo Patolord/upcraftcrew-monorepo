@@ -34,10 +34,10 @@ export function ProfilePage({
 
   if (!user) {
     return (
-      <div className="p-6 space-y-6 bg-orange-50/30 min-h-screen">
+      <div className="p-4 md:p-6 space-y-4 md:space-y-6 bg-orange-50/30 min-h-screen">
         <ProfileHeader />
         <Card className="rounded-2xl border-0 shadow-sm">
-          <CardContent className="p-8">
+          <CardContent className="p-4 md:p-8">
             <p className="text-center text-muted-foreground">No user data available</p>
           </CardContent>
         </Card>
@@ -46,14 +46,14 @@ export function ProfilePage({
   }
 
   return (
-    <div className="p-6 space-y-6 bg-orange-50/30 min-h-screen">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6 bg-orange-50/30 min-h-screen">
       <ProfileHeader />
 
       {/* User Profile Card */}
       <ProfileUserCard user={user} />
 
       {/* Three Cards Grid: Tasks, Budgets, Events */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         <ProfileTasksCard tasks={tasks} />
         <ProfileBudgetsCard budgets={budgets} />
         <ProfileEventsCard events={events} />

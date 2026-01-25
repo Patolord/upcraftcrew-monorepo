@@ -117,7 +117,7 @@ export function DashboardPage({
   // const hasError = !projects && !teamMembers && !transactions;
 
   return (
-    <div className="p-6 pb-2 space-y-6">
+    <div className="p-4 md:p-6 pb-2 space-y-4 md:space-y-6">
       {/* Header with Search and User */}
       <DashboardHeader />
 
@@ -129,7 +129,7 @@ export function DashboardPage({
       />
 
       {/* Statistics Chart + Transactions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2">
           <DashboardStatisticsChart transactions={transactions} />
         </div>
@@ -139,7 +139,7 @@ export function DashboardPage({
       </div>
 
       {/* Recent Projects Table + Follow Up */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 items-stretch">
         <div className="lg:col-span-2">
           <DashboardRecentProjectsTable projects={projects} />
         </div>

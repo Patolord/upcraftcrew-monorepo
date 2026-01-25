@@ -206,9 +206,9 @@ export default function SchedulePage() {
   return (
     <div className="flex flex-col h-full">
       <ScheduleHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <div className="pr-6">
+      <div className="px-4 md:pr-6 md:pl-0">
         <div
-          className="bg-card p-4 rounded-xl border border-border shadow-sm overflow-hidden"
+          className="bg-card p-2 md:p-4 rounded-xl border border-border shadow-sm overflow-hidden"
           suppressHydrationWarning
         >
           <div className="flex flex-col lg:flex-row" suppressHydrationWarning>
@@ -224,7 +224,7 @@ export default function SchedulePage() {
               />
 
               {/* Calendar content */}
-              <div className="p-4">
+              <div className="p-2 md:p-4">
                 {isLoading ? (
                   <div className="flex items-center justify-center py-24">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand" />

@@ -42,19 +42,19 @@ export function ProjectsPage() {
   }, [results, searchQuery]);
 
   return (
-    <div className="p-6 pl-12 pr-12 space-y-6">
+    <div className="p-4 md:p-6 md:pl-12 md:pr-12 space-y-4 md:space-y-6">
       <ProjectHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
       <ProjectsStats projects={(allProjects || []) as unknown as Project[]} />
 
       {/* Our Projects Section Header */}
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6">
         <div className="flex-1">
-          <h2 className="text-xl font-semibold text-foreground mb-2">Our projects</h2>
+          <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">Our projects</h2>
         </div>
         <Button
           onClick={() => setIsNewProjectModalOpen(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-6"
+          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-4 sm:px-6 text-sm w-full sm:w-auto"
         >
           <PlusIcon className="h-4 w-4 mr-2" />
           Add New
@@ -80,7 +80,7 @@ export function ProjectsPage() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredProjects.map((project) => (
               <ProjectCard key={project._id} project={project} />
             ))}
