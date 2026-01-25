@@ -1,268 +1,150 @@
-import { Ionicons } from "@expo/vector-icons";
-import { api } from "@upcraftcrew-os/backend/convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { NewBudgetModal } from "@/components/modals/NewBudgetModal";
+import { useMemo, useState } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { NewBudgetModal } from "@/components/modals/new-budget-modal";
+
+import { BudgetHeader } from "./_components/budget-header";
+import { BudgetStats } from "./_components/budget-stats";
+import { BudgetCard } from "./_components/budget-card";
 
 export default function BudgetsPage() {
   const budgets = useQuery(api.budgets.getBudgets);
-  const budgetStats = useQuery(api.budgets.getBudgetStats);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "all">("dashboard");
+  const statistics = useQuery(api.budgets.getBudgetStats);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isNewBudgetModalOpen, setIsNewBudgetModalOpen] = useState(false);
 
-  if (budgets === undefined || budgetStats === undefined) {
+  // Filter budgets based on search query
+  const filteredBudgets = useMemo(() => {
+    if (!budgets) return [];
+    if (!searchQuery.trim()) return budgets;
+
+    const query = searchQuery.toLowerCase();
+    return budgets.filter((budget) => {
+      const title = "title" in budget ? budget.title : "";
+      return (
+        title?.toLowerCase().includes(query) ||
+        budget.description?.toLowerCase().includes(query) ||
+        budget.status?.toLowerCase().includes(query)
+      );
+    });
+  }, [budgets, searchQuery]);
+
+  // Default statistics
+  const defaultStatistics = {
+    total: 0,
+    draft: 0,
+    sent: 0,
+    approved: 0,
+    rejected: 0,
+    cancelled: 0,
+    totalValue: 0,
+    approvedValue: 0,
+    conversionRate: 0,
+  };
+
+  // Loading state
+  if (budgets === undefined) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#FF5722" />
-        <Text className="mt-4 text-gray-600">Loading budgets...</Text>
+      <View className="flex-1 bg-admin-background pt-12">
+        <View className="px-4 space-y-4">
+          {/* Header skeleton */}
+          <View className="space-y-4 pb-2">
+            <View className="flex-row justify-between">
+              <Skeleton className="h-8 w-28" />
+              <View className="flex-row items-center gap-2">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <Skeleton className="h-4 w-20" />
+              </View>
+            </View>
+            <Skeleton className="h-10 w-full rounded-full" />
+          </View>
+
+          {/* Stats skeleton */}
+          <View className="flex-row flex-wrap gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <View key={i} className="flex-1 min-w-[45%]">
+                <Skeleton className="h-20 rounded-xl" />
+              </View>
+            ))}
+          </View>
+
+          {/* Budget cards skeleton */}
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-48 rounded-xl" />
+          ))}
+        </View>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 pt-16 ">
-      {/* Header */}
-      <View className="border-gray-200 border-b p-4">
-        <View className="mb-3 flex-row items-center justify-between">
-          <Text className="font-bold text-3xl text-orange-500">Budgets</Text>
-          {activeTab === "all" && (
-            <TouchableOpacity
+    <View className="flex-1 bg-admin-background pt-12">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="px-4 space-y-4">
+          {/* Header */}
+          <BudgetHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+
+          {/* Stats */}
+          <BudgetStats statistics={statistics || defaultStatistics} />
+
+          {/* Section Header */}
+          <View className="flex-row items-center justify-between pt-2">
+            <Text className="text-lg font-semibold text-foreground">Seus Orçamentos</Text>
+            <Button
+              variant="default"
+              size="sm"
               onPress={() => setIsNewBudgetModalOpen(true)}
-              className="rounded-lg bg-orange-500 px-4 py-2"
+              className="bg-brand"
             >
-              <Text className="font-semibold text-white">+ New Budget</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Tab Navigation */}
-        <View className="flex-row gap-2">
-          <TouchableOpacity
-            onPress={() => setActiveTab("dashboard")}
-            className={`flex-1 rounded-lg py-2 ${
-              activeTab === "dashboard" ? "bg-orange-500" : "bg-gray-100"
-            }`}
-          >
-            <Text
-              className={`text-center font-medium ${
-                activeTab === "dashboard" ? "text-white" : "text-gray-700"
-              }`}
-            >
-              Dashboard
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab("all")}
-            className={`flex-1 rounded-lg py-2 ${
-              activeTab === "all" ? "bg-orange-500" : "bg-gray-100"
-            }`}
-          >
-            <Text
-              className={`text-center font-medium ${
-                activeTab === "all" ? "text-white" : "text-gray-700"
-              }`}
-            >
-              All Budgets
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView className="flex-1">
-        <View className="gap-4 p-4">
-          {activeTab === "dashboard" ? (
-            /* Dashboard View */
-            <>
-              {/* Stats Cards */}
-              {budgetStats && (
-                <View className="flex-row flex-wrap gap-3">
-                  <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-4">
-                    <Text className="text-gray-500 text-sm">Total Budgets</Text>
-                    <Text className="mt-1 font-bold text-3xl text-orange-500">
-                      {budgetStats.total || 0}
-                    </Text>
-                  </View>
-                  <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-4">
-                    <Text className="text-gray-500 text-sm">Approved</Text>
-                    <Text className="mt-1 font-bold text-3xl text-orange-500">
-                      {budgetStats.approved || 0}
-                    </Text>
-                  </View>
-                  <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-4">
-                    <Text className="text-gray-500 text-sm">Pending</Text>
-                    <Text className="mt-1 font-bold text-3xl text-orange-500">
-                      {budgetStats.sent || 0}
-                    </Text>
-                  </View>
-                  <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-4">
-                    <Text className="text-gray-500 text-sm">Total Value</Text>
-                    <Text className="mt-1 font-bold text-3xl text-orange-500">
-                      ${(budgetStats.totalValue || 0).toLocaleString()}
-                    </Text>
-                  </View>
-                </View>
-              )}
-
-              {/* Recent Budgets */}
-              <View className="rounded-lg border border-orange-500 bg-white p-4">
-                <Text className="mb-3 font-semibold text-lg text-orange-500">Recent Budgets</Text>
-                {budgets?.slice(0, 5).map((budget, index) => (
-                  <View
-                    key={budget._id}
-                    className={`py-3 ${index !== 0 ? "border-gray-100 border-t" : ""}`}
-                  >
-                    <View className="flex-row items-start justify-between">
-                      <View className="flex-1">
-                        <Text className="font-semibold text-gray-800">{budget.client}</Text>
-                        <Text className="mt-1 text-gray-500 text-xs">{budget.title}</Text>
-                      </View>
-                      <View className="items-end">
-                        <Text className="font-bold text-orange-500 text-sm">
-                          ${budget.totalAmount?.toLocaleString()}
-                        </Text>
-                        <View
-                          className={`mt-1 rounded px-2 py-1 ${
-                            budget.status === "approved"
-                              ? "bg-green-100"
-                              : budget.status === "sent"
-                                ? "bg-yellow-100"
-                                : budget.status === "rejected"
-                                  ? "bg-red-100"
-                                  : "bg-gray-100"
-                          }`}
-                        >
-                          <Text
-                            className={`text-xs ${
-                              budget.status === "approved"
-                                ? "text-green-700"
-                                : budget.status === "sent"
-                                  ? "text-yellow-700"
-                                  : budget.status === "rejected"
-                                    ? "text-red-700"
-                                    : "text-gray-700"
-                            }`}
-                          >
-                            {budget.status}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                ))}
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="add" size={16} color="#ffffff" />
+                <Text className="text-white text-xs font-medium">Novo</Text>
               </View>
-            </>
+            </Button>
+          </View>
+
+          {/* Budgets List */}
+          {filteredBudgets.length === 0 ? (
+            <EmptyState
+              icon="document-text-outline"
+              title="Nenhum orçamento encontrado"
+              description={searchQuery ? "Tente ajustar sua busca" : "Crie seu primeiro orçamento"}
+            />
           ) : (
-            /* All Budgets View */
             <View className="gap-4">
-              {budgets?.map((budget) => (
-                <View key={budget._id} className="rounded-lg border border-orange-500 bg-white p-4">
-                  {/* Header */}
-                  <View className="mb-3 flex-row items-start justify-between">
-                    <View className="flex-1">
-                      <Text className="font-semibold text-gray-800 text-lg">{budget.title}</Text>
-                      <Text className="mt-1 text-gray-500 text-sm">{budget.client}</Text>
-                    </View>
-                    <View
-                      className={`rounded-full px-3 py-1 ${
-                        budget.status === "approved"
-                          ? "bg-green-100"
-                          : budget.status === "sent"
-                            ? "bg-yellow-100"
-                            : budget.status === "rejected"
-                              ? "bg-red-100"
-                              : budget.status === "draft"
-                                ? "bg-gray-100"
-                                : "bg-blue-100"
-                      }`}
-                    >
-                      <Text
-                        className={`font-medium text-xs ${
-                          budget.status === "approved"
-                            ? "text-green-700"
-                            : budget.status === "sent"
-                              ? "text-yellow-700"
-                              : budget.status === "rejected"
-                                ? "text-red-700"
-                                : budget.status === "draft"
-                                  ? "text-gray-700"
-                                  : "text-blue-700"
-                        }`}
-                      >
-                        {budget.status?.charAt(0).toUpperCase() + budget.status?.slice(1)}
-                      </Text>
-                    </View>
-                  </View>
-
-                  {/* Description */}
-                  {budget.description && (
-                    <Text className="mb-3 text-gray-600 text-sm" numberOfLines={2}>
-                      {budget.description}
-                    </Text>
-                  )}
-
-                  {/* Budget Details */}
-                  <View className="space-y-2">
-                    {/* Amount */}
-                    <View className="flex-row items-center justify-between border-gray-100 border-t py-2">
-                      <Text className="text-gray-600 text-sm">Total Amount</Text>
-                      <Text className="font-bold text-lg text-orange-500">
-                        ${budget.totalAmount?.toLocaleString()}
-                      </Text>
-                    </View>
-
-                    {/* Items Count */}
-                    {budget.items && budget.items.length > 0 && (
-                      <View className="flex-row items-center">
-                        <Ionicons name="list-outline" size={16} color="#9ca3af" />
-                        <Text className="ml-2 text-gray-600 text-sm">
-                          {budget.items.length} item
-                          {budget.items.length > 1 ? "s" : ""}
-                        </Text>
-                      </View>
-                    )}
-
-                    {/* Created Date */}
-                    {budget.createdAt && (
-                      <View className="flex-row items-center">
-                        <Ionicons name="calendar-outline" size={16} color="#9ca3af" />
-                        <Text className="ml-2 text-gray-600 text-sm">
-                          Created: {new Date(budget.createdAt).toLocaleDateString()}
-                        </Text>
-                      </View>
-                    )}
-
-                    {/* Valid Until */}
-                    {budget.validUntil && (
-                      <View className="flex-row items-center">
-                        <Ionicons name="time-outline" size={16} color="#9ca3af" />
-                        <Text className="ml-2 text-gray-600 text-sm">
-                          Valid until: {new Date(budget.validUntil).toLocaleDateString()}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-
-                  {/* Action Button */}
-                  <TouchableOpacity className="mt-3 rounded-lg bg-blue-50 py-2">
-                    <Text className="text-center font-medium text-blue-600">View Details</Text>
-                  </TouchableOpacity>
-                </View>
+              {filteredBudgets.map((budget) => (
+                <BudgetCard
+                  key={budget._id}
+                  budget={{
+                    _id: budget._id,
+                    title: budget.title,
+                    client: budget.client,
+                    description: budget.description,
+                    status: budget.status,
+                    totalAmount: budget.totalAmount,
+                    validUntil: budget.validUntil,
+                    createdAt: budget.createdAt,
+                    project: "project" in budget ? budget.project : undefined,
+                  }}
+                  onPress={() => {
+                    // Open budget detail
+                  }}
+                />
               ))}
-
-              {(!budgets || budgets.length === 0) && (
-                <View className="items-center rounded-lg border border-orange-500 bg-white p-8">
-                  <Ionicons name="document-text-outline" size={48} color="#d1d5db" />
-                  <Text className="mt-4 text-gray-500">No budgets found</Text>
-                  <Text className="mt-2 text-gray-400 text-sm">
-                    Create your first budget to get started
-                  </Text>
-                </View>
-              )}
             </View>
           )}
         </View>
       </ScrollView>
+
       <NewBudgetModal
         isOpen={isNewBudgetModalOpen}
         onClose={() => setIsNewBudgetModalOpen(false)}

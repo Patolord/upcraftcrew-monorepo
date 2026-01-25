@@ -1,273 +1,177 @@
-import { Ionicons } from "@expo/vector-icons";
-import { api } from "@upcraftcrew-os/backend/convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { NewEventModal } from "@/components/modals/NewEventModal";
+import { View, Text, ScrollView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { NewEventModal } from "@/components/modals/new-event-modal";
+
+import { ScheduleHeader } from "./_components/schedule-header";
+import { ScheduleStats } from "./_components/schedule-stats";
+import { MonthNavigator } from "./_components/schedule-month-nav";
+import { EventCard } from "./_components/schedule-event-card";
 
 export default function SchedulePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<"month" | "list">("list");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
 
-  const currentMonth = selectedDate.getMonth() + 1;
-  const currentYear = selectedDate.getFullYear();
-
-  const events = useQuery(api.schedule.getEventsByMonth, {
-    month: currentMonth,
-    year: currentYear,
-  });
-
-  const stats = useMemo(() => {
-    if (!events) return { total: 0, meetings: 0, deadlines: 0, tasks: 0 };
-
+  // Get month range for query
+  const monthRange = useMemo(() => {
+    const start = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    const end = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
     return {
-      total: events.length,
-      meetings: events.filter((e) => e.type === "meeting").length,
-      deadlines: events.filter((e) => e.type === "deadline").length,
-      tasks: events.filter((e) => e.type === "task").length,
+      startDate: start.getTime(),
+      endDate: end.getTime(),
     };
-  }, [events]);
+  }, [selectedDate]);
 
-  const upcomingEvents = useMemo(() => {
+  const events = useQuery(api.schedule.getEventsByMonth, monthRange);
+
+  // Filter events based on search query
+  const filteredEvents = useMemo(() => {
     if (!events) return [];
-    const now = Date.now();
-    return events.filter((e) => e.startTime >= now).sort((a, b) => a.startTime - b.startTime);
-  }, [events]);
+    if (!searchQuery.trim()) return events;
 
+    const query = searchQuery.toLowerCase();
+    return events.filter((event) => {
+      return (
+        event.title?.toLowerCase().includes(query) ||
+        event.description?.toLowerCase().includes(query) ||
+        event.type?.toLowerCase().includes(query) ||
+        event.location?.toLowerCase().includes(query)
+      );
+    });
+  }, [events, searchQuery]);
+
+  // Sort events by date (upcoming first)
+  const sortedEvents = useMemo(() => {
+    return [...filteredEvents].sort((a, b) => a.startTime - b.startTime);
+  }, [filteredEvents]);
+
+  // Group events by date
+  const eventsByDate = useMemo(() => {
+    const groups: Record<string, typeof sortedEvents> = {};
+    sortedEvents.forEach((event) => {
+      const dateKey = new Date(event.startTime).toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "short",
+      });
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(event);
+    });
+    return groups;
+  }, [sortedEvents]);
+
+  // Loading state
   if (events === undefined) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#FF5722" />
-        <Text className="mt-4 text-gray-600">Loading schedule...</Text>
+      <View className="flex-1 bg-admin-background pt-12">
+        <View className="px-4 space-y-4">
+          {/* Header skeleton */}
+          <View className="space-y-4 pb-2">
+            <View className="flex-row justify-between">
+              <Skeleton className="h-8 w-24" />
+              <View className="flex-row items-center gap-2">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <Skeleton className="h-4 w-20" />
+              </View>
+            </View>
+            <Skeleton className="h-10 w-full rounded-full" />
+          </View>
+
+          {/* Stats skeleton */}
+          <View className="flex-row flex-wrap gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <View key={i} className="flex-1 min-w-[45%]">
+                <Skeleton className="h-20 rounded-xl" />
+              </View>
+            ))}
+          </View>
+
+          {/* Month nav skeleton */}
+          <Skeleton className="h-24 rounded-xl" />
+
+          {/* Events skeleton */}
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-28 rounded-xl" />
+          ))}
+        </View>
       </View>
     );
   }
 
-  const getEventTypeColor = (type: string) => {
-    switch (type) {
-      case "meeting":
-        return { bg: "bg-orange-100", text: "text-orange-700", icon: "people" };
-      case "deadline":
-        return { bg: "bg-orange-100", text: "text-orange-700", icon: "flag" };
-      case "task":
-        return {
-          bg: "bg-orange-100",
-          text: "text-orange-700",
-          icon: "checkmark-circle",
-        };
-      case "reminder":
-        return { bg: "bg-orange-100", text: "text-orange-700", icon: "alarm" };
-      case "milestone":
-        return { bg: "bg-orange-100", text: "text-orange-700", icon: "trophy" };
-      default:
-        return {
-          bg: "bg-orange-100",
-          text: "text-orange-700",
-          icon: "calendar",
-        };
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "text-red-600";
-      case "medium":
-        return "text-yellow-600";
-      case "low":
-        return "text-green-600";
-      default:
-        return "text-gray-600";
-    }
-  };
-
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  };
-
-  const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const monthName = selectedDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-
   return (
-    <View className="flex-1 pt-16 ">
-      <ScrollView className="flex-1">
-        <View className="gap-4 p-4">
+    <View className="flex-1 bg-admin-background pt-12">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="px-4 space-y-4">
           {/* Header */}
-          <View className="flex-row items-center justify-between">
-            <Text className="font-bold text-3xl text-orange-500">Schedule</Text>
-            <TouchableOpacity
-              onPress={() => setIsNewEventModalOpen(true)}
-              className="rounded-lg bg-orange-500 px-4 py-2"
-            >
-              <Text className="font-semibold text-white">+ New Event</Text>
-            </TouchableOpacity>
-          </View>
+          <ScheduleHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
           {/* Stats */}
-          <View className="flex-row flex-wrap gap-3">
-            <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-3">
-              <Text className="text-gray-500 text-xs">Total Events</Text>
-              <Text className="mt-1 font-bold text-2xl text-orange-500">{stats.total}</Text>
-            </View>
-            <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-3">
-              <Text className="text-gray-500 text-xs">Meetings</Text>
-              <Text className="mt-1 font-bold text-2xl text-orange-500">{stats.meetings}</Text>
-            </View>
-            <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-3">
-              <Text className="text-gray-500 text-xs">Deadlines</Text>
-              <Text className="mt-1 font-bold text-2xl text-orange-500">{stats.deadlines}</Text>
-            </View>
-            <View className="min-w-[45%] flex-1 rounded-lg border border-orange-500 bg-white p-3">
-              <Text className="text-gray-500 text-xs">Tasks</Text>
-              <Text className="mt-1 font-bold text-2xl text-orange-500">{stats.tasks}</Text>
-            </View>
-          </View>
+          <ScheduleStats events={events} />
 
-          {/* Month Navigation */}
-          <View className="rounded-lg border border-orange-500 bg-white p-4">
-            <View className="flex-row items-center justify-between">
-              <TouchableOpacity
-                onPress={() => {
-                  const newDate = new Date(selectedDate);
-                  newDate.setMonth(newDate.getMonth() - 1);
-                  setSelectedDate(newDate);
-                }}
-                className="p-2"
-              >
-                <Ionicons name="chevron-back" size={24} color="#FF5722" />
-              </TouchableOpacity>
+          {/* Month Navigator */}
+          <MonthNavigator selectedDate={selectedDate} onDateChange={setSelectedDate} />
 
-              <Text className="font-semibold text-gray-800 text-lg">{monthName}</Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  const newDate = new Date(selectedDate);
-                  newDate.setMonth(newDate.getMonth() + 1);
-                  setSelectedDate(newDate);
-                }}
-                className="p-2"
-              >
-                <Ionicons name="chevron-forward" size={24} color="#FF5722" />
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => setSelectedDate(new Date())}
-              className="mt-3 rounded-lg bg-orange-500 py-2"
+          {/* Section Header */}
+          <View className="flex-row items-center justify-between pt-2">
+            <Text className="text-lg font-semibold text-foreground">Próximos Eventos</Text>
+            <Button
+              variant="default"
+              size="sm"
+              onPress={() => setIsNewEventModalOpen(true)}
+              className="bg-brand"
             >
-              <Text className="text-center font-medium text-white">Today</Text>
-            </TouchableOpacity>
+              <View className="flex-row items-center gap-1">
+                <Ionicons name="add" size={16} color="#ffffff" />
+                <Text className="text-white text-xs font-medium">Novo</Text>
+              </View>
+            </Button>
           </View>
 
           {/* Events List */}
-          <View>
-            <Text className="mb-3 font-semibold text-lg text-orange-500">Upcoming Events</Text>
-            <View className="gap-4">
-              {upcomingEvents.map((event) => {
-                const typeColor = getEventTypeColor(event.type);
-                return (
-                  <View
-                    key={event._id}
-                    className="rounded-lg border border-orange-500 bg-white p-4"
-                  >
-                    {/* Header */}
-                    <View className="mb-2 flex-row items-start justify-between">
-                      <View className="flex-1">
-                        <Text className="font-semibold text-lg text-orange-500">{event.title}</Text>
-                        {event.project && (
-                          <Text className="mt-1 text-gray-500 text-sm">{event.project.name}</Text>
-                        )}
-                      </View>
-                      <View className={`rounded-full px-3 py-1 ${typeColor.bg}`}>
-                        <Text className={`font-medium text-xs ${typeColor.text}`}>
-                          {event.type}
-                        </Text>
-                      </View>
-                    </View>
+          {sortedEvents.length === 0 ? (
+            <EmptyState
+              icon="calendar-outline"
+              title="Nenhum evento encontrado"
+              description={searchQuery ? "Tente ajustar sua busca" : "Adicione seu primeiro evento"}
+            />
+          ) : (
+            <View>
+              {Object.entries(eventsByDate).map(([date, dateEvents]) => (
+                <View key={date} className="mb-4">
+                  {/* Date Header */}
+                  <Text className="text-sm font-semibold text-muted-foreground mb-2 capitalize">
+                    {date}
+                  </Text>
 
-                    {/* Description */}
-                    {event.description && (
-                      <Text className="mb-3 text-gray-600 text-sm" numberOfLines={2}>
-                        {event.description}
-                      </Text>
-                    )}
-
-                    {/* Details */}
-                    <View className="space-y-2">
-                      {/* Date & Time */}
-                      <View className="flex-row items-center">
-                        <Ionicons name="calendar-outline" size={16} color="#9ca3af" />
-                        <Text className="ml-2 text-gray-600 text-sm">
-                          {formatDate(event.startTime)} at {formatTime(event.startTime)}
-                        </Text>
-                      </View>
-
-                      {/* Location */}
-                      {event.location && (
-                        <View className="flex-row items-center">
-                          <Ionicons name="location-outline" size={16} color="#9ca3af" />
-                          <Text className="ml-2 text-gray-600 text-sm">{event.location}</Text>
-                        </View>
-                      )}
-
-                      {/* Attendees */}
-                      {event.attendees && event.attendees.length > 0 && (
-                        <View className="flex-row items-center">
-                          <Ionicons name="people-outline" size={16} color="#9ca3af" />
-                          <Text className="ml-2 text-gray-600 text-sm">
-                            {event.attendees.length} attendee
-                            {event.attendees.length > 1 ? "s" : ""}
-                          </Text>
-                        </View>
-                      )}
-
-                      {/* Priority */}
-                      {event.priority && (
-                        <View className="flex-row items-center">
-                          <Ionicons name="flag-outline" size={16} color="#9ca3af" />
-                          <Text
-                            className={`ml-2 font-medium text-sm ${getPriorityColor(event.priority)}`}
-                          >
-                            {event.priority.charAt(0).toUpperCase() + event.priority.slice(1)}{" "}
-                            priority
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-
-                    {/* Status */}
-                    {event.endTime < Date.now() && (
-                      <View className="mt-3 flex-row items-center rounded-lg bg-green-50 px-3 py-2">
-                        <Ionicons name="checkmark-circle" size={16} color="#22c55e" />
-                        <Text className="ml-2 font-medium text-green-700 text-sm">Past Event</Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              })}
+                  {/* Events */}
+                  {dateEvents.map((event) => (
+                    <EventCard
+                      key={event._id}
+                      event={event}
+                      onPress={() => {
+                        // Open event detail
+                      }}
+                    />
+                  ))}
+                </View>
+              ))}
             </View>
-
-            {upcomingEvents.length === 0 && (
-              <View className="items-center rounded-lg border border-orange-500 bg-white p-8">
-                <Ionicons name="calendar-outline" size={48} color="#d1d5db" />
-                <Text className="mt-4 text-gray-500">No upcoming events</Text>
-              </View>
-            )}
-          </View>
+          )}
         </View>
       </ScrollView>
+
       <NewEventModal isOpen={isNewEventModalOpen} onClose={() => setIsNewEventModalOpen(false)} />
     </View>
   );

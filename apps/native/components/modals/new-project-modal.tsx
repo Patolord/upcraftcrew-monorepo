@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { api } from "@upcraftcrew-os/backend/convex/_generated/api";
-import { useMutation } from "convex/react";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -26,6 +27,7 @@ type ProjectPriority = "low" | "medium" | "high" | "urgent";
 export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const createProject = useMutation(api.projects.createProject);
+  const teamMembers = useQuery(api.team.getTeamMembers);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -38,11 +40,12 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     progress: 0,
     budgetTotal: "",
     budgetSpent: "",
+    managerId: "" as string,
   });
 
   const handleSubmit = async () => {
-    if (!formData.name || !formData.client || !formData.description) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos obrigatórios");
+    if (!formData.name || !formData.client || !formData.description || !formData.managerId) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos obrigatórios (incluindo o gerente)");
       return;
     }
 
@@ -60,6 +63,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         progress: formData.progress,
         budget: parseFloat(formData.budgetTotal) || 0,
         teamIds: [],
+        managerId: formData.managerId as Id<"users">,
       });
 
       Alert.alert("Sucesso", "Projeto criado com sucesso!");
@@ -76,6 +80,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
         progress: 0,
         budgetTotal: "",
         budgetSpent: "",
+        managerId: "",
       });
 
       onClose();
@@ -204,6 +209,39 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                       )}
                     </ScrollView>
                   </View>
+                </View>
+              </View>
+
+              {/* Manager */}
+              <View className="mb-4">
+                <Text className="mb-2 font-medium text-gray-700">Gerente do Projeto *</Text>
+                <View className="border border-gray-300 rounded-lg max-h-32">
+                  <ScrollView>
+                    {teamMembers?.map((member) => (
+                      <TouchableOpacity
+                        key={member._id}
+                        onPress={() =>
+                          setFormData({
+                            ...formData,
+                            managerId: member._id,
+                          })
+                        }
+                        className={`p-3 border-b border-gray-200 ${
+                          formData.managerId === member._id ? "bg-orange-50" : "bg-white"
+                        }`}
+                      >
+                        <Text
+                          className={
+                            formData.managerId === member._id
+                              ? "font-semibold text-orange-600"
+                              : "text-gray-700"
+                          }
+                        >
+                          {member.firstName} {member.lastName}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
                 </View>
               </View>
 

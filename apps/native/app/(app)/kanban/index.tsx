@@ -1,182 +1,172 @@
-import { Ionicons } from "@expo/vector-icons";
-import { api } from "@upcraftcrew-os/backend/convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { NewTaskModal } from "@/components/modals/NewTaskModal";
+import { View, ScrollView } from "react-native";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NewTaskModal } from "@/components/modals/new-task-modal";
+
+import { KanbanHeader } from "./_components/kanban-header";
+import { KanbanTeamAvatars } from "./_components/kanban-team-avatars";
+import { KanbanColumn } from "./_components/kanban-column";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
 
+interface Column {
+  id: TaskStatus;
+  title: string;
+  tasks: any[];
+}
+
 export default function KanbanPage() {
   const tasks = useQuery(api.tasks.getTasks);
+  const teamMembers = useQuery(api.team.getTeamMembers);
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+  const [newTaskDefaultStatus, setNewTaskDefaultStatus] = useState<TaskStatus>("todo");
+  const [selectedTaskId, setSelectedTaskId] = useState<Id<"tasks"> | null>(null);
 
-  const filteredTasks = useMemo(() => {
+  // Transform tasks to match the expected interface
+  const transformedTasks = useMemo(() => {
     if (!tasks) return [];
+    return tasks.map((task) => ({
+      _id: task._id,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      assignedUser: task.assignedUser
+        ? {
+            _id: task.assignedUser._id,
+            name: task.assignedUser.name || "",
+            imageUrl: task.assignedUser.imageUrl,
+          }
+        : null,
+      project: task.project
+        ? {
+            _id: task.project._id,
+            name: task.project.name,
+          }
+        : null,
+      dueDate: task.dueDate,
+      labels: task.labels,
+      subtaskStats: task.subtaskStats,
+      commentCount: task.commentCount,
+    }));
+  }, [tasks]);
 
-    return tasks.filter((task) => {
-      const matchesSearch =
-        searchQuery === "" ||
-        task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.assignedUser?.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.assignedUser?.lastName?.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filter tasks based on search query
+  const filteredTasks = useMemo(() => {
+    if (!searchQuery.trim()) return transformedTasks;
 
-      return matchesSearch;
+    const query = searchQuery.toLowerCase();
+    return transformedTasks.filter((task) => {
+      return (
+        task.title?.toLowerCase().includes(query) ||
+        task.description?.toLowerCase().includes(query) ||
+        task.project?.name?.toLowerCase().includes(query) ||
+        task.assignedUser?.name?.toLowerCase().includes(query) ||
+        task.priority?.toLowerCase().includes(query) ||
+        task.status?.toLowerCase().includes(query)
+      );
     });
-  }, [tasks, searchQuery]);
+  }, [transformedTasks, searchQuery]);
 
-  const groupedTasks = useMemo(() => {
-    const groups: Record<TaskStatus, typeof filteredTasks> = {
-      todo: [],
-      "in-progress": [],
-      review: [],
-      done: [],
-      blocked: [],
-    };
+  // Group tasks by status into columns
+  const columns = useMemo<Column[]>(() => {
+    const statuses: { id: TaskStatus; title: string }[] = [
+      { id: "todo", title: "Para Fazer" },
+      { id: "in-progress", title: "Em Progresso" },
+      { id: "review", title: "Revisão" },
+      { id: "done", title: "Concluído" },
+    ];
 
-    filteredTasks.forEach((task) => {
-      if (task.status && groups[task.status as TaskStatus]) {
-        groups[task.status as TaskStatus].push(task);
-      }
-    });
-
-    return groups;
+    return statuses.map((status) => ({
+      id: status.id,
+      title: status.title,
+      tasks: filteredTasks.filter((task) => task.status === status.id),
+    }));
   }, [filteredTasks]);
 
-  if (tasks === undefined) {
+  // Handlers
+  const handleTaskClick = (taskId: Id<"tasks">) => {
+    setSelectedTaskId(taskId);
+    // Could open task detail modal here
+  };
+
+  const handleAddTask = (status: TaskStatus) => {
+    setNewTaskDefaultStatus(status);
+    setIsNewTaskModalOpen(true);
+  };
+
+  // Loading state
+  if (tasks === undefined || teamMembers === undefined) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#FF5722" />
-        <Text className="mt-4 text-gray-600">Loading kanban...</Text>
+      <View className="flex-1 bg-admin-background pt-12">
+        <View className="px-4 space-y-4">
+          {/* Header skeleton */}
+          <View className="space-y-4 pb-2">
+            <View className="flex-row justify-between">
+              <Skeleton className="h-8 w-24" />
+              <View className="flex-row items-center gap-2">
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <Skeleton className="h-4 w-20" />
+              </View>
+            </View>
+            <Skeleton className="h-10 w-full rounded-full" />
+          </View>
+
+          {/* Team avatars skeleton */}
+          <View className="flex-row items-center gap-4">
+            <Skeleton className="h-5 w-32" />
+            <View className="flex-row -space-x-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} className="h-10 w-10 rounded-full" />
+              ))}
+            </View>
+          </View>
+
+          {/* Columns skeleton */}
+          <View className="flex-row">
+            {[1, 2, 3, 4].map((i) => (
+              <View key={i} className="w-72 mr-4">
+                <Skeleton className="h-12 rounded-t-xl" />
+                <Skeleton className="h-64 rounded-b-xl" />
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
     );
   }
 
-  const columns: { id: TaskStatus; title: string; color: string }[] = [
-    { id: "todo", title: "To Do", color: "bg-gray-100" },
-    { id: "in-progress", title: "In Progress", color: "bg-orange-100" },
-    { id: "review", title: "Review", color: "bg-yellow-100" },
-    { id: "done", title: "Done", color: "bg-green-100" },
-    { id: "blocked", title: "Blocked", color: "bg-red-100" },
-  ];
-
   return (
-    <View className="flex-1 pt-16 ">
-      {/* Header */}
-      <View className="border-gray-200 border-b bg-white p-4">
-        <View className="mb-3 flex-row items-center justify-between">
-          <Text className="font-bold text-3xl text-orange-500">Kanban</Text>
-          <TouchableOpacity
-            onPress={() => setIsNewTaskModalOpen(true)}
-            className="rounded-lg bg-orange-500 px-4 py-2"
-          >
-            <Text className="font-semibold text-white">+ New Task</Text>
-          </TouchableOpacity>
+    <View className="flex-1 bg-admin-background pt-12">
+      <View className="flex-1">
+        {/* Fixed Header Section */}
+        <View className="px-4 space-y-4 pb-4">
+          <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+          <KanbanTeamAvatars teamMembers={teamMembers} />
         </View>
 
-        {/* Search */}
-        <View className="flex-row items-center rounded-lg bg-gray-50 p-3">
-          <Ionicons name="search-outline" size={20} color="#9ca3af" />
-          <TextInput
-            className="ml-2 flex-1 text-gray-800"
-            placeholder="Search tasks..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
+        {/* Scrollable Kanban Board */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+        >
+          {columns.map((column) => (
+            <KanbanColumn
+              key={column.id}
+              column={column}
+              onTaskClick={handleTaskClick}
+              onAddTask={handleAddTask}
+            />
+          ))}
+        </ScrollView>
       </View>
 
-      {/* Kanban Board */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-1">
-        <View className="flex-row gap-4 p-4">
-          {columns.map((column) => {
-            const columnTasks = groupedTasks[column.id] || [];
-            return (
-              <View key={column.id} className="w-80">
-                {/* Column Header */}
-                <View className={`${column.color} rounded-t-lg p-3`}>
-                  <View className="flex-row items-center justify-between">
-                    <Text className="font-semibold text-gray-800">{column.title}</Text>
-                    <View className="rounded bg-white px-2 py-1">
-                      <Text className="font-medium text-gray-700 text-xs">
-                        {columnTasks.length}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Column Content */}
-                <ScrollView
-                  className="max-h-screen rounded-b-lg bg-white p-3"
-                  showsVerticalScrollIndicator={false}
-                >
-                  <View className="space-y-3">
-                    {columnTasks.map((task) => (
-                      <View
-                        key={task._id}
-                        className="rounded-lg border border-gray-200 bg-gray-50 p-4"
-                      >
-                        {/* Task Title */}
-                        <Text className="mb-2 font-semibold text-gray-800">{task.title}</Text>
-
-                        {/* Task Description */}
-                        {task.description && (
-                          <Text className="mb-3 text-gray-600 text-sm" numberOfLines={3}>
-                            {task.description}
-                          </Text>
-                        )}
-
-                        {/* Task Meta */}
-                        {task.assignedUser && (
-                          <View className="mt-2 flex-row items-center">
-                            <View className="mr-2 h-6 w-6 items-center justify-center rounded-full bg-orange-100">
-                              <Text className="font-semibold text-orange-500 text-xs">
-                                {task.assignedUser.firstName
-                                  .split(" ")
-                                  .map((n: string) => n[0])
-                                  .join("")
-                                  .slice(0, 2)}
-                              </Text>
-                            </View>
-                            <Text className="text-gray-600 text-xs">
-                              {task.assignedUser.firstName} {task.assignedUser.lastName}
-                            </Text>
-                          </View>
-                        )}
-
-                        {task.dueDate && (
-                          <View className="mt-2 flex-row items-center">
-                            <Ionicons name="calendar-outline" size={14} color="#9ca3af" />
-                            <Text className="ml-1 text-gray-600 text-xs">
-                              {new Date(task.dueDate).toLocaleDateString()}
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                    ))}
-
-                    {columnTasks.length === 0 && (
-                      <View className="items-center py-8">
-                        <Ionicons name="folder-open-outline" size={32} color="#d1d5db" />
-                        <Text className="mt-2 text-gray-400 text-sm">No tasks</Text>
-                      </View>
-                    )}
-                  </View>
-                </ScrollView>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+      {/* New Task Modal */}
       <NewTaskModal isOpen={isNewTaskModalOpen} onClose={() => setIsNewTaskModalOpen(false)} />
     </View>
   );

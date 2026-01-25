@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { api } from "@upcraftcrew-os/backend/convex/_generated/api";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@upcraftcrew-os/backend/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { useState } from "react";
