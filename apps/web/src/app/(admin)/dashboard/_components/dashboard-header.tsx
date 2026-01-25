@@ -1,10 +1,11 @@
 "use client";
 
-import { ChevronDownIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { ChevronDownIcon, LogOutIcon, MoonIcon, SunIcon, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import React from "react";
+import { useTheme } from "@/hooks/use-theme";
 
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export function DashboardHeader() {
   const router = useRouter();
   const { user } = useUser();
+  const { theme, toggleTheme, mounted } = useTheme();
 
   const handleSignOut = () => {
     toast.success("Logged out successfully");
@@ -54,6 +56,20 @@ export function DashboardHeader() {
           <DropdownMenuItem className="cursor-pointer">
             <UserIcon className="size-4" />
             Profile
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
+            {mounted && theme === "dark" ? (
+              <>
+                <SunIcon className="size-4" />
+                Light mode
+              </>
+            ) : (
+              <>
+                <MoonIcon className="size-4" />
+                Dark mode
+              </>
+            )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <SignOutButton>

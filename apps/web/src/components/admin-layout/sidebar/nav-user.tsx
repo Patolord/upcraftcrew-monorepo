@@ -1,10 +1,11 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, User } from "lucide-react";
+import { ChevronsUpDown, LogOut, Moon, Sun, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import React from "react";
+import { useTheme } from "@/hooks/use-theme";
 
 import {
   SidebarMenu,
@@ -25,6 +26,7 @@ export default function NavUser() {
   const router = useRouter();
   const { user } = useUser();
   const { state } = useSidebar();
+  const { theme, toggleTheme, mounted } = useTheme();
 
   const handleSignOut = () => {
     toast.success("Logged out successfully");
@@ -77,6 +79,20 @@ export default function NavUser() {
             <DropdownMenuItem className="cursor-pointer">
               <User className="size-4" />
               Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
+              {mounted && theme === "dark" ? (
+                <>
+                  <Sun className="size-4" />
+                  Light mode
+                </>
+              ) : (
+                <>
+                  <Moon className="size-4" />
+                  Dark mode
+                </>
+              )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <SignOutButton>
