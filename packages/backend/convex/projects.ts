@@ -459,8 +459,9 @@ export const createProjectFromBudget = mutation({
     });
 
     // Update user's projectIds
+    const currentProjectIds = user.projectIds || [];
     await ctx.db.patch(user._id, {
-      projectIds: [...user.projectIds, projectId],
+      projectIds: [...currentProjectIds, projectId],
     });
 
     // Update budget with project reference
