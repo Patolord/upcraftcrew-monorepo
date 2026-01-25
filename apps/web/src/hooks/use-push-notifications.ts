@@ -22,12 +22,13 @@ interface UsePushNotificationsReturn extends PushNotificationState {
 // Generate your own keys using: npx web-push generate-vapid-keys
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
-function urlBase64ToUint8Array(base64String: string): Uint8Array {
+function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
   const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
+  const buffer = new ArrayBuffer(rawData.length);
+  const outputArray = new Uint8Array(buffer);
 
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
@@ -214,7 +215,6 @@ export function usePushNotifications(): UsePushNotificationsReturn {
         registration.showNotification(title, {
           icon: "/icons/icon-192x192.png",
           badge: "/icons/icon-72x72.png",
-          vibrate: [100, 50, 100],
           ...options,
         });
       });
