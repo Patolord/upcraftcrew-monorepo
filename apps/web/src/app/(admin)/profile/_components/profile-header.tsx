@@ -35,8 +35,14 @@ export function ProfileHeader() {
 
   return (
     <header className="flex items-center justify-between py-4 md:py-6">
-      {/* Title */}
-      <div>
+      {/* Left side - Profile Avatar and Title */}
+      <div className="flex items-center gap-3">
+        <Avatar className="size-9 md:size-10 ring-2 ring-orange-300 ring-offset-2">
+          <AvatarImage src={user?.imageUrl} alt={userName} />
+          <AvatarFallback className="bg-linear-to-br from-orange-400 to-pink-500 text-white text-sm font-medium">
+            {userInitials}
+          </AvatarFallback>
+        </Avatar>
         <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">Profile</h1>
       </div>
 

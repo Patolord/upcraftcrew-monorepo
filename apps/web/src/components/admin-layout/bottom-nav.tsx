@@ -1,30 +1,18 @@
 "use client";
 
-import {
-  LayoutDashboard,
-  FileText,
-  FolderOpen,
-  Users,
-  CalendarDays,
-  DollarSign,
-  Kanban,
-  User,
-} from "lucide-react";
+import { LayoutDashboard, FileText, FolderOpen, Kanban, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+// Items to show in bottom nav (limited to 5 for better UX)
+// Profile is first since it's the main entry point with tasks
+const bottomNavItems = [
   {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Orçamentos",
-    url: "/budgets",
-    icon: FileText,
+    title: "Perfil",
+    url: "/profile",
+    icon: User,
   },
   {
     title: "Projetos",
@@ -32,19 +20,9 @@ const navItems = [
     icon: FolderOpen,
   },
   {
-    title: "Equipe",
-    url: "/team",
-    icon: Users,
-  },
-  {
-    title: "Agenda",
-    url: "/schedule",
-    icon: CalendarDays,
-  },
-  {
-    title: "Finanças",
-    url: "/finance",
-    icon: DollarSign,
+    title: "Orçamentos",
+    url: "/budgets",
+    icon: FileText,
   },
   {
     title: "Kanban",
@@ -52,20 +30,17 @@ const navItems = [
     icon: Kanban,
   },
   {
-    title: "Perfil",
-    url: "/profile",
-    icon: User,
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
   },
 ];
-
-// Items to show in bottom nav (limited to 5 for better UX)
-const bottomNavItems = navItems.slice(0, 5);
 
 export function BottomNav() {
   const pathname = usePathname();
 
   const isActive = (url: string) => {
-    if (url === "/dashboard") return pathname === url;
+    if (url === "/dashboard" || url === "/profile") return pathname === url;
     return pathname.startsWith(url);
   };
 

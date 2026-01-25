@@ -43,7 +43,7 @@ export default function SignInPage() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        router.push("/dashboard");
+        router.push("/profile");
       }
     } catch (err) {
       console.error("Error:", err);
