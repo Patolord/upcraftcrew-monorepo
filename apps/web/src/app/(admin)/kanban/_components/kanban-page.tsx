@@ -9,9 +9,6 @@ import { TaskDetailModal } from "./task-detail-modal";
 import { NewTaskModal } from "./new-task-modal";
 import { KanbanHeader } from "./kanban-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { ZapIcon, StarIcon, Share2Icon, ColumnsIcon } from "lucide-react";
-import { toast } from "sonner";
 import React from "react";
 
 interface TaskLabel {
@@ -144,10 +141,6 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
     }
   };
 
-  const handleAddColumn = () => {
-    toast.info("New column feature coming soon!");
-  };
-
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Fixed Header Section */}
@@ -157,7 +150,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         {/* Team Members Section */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h2 className="text-lg font-semibold">Team Members</h2>
+            <h2 className="text-lg font-semibold">Membros da Equipe</h2>
             <div className="flex -space-x-2">
               {teamMembers.slice(0, 5).map((member: TeamMember) => {
                 const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
@@ -190,24 +183,6 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
                 </Avatar>
               )}
             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2">
-            <Button variant="default" size="sm" className="rounded-full" onClick={handleAddColumn}>
-              <ColumnsIcon className="size-4 mr-1" />
-              New Column
-            </Button>
-            <Button variant="ghost" size="icon-sm" className="rounded-full">
-              <ZapIcon className="size-4" />
-            </Button>
-            <Button variant="ghost" size="icon-sm" className="rounded-full">
-              <StarIcon className="size-4" />
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full">
-              <Share2Icon className="size-4 mr-1" />
-              Share
-            </Button>
           </div>
         </div>
       </div>

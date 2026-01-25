@@ -29,8 +29,8 @@ const BalanceChart = () => (
     {/* Área preenchida */}
     <defs>
       <linearGradient id="balanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.3" />
-        <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.05" />
+        <stop offset="0%" stopColor="var(--brand)" stopOpacity="0.3" />
+        <stop offset="100%" stopColor="var(--brand)" stopOpacity="0.05" />
       </linearGradient>
     </defs>
     <path
@@ -40,7 +40,7 @@ const BalanceChart = () => (
     {/* Linha */}
     <path
       d="M0 80 Q 30 75, 50 70 T 100 65 Q 130 60, 160 55 T 220 50 Q 260 45, 300 40 T 360 30 Q 380 25, 400 20"
-      stroke="#8b5cf6"
+      stroke="var(--brand)"
       strokeWidth="2.5"
       fill="none"
       strokeLinecap="round"
