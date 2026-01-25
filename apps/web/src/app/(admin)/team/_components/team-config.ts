@@ -1,18 +1,18 @@
 export const roleConfig = {
   owner: {
-    label: "Owner",
+    label: "Proprietário",
     variant: "destructive" as const,
   },
   admin: {
-    label: "Admin",
+    label: "Administrador",
     variant: "warning" as const,
   },
   manager: {
-    label: "Manager",
+    label: "Gerente",
     variant: "default" as const,
   },
   developer: {
-    label: "Developer",
+    label: "Desenvolvedor",
     variant: "default" as const,
   },
   designer: {
@@ -20,33 +20,33 @@ export const roleConfig = {
     variant: "secondary" as const,
   },
   member: {
-    label: "Member",
+    label: "Membro",
     variant: "outline" as const,
   },
   viewer: {
-    label: "Viewer",
+    label: "Visualizador",
     variant: "outline" as const,
   },
 };
 
 export const statusConfig = {
   online: {
-    label: "Online",
+    label: "Conectado",
     color: "bg-green-500",
     textColor: "text-green-600 dark:text-green-500",
   },
   away: {
-    label: "Away",
+    label: "Ausente",
     color: "bg-amber-500",
     textColor: "text-amber-600 dark:text-amber-500",
   },
   busy: {
-    label: "Busy",
+    label: "Ocupado",
     color: "bg-red-500",
     textColor: "text-red-600 dark:text-red-500",
   },
   offline: {
-    label: "Offline",
+    label: "Desconectado",
     color: "bg-muted",
     textColor: "text-muted-foreground",
   },

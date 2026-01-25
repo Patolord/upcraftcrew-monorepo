@@ -32,7 +32,7 @@ export function TeamStats({ teamMembers }: TeamStatsProps) {
   const statCards = [
     {
       key: "total",
-      label: "Total Members",
+      label: "Total",
       icon: UsersIcon,
       iconBg: "bg-teal-500",
       value: totalMembers,
@@ -48,7 +48,7 @@ export function TeamStats({ teamMembers }: TeamStatsProps) {
     },
     {
       key: "projects",
-      label: "Active Projects",
+      label: "Projetos Ativos",
       icon: FolderKanbanIcon,
       iconBg: "bg-orange-400",
       value: activeProjects,
@@ -56,7 +56,7 @@ export function TeamStats({ teamMembers }: TeamStatsProps) {
     },
     {
       key: "busy",
-      label: "Busy",
+      label: "Ocupado",
       icon: ClockIcon,
       iconBg: "bg-red-500",
       value: busyCount,

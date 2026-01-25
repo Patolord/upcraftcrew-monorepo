@@ -62,7 +62,7 @@ type ProjectPriority = "low" | "medium" | "high" | "urgent";
 const STATUS_OPTIONS = [
   {
     value: "planning",
-    label: "Executar",
+    label: "Planejamento",
     icon: ClipboardListIcon,
     color: "text - blue - 500",
   },

@@ -18,7 +18,7 @@ import React from "react";
 
 const statusConfig = {
   planning: {
-    label: "Executar",
+    label: "Planejamento",
     variant: "secondary" as const,
   },
   "in-progress": {

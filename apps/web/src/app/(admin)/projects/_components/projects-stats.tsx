@@ -47,7 +47,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
     },
     {
       key: "planning",
-      label: "Executar",
+      label: "Planejamento",
       icon: ClipboardListIcon,
       iconBg: "bg-orange-400",
       value: planning,

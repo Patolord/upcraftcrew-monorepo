@@ -46,7 +46,7 @@ type ProjectPriority = "low" | "medium" | "high" | "urgent";
 type TeamMember = Doc<"users">;
 
 const STATUS_OPTIONS = [
-  { value: "planning", label: "Executar", icon: ClipboardListIcon, color: "text - blue - 500" },
+  { value: "planning", label: "Planejamento", icon: ClipboardListIcon, color: "text - blue - 500" },
   { value: "in-progress", label: "Em Progresso", icon: RocketIcon, color: "text-amber-500" },
   { value: "completed", label: "Concluído", icon: CheckCircleIcon, color: "text-green-500" },
 ] as const;

@@ -18,7 +18,7 @@ import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
 const statusConfig = {
   planning: {
-    label: "Executar",
+    label: "Planejamento",
     variant: "secondary" as const,
     color: "bg-blue-100 text-blue-700 border-blue-200",
   },
