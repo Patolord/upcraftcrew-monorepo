@@ -1,21 +1,26 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { MoreHorizontalIcon, ReceiptIcon, CarIcon, BookOpenIcon } from "lucide-react";
-import React from "react";
+import {
+  MoreHorizontalIcon,
+  ReceiptIcon,
+  ShoppingCartIcon,
+  WrenchIcon,
+  MonitorIcon,
+  MegaphoneIcon,
+  BuildingIcon,
+  UsersIcon,
+  PackageIcon,
+} from "lucide-react";
+import type { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import React, { useMemo } from "react";
 
-interface RecentItem {
-  id: string;
-  icon: React.ReactNode;
-  iconBg: string;
-  title: string;
-  date: string;
-  amount: number;
-}
+type Transaction = Doc<"transactions"> & {
+  project?: Doc<"projects"> | null;
+};
 
 interface FinanceCreditCardProps {
-  balance?: number;
-  recentItems?: RecentItem[];
+  transactions?: Transaction[];
 }
 
 // Mini gráfico decorativo SVG
@@ -31,39 +36,84 @@ const MiniWaveChart = () => (
   </svg>
 );
 
-// Dados mockados para demonstração
-const mockRecentItems: RecentItem[] = [
-  {
-    id: "1",
+// Mapeamento de categorias para ícones e cores
+const categoryConfig: Record<string, { icon: React.ReactNode; bgColor: string }> = {
+  "project-payment": {
     icon: <ReceiptIcon className="size-4 text-indigo-600" />,
-    iconBg: "bg-indigo-100",
-    title: "Contas e Impostos",
-    date: "Today, 16:36",
-    amount: -154.5,
+    bgColor: "bg-indigo-100",
   },
-  {
-    id: "2",
-    icon: <CarIcon className="size-4 text-amber-600" />,
-    iconBg: "bg-amber-100",
-    title: "Energia do Carro",
-    date: "23 Jun, 13:06",
-    amount: -40.5,
+  salary: {
+    icon: <UsersIcon className="size-4 text-blue-600" />,
+    bgColor: "bg-blue-100",
   },
-  {
-    id: "3",
-    icon: <BookOpenIcon className="size-4 text-emerald-600" />,
-    iconBg: "bg-emerald-100",
-    title: "Curso de Design",
-    date: "21 Jun, 19:04",
-    amount: -70.0,
+  subscription: {
+    icon: <MonitorIcon className="size-4 text-purple-600" />,
+    bgColor: "bg-purple-100",
   },
-];
+  equipment: {
+    icon: <WrenchIcon className="size-4 text-amber-600" />,
+    bgColor: "bg-amber-100",
+  },
+  marketing: {
+    icon: <MegaphoneIcon className="size-4 text-pink-600" />,
+    bgColor: "bg-pink-100",
+  },
+  office: {
+    icon: <BuildingIcon className="size-4 text-teal-600" />,
+    bgColor: "bg-teal-100",
+  },
+  software: {
+    icon: <MonitorIcon className="size-4 text-cyan-600" />,
+    bgColor: "bg-cyan-100",
+  },
+  consultant: {
+    icon: <UsersIcon className="size-4 text-emerald-600" />,
+    bgColor: "bg-emerald-100",
+  },
+  materials: {
+    icon: <PackageIcon className="size-4 text-orange-600" />,
+    bgColor: "bg-orange-100",
+  },
+  other: {
+    icon: <ShoppingCartIcon className="size-4 text-gray-600" />,
+    bgColor: "bg-gray-100",
+  },
+};
 
-export function FinanceCreditCard({
-  balance = 25215,
-  recentItems = mockRecentItems,
-}: FinanceCreditCardProps) {
-  const displayBalance = balance ?? 0;
+// Função para formatar a data
+function formatTransactionDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const isToday = date.toDateString() === now.toDateString();
+
+  if (isToday) {
+    return `Hoje, ${date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`;
+  }
+
+  return date.toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps) {
+  // Filtrar apenas transações de despesa (expense) e calcular o total
+  const { totalExpenses, recentExpenses } = useMemo(() => {
+    const expenses = transactions.filter((t) => t.type === "expense");
+
+    const total = expenses
+      .filter((t) => t.status === "completed")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Pegar as 3 transações mais recentes
+    const recent = expenses.slice(0, 3);
+
+    return { totalExpenses: total, recentExpenses: recent };
+  }, [transactions]);
+
+  const displayBalance = totalExpenses;
 
   return (
     <Card className="rounded-2xl border-0 shadow-sm bg-white overflow-hidden">
@@ -76,7 +126,7 @@ export function FinanceCreditCard({
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-white/80 text-sm font-medium">Saldo de Crédito</p>
+              <p className="text-white/80 text-sm font-medium">Pagamentos</p>
               <button className="text-white/80 hover:text-white transition-colors">
                 <MoreHorizontalIcon className="size-5" />
               </button>
@@ -94,20 +144,29 @@ export function FinanceCreditCard({
         <div className="p-4 pt-5">
           <p className="text-sm text-gray-500 font-medium mb-4">Recente</p>
           <div className="space-y-4">
-            {recentItems.map((item) => (
-              <div key={item.id} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${item.iconBg}`}>{item.icon}</div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{item.title}</p>
-                    <p className="text-xs text-gray-500">{item.date}</p>
+            {recentExpenses.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">Nenhuma despesa registrada</p>
+            ) : (
+              recentExpenses.map((expense) => {
+                const config = categoryConfig[expense.category] || categoryConfig.other;
+                return (
+                  <div key={expense._id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2.5 rounded-xl ${config.bgColor}`}>{config.icon}</div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{expense.description}</p>
+                        <p className="text-xs text-gray-500">
+                          {formatTransactionDate(expense.date)}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="font-semibold text-gray-900">
+                      -${Math.abs(expense.amount).toFixed(2)}
+                    </span>
                   </div>
-                </div>
-                <span className="font-semibold text-gray-900">
-                  -${Math.abs(item.amount).toFixed(2)}
-                </span>
-              </div>
-            ))}
+                );
+              })
+            )}
           </div>
         </div>
       </CardContent>

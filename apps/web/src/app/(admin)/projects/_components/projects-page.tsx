@@ -63,14 +63,14 @@ export function ProjectsPage() {
 
       {/* Projects Grid */}
       {isLoading && results === undefined ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <div className="flex items-center justify-center py-12 text-brand">
+          <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-12 bg-white rounded-lg shadow-sm p-4">
           <EmptyState
             icon={FolderOpenIcon}
-            title="Nenhum projeto encontrado. Crie seu primeiro projeto clicando no botão acima."
+            title="Nenhum projeto encontrado"
             description={
               searchQuery
                 ? "Tente ajustar sua busca"
@@ -92,7 +92,7 @@ export function ProjectsPage() {
               <Button
                 onClick={() => loadMore(3)}
                 variant="outline"
-                className="min-w-[150px]"
+                className="min-w-[150px] rounded-lg"
                 disabled={status !== "CanLoadMore"}
               >
                 Ver Mais

@@ -36,7 +36,7 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
   const statCards = [
     {
       key: "income",
-      label: "Total Income",
+      label: "Total",
       icon: TrendingUpIcon,
       iconBg: "bg-emerald-500",
       value: formatCurrency(summary.totalIncome),
@@ -44,7 +44,7 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
     },
     {
       key: "expenses",
-      label: "Total Expenses",
+      label: "Despesas",
       icon: TrendingDownIcon,
       iconBg: "bg-rose-500",
       value: formatCurrency(summary.totalExpenses),
@@ -52,7 +52,7 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
     },
     {
       key: "profit",
-      label: "Net Profit",
+      label: "Lucro",
       icon: WalletIcon,
       iconBg: "bg-blue-500",
       value: formatCurrency(summary.netProfit),
@@ -60,7 +60,7 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
     },
     {
       key: "transactions",
-      label: "Transactions",
+      label: "Transações",
       icon: ReceiptIcon,
       iconBg: "bg-orange-400",
       value: totalTransactions.toString(),

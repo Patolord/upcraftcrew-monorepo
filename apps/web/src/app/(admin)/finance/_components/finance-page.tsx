@@ -107,7 +107,7 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         </div>
         {/* Credit Balance Card */}
         <div className="lg:col-span-1">
-          <FinanceCreditCard balance={financialSummary.totalExpense} />
+          <FinanceCreditCard transactions={transactions} />
         </div>
         {/* Total Spent Card - Takes 2 columns */}
         <div className="lg:col-span-2">

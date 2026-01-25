@@ -86,7 +86,7 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
         <div className="flex gap-3">
           {/* Saves */}
           <div className="flex-1 bg-gray-50 rounded-xl p-2">
-            <p className="text-sm text-emerald-600 font-medium mb-1">Saves</p>
+            <p className="text-sm text-emerald-600 font-medium mb-1">Economia</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900">{savingsPercentage}%</span>
               <Badge className="bg-emerald-100 text-emerald-600 border-0 text-xs">
@@ -96,8 +96,8 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
           </div>
 
           {/* Balance */}
-          <div className="flex-1 bg-gray-50 rounded-xl">
-            <p className="text-sm text-violet-600 font-medium">Balance</p>
+          <div className="flex-1 bg-gray-50 rounded-xl p-2">
+            <p className="text-sm text-violet-600 font-medium">Saldo</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900">${profit.toLocaleString()}</span>
               <Badge className="bg-rose-100 text-rose-600 border-0 text-xs">{balanceChange}%</Badge>
