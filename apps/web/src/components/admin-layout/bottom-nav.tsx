@@ -1,6 +1,14 @@
 "use client";
 
-import { LayoutDashboard, FileText, FolderOpen, Kanban, User } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  FileTextIcon,
+  FolderOpenIcon,
+  KanbanIcon,
+  UserIcon,
+  CalendarDaysIcon,
+  UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -10,29 +18,40 @@ import { cn } from "@/lib/utils";
 // Profile is first since it's the main entry point with tasks
 const bottomNavItems = [
   {
-    title: "Perfil",
-    url: "/profile",
-    icon: User,
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboardIcon,
   },
   {
     title: "Projetos",
     url: "/projects",
-    icon: FolderOpen,
-  },
-  {
-    title: "Orçamentos",
-    url: "/budgets",
-    icon: FileText,
+    icon: FolderOpenIcon,
   },
   {
     title: "Kanban",
     url: "/kanban",
-    icon: Kanban,
+    icon: KanbanIcon,
   },
   {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
+    title: "Perfil",
+    url: "/profile",
+    icon: UserIcon,
+  },
+  {
+    title: "Agenda",
+    url: "/schedule",
+    icon: CalendarDaysIcon,
+  },
+
+  {
+    title: "Equipe",
+    url: "/team",
+    icon: UsersIcon,
+  },
+  {
+    title: "Orçamentos",
+    url: "/budgets",
+    icon: FileTextIcon,
   },
 ];
 
