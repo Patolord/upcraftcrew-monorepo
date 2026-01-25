@@ -416,13 +416,16 @@ export const createProjectFromBudget = mutation({
     budgetId: v.id("budgets"),
   },
   handler: async (ctx, args) => {
+    // Get authenticated user
     const user = await requireWrite(ctx);
+    console.log("User found:", user._id, "projectIds:", user.projectIds);
 
     // Get the budget
     const budget = await ctx.db.get(args.budgetId);
     if (!budget) {
       throw new Error("Orçamento não encontrado");
     }
+    console.log("Budget found:", budget._id, "status:", budget.status);
 
     // Check if budget is approved
     if (budget.status !== "approved") {
@@ -443,10 +446,17 @@ export const createProjectFromBudget = mutation({
     const now = Date.now();
     const thirtyDaysFromNow = now + 30 * 24 * 60 * 60 * 1000;
 
+    console.log("Creating project with data:", {
+      name: budget.title,
+      client: budget.client,
+      description: budget.description,
+      managerId: user._id,
+    });
+
     const projectId = await ctx.db.insert("projects", {
       name: budget.title,
       client: budget.client,
-      description: budget.description || "",
+      description: budget.description ?? "",
       status: "planning",
       priority: "medium",
       startDate: now,
@@ -455,11 +465,13 @@ export const createProjectFromBudget = mutation({
       budget: budget.totalAmount,
       managerId: user._id,
       teamIds: [user._id],
-      budgetId: args.budgetId, // Link to the original budget
+      budgetId: args.budgetId,
     });
 
+    console.log("Project created:", projectId);
+
     // Update user's projectIds
-    const currentProjectIds = user.projectIds || [];
+    const currentProjectIds = user.projectIds ?? [];
     await ctx.db.patch(user._id, {
       projectIds: [...currentProjectIds, projectId],
     });
@@ -469,6 +481,7 @@ export const createProjectFromBudget = mutation({
       projectId: projectId,
     });
 
+    console.log("All updates complete");
     return projectId;
   },
 });
