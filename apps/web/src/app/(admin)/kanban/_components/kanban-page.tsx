@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { usePreloadedQuery, type Preloaded } from "convex/react";
+import { usePreloadedQuery, useQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { type Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { TaskKanbanBoard, type Task, type TaskStatus, type Column } from "./kanban-task-board";
@@ -18,6 +18,7 @@ interface TaskLabel {
 }
 
 type TaskWithDetails = Doc<"tasks"> & {
+  ownerId?: Id<"users">;
   assignedUser: {
     _id: Id<"users">;
     name: string;
@@ -42,6 +43,7 @@ interface KanbanPageProps {
 export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageProps) {
   const tasksWithDetails = usePreloadedQuery(preloadedTasks) as TaskWithDetails[];
   const teamMembers = usePreloadedQuery(preloadedTeamMembers);
+  const currentUser = useQuery(api.users.current);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Modal states
@@ -59,6 +61,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         description: task.description,
         status: task.status,
         priority: task.priority,
+        ownerId: task.ownerId,
         assignedUser: task.assignedUser
           ? {
               _id: task.assignedUser._id,
@@ -80,12 +83,29 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
     );
   }, [tasksWithDetails]);
 
+  // Filter tasks by visibility:
+  // - Unassigned tasks are visible to all
+  // - Assigned tasks are visible to the assigned user
+  // - Tasks are always visible to the owner (creator) so they can track progress
+  const visibleTasks = useMemo(() => {
+    if (!currentUser) return [];
+
+    return tasks.filter((task) => {
+      // If task has no assigned user, everyone can see it
+      if (!task.assignedUser) return true;
+      // If I am the owner (creator), I can always see it
+      if (task.ownerId === currentUser._id) return true;
+      // If task is assigned to me, I can see it
+      return task.assignedUser._id === currentUser._id;
+    });
+  }, [tasks, currentUser]);
+
   // Filter tasks based on search query
   const filteredTasks = useMemo(() => {
-    if (!searchQuery.trim()) return tasks;
+    if (!searchQuery.trim()) return visibleTasks;
 
     const query = searchQuery.toLowerCase();
-    return tasks.filter((task) => {
+    return visibleTasks.filter((task) => {
       return (
         task.title?.toLowerCase().includes(query) ||
         task.description?.toLowerCase().includes(query) ||
@@ -96,7 +116,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         task.labels?.some((label) => label.name.toLowerCase().includes(query))
       );
     });
-  }, [tasks, searchQuery]);
+  }, [visibleTasks, searchQuery]);
 
   // Group tasks by status
   const columns = useMemo<Column[]>(() => {
@@ -142,7 +162,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full">
       {/* Fixed Header Section */}
       <div className="shrink-0 p-4 md:p-6 pb-4 space-y-4 md:space-y-6">
         <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
@@ -187,8 +207,8 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         </div>
       </div>
 
-      {/* Scrollable Kanban Board */}
-      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-auto px-4 md:px-6 pb-6">
+      {/* Kanban Board */}
+      <div className="px-4 md:px-6 pb-6">
         <TaskKanbanBoard
           columns={columns}
           onTaskClick={handleTaskClick}

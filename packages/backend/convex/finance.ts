@@ -198,6 +198,7 @@ export const createTransaction = mutation({
     date: v.number(),
     clientId: v.optional(v.string()),
     projectId: v.optional(v.id("projects")),
+    imageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);
@@ -231,6 +232,7 @@ export const updateTransaction = mutation({
     date: v.optional(v.number()),
     clientId: v.optional(v.string()),
     projectId: v.optional(v.id("projects")),
+    imageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);

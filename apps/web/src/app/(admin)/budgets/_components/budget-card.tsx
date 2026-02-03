@@ -12,7 +12,6 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-  CardAction,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -166,54 +165,52 @@ export function BudgetCard({ budget }: { budget: Budget }) {
   };
 
   return (
-    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full">
-      <CardHeader className="p-4 md:p-6">
-        <div className="flex items-start justify-between gap-2 md:gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <Badge
-                variant="outline"
-                className={
-                  isProposal
-                    ? "text-[10px] md:text-xs border-orange-300 text-orange-600 bg-orange-50"
-                    : "text-[10px] md:text-xs border-blue-300 text-blue-600 bg-blue-50"
-                }
-              >
-                {isProposal ? "Proposta" : "Orçamento"}
-              </Badge>
-            </div>
-            <CardTitle className="text-base md:text-lg truncate">{budget.title}</CardTitle>
-            <CardDescription className="mt-1 text-sm truncate">{budget.client}</CardDescription>
+    <Card className="hover:shadow-lg transition-shadow h-full">
+      <CardHeader className="grid! grid-cols-[1fr_auto]! items-start! p-4 md:p-6 gap-3 overflow-hidden">
+        <div className="min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 mb-1">
+            <Badge
+              variant="outline"
+              className={
+                isProposal
+                  ? "text-[10px] md:text-xs border-orange-300 text-orange-600 bg-orange-50"
+                  : "text-[10px] md:text-xs border-blue-300 text-blue-600 bg-blue-50"
+              }
+            >
+              {isProposal ? "Proposta" : "Orçamento"}
+            </Badge>
           </div>
-          <CardAction>
-            {/* Status Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-auto p-0 hover:bg-transparent">
-                  <Badge
-                    variant={isExpired ? "outline" : status.variant}
-                    className="cursor-pointer flex items-center gap-1 text-[10px] md:text-xs"
-                  >
-                    {isExpired ? "Expirado" : status.label}
-                    <ChevronDownIcon className="h-3 w-3" />
+          <CardTitle className="text-base md:text-lg truncate">{budget.title}</CardTitle>
+          <CardDescription className="mt-1 text-sm truncate">{budget.client}</CardDescription>
+        </div>
+        <div className="shrink-0">
+          {/* Status Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-auto p-0 hover:bg-transparent">
+                <Badge
+                  variant={isExpired ? "outline" : status.variant}
+                  className="cursor-pointer flex items-center gap-1 text-[10px] md:text-xs whitespace-nowrap"
+                >
+                  {isExpired ? "Expirado" : status.label}
+                  <ChevronDownIcon className="h-3 w-3" />
+                </Badge>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              {statusOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => handleStatusChange(option.value)}
+                  className={budget.status === option.value ? "bg-muted" : ""}
+                >
+                  <Badge variant={statusConfig[option.value].variant} className="mr-2">
+                    {option.label}
                   </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40">
-                {statusOptions.map((option) => (
-                  <DropdownMenuItem
-                    key={option.value}
-                    onClick={() => handleStatusChange(option.value)}
-                    className={budget.status === option.value ? "bg-muted" : ""}
-                  >
-                    <Badge variant={statusConfig[option.value].variant} className="mr-2">
-                      {option.label}
-                    </Badge>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </CardAction>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
 

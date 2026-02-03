@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { toast } from "sonner";
 import { Loader2Icon, XIcon, PlusCircleIcon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
@@ -31,6 +32,7 @@ const initialFormData = {
   date: new Date().toISOString().split("T")[0],
   clientId: "",
   projectId: "",
+  imageUrl: undefined as string | undefined,
 };
 
 export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProps) {
@@ -102,6 +104,7 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
         date: new Date(formData.date).getTime(),
         clientId: formData.clientId || undefined,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
+        imageUrl: formData.imageUrl,
       });
 
       toast.success("Transação criada com sucesso!");
@@ -339,6 +342,19 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                     className="border border-base-300 rounded-lg focus:border-orange-500"
                   />
                 </div>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <Label className="text-sm font-medium mb-2 block">
+                  Comprovante/Recibo (Opcional)
+                </Label>
+                <ImageUpload
+                  value={formData.imageUrl}
+                  onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+                  folder="finance/transactions"
+                  disabled={isSubmitting}
+                />
               </div>
 
               {/* Action Buttons */}

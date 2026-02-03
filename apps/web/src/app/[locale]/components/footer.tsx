@@ -77,7 +77,7 @@ export const Footer = () => {
                   <span className="iconify ri--instagram-fill size-6" />
                 </Link>
                 <Link
-                  href="https://api.whatsapp.com/send/?phone=11914246379&text&type=phone_number&app_absent=0"
+                  href="https://api.whatsapp.com/send/?phone=11995993626&text&type=phone_number&app_absent=0"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3"

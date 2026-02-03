@@ -45,6 +45,7 @@ export interface Task {
   description: string;
   status: TaskStatus;
   priority: "low" | "medium" | "high" | "urgent";
+  ownerId?: string;
   assignedUser: {
     _id: string;
     name: string;
@@ -154,7 +155,7 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
     <div
       ref={setNodeRef}
       className={cn(
-        "flex flex-col min-w-[320px] max-w-[320px] rounded-2xl transition-all duration-200",
+        "flex flex-col rounded-2xl transition-all duration-200",
         isOver && "ring-2 ring-primary ring-offset-2",
       )}
     >
@@ -188,12 +189,12 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
       </div>
 
       {/* Column Content - Droppable area */}
-      <div className="flex-1 pt-4 pb-2">
+      <div className="pt-4 pb-2 flex flex-col">
         <SortableContext
           items={column.tasks.map((t) => t._id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-3 min-h-[200px]">
+          <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-320px)] pr-1">
             {column.tasks.length === 0 ? (
               <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/20 rounded-xl text-muted-foreground mx-1">
                 <p className="text-xs">No tasks yet</p>
@@ -214,7 +215,7 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
         <Button
           variant="ghost"
           size="sm"
-          className="w-full mt-3 text-muted-foreground hover:text-foreground justify-start"
+          className="w-full mt-3 shrink-0 text-muted-foreground hover:text-foreground justify-start"
           onClick={onAddTask}
         >
           <PlusIcon className="size-4 mr-2" />
@@ -293,7 +294,7 @@ export function TaskKanbanBoard({ columns, onTaskClick, onAddTask }: TaskKanbanB
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-6 overflow-x-auto pb-4">
+      <div className="grid grid-cols-4 gap-4 h-full">
         {columns.map((column) => (
           <DroppableColumn
             key={column.id}
