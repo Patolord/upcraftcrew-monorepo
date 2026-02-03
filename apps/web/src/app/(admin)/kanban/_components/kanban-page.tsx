@@ -8,7 +8,10 @@ import { TaskKanbanBoard, type Task, type TaskStatus, type Column } from "./kanb
 import { TaskDetailModal } from "./task-detail-modal";
 import { NewTaskModal } from "./new-task-modal";
 import { KanbanHeader } from "./kanban-header";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Users, X } from "lucide-react";
 import React from "react";
 
 interface TaskLabel {
@@ -52,6 +55,9 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
   const [newTaskDefaultStatus, setNewTaskDefaultStatus] = useState<TaskStatus>("todo");
 
+  // View mode: false = my tasks only, true = all public tasks
+  const [viewAllPublicTasks, setViewAllPublicTasks] = useState(false);
+
   // Transform tasks to match the expected interface
   const tasks = useMemo<Task[]>(() => {
     return tasksWithDetails.map(
@@ -84,21 +90,30 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
   }, [tasksWithDetails]);
 
   // Filter tasks by visibility:
-  // - Unassigned tasks are visible to all
-  // - Assigned tasks are visible to the assigned user
-  // - Tasks are always visible to the owner (creator) so they can track progress
+  // When viewAllPublicTasks = true: Show ALL public tasks from everyone
+  // When viewAllPublicTasks = false: Show only my tasks (created by me or assigned to me)
   const visibleTasks = useMemo(() => {
     if (!currentUser) return [];
 
+    // View all public tasks mode - show everything (already filtered by backend to public + my private)
+    if (viewAllPublicTasks) {
+      return tasks;
+    }
+
+    // Default mode - show only my tasks
     return tasks.filter((task) => {
-      // If task has no assigned user, everyone can see it
-      if (!task.assignedUser) return true;
-      // If I am the owner (creator), I can always see it
-      if (task.ownerId === currentUser._id) return true;
-      // If task is assigned to me, I can see it
-      return task.assignedUser._id === currentUser._id;
+      const isOwner = task.ownerId === currentUser._id;
+      const isAssignedToMe = task.assignedUser?._id === currentUser._id;
+
+      // Task I created (I'm the owner)
+      if (isOwner) return true;
+
+      // Task someone sent to me (I'm assigned but not the owner)
+      if (isAssignedToMe) return true;
+
+      return false;
     });
-  }, [tasks, currentUser]);
+  }, [tasks, currentUser, viewAllPublicTasks]);
 
   // Filter tasks based on search query
   const filteredTasks = useMemo(() => {
@@ -209,6 +224,37 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
 
       {/* Kanban Board */}
       <div className="px-4 md:px-6 pb-6">
+        {/* View All Toggle - aligned to the right above columns */}
+        <div className="flex items-center justify-end gap-2 mb-3">
+          {viewAllPublicTasks && (
+            <span className="text-sm text-muted-foreground">
+              Visualizando todas as tarefas públicas
+            </span>
+          )}
+          <Button
+            variant={viewAllPublicTasks ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewAllPublicTasks(!viewAllPublicTasks)}
+            className={
+              viewAllPublicTasks
+                ? "gap-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white"
+                : "gap-2 rounded-full border-orange-300 text-orange-600 hover:bg-orange-50 hover:text-orange-700 dark:border-orange-600 dark:text-orange-400 dark:hover:bg-orange-950"
+            }
+          >
+            {viewAllPublicTasks ? (
+              <>
+                <X className="size-4" />
+                <span>Fechar</span>
+              </>
+            ) : (
+              <>
+                <Users className="size-4" />
+                <span>Ver todas</span>
+              </>
+            )}
+          </Button>
+        </div>
+
         <TaskKanbanBoard
           columns={columns}
           onTaskClick={handleTaskClick}

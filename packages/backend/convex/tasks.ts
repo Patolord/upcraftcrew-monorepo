@@ -218,6 +218,67 @@ export const getTasksByUser = query({
   },
 });
 
+// Query: Get all public tasks (for "View All" feature)
+// Shows all public tasks from all users to compare workloads
+export const getAllPublicTasks = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    const allTasks = await ctx.db.query("tasks").withIndex("by_created_at").order("desc").collect();
+
+    // Filter only public tasks (isPrivate === false or undefined)
+    const publicTasks = allTasks.filter((task) => !(task.isPrivate ?? false));
+
+    // Populate assigned user, project, labels, and subtask stats
+    const tasksWithDetails = await Promise.all(
+      publicTasks.map(async (task) => {
+        const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+        const owner = task.ownerId ? await ctx.db.get(task.ownerId) : null;
+        const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+
+        // Get labels
+        const labels = task.labelIds
+          ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
+          : [];
+
+        // Get subtask stats
+        const subtasks = await ctx.db
+          .query("subtasks")
+          .withIndex("by_task", (q) => q.eq("taskId", task._id))
+          .collect();
+        const subtaskStats = {
+          total: subtasks.length,
+          completed: subtasks.filter((s) => s.completed).length,
+        };
+
+        // Get comment count
+        const comments = await ctx.db
+          .query("taskComments")
+          .withIndex("by_task", (q) => q.eq("taskId", task._id))
+          .collect();
+
+        return {
+          ...task,
+          assignedUser: transformUserToAssignedUser(assignedUser),
+          owner: owner
+            ? {
+                _id: owner._id,
+                name: `${owner.firstName} ${owner.lastName}`,
+                imageUrl: owner.imageUrl,
+              }
+            : null,
+          project,
+          labels: labels.filter(Boolean),
+          subtaskStats,
+          commentCount: comments.length,
+        };
+      }),
+    );
+
+    return tasksWithDetails;
+  },
+});
+
 // Mutation: Create task
 export const createTask = mutation({
   args: {
