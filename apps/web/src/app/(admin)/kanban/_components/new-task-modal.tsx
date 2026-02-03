@@ -9,7 +9,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ChevronDownIcon, ChevronUpIcon, XIcon, Loader2Icon, PlusIcon } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  XIcon,
+  Loader2Icon,
+  PlusIcon,
+  Lock,
+  Globe,
+} from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { MultiImageUpload } from "@/components/ui/multi-image-upload";
@@ -59,6 +68,7 @@ export function NewTaskModal({
     projectId: "",
     dueDate: "",
     imageUrls: [] as string[],
+    isPrivate: false,
   });
 
   const createTask = useMutation(api.tasks.createTask);
@@ -77,6 +87,7 @@ export function NewTaskModal({
         projectId: defaultProjectId ?? "",
         dueDate: "",
         imageUrls: [],
+        isPrivate: false,
       });
       setShowAdvanced(!!defaultProjectId); // Show advanced if project is pre-selected
       clearError();
@@ -125,6 +136,7 @@ export function NewTaskModal({
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
         imageUrls: formData.imageUrls.length > 0 ? formData.imageUrls : undefined,
+        isPrivate: formData.isPrivate,
       });
 
       toast.success("Tarefa criada com sucesso!");
@@ -253,6 +265,32 @@ export function NewTaskModal({
                     ))}
                   </select>
                 </div>
+              </div>
+
+              {/* Privacy Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg border border-base-300 bg-muted/30">
+                <div className="flex items-center gap-3">
+                  {formData.isPrivate ? (
+                    <Lock className="size-4 text-orange-500" />
+                  ) : (
+                    <Globe className="size-4 text-green-500" />
+                  )}
+                  <div>
+                    <Label htmlFor="isPrivate" className="text-sm font-medium cursor-pointer">
+                      {formData.isPrivate ? "Tarefa Privada" : "Tarefa Pública"}
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      {formData.isPrivate
+                        ? "Só você pode ver esta tarefa"
+                        : "Visível para a equipe no 'Ver todas'"}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  id="isPrivate"
+                  checked={formData.isPrivate}
+                  onCheckedChange={(checked) => setFormData({ ...formData, isPrivate: checked })}
+                />
               </div>
 
               {/* Toggle Advanced Options */}

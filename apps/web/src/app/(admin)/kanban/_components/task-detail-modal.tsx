@@ -41,7 +41,11 @@ import {
   CircleIcon,
   MessageSquareIcon,
   ImageIcon,
+  Lock,
+  Globe,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import React from "react";
 
@@ -167,6 +171,15 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         assignedTo: userId === "none" ? undefined : (userId as Id<"users">),
       });
       toast.success("Assignee updated!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleUpdatePrivacy = async (isPrivate: boolean) => {
+    try {
+      await updateTask({ id: taskId, isPrivate });
+      toast.success(isPrivate ? "Tarefa agora é privada" : "Tarefa agora é pública");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -467,6 +480,24 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Privacy Toggle */}
+          <div className="flex items-center gap-2 ml-auto px-3 py-1.5 rounded-md border border-brand bg-admin-background">
+            {task.isPrivate ? (
+              <Lock className="size-4 text-orange-500" />
+            ) : (
+              <Globe className="size-4 text-green-500" />
+            )}
+            <Label htmlFor="privacy-toggle" className="text-xs cursor-pointer">
+              {task.isPrivate ? "Privada" : "Pública"}
+            </Label>
+            <Switch
+              id="privacy-toggle"
+              checked={task.isPrivate ?? false}
+              onCheckedChange={handleUpdatePrivacy}
+              className="scale-75"
+            />
+          </div>
         </div>
 
         {/* Main Content */}
