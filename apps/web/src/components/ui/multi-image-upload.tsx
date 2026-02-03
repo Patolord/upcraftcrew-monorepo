@@ -13,6 +13,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlusIcon,
+  DownloadIcon,
+  ZoomInIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -57,6 +59,7 @@ export function MultiImageUpload({
   const [error, setError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const imageKitConfigured = isImageKitConfigured();
@@ -215,6 +218,46 @@ export function MultiImageUpload({
     setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   };
 
+  const handleDownload = async (imageUrl: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      // Extract filename from URL or use a default
+      const urlParts = imageUrl.split("/");
+      const filename = urlParts[urlParts.length - 1] || `image-${Date.now()}.jpg`;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download error:", err);
+      // Fallback: open in new tab
+      window.open(imageUrl, "_blank");
+    }
+  };
+
+  const openPreview = () => {
+    setIsPreviewOpen(true);
+  };
+
+  const closePreview = () => {
+    setIsPreviewOpen(false);
+  };
+
+  const goToPreviousPreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
+  const goToNextPreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  };
+
   // Show warning if ImageKit is not configured
   if (!imageKitConfigured) {
     return (
@@ -250,22 +293,34 @@ export function MultiImageUpload({
                 <img
                   src={images[currentIndex]}
                   alt={`Imagem ${currentIndex + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover cursor-pointer transition-opacity hover:opacity-90"
+                  onClick={openPreview}
                 />
+
+                {/* Zoom indicator */}
+                <div className="absolute bottom-2 left-2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <ZoomInIcon className="h-4 w-4" />
+                </div>
 
                 {/* Navigation Arrows */}
                 {images.length > 1 && (
                   <>
                     <button
                       type="button"
-                      onClick={goToPrevious}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToPrevious();
+                      }}
                       className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
                     >
                       <ChevronLeftIcon className="h-5 w-5" />
                     </button>
                     <button
                       type="button"
-                      onClick={goToNext}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToNext();
+                      }}
                       className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
                     >
                       <ChevronRightIcon className="h-5 w-5" />
@@ -277,7 +332,10 @@ export function MultiImageUpload({
                 {!disabled && (
                   <button
                     type="button"
-                    onClick={() => handleRemove(currentIndex)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove(currentIndex);
+                    }}
                     className="absolute top-2 right-2 p-1.5 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                   >
                     <XIcon className="h-4 w-4" />
@@ -408,6 +466,98 @@ export function MultiImageUpload({
         )}
 
         {error && <p className="text-sm text-red-500">{error}</p>}
+
+        {/* Image Preview Modal - Contained within parent */}
+        {isPreviewOpen && (
+          <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+            <div className="relative w-full max-w-lg mx-4 bg-background rounded-lg shadow-2xl overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-3 border-b bg-muted/50">
+                <span className="text-sm font-medium">
+                  {images.length > 1
+                    ? `${currentIndex + 1} / ${images.length}`
+                    : "Visualizar imagem"}
+                </span>
+                <div className="flex items-center gap-1">
+                  {/* Download Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(images[currentIndex])}
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                    title="Baixar imagem"
+                  >
+                    <DownloadIcon className="h-4 w-4" />
+                  </button>
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={closePreview}
+                    className="p-2 rounded-md hover:bg-muted transition-colors"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Image Container */}
+              <div className="relative bg-black/5">
+                <img
+                  src={images[currentIndex]}
+                  alt={`Imagem ${currentIndex + 1}`}
+                  className="w-full max-h-[60vh] object-contain"
+                />
+
+                {/* Navigation Arrows */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={goToPreviousPreview}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                    >
+                      <ChevronLeftIcon className="h-5 w-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goToNextPreview}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                    >
+                      <ChevronRightIcon className="h-5 w-5" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail Navigation */}
+              {images.length > 1 && (
+                <div className="flex items-center justify-center gap-2 p-3 border-t bg-muted/30">
+                  {images.map((img, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setCurrentIndex(index)}
+                      className={cn(
+                        "w-10 h-10 rounded-md overflow-hidden border-2 transition-all",
+                        index === currentIndex
+                          ? "border-orange-500 ring-2 ring-orange-500/30"
+                          : "border-transparent opacity-60 hover:opacity-100",
+                      )}
+                    >
+                      <img
+                        src={img}
+                        alt={`Miniatura ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Click outside to close */}
+            <div className="absolute inset-0 -z-10" onClick={closePreview} />
+          </div>
+        )}
       </div>
     </ImageKitProvider>
   );
