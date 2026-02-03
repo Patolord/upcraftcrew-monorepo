@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronDownIcon, ChevronUpIcon, XIcon, Loader2Icon, PlusIcon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import React from "react";
 
 type TaskStatus = "todo" | "in-progress" | "review" | "done" | "blocked";
@@ -21,6 +22,7 @@ interface NewTaskModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultStatus?: TaskStatus;
+  defaultProjectId?: Id<"projects">;
 }
 
 const statusLabels: Record<TaskStatus, string> = {
@@ -38,7 +40,12 @@ const priorityLabels: Record<TaskPriority, { label: string; color: string }> = {
   urgent: { label: "Urgente", color: "#ef4444" },
 };
 
-export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: NewTaskModalProps) {
+export function NewTaskModal({
+  open,
+  onOpenChange,
+  defaultStatus = "todo",
+  defaultProjectId,
+}: NewTaskModalProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { error, clearError, handleError } = useConvexError();
@@ -51,6 +58,7 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
     assignedTo: "",
     projectId: "",
     dueDate: "",
+    imageUrls: [] as string[],
   });
 
   const createTask = useMutation(api.tasks.createTask);
@@ -66,13 +74,14 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
         status: defaultStatus,
         priority: "medium",
         assignedTo: "",
-        projectId: "",
+        projectId: defaultProjectId ?? "",
         dueDate: "",
+        imageUrls: [],
       });
-      setShowAdvanced(false);
+      setShowAdvanced(!!defaultProjectId); // Show advanced if project is pre-selected
       clearError();
     }
-  }, [open, defaultStatus, clearError]);
+  }, [open, defaultStatus, defaultProjectId, clearError]);
 
   // Handle escape key
   useEffect(() => {
@@ -115,6 +124,7 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
         assignedTo: formData.assignedTo ? (formData.assignedTo as Id<"users">) : undefined,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
+        imageUrls: formData.imageUrls.length > 0 ? formData.imageUrls : undefined,
       });
 
       toast.success("Tarefa criada com sucesso!");
@@ -341,6 +351,18 @@ export function NewTaskModal({ open, onOpenChange, defaultStatus = "todo" }: New
                       value={formData.dueDate}
                       onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                       className="border border-base-300 rounded-lg focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* Multi Image Upload */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Fotos / Anexos</Label>
+                    <MultiImageUpload
+                      value={formData.imageUrls}
+                      onChange={(urls) => setFormData({ ...formData, imageUrls: urls })}
+                      folder="tasks"
+                      disabled={isSubmitting}
+                      maxImages={10}
                     />
                   </div>
                 </div>

@@ -40,7 +40,9 @@ import {
   SendIcon,
   CircleIcon,
   MessageSquareIcon,
+  ImageIcon,
 } from "lucide-react";
+import { MultiImageUpload } from "@/components/ui/multi-image-upload";
 import React from "react";
 
 type TaskPriority = "low" | "medium" | "high" | "urgent";
@@ -135,6 +137,15 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
     try {
       await updateTask({ id: taskId, description: editedDescription });
       toast.success("Description updated!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleUpdateImages = async (imageUrls: string[]) => {
+    try {
+      await updateTask({ id: taskId, imageUrls: imageUrls.length > 0 ? imageUrls : undefined });
+      toast.success("Imagens atualizadas!");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -302,7 +313,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         {/* Action Bar */}
         <div className="flex flex-wrap gap-2 p-4 border-b">
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
@@ -319,7 +330,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
@@ -379,7 +390,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
@@ -420,7 +431,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </Button>
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
@@ -599,6 +610,19 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                 </Button>
               )}
             </div>
+
+            {/* Images/Attachments */}
+            <div className="space-y-2 p-2">
+              <h4 className="text-sm font-medium flex items-center gap-2">
+                <ImageIcon className="size-4 text-brand" /> Fotos / Anexos
+              </h4>
+              <MultiImageUpload
+                value={task.imageUrls || (task.imageUrl ? [task.imageUrl] : [])}
+                onChange={handleUpdateImages}
+                folder="tasks"
+                maxImages={10}
+              />
+            </div>
           </div>
 
           {/* Right Column - Comments & Activity */}
@@ -646,7 +670,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                       {formatDate(comment.createdAt)}
                     </span>
                     <DropdownMenu>
-                      <DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon-sm"

@@ -90,6 +90,7 @@ export default defineSchema({
     date: v.number(),
     clientId: v.optional(v.string()),
     projectId: v.optional(v.id("projects")),
+    imageUrl: v.optional(v.string()), // Comprovante/recibo da transação
   })
     .index("by_date", ["date"])
     .index("by_project", ["projectId"]),
@@ -205,6 +206,8 @@ export default defineSchema({
     assignedTo: v.optional(v.id("users")),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
+    imageUrl: v.optional(v.string()), // @deprecated - usar imageUrls
+    imageUrls: v.optional(v.array(v.string())), // Imagens/anexos da tarefa
     createdAt: v.number(),
     updatedAt: v.number(),
     isPrivate: v.optional(v.boolean()),
