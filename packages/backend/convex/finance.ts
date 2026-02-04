@@ -187,6 +187,79 @@ export const getMonthlyFinancialSummary = query({
   },
 });
 
+// Query: Get yearly expenses by month (last 12 months)
+export const getYearlyExpensesByMonth = query({
+  args: {
+    year: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+
+    const currentDate = new Date();
+    const targetYear = args.year ?? currentDate.getFullYear();
+
+    // Get all transactions for the target year
+    const startOfYear = new Date(targetYear, 0, 1).getTime();
+    const endOfYear = new Date(targetYear, 11, 31, 23, 59, 59).getTime();
+
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_date")
+      .filter((q) => q.and(q.gte(q.field("date"), startOfYear), q.lte(q.field("date"), endOfYear)))
+      .collect();
+
+    // Group expenses by month
+    const monthNames = [
+      "Jan",
+      "Fev",
+      "Mar",
+      "Abr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Set",
+      "Out",
+      "Nov",
+      "Dez",
+    ];
+
+    const monthlyData = monthNames.map((month, index) => {
+      const monthExpenses = transactions
+        .filter((t) => {
+          const transactionDate = new Date(t.date);
+          return (
+            t.type === "expense" &&
+            t.status === "completed" &&
+            transactionDate.getMonth() === index &&
+            transactionDate.getFullYear() === targetYear
+          );
+        })
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      return {
+        month,
+        value: monthExpenses,
+        isHighlighted: index === currentDate.getMonth() && targetYear === currentDate.getFullYear(),
+      };
+    });
+
+    // Calculate total expenses for the year
+    const totalExpenses = monthlyData.reduce((sum, m) => sum + m.value, 0);
+
+    // Find the highest month for budget reference
+    const maxMonthValue = Math.max(...monthlyData.map((m) => m.value));
+
+    return {
+      year: targetYear,
+      monthlyData,
+      totalExpenses,
+      averageMonthly: totalExpenses / 12,
+      highestMonth: maxMonthValue,
+    };
+  },
+});
+
 // Mutation: Create transaction
 export const createTransaction = mutation({
   args: {
