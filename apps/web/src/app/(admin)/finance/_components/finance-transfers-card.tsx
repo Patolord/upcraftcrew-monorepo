@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowRightIcon, WalletIcon } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
@@ -22,6 +21,7 @@ interface Transaction {
 
 interface FinanceTransfersCardProps {
   transactions: Transaction[];
+  onViewAll?: () => void;
 }
 
 function formatTransactionDate(timestamp: number): string {
@@ -57,7 +57,7 @@ function getCategoryIcon(category: string): string {
   return icons[category] || "📦";
 }
 
-export function FinanceTransfersCard({ transactions }: FinanceTransfersCardProps) {
+export function FinanceTransfersCard({ transactions, onViewAll }: FinanceTransfersCardProps) {
   // Get the most recent transactions (limit to 3)
   const recentTransactions = useMemo(() => {
     return [...transactions].sort((a, b) => b.date - a.date).slice(0, 3);
@@ -114,14 +114,15 @@ export function FinanceTransfersCard({ transactions }: FinanceTransfersCardProps
           ))}
         </div>
 
-        {/* View All Link */}
-        <Link
-          href="/finance"
+        {/* View All Button */}
+        <button
+          type="button"
+          onClick={onViewAll}
           className="flex items-center justify-end gap-2 mt-auto pt-4 text-emerald-600 hover:text-emerald-700 font-medium text-sm transition-colors"
         >
           Ver todas
           <ArrowRightIcon className="size-4" />
-        </Link>
+        </button>
       </CardContent>
     </Card>
   );

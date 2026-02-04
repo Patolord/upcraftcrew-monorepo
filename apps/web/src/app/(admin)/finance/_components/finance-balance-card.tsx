@@ -55,19 +55,18 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
 
   const savingsPercentage = income > 0 ? ((profit / income) * 100).toFixed(2) : "0.00";
 
-  const savingsChange = 2.45; // Mock
-  const balanceChange = -4.75; // Mock
-
   return (
     <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white overflow-hidden h-[290px]">
       <CardContent className="h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <h3 className="text-xl font-semibold text-gray-900">Balance</h3>
-            <Badge className="bg-emerald-50 text-emerald-600 border-0 gap-1 px-2 py-1">
+            <h3 className="text-xl font-semibold text-gray-900">Balanço</h3>
+            <Badge
+              className={`${profit >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"} border-0 gap-1 px-2 py-1`}
+            >
               <CheckCircle2Icon className="size-3.5" />
-              On track
+              {profit >= 0 ? "Positivo" : "Negativo"}
             </Badge>
           </div>
           <Select defaultValue="monthly">
@@ -75,9 +74,9 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
               <SelectValue placeholder="Period" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="weekly">Weekly</SelectItem>
-              <SelectItem value="monthly">Monthly</SelectItem>
-              <SelectItem value="yearly">Yearly</SelectItem>
+              <SelectItem value="weekly">Semanal</SelectItem>
+              <SelectItem value="monthly">Mensal</SelectItem>
+              <SelectItem value="yearly">Anual</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -86,21 +85,21 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
         <div className="flex gap-3">
           {/* Saves */}
           <div className="flex-1 bg-gray-50 rounded-xl p-2">
-            <p className="text-sm text-emerald-600 font-medium mb-1">Economia</p>
+            <p className="text-sm text-emerald-600 font-medium mb-1">Margem</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-gray-900">{savingsPercentage}%</span>
-              <Badge className="bg-emerald-100 text-emerald-600 border-0 text-xs">
-                +{savingsChange}%
-              </Badge>
             </div>
           </div>
 
           {/* Balance */}
           <div className="flex-1 bg-gray-50 rounded-xl p-2">
-            <p className="text-sm text-violet-600 font-medium">Saldo</p>
+            <p className="text-sm text-violet-600 font-medium">Lucro</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-gray-900">${profit.toLocaleString()}</span>
-              <Badge className="bg-rose-100 text-rose-600 border-0 text-xs">{balanceChange}%</Badge>
+              <span
+                className={`text-3xl font-bold ${profit >= 0 ? "text-gray-900" : "text-rose-600"}`}
+              >
+                ${profit.toLocaleString()}
+              </span>
             </div>
           </div>
         </div>

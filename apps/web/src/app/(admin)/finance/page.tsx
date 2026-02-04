@@ -12,15 +12,17 @@ export default async function Page() {
   const { token } = await requireAuthWithToken();
 
   // Preload data with authentication - parallel execution
-  const [preloadedTransactions, preloadedSummary] = await Promise.all([
+  const [preloadedTransactions, preloadedSummary, preloadedYearlyExpenses] = await Promise.all([
     preloadQuery(api.finance.getTransactions, {}, { token }),
     preloadQuery(api.finance.getFinancialSummary, {}, { token }),
+    preloadQuery(api.finance.getYearlyExpensesByMonth, {}, { token }),
   ]);
 
   return (
     <FinancePage
       preloadedTransactions={preloadedTransactions}
       preloadedSummary={preloadedSummary}
+      preloadedYearlyExpenses={preloadedYearlyExpenses}
     />
   );
 }

@@ -27,12 +27,6 @@ const formatCurrency = (value: number) => {
 };
 
 export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) {
-  // Calculate percentage changes (mock data for now)
-  const incomeChange = 12;
-  const expensesChange = -8;
-  const profitChange = 25;
-  const transactionsChange = 15;
-
   const statCards = [
     {
       key: "income",
@@ -40,7 +34,6 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
       icon: TrendingUpIcon,
       iconBg: "bg-emerald-500",
       value: formatCurrency(summary.totalIncome),
-      change: incomeChange,
     },
     {
       key: "expenses",
@@ -48,15 +41,13 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
       icon: TrendingDownIcon,
       iconBg: "bg-rose-500",
       value: formatCurrency(summary.totalExpenses),
-      change: expensesChange,
     },
     {
       key: "profit",
       label: "Lucro",
       icon: WalletIcon,
-      iconBg: "bg-blue-500",
+      iconBg: summary.netProfit >= 0 ? "bg-blue-500" : "bg-red-500",
       value: formatCurrency(summary.netProfit),
-      change: profitChange,
     },
     {
       key: "transactions",
@@ -64,7 +55,6 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
       icon: ReceiptIcon,
       iconBg: "bg-orange-400",
       value: totalTransactions.toString(),
-      change: transactionsChange,
     },
   ];
 
@@ -72,7 +62,6 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {statCards.map((card) => {
         const Icon = card.icon;
-        const isPositiveChange = card.change >= 0;
 
         return (
           <Card key={card.key} className="rounded-xl bg-white shadow-sm ring-0 py-0">
@@ -87,14 +76,6 @@ export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) 
                 <p className="text-sm text-muted-foreground">{card.label}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-foreground">{card.value}</span>
-                  <span
-                    className={`text-xs font-medium ${
-                      isPositiveChange ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {isPositiveChange ? "+" : ""}
-                    {card.change}%
-                  </span>
                 </div>
               </div>
             </CardContent>

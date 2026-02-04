@@ -11,6 +11,7 @@ import { FinanceTransfersCard } from "./finance-transfers-card";
 import { FinanceCreditCard } from "./finance-credit-card";
 import { FinanceSpentCard } from "./finance-spent-card";
 import { NewTransactionModal } from "./new-transaction-modal";
+import { TransactionsListModal } from "./transactions-list-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
@@ -19,12 +20,19 @@ import React from "react";
 interface FinancePageProps {
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
   preloadedSummary: Preloaded<typeof api.finance.getFinancialSummary>;
+  preloadedYearlyExpenses: Preloaded<typeof api.finance.getYearlyExpensesByMonth>;
 }
 
-export function FinancePage({ preloadedTransactions, preloadedSummary }: FinancePageProps) {
+export function FinancePage({
+  preloadedTransactions,
+  preloadedSummary,
+  preloadedYearlyExpenses,
+}: FinancePageProps) {
   const transactions = usePreloadedQuery(preloadedTransactions);
   const financialSummary = usePreloadedQuery(preloadedSummary);
+  const yearlyExpenses = usePreloadedQuery(preloadedYearlyExpenses);
   const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
+  const [isTransactionsListModalOpen, setIsTransactionsListModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Transform transactions from Convex format to UI format
@@ -71,7 +79,7 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         summary={{
           totalIncome: financialSummary.totalIncome,
           totalExpenses: financialSummary.totalExpense,
-          netProfit: financialSummary.totalExpense,
+          netProfit: financialSummary.balance,
           pendingIncome: financialSummary.pendingIncome,
           pendingExpenses: financialSummary.pendingExpense,
         }}
@@ -100,12 +108,15 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         <div className="lg:col-span-2">
           <FinanceBalanceCard
             totalIncome={financialSummary.totalIncome}
-            netProfit={financialSummary.totalExpense}
+            netProfit={financialSummary.balance}
           />
         </div>
         {/* Transfers Card */}
         <div className="lg:col-span-1">
-          <FinanceTransfersCard transactions={transactions} />
+          <FinanceTransfersCard
+            transactions={transactions}
+            onViewAll={() => setIsTransactionsListModalOpen(true)}
+          />
         </div>
         {/* Credit Balance Card */}
         <div className="lg:col-span-1">
@@ -113,7 +124,11 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         </div>
         {/* Total Spent Card - Takes 2 columns */}
         <div className="lg:col-span-2">
-          <FinanceSpentCard totalSpent={financialSummary.totalExpense} />
+          <FinanceSpentCard
+            totalSpent={financialSummary.totalExpense}
+            monthlyData={yearlyExpenses?.monthlyData}
+            averageMonthly={yearlyExpenses?.averageMonthly}
+          />
         </div>
       </div>
 
@@ -121,6 +136,13 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
       <NewTransactionModal
         isOpen={isNewTransactionModalOpen}
         onClose={() => setIsNewTransactionModalOpen(false)}
+      />
+
+      {/* Transactions List Modal */}
+      <TransactionsListModal
+        isOpen={isTransactionsListModalOpen}
+        onClose={() => setIsTransactionsListModalOpen(false)}
+        transactions={transactions}
       />
     </div>
   );
