@@ -98,7 +98,7 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
               <span
                 className={`text-3xl font-bold ${profit >= 0 ? "text-gray-900" : "text-rose-600"}`}
               >
-                ${profit.toLocaleString()}
+                R${profit.toLocaleString()}
               </span>
             </div>
           </div>

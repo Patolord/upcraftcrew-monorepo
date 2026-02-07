@@ -28,18 +28,18 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Avg Transaction</span>
-            <span className="font-medium">${avgTransaction.toFixed(0)}</span>
+            <span className="font-medium">R${avgTransaction.toFixed(0)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Largest Income</span>
             <span className="font-medium text-green-600 dark:text-green-500">
-              ${largestIncome.toFixed(0)}
+              R${largestIncome.toFixed(0)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Largest Expense</span>
             <span className="font-medium text-red-600 dark:text-red-500">
-              ${largestExpense.toFixed(0)}
+              R${largestExpense.toFixed(0)}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">

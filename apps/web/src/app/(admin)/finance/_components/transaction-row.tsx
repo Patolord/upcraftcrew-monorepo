@@ -82,7 +82,7 @@ export function TransactionRow({
             isIncome ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500",
           )}
         >
-          {isIncome ? "+" : "-"}${transaction.amount.toFixed(0)}
+          {isIncome ? "+" : "-"}R${transaction.amount.toFixed(0)}
         </div>
       </TableCell>
       <TableCell>
