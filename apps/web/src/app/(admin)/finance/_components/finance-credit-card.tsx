@@ -133,7 +133,7 @@ export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps)
             </div>
             <div className="flex items-center justify-between">
               <span className="text-3xl font-bold text-white">
-                ${displayBalance.toLocaleString()}
+                R${displayBalance.toLocaleString()}
               </span>
               <MiniWaveChart />
             </div>
@@ -161,7 +161,7 @@ export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps)
                       </div>
                     </div>
                     <span className="font-semibold text-gray-900">
-                      -${Math.abs(expense.amount).toFixed(2)}
+                      -R${Math.abs(expense.amount).toFixed(2)}
                     </span>
                   </div>
                 );

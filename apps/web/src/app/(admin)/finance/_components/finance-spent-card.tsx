@@ -51,7 +51,7 @@ export function FinanceSpentCard({
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Total de Gastos</p>
             <span className="text-3xl font-bold text-gray-900">
-              ${displaySpent.toLocaleString()}
+              R${displaySpent.toLocaleString()}
             </span>
           </div>
           <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -66,7 +66,7 @@ export function FinanceSpentCard({
             <div className="absolute top-0 left-0 right-0 flex items-center z-10">
               <div className="flex-1 border-t-2 border-dashed border-amber-400" />
               <span className="text-xs text-amber-600 font-medium ml-2">
-                Média: ${displayAverage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                Média: R${displayAverage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </span>
             </div>
           )}

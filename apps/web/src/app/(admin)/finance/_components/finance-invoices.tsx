@@ -61,7 +61,7 @@ export function FinanceInvoices({ invoices = [] }: FinanceInvoicesProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{invoice.date}</TableCell>
-                <TableCell className="font-medium">${invoice.price}</TableCell>
+                <TableCell className="font-medium">R${invoice.price}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
