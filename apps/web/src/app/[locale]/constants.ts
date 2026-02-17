@@ -7,8 +7,8 @@ export const SECTION_IDS = {
   features: "features",
   process: "process",
   benefits: "benefits",
-  integrations: "integrations",
-  testimonials: "testimonials",
+  caseStudies: "case-studies",
+  leadMagnet: "lead-magnet",
   pricing: "pricing",
   contact: "contact",
 } as const;

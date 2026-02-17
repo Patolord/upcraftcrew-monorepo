@@ -99,7 +99,8 @@
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", sans-serif;
+  --font-sans: "DM Sans Variable", "DM Sans", sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
   --color-admin-background: var(--admin-background);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
@@ -190,6 +191,11 @@
 
 /* Typography utility classes */
 @layer utilities {
+  /* Display font for headings */
+  .font-display {
+    font-family: var(--font-display);
+  }
+
   /* Display */
   .text-display-lg {
     font-size: var(--font-size-display-lg);

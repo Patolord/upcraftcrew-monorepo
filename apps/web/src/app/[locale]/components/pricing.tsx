@@ -62,12 +62,12 @@ export const Pricing = () => {
   const { messages } = useLandingI18n();
   const { pricing } = messages;
 
-  const tabKeys = ["websites", "webApps", "mobileApps", "consulting"] as const;
+  const tabKeys = ["solutions", "retainers", "discovery"] as const;
   type TabKey = (typeof tabKeys)[number];
 
   const [activeTab, setActiveTab] = useQueryState(
     "tab",
-    parseAsStringEnum<TabKey>([...tabKeys]).withDefault("websites"),
+    parseAsStringEnum<TabKey>([...tabKeys]).withDefault("solutions"),
   );
 
   const currentPlans = pricing.plans[activeTab] || [];
@@ -124,7 +124,9 @@ export const Pricing = () => {
             includes={plan.includes}
             tagline={plan.tagline}
             cta={currentCta}
-            customCta={"customCta" in plan ? plan.customCta : undefined}
+            customCta={
+              "customCta" in plan && typeof plan.customCta === "string" ? plan.customCta : undefined
+            }
           />
         ))}
       </div>

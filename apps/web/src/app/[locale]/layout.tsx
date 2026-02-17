@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { locale } = await params;
 
   const titles = {
-    en: "UpCraftCrew - Web Development & Software Solutions",
-    pt: "UpCraftCrew - Desenvolvimento de Websites e Aplicativos",
+    en: "Upcraft Crew — We Fix Delivery Bottlenecks in Codebases",
+    pt: "Upcraft Crew — Resolvemos Gargalos de Entrega em Codebases",
   };
 
   const descriptions = {
-    en: "Boutique software studio specializing in React, Next.js, and modern cloud solutions. High-quality web development delivered seamlessly.",
-    pt: "Estúdio boutique especializado em React, Next.js e soluções modernas em nuvem. Desenvolvimento web de alta qualidade entregue com fluidez.",
+    en: "Team afraid to ship? Slow queries? Regressions every release? We fix delivery bottlenecks across Convex, Supabase, Next.js, WordPress, and more.",
+    pt: "Equipe com medo de entregar? Queries lentas? Regressões em toda release? Resolvemos gargalos de entrega em Convex, Supabase, Next.js, WordPress e mais.",
   };
 
   return {

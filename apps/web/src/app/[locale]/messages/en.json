@@ -1,9 +1,9 @@
 {
   "common": {
     "cta": {
-      "getFreeConsultation": "Get Free Consultation",
-      "getQuote": "Get Quote",
-      "startProject": "Start Project",
+      "bookAudit": "Book a Codebase Review",
+      "getChecklist": "Get Free Checklist",
+      "startSprint": "Start Codebase Audit",
       "contactUs": "Contact Us"
     },
     "status": {
@@ -12,15 +12,18 @@
     },
     "form": {
       "emailPlaceholder": "Email Address",
-      "emailHelper": "Never spam!",
+      "emailHelper": "We respect your inbox. No spam.",
       "emailInvalid": "Please enter a valid email",
-      "emailSent": "Email sent successfully!",
-      "emailError": "Error sending email"
+      "nameInvalid": "Please enter your name",
+      "emailSent": "Request sent successfully!",
+      "emailError": "Error sending request"
     },
     "dialog": {
-      "confirmEmail": "Confirm email",
-      "confirmEmailDescription": "Do you want to send this email to receive free consultation?",
+      "confirmEmail": "Confirm your request",
+      "confirmEmailDescription": "We'll review your details and reach out within 24 hours.",
       "emailLabel": "Email:",
+      "nameLabel": "Name:",
+      "companyLabel": "Company:",
       "editButton": "Edit",
       "confirmButton": "Confirm",
       "sendingButton": "Sending..."
@@ -38,11 +41,11 @@
   "topbar": {
     "menu": [
       { "title": "Home", "target": "hero" },
-      { "title": "Portfolio", "target": "portfolio" },
-      { "title": "Features", "target": "features" },
-      { "title": "Benefits", "target": "benefits" },
+      { "title": "Solutions", "target": "features" },
+      { "title": "Process", "target": "process" },
+      { "title": "Case Studies", "target": "caseStudies" },
       { "title": "Pricing", "target": "pricing" },
-      { "title": "Contact", "target": "contact" }
+      { "title": "Start", "target": "contact" }
     ],
     "mobileNavigationLabel": "Navigation",
     "languageSwitch": {
@@ -57,55 +60,55 @@
   "hero": {
     "badge": {
       "prefix": "Trusted by",
-      "highlight": "Global Businesses"
+      "highlight": "Teams With Delivery Bottlenecks"
     },
     "title": {
-      "line1": "High-Quality Web Development",
-      "line2": "Delivered",
-      "highlight": "Seamlessly"
+      "line1": "Your Team Is Afraid",
+      "line2": "To Ship. We Fix",
+      "highlight": "That."
     },
-    "description": "We help businesses scale faster with bespoke web and software solutions — built to the highest standards, with clear communication and reliable delivery.",
-    "primaryCta": "Get Free Consultation",
-    "secondaryCta": "Our Process",
+    "description": "We refactor messy backends, optimize slow queries, clean up architecture, and fix what's broken — across Convex, Supabase, Next.js, WordPress, and more. So your team can ship with confidence again.",
+    "primaryCta": "Book a Codebase Review",
+    "secondaryCta": "See What We Fix",
     "cards": {
       "left": {
-        "badgeTitle": "Modern Web Development",
+        "badgeTitle": "Full Stack Expertise",
         "secondaryCard": {
-          "title": "React & Next.js",
-          "description": "Modern Tech Stack"
+          "title": "Convex · Supabase · Next.js",
+          "description": "Deep Specialists"
         },
         "performance": {
-          "label": "Performance",
+          "label": "Query Speed",
           "value": "Optimal"
         },
         "email": {
-          "title": "Email Alert",
-          "status": "Pending...",
-          "percentage": "47%"
+          "title": "Refactor Alert",
+          "status": "In Progress",
+          "percentage": "92%"
         }
       },
       "center": {
-        "highlight": "Bespoke Solutions in Action"
+        "highlight": "Clean Architecture in Action"
       },
       "right": {
-        "badgeTitle": "Seamless Development Process",
+        "badgeTitle": "Zero Downtime Refactors",
         "supportCard": {
-          "title": "Ongoing Support",
+          "title": "Ship Confidence",
           "growth": "+78%"
         },
         "resources": {
-          "usage": "3.4vGPU of 5vGPU"
+          "usage": "3 of 5 bottlenecks resolved"
         }
       },
       "top": {
-        "title": "Clean Code & Best Practices"
+        "title": "Incremental, Safe Changes"
       }
     }
   },
   "portfolio": {
     "eyebrow": "Our Work",
     "title": "Portfolio Highlights",
-    "description": "Real-world products that blend delightful design with measurable business outcomes.",
+    "description": "Real-world operational systems replacing manual processes with measurable outcomes.",
     "controls": {
       "previous": "Previous projects",
       "next": "Next projects"
@@ -125,7 +128,7 @@
       "technologies": "Technologies",
       "keyHighlights": "Key Highlights",
       "interestedInSimilar": "Interested in a similar project?",
-      "ctaDescription": "Get in touch with us to discuss how we can create a custom solution for your business.",
+      "ctaDescription": "Get in touch with us to discuss how we can solve your workflow challenge.",
       "contactUs": "Contact us",
       "viewMoreProjects": "View more projects",
       "viewMore": "View more"
@@ -342,474 +345,372 @@
     ]
   },
   "features": {
-    "eyebrow": "Our Services",
-    "title": "Built for Your Success",
-    "description": "From concept to deployment, we deliver modern web solutions that drive your business forward with cutting-edge technology.",
+    "eyebrow": "What We Do",
+    "title": "Problems We Solve in Codebases",
+    "description": "We niche by problem, not industry. Most clients come to us when shipping has slowed down, regressions keep appearing, queries are too slow, and architecture has become hard to change. We fix that across Convex, Supabase, Next.js, WordPress, and more.",
     "items": [
       {
-        "title": "Custom Web Applications",
-        "description": "Bespoke web applications built with React, Next.js, and modern frameworks tailored to your specific business requirements."
+        "title": "Backend Refactoring",
+        "description": "Redesign your data model for correctness and performance. Whether it's Convex schemas, Supabase tables, or Postgres queries — we normalize, index, and introduce clean patterns."
       },
       {
-        "title": "SaaS Platform Development",
-        "description": "Complete SaaS solutions with user authentication, payment integration, and scalable architecture for growing businesses."
+        "title": "Query & Performance Optimization",
+        "description": "Remove bottlenecks, fix slow queries, introduce proper data access patterns, and make your app fast at scale. We've done this across Convex, Supabase, Prisma, and raw SQL."
       },
       {
-        "title": "E-commerce Solutions",
-        "description": "Modern e-commerce platforms with secure payment processing, inventory management, and seamless user experience."
+        "title": "Frontend Architecture Cleanup",
+        "description": "Restructure Next.js App Router layouts, fix React data flow, clean up WordPress themes, improve type safety, and make your frontend maintainable and shippable."
       },
       {
-        "title": "API Development & Integration",
-        "description": "RESTful APIs and third-party integrations to connect your systems and streamline business processes."
+        "title": "Authorization & Security",
+        "description": "Centralize auth checks, implement row-level security, clean up scattered permission logic across any stack — Clerk, Supabase Auth, NextAuth, WordPress roles."
       },
       {
-        "title": "Cloud Deployment & DevOps",
-        "description": "Seamless deployment to AWS, Vercel, or your preferred cloud platform with CI/CD pipelines and monitoring."
+        "title": "Workflow Automation",
+        "description": "For teams drowning in spreadsheets: we build focused operational tools that replace one broken process at a time. Bounded scope, measurable outcomes."
       },
       {
-        "title": "Ongoing Support",
-        "description": "Comprehensive maintenance, updates, and technical support to keep your applications running smoothly.",
-        "cta": "Learn more about our services"
+        "title": "Ongoing Codebase Support",
+        "description": "Retainer-based support for teams that need a senior web engineer on call. Architecture reviews, incremental improvements, and someone who knows your codebase inside out.",
+        "cta": "See our retainer plans"
       }
     ]
   },
   "benefits": {
-    "eyebrow": "Why Choose Us",
-    "title": "Why Work With Us?",
-    "description": "We are a boutique software studio specialising in React, Next.js, and modern cloud solutions. Small enough to give you personal attention, skilled enough to deliver enterprise-grade results.",
+    "eyebrow": "Why Upcraft Crew",
+    "title": "Why Teams Call Us When Shipping Slows Down",
+    "description": "You don't need another agency. You need technical clarity, safer releases, and a codebase your team can move in confidently.",
     "items": [
       {
-        "title": "Bespoke Solutions",
-        "description": "Tailored web applications designed specifically for your business goals"
+        "title": "Stack-Flexible, Not Stack-Locked",
+        "description": "We go where your code lives. Convex, Supabase, Next.js, WordPress, React Native — we bring senior expertise to whatever stack you're on."
       },
       {
-        "title": "Cost-Effective Development",
-        "description": "Offshore rates without compromise on quality or communication"
+        "title": "Zero Downtime Changes",
+        "description": "We refactor production codebases with incremental changes, migration paths, and rollback safety. No big-bang rewrites."
       },
       {
-        "title": "Clear Communication",
-        "description": "English-speaking developers with flexible hours across multiple time zones"
+        "title": "Read Before We Write",
+        "description": "We understand your existing codebase, patterns, and conventions before changing anything. No reckless refactors."
       },
       {
-        "title": "Proven Expertise",
-        "description": "Full-stack web apps, SaaS platforms, and modern landing pages"
+        "title": "Predictable Delivery",
+        "description": "Every engagement starts with a codebase review so we scope accurately. Fixed timelines, no surprises."
       },
       {
-        "title": "Personal Attention",
-        "description": "Direct access to senior developers, not a faceless team"
+        "title": "Direct Access to Engineers",
+        "description": "You work directly with the engineers doing the work. No account managers, no telephone game, no offshore relay teams."
       },
       {
-        "title": "Reliable Delivery",
-        "description": "Consistent project delivery with transparent progress updates"
+        "title": "Bounded Scope, Always",
+        "description": "We scope tightly and deliver on what's agreed. No feature creep, no surprise invoices, no scope sprawl."
       }
     ]
   },
   "process": {
-    "eyebrow": "Our Process",
-    "title": "Our Development Process",
-    "description": "From initial consultation to final deployment, we follow a proven process that ensures quality and transparency",
+    "eyebrow": "How We Work",
+    "title": "From Codebase Review to Stable Ship",
+    "description": "Whether it's a Convex refactor or a workflow build, we always start by understanding what exists before changing anything. No guesswork, no big-bang rewrites.",
     "steps": [
       {
-        "title": "Discovery & Planning",
-        "subtitle": "We start by understanding your vision and requirements.",
-        "stepLabel": "First step",
+        "title": "Codebase Review",
+        "subtitle": "We read your code, identify the top issues, and give you an honest assessment.",
+        "stepLabel": "Entry point",
         "items": [
-          "Requirements gathering",
-          "Wireframing",
-          "Timeline planning",
-          "Technical specification"
+          "Read existing architecture",
+          "Identify pain points",
+          "Assess technical debt",
+          "Qualify fit and scope"
         ]
       },
       {
-        "title": "Development & Design",
-        "subtitle": "Our team brings your vision to life with clean code",
-        "stepLabel": "Second step"
+        "title": "Refactor Plan",
+        "subtitle": "A clear, prioritized plan for what to fix first and how to do it safely.",
+        "stepLabel": "Stage one"
       },
       {
-        "title": "Testing & Deployment",
-        "subtitle": "Rigorous testing and seamless deployment to production",
-        "stepLabel": "Third step",
-        "items": ["Quality assurance", "Cloud deployment", "Security audit", "Go live"]
-      },
-      {
-        "title": "Ongoing Support",
-        "subtitle": "Continuous maintenance and support for your application.",
-        "stepLabel": "Fourth step",
+        "title": "Incremental Sprints",
+        "subtitle": "We execute changes incrementally — no big-bang rewrites, no broken production.",
+        "stepLabel": "Stage two",
         "items": [
-          "Performance Monitoring",
-          "Updates & Patches",
-          "Security Updates",
-          "Technical Support",
-          "Feature Enhancements",
-          "Code Reviews",
-          "More"
+          "Surgical refactors",
+          "Migration paths",
+          "Iterative reviews",
+          "Production-safe deploys"
+        ]
+      },
+      {
+        "title": "Handoff & Retainer",
+        "subtitle": "Full delivery with documented changes and optional ongoing support.",
+        "stepLabel": "Delivery",
+        "items": [
+          "Architecture documentation",
+          "Team knowledge transfer",
+          "Optional support retainer",
+          "Performance monitoring",
+          "Incremental improvements",
+          "Architecture reviews"
         ]
       }
     ]
   },
-  "integrations": {
-    "eyebrow": "Seamless Sync",
-    "title": "Powerful Integrations",
-    "description": "Our platform integrates with the tools you already use, making automation smooth and effortless",
+  "caseStudies": {
+    "eyebrow": "Recent Work",
+    "title": "Refactors, Stabilization & Workflow Builds",
+    "description": "Real codebase bottlenecks. Measurable improvements.",
+    "readMore": "Read more",
+    "showLess": "Show less",
+    "problemLabel": "The Problem",
+    "solutionLabel": "Our Solution",
+    "resultsLabel": "Results",
     "items": [
       {
-        "title": "HubSpot",
-        "description": "Sync customer data and track interactions effortlessly to improve sales and support",
-        "category": "CRM",
-        "image": "/images/brand-logo/hubspot.svg"
+        "company": "SaaS Startup (Convex)",
+        "industry": "Problem: Team Afraid to Ship",
+        "situation": "A Series A startup had grown fast on Convex but their backend was full of O(n) queries, duplicated authorization logic, and a schema that made simple features take weeks to build.",
+        "problem": "Page loads were 3-5 seconds on key screens. Every new feature introduced regressions. The team was afraid to ship.",
+        "solution": "We refactored their Convex schema, replaced .collect().filter() patterns with indexed queries, introduced aggregates for dashboard counts, and centralized their auth logic.",
+        "results": [
+          { "metric": "10x faster", "label": "Dashboard load times" },
+          { "metric": "Zero", "label": "Auth-related bugs post-refactor" },
+          { "metric": "2x faster", "label": "Feature shipping velocity" }
+        ],
+        "band": "Refactor",
+        "duration": "4 weeks"
       },
       {
-        "title": "Shopify",
-        "description": "Automatically update inventory, process orders, and send customer notifications",
-        "category": "E-commerce",
-        "image": "/images/brand-logo/shopify.svg"
+        "company": "EdTech Platform",
+        "industry": "Problem: Slow Queries at Scale",
+        "situation": "A question-bank platform built on Next.js + Convex needed to scale from hundreds to thousands of users but their query patterns wouldn't hold up.",
+        "problem": "Quiz submission queries were O(n) across all users. Leaderboard calculations timed out. The Next.js app had client/server boundary issues causing hydration errors.",
+        "solution": "We redesigned the Convex data model, added proper indexes, introduced aggregates for leaderboards, and restructured the Next.js App Router layout for clean data flow.",
+        "results": [
+          { "metric": "50x", "label": "Query performance improvement" },
+          { "metric": "Zero", "label": "Hydration errors post-fix" },
+          { "metric": "10K+", "label": "Users supported without changes" }
+        ],
+        "band": "Refactor",
+        "duration": "3 weeks"
       },
       {
-        "title": "Zapier",
-        "description": "Connect with 5,000+ apps to automate repetitive tasks and streamline workflows effortlessly",
-        "category": "Automation",
-        "image": "/images/brand-logo/zapier.svg"
-      },
-      {
-        "title": "Stripe",
-        "description": "Automate invoicing, payments, and subscription billing with seamless Stripe integration",
-        "category": "Payment",
-        "image": "/images/brand-logo/stripe.svg"
-      },
-      {
-        "title": "Slack",
-        "description": "Send instant updates to your team, keeping everyone aligned without switching apps",
-        "category": "Communication",
-        "image": "/images/brand-logo/slack.svg"
-      },
-      {
-        "title": "Google Drive",
-        "description": "Automatically store and organize important documents, ensuring easy access whenever needed",
-        "category": "Storage",
-        "image": "/images/brand-logo/g-drive.svg"
+        "company": "Field Service Company",
+        "industry": "Problem: Manual Scheduling Chaos",
+        "situation": "A technical services company was scheduling field technicians using shared spreadsheets and group chats, with managers manually tracking job status.",
+        "problem": "Double bookings happened weekly. Technicians showed up without context. Managers had no real-time view of daily operations.",
+        "solution": "We built a focused scheduling tool with real-time status tracking, technician calendars, and a centralized dashboard — scoped to their exact workflow.",
+        "results": [
+          { "metric": "Zero", "label": "Double bookings after launch" },
+          { "metric": "100%", "label": "Real-time status visibility" },
+          { "metric": "2 hrs/day", "label": "Scheduling time saved" }
+        ],
+        "band": "Workflow",
+        "duration": "4 weeks"
       }
     ]
   },
-  "testimonials": {
-    "eyebrow": "Client Success",
-    "title": "Trusted by Businesses Worldwide",
-    "description": "See how companies across the globe have scaled their digital presence with our bespoke web development solutions",
-    "avatarAlt": "Profile picture",
-    "stats": [
-      {
-        "title": "On-Time Delivery",
-        "number": "100%",
-        "description": "Projects delivered on schedule and within budget."
-      },
-      {
-        "title": "Free Support",
-        "number": "30 days",
-        "description": "Complimentary adjustments and ongoing support included."
-      },
-      {
-        "title": "Happy Clients",
-        "number": "100%",
-        "description": "Client satisfaction rate on completed projects."
-      },
-      {
-        "title": "Response Time",
-        "number": "< 2hrs",
-        "description": "Average response time for client communications."
-      }
+  "leadMagnet": {
+    "eyebrow": "Free Resource",
+    "title": "Is Your Codebase Holding You Back?",
+    "description": "Download our Codebase Health Check — 7 signs your codebase is quietly killing delivery speed.",
+    "cardTitle": "Codebase Health Check",
+    "cardSubtitle": "PDF Guide — Free Download",
+    "successTitle": "Check your inbox!",
+    "successDescription": "We've sent the Codebase Health Check to your email.",
+    "sending": "Sending...",
+    "items": [
+      "Queries are slow and nobody knows why",
+      "Key pages take 3+ seconds to load",
+      "Authorization logic is scattered across the codebase",
+      "Every new feature introduces unexpected regressions",
+      "Your data model has grown organically without clear design",
+      "You avoid touching certain files because 'they just work'",
+      "Your team is shipping slower than 6 months ago"
     ],
-    "list": [
-      {
-        "image": "/images/avatars/1.png",
-        "name": "Sarah Mitchell",
-        "comments": "Working with this team was exceptional. They delivered our custom SaaS platform on time and within budget. The quality exceeded our expectations.",
-        "company": "TechFlow Solutions",
-        "position": "Operations Director",
-        "location": "Manchester, UK"
-      },
-      {
-        "image": "/images/avatars/2.png",
-        "name": "Alex Rodriguez",
-        "comments": "Outstanding development experience. Clear communication across time zones, reliable delivery, and the final product was exactly what we needed.",
-        "company": "InnovateCore",
-        "position": "CTO",
-        "location": "Toronto, Canada"
-      }
-    ]
+    "cta": "Get the Free Checklist",
+    "ctaHelper": "PDF delivered instantly. No spam, ever.",
+    "emailPlaceholder": "Your work email"
   },
   "pricing": {
     "eyebrow": "Transparent Pricing",
-    "title": "Development Pricing",
+    "title": "Scope-Based Pricing",
+    "description": "We price based on the problem scope and risk — not hours. Every engagement starts with a codebase review so we can isolate root causes before touching production.",
     "sectionsLabel": "What's Included",
     "tabs": {
-      "websites": "Websites",
-      "webApps": "Web Apps",
-      "mobileApps": "Mobile Apps",
-      "maintenance": "Maintenance",
-      "consulting": "Consulting"
+      "solutions": "Codebase Refactors",
+      "retainers": "Ongoing Support",
+      "discovery": "Getting Started"
     },
     "cta": {
-      "websites": "Get Quote",
-      "webApps": "Start Project",
-      "mobileApps": "Start Project",
-      "maintenance": "Subscribe",
-      "consulting": "Schedule"
+      "solutions": "Book a Codebase Review",
+      "retainers": "Start Retainer",
+      "discovery": "Book a Call"
     },
     "plans": {
-      "websites": [
+      "solutions": [
         {
-          "title": "Basic Landing",
-          "price": "$240",
+          "title": "Focused Refactor",
+          "price": "$3,000 – $8,000",
           "includes": [
-            { "text": "1 responsive page (landing or portfolio)", "included": true },
-            { "text": "Clean design and basic SEO", "included": true },
-            { "text": "Functional contact form", "included": true },
-            { "text": "Deploy on own domain or Vercel", "included": true },
-            { "text": "Advanced animations", "included": false },
-            { "text": "CMS integration", "included": false }
+            { "text": "Targeted schema or query refactor", "included": true },
+            { "text": "Authorization logic cleanup", "included": true },
+            { "text": "Performance bottleneck removal", "included": true },
+            { "text": "Architecture documentation", "included": true },
+            { "text": "Safe migration path with rollback", "included": true },
+            { "text": "Multi-system redesign", "included": false },
+            { "text": "Full codebase rewrite", "included": false }
           ],
-          "tagline": "Perfect for those who need to publish quickly with a lean budget.",
-          "customCta": "Buy now"
+          "tagline": "For teams with 1-2 high-impact bottlenecks blocking delivery."
         },
         {
-          "title": "Artistic Landing",
-          "price": "from $500",
+          "title": "Full Stabilization",
+          "price": "$8,000 – $20,000",
           "includes": [
-            { "text": "Artistic design with micro-interactions", "included": true },
-            { "text": "Animations (GSAP) and visual storytelling", "included": true },
-            { "text": "Optimized SEO and performance", "included": true },
-            { "text": "Hosting and deployment included", "included": true },
-            { "text": "Up to 5 pages (Home, About, Services, Contact...)", "included": true },
-            { "text": "Dynamic CMS", "included": false }
+            { "text": "Everything in Focused Refactor", "included": true },
+            { "text": "Complete backend schema redesign", "included": true },
+            { "text": "Frontend architecture restructuring", "included": true },
+            { "text": "Data access pattern optimization", "included": true },
+            { "text": "Type safety improvements across codebase", "included": true },
+            { "text": "Team knowledge transfer sessions", "included": true },
+            { "text": "CI/CD and deployment stabilization", "included": true },
+            { "text": "Legacy system migration", "included": false }
           ],
-          "tagline": "For creators and brands that want to captivate at first glance.",
+          "tagline": "For teams whose architecture is slowing releases and creating recurring regressions.",
           "popular": true
         },
         {
-          "title": "Business Website",
-          "price": "from $500",
+          "title": "Workflow Build",
+          "price": "From $5,000",
           "includes": [
-            { "text": "Up to 5 pages (Home, About, Services, Contact...)", "included": true },
-            { "text": "Optional CMS for content editing", "included": true },
-            { "text": "Forms, basic SEO and analytics", "included": true },
-            { "text": "Mobile-first and accessible layout", "included": true },
-            { "text": "Custom integrations", "included": false },
-            { "text": "E-commerce functionality", "included": false }
+            { "text": "Bounded operational tool build", "included": true },
+            { "text": "Internal dashboard or admin view", "included": true },
+            { "text": "Process automation and data logging", "included": true },
+            { "text": "User auth and role-based access", "included": true },
+            { "text": "API integrations (1-2 systems)", "included": true },
+            { "text": "Production deployment and handoff docs", "included": true },
+            { "text": "Real-time sync and notifications", "included": true },
+            { "text": "Full ERP replacement", "included": false }
           ],
-          "tagline": "For companies that need a complete and reliable digital presence."
-        },
-        {
-          "title": "Online Store (E-commerce)",
-          "price": "from $600",
-          "includes": [
-            { "text": "Product catalog and categories", "included": true },
-            { "text": "Cart and checkout (Stripe/MercadoPago)", "included": true },
-            { "text": "Order and inventory management", "included": true },
-            { "text": "Discounts/coupons and shipping calculation*", "included": true },
-            { "text": "CMS integration for storefronts", "included": true },
-            { "text": "Tax/logistics automation (under scope)", "included": false }
-          ],
-          "tagline": "For those who want to sell online with performance and professional experience."
+          "tagline": "For teams that need a focused tool to replace a broken manual process."
         }
       ],
-      "webApps": [
+      "retainers": [
         {
-          "title": "Web App Start",
-          "price": "from $800",
+          "title": "Monitoring",
+          "price": "$500/month",
           "includes": [
-            { "text": "Login/authentication (Clerk/Auth.js)", "included": true },
-            { "text": "Synchronized database (Convex)", "included": true },
-            { "text": "Basic dashboard and initial CRUD", "included": true },
-            { "text": "Deploy on Vercel", "included": true },
-            { "text": "Responsive and mobile-first design", "included": true },
-            { "text": "External integrations", "included": false },
-            { "text": "Payment system", "included": false },
-            { "text": "Admin panel", "included": false }
+            { "text": "Performance and uptime monitoring", "included": true },
+            { "text": "Small bug fixes and tweaks", "included": true },
+            { "text": "Monthly health check report", "included": true },
+            { "text": "Security patch updates", "included": true },
+            { "text": "2 hours of monthly support", "included": true },
+            { "text": "Priority response time", "included": false },
+            { "text": "Feature development", "included": false },
+            { "text": "Architecture reviews", "included": false }
           ],
-          "tagline": "To validate an MVP with speed and solid foundation."
+          "tagline": "For stable codebases that need reliable monitoring and minor maintenance."
         },
         {
-          "title": "Web App Pro",
-          "price": "from $1,600",
+          "title": "Priority Support",
+          "price": "$1,500/month",
           "includes": [
-            { "text": "APIs, complete CRUD and notifications", "included": true },
-            { "text": "Plans and billing", "included": true },
-            { "text": "User area + admin panel", "included": true },
-            { "text": "Sentry/Cloudflare for observability", "included": true },
-            { "text": "File upload and management", "included": true },
-            { "text": "Transactional emails (Resend)", "included": true },
-            { "text": "External API integrations", "included": false },
-            { "text": "AI/ML features", "included": false }
+            { "text": "Everything in Monitoring", "included": true },
+            { "text": "Priority response (< 4 hours)", "included": true },
+            { "text": "Monthly code improvements", "included": true },
+            { "text": "6 hours of monthly development", "included": true },
+            { "text": "Query and performance optimization", "included": true },
+            { "text": "Weekly status updates", "included": true },
+            { "text": "Dedicated Slack channel", "included": true },
+            { "text": "Architecture reviews", "included": false }
           ],
-          "tagline": "For growing businesses with automations.",
+          "tagline": "For active codebases that benefit from regular improvements and a senior engineer on call.",
           "popular": true
         },
         {
-          "title": "Web App SaaS Premium",
-          "price": "from $3,000",
+          "title": "Strategic Partner",
+          "price": "$3,000/month",
           "includes": [
-            { "text": "Multi-user and permissions", "included": true },
-            { "text": "Advanced external integrations", "included": true },
-            { "text": "AI automation (Firecrawl/OpenAI)", "included": true },
-            { "text": "Proprietary backend (Convex)", "included": true },
-            { "text": "Advanced analytics and metrics", "included": true },
-            { "text": "Webhooks and event-driven", "included": true },
-            { "text": "White-label and full customization", "included": true },
-            { "text": "SLA and priority support", "included": true }
+            { "text": "Everything in Priority Support", "included": true },
+            { "text": "12+ hours of monthly development", "included": true },
+            { "text": "Monthly architecture reviews", "included": true },
+            { "text": "Proactive refactoring and optimization", "included": true },
+            { "text": "Quarterly roadmap planning", "included": true },
+            { "text": "Team onboarding and knowledge transfer", "included": true },
+            { "text": "Emergency response (< 1 hour)", "included": true },
+            { "text": "Dedicated senior web engineer", "included": true }
           ],
-          "tagline": "For SaaS products that require scale and robustness."
+          "tagline": "For teams that want a senior engineer embedded to prevent recurring technical fires."
         }
       ],
-      "mobileApps": [
+      "discovery": [
         {
-          "title": "App MVP",
-          "price": "from $1,400",
+          "title": "Codebase Review Call",
+          "price": "Free",
           "includes": [
-            { "text": "Login and authentication", "included": true },
-            { "text": "Up to 3 main screens", "included": true },
-            { "text": "Integrated backend (Convex/Firebase)", "included": true },
-            { "text": "Google Play publication", "included": true },
-            { "text": "Basic UI/UX design", "included": true },
-            { "text": "Push notifications", "included": false },
-            { "text": "App Store (iOS) publication", "included": false },
-            { "text": "External API integration", "included": false }
+            { "text": "30-minute diagnostic call", "included": true },
+            { "text": "Identify top 3-5 architecture issues", "included": true },
+            { "text": "Initial scope and complexity assessment", "included": true },
+            { "text": "Fit evaluation (we say no when it doesn't fit)", "included": true },
+            { "text": "Honest recommendations regardless of fit", "included": true },
+            { "text": "Detailed refactor plan", "included": false },
+            { "text": "Code-level analysis", "included": false },
+            { "text": "Fixed proposal", "included": false }
           ],
-          "tagline": "Perfect for testing an idea in the real market."
+          "tagline": "In 30 minutes, we'll look at your codebase and tell you the top things to fix."
         },
         {
-          "title": "Advanced App",
-          "price": "from $2,400",
+          "title": "Deep Codebase Audit",
+          "price": "$2,000 – $5,000",
           "includes": [
-            { "text": "Animations and refined navigation", "included": true },
-            { "text": "Real-time synchronization", "included": true },
-            { "text": "Payments", "included": true },
-            { "text": "Push Notifications", "included": true },
-            { "text": "Camera and photo gallery", "included": true },
-            { "text": "Geolocation and maps", "included": true },
-            { "text": "Offline mode (local storage)", "included": true },
-            { "text": "Analytics and event tracking", "included": false }
+            {
+              "text": "Full codebase review (schema, queries, auth, architecture)",
+              "included": true
+            },
+            { "text": "Prioritized list of issues with severity ratings", "included": true },
+            { "text": "Refactor plan with phased approach", "included": true },
+            { "text": "Performance benchmarks and recommendations", "included": true },
+            { "text": "Architecture diagram and documentation", "included": true },
+            { "text": "Risk assessment for each change", "included": true },
+            { "text": "Fixed scope and price for refactor phase", "included": true },
+            { "text": "Standalone value — even if you don't proceed", "included": true }
           ],
-          "tagline": "For apps with engagement and important integrations.",
+          "tagline": "A thorough audit that gives you a complete roadmap — whether you hire us to fix it or not.",
           "popular": true
-        },
-        {
-          "title": "Full Custom App",
-          "price": "from $3,600",
-          "includes": [
-            { "text": "Exclusive design and CI/CD configured", "included": true },
-            { "text": "iOS and Android + web admin panel", "included": true },
-            { "text": "Proprietary backend (Convex + Clerk + Sentry)", "included": true },
-            { "text": "Store publication (iOS + Android)", "included": true },
-            { "text": "Deep linking and sharing", "included": true },
-            { "text": "Biometrics (Face ID/Touch ID)", "included": true },
-            { "text": "Real-time chat", "included": true },
-            { "text": "Video calls or streaming", "included": false }
-          ],
-          "tagline": "For startups and companies that need a complete app."
-        }
-      ],
-      "maintenance": [
-        {
-          "title": "Essential Maintenance",
-          "price": "$60/month",
-          "includes": [
-            { "text": "Basic updates and fixes", "included": true },
-            { "text": "Automatic weekly backups", "included": true },
-            { "text": "Monthly security check", "included": true },
-            { "text": "1h of monthly support", "included": true },
-            { "text": "Dependencies updates", "included": true },
-            { "text": "Uptime monitoring", "included": false },
-            { "text": "Priority support", "included": false },
-            { "text": "New features development", "included": false }
-          ],
-          "tagline": "For sites and portfolios in stable production."
-        },
-        {
-          "title": "Pro Maintenance",
-          "price": "$120/month",
-          "includes": [
-            { "text": "24/7 uptime/performance monitoring", "included": true },
-            { "text": "Fixes and small improvements", "included": true },
-            { "text": "3h of monthly support", "included": true },
-            { "text": "Daily backups with 30-day retention", "included": true },
-            { "text": "Performance optimization", "included": true },
-            { "text": "Monthly analytics reports", "included": true },
-            { "text": "Priority support (24h response)", "included": true },
-            { "text": "Complex features development", "included": false }
-          ],
-          "tagline": "For active e-commerce and web apps.",
-          "popular": true
-        },
-        {
-          "title": "Premium Support",
-          "price": "from $240/month",
-          "includes": [
-            { "text": "New features development", "included": true },
-            { "text": "Enterprise managed hosting", "included": true },
-            { "text": "Monthly SEO and metrics review", "included": true },
-            { "text": "8h+ monthly development", "included": true },
-            { "text": "Roadmap and planning meetings", "included": true },
-            { "text": "Urgent support (4h response)", "included": true },
-            { "text": "CDN and global optimization", "included": true },
-            { "text": "Quarterly security audit", "included": true }
-          ],
-          "tagline": "For products in constant evolution with roadmap."
-        }
-      ],
-      "consulting": [
-        {
-          "title": "Quick Consultation",
-          "price": "$0",
-          "includes": [
-            { "text": "1 hour individual call", "included": true },
-            { "text": "Analysis of your project or idea", "included": true },
-            { "text": "Personalized technical guidance", "included": true },
-            { "text": "Stack and architecture recommendations", "included": true },
-            { "text": "Session recording", "included": true },
-            { "text": "Post-call support material", "included": false },
-            { "text": "7 days support after call", "included": false }
-          ],
-          "tagline": "Ideal for clarifying doubts and validating your idea with an expert."
-        },
-        {
-          "title": "Business Consulting",
-          "price": "$300",
-          "includes": [
-            { "text": "3 hours of technical consulting", "included": true },
-            { "text": "Complete digital business analysis", "included": true },
-            { "text": "Implementation roadmap", "included": true },
-            { "text": "Cost and time estimates", "included": true },
-            { "text": "Tools and stack recommendations", "included": true },
-            { "text": "Detailed post-consulting document", "included": true },
-            { "text": "2 weeks of email support", "included": true },
-            { "text": "Existing code review", "included": false }
-          ],
-          "tagline": "Perfect for companies that need to plan their digital transformation.",
-          "popular": true
-        },
-        {
-          "title": "Personalized Mentoring",
-          "price": "$600",
-          "includes": [
-            { "text": "4 sessions of 1h per month during 4 months", "included": true },
-            { "text": "Personal project follow-up", "included": true },
-            { "text": "Unlimited code review", "included": true },
-            { "text": "Dedicated Discord support", "included": true },
-            { "text": "Dev career planning", "included": true },
-            { "text": "Exclusive materials and resources", "included": true },
-            { "text": "Access to stack course", "included": true },
-            { "text": "Community networking", "included": true }
-          ],
-          "tagline": "For devs who want to accelerate learning with close follow-up."
         }
       ]
     }
   },
+  "workflowAudit": {
+    "eyebrow": "Start Here",
+    "title": "Book a Free Codebase Review",
+    "description": "In 30 minutes, we'll look at your codebase and tell you the top things that need fixing. Any stack — Convex, Supabase, Next.js, WordPress, you name it. No pitch. No pressure. Just honest engineering feedback.",
+    "form": {
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "Work email",
+      "companyPlaceholder": "Company / Project name",
+      "workflowLabel": "What's the biggest pain point in your codebase?",
+      "workflowPlaceholder": "e.g., Queries are slow, schema is messy, auth logic is scattered, afraid to ship...",
+      "teamSizeLabel": "Team size",
+      "teamSizeOptions": ["Solo founder", "2-5", "6-15", "15+"],
+      "currentToolsLabel": "What's in your stack?",
+      "currentToolsOptions": [
+        "Convex",
+        "Supabase",
+        "Next.js",
+        "WordPress",
+        "React Native",
+        "Other"
+      ],
+      "submitButton": "Book My Review",
+      "submittingButton": "Sending...",
+      "privacyNote": "We'll reach out within 24 hours. No spam, no sales pitch — just a diagnostic call."
+    }
+  },
   "footer": {
-    "eyebrow": "Stay Connected",
-    "title": "Ready to Start Your Project?",
-    "description": "Let's discuss your web development needs. Get a free consultation and see how we can help bring your vision to life.",
-    "cta": "Get Free Consultation",
-    "summary": "Boutique software studio specialising in React, Next.js, and modern cloud solutions. Small enough to give you personal attention, skilled enough to deliver enterprise-grade results.",
+    "eyebrow": "Let's Talk",
+    "title": "Ready to Stabilize Your Codebase?",
+    "description": "Start with a free codebase review call. We'll identify the top issues holding your team back and tell you exactly what it would take to fix them.",
+    "cta": "Book a Codebase Review",
+    "summary": "Web engineers who solve delivery bottlenecks. We refactor backends, optimize queries, clean architecture, and build focused operational tools — across Convex, Supabase, Next.js, WordPress, and more.",
     "social": {
       "google": "Google",
       "apple": "Apple",
@@ -818,17 +719,17 @@
     },
     "quickLinks": {
       "title": "Quick Links",
-      "items": ["Home", "Features", "Pricing", "About Us", "Contact"]
+      "items": ["Home", "Solutions", "Pricing", "Case Studies", "Contact"]
     },
     "resources": {
       "title": "Resources",
-      "items": ["Documentation", "Help Center", "FAQs", "Community", "Blog"]
+      "items": ["Workflow Checklist", "Architecture Guide", "FAQs", "Community", "Blog"]
     },
     "communityBadge": "New",
     "legal": {
       "copyright": "© {year} Upcraft Crew",
       "credit": {
-        "prefix": "Concept to Reality by",
+        "prefix": "Built by",
         "linkLabel": "Upcraft Crew"
       },
       "terms": "Terms",
