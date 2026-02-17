@@ -3,7 +3,7 @@
     "cta": {
       "bookAudit": "Agendar Revisão de Código",
       "getChecklist": "Baixar Checklist Grátis",
-      "startSprint": "Iniciar Auditoria de Código",
+      "startSprint": "Agendar Revisão de Código",
       "contactUs": "Fale Conosco"
     },
     "status": {
@@ -45,7 +45,7 @@
       { "title": "Processo", "target": "process" },
       { "title": "Casos", "target": "caseStudies" },
       { "title": "Preços", "target": "pricing" },
-      { "title": "Começar", "target": "contact" }
+      { "title": "Agendar Revisão", "target": "contact" }
     ],
     "mobileNavigationLabel": "Navegação",
     "languageSwitch": {
@@ -63,13 +63,13 @@
       "highlight": "Equipes Com Gargalos de Entrega"
     },
     "title": {
-      "line1": "Sua Equipe Tem Medo",
-      "line2": "De Entregar. Nós",
-      "highlight": "Resolvemos."
+      "line1": "Ajudamos equipes a lançar produtos reais —",
+      "line2": "mesmo quando o código está bagunçado",
+      "highlight": "ou a ideia está só começando."
     },
-    "description": "Refatoramos backends bagunçados, otimizamos queries lentas, limpamos arquitetura e corrigimos o que está quebrado — em Convex, Supabase, Next.js, WordPress e mais. Para sua equipe entregar com confiança de novo.",
+    "description": "Da refatoração de backends frágeis à construção de MVPs do zero, ajudamos fundadores a avançar mais rápido com confiança.",
     "primaryCta": "Agendar Revisão de Código",
-    "secondaryCta": "Veja O Que Corrigimos",
+    "secondaryCta": "Baixar Checklist Grátis",
     "cards": {
       "left": {
         "badgeTitle": "Expertise Full Stack",
@@ -106,9 +106,9 @@
     }
   },
   "portfolio": {
-    "eyebrow": "Nosso Trabalho",
-    "title": "Destaques do Portfólio",
-    "description": "Sistemas operacionais reais substituindo processos manuais com resultados mensuráveis.",
+    "eyebrow": "Provas de Resultado",
+    "title": "Refactors e Sistemas que Melhoraram Entregas",
+    "description": "Projetos em que equipes entregaram mais rápido, reduziram regressões e trocaram operações manuais arriscadas por processos confiáveis.",
     "controls": {
       "previous": "Projetos anteriores",
       "next": "Próximos projetos"
@@ -127,9 +127,9 @@
       "backToPortfolio": "Voltar ao portfólio",
       "technologies": "Tecnologias",
       "keyHighlights": "Principais Destaques",
-      "interestedInSimilar": "Interessado em um projeto similar?",
-      "ctaDescription": "Entre em contato para discutir como podemos resolver seu desafio de fluxo de trabalho.",
-      "contactUs": "Fale conosco",
+      "interestedInSimilar": "Quer resultados parecidos?",
+      "ctaDescription": "Agende uma revisão de código e mapeamos o caminho mais rápido para releases mais seguros e rápidos.",
+      "contactUs": "Agendar Revisão de Código",
       "viewMoreProjects": "Ver mais projetos",
       "viewMore": "Ver mais"
     },
@@ -347,26 +347,26 @@
   "features": {
     "eyebrow": "O Que Fazemos",
     "title": "Problemas Que Resolvemos em Codebases",
-    "description": "Nossas ofertas são definidas pelo problema, não pelo setor. A maioria dos clientes chega quando a entrega desacelera, regressões viram rotina, queries ficam lentas e a arquitetura fica difícil de evoluir. Nós corrigimos isso em Convex, Supabase, Next.js, WordPress e mais.",
+    "description": "Nossas ofertas são definidas pelo problema, não pelo setor. As equipes nos procuram quando a entrega desacelera, regressões viram rotina e lançar novidades passa a ser arriscado. Nós removemos esses gargalos para sua equipe voltar a entregar com consistência.",
     "items": [
       {
         "title": "Refatoração de Backend",
-        "description": "Redesenhamos seu modelo de dados para correção e performance. Seja schemas Convex, tabelas Supabase ou queries Postgres — normalizamos, indexamos e introduzimos padrões limpos."
+        "description": "Reconstruímos bases frágeis de backend para seu produto responder mais rápido e o time parar de quebrar fluxo a cada nova entrega."
       },
       {
         "title": "Otimização de Queries & Performance",
-        "description": "Removemos gargalos, corrigimos queries lentas, introduzimos padrões de acesso a dados adequados e deixamos seu app rápido em escala. Já fizemos isso em Convex, Supabase, Prisma e SQL puro."
+        "description": "Removemos gargalos que deixam páginas lentas e equipes inseguras. Resultado: telas mais rápidas, usuários mais satisfeitos e menos incêndios no dia a dia."
       },
       {
         "title": "Limpeza de Arquitetura Frontend",
-        "description": "Reestruturamos layouts Next.js App Router, corrigimos data flow React, limpamos themes WordPress, melhoramos type safety e tornamos seu frontend mantenível e entregável."
+        "description": "Destravamos a arquitetura frontend para sua equipe lançar mudanças com velocidade, sem regressões frágeis de interface."
       },
       {
         "title": "Autorização & Segurança",
-        "description": "Centralizamos verificações de auth, implementamos segurança por linha, limpamos lógica de permissão espalhada em qualquer stack — Clerk, Supabase Auth, NextAuth, WordPress roles."
+        "description": "Centralizamos regras de acesso para permissões previsíveis, mais seguras e fáceis de manter conforme o produto cresce."
       },
       {
-        "title": "Automação de Fluxos",
+        "title": "Ferramentas Internas Focadas",
         "description": "Para equipes afogadas em planilhas: construímos ferramentas operacionais focadas que substituem um processo quebrado por vez. Escopo delimitado, resultados mensuráveis."
       },
       {
@@ -383,7 +383,7 @@
     "items": [
       {
         "title": "Flexíveis no Stack, Não Presos a Um",
-        "description": "Vamos onde seu código vive. Convex, Supabase, Next.js, WordPress, React Native — levamos expertise sênior para qualquer stack que você estiver."
+        "description": "Trabalhamos no stack que você já usa e melhoramos o que existe, sem forçar rewrites caros."
       },
       {
         "title": "Mudanças Sem Downtime",
@@ -410,7 +410,7 @@
   "process": {
     "eyebrow": "Como Trabalhamos",
     "title": "Da Revisão de Código à Entrega Estável",
-    "description": "Seja um refactor Convex ou um build de fluxo, sempre começamos entendendo o que existe antes de mudar qualquer coisa. Sem adivinhação, sem rewrites big-bang.",
+    "description": "Seja uma estabilização de codebase ou uma ferramenta interna focada, sempre começamos entendendo o que existe antes de mudar qualquer coisa. Sem adivinhação, sem rewrites big-bang.",
     "steps": [
       {
         "title": "Revisão de Código",
@@ -467,9 +467,9 @@
       {
         "company": "Startup SaaS (Convex)",
         "industry": "Problema: Equipe Com Medo de Entregar",
-        "situation": "Uma startup Series A cresceu rápido no Convex mas seu backend estava cheio de queries O(n), lógica de autorização duplicada e um schema que fazia features simples levarem semanas.",
-        "problem": "Page loads de 3-5 segundos em telas chave. Cada nova feature introduzia regressões. A equipe tinha medo de entregar.",
-        "solution": "Refatoramos o schema Convex, substituímos padrões .collect().filter() por queries indexadas, introduzimos aggregates para contagens no dashboard e centralizamos a lógica de auth.",
+        "situation": "Uma startup Series A cresceu rápido, mas o backend ficou difícil de evoluir com segurança e cada release virou risco.",
+        "problem": "Telas-chave levavam 3-5 segundos para carregar, regressões voltavam com frequência e a velocidade de produto caiu.",
+        "solution": "Reestruturamos padrões centrais de backend e centralizamos regras de autorização — reduzindo carregamentos de segundos para milissegundos e tornando as releases previsíveis novamente.",
         "results": [
           { "metric": "10x mais rápido", "label": "Tempo de carga do dashboard" },
           { "metric": "Zero", "label": "Bugs de auth pós-refactor" },
@@ -481,12 +481,12 @@
       {
         "company": "Plataforma EdTech",
         "industry": "Problema: Queries Lentas em Escala",
-        "situation": "Uma plataforma de banco de questões em Next.js + Convex precisava escalar de centenas para milhares de usuários mas seus padrões de query não aguentariam.",
-        "problem": "Queries de envio de quiz eram O(n) sobre todos os usuários. Cálculos de ranking davam timeout. O app Next.js tinha problemas de boundary client/server causando erros de hydration.",
-        "solution": "Redesenhamos o modelo de dados Convex, adicionamos indexes adequados, introduzimos aggregates para rankings e reestruturamos o layout App Router Next.js para data flow limpo.",
+        "situation": "Uma plataforma de aprendizado precisava sair de centenas para milhares de usuários sem perder confiabilidade.",
+        "problem": "Envios ficavam lentos em carga, rankings davam timeout e problemas de renderização afetavam a experiência.",
+        "solution": "Redesenhamos o acesso aos dados e corrigimos limites de renderização do app — para páginas rápidas, rankings estáveis e crescimento sem comprometer qualidade.",
         "results": [
           { "metric": "50x", "label": "Melhoria de performance de query" },
-          { "metric": "Zero", "label": "Erros de hydration pós-fix" },
+          { "metric": "Zero", "label": "Erros críticos de renderização pós-fix" },
           { "metric": "10K+", "label": "Usuários suportados sem mudanças" }
         ],
         "band": "Refactor",
@@ -542,8 +542,8 @@
     },
     "cta": {
       "solutions": "Agendar Revisão de Código",
-      "retainers": "Iniciar Retainer",
-      "discovery": "Agendar uma Call"
+      "retainers": "Agendar Revisão de Código",
+      "discovery": "Agendar Revisão de Código"
     },
     "plans": {
       "solutions": [
@@ -551,7 +551,7 @@
           "title": "Refactor Focado",
           "price": "$3.000 – $8.000",
           "includes": [
-            { "text": "Refactor direcionado de schema ou query", "included": true },
+            { "text": "Refactor direcionado de backend e performance", "included": true },
             { "text": "Limpeza de lógica de autorização", "included": true },
             { "text": "Remoção de gargalos de performance", "included": true },
             { "text": "Documentação de arquitetura", "included": true },
@@ -566,9 +566,9 @@
           "price": "$8.000 – $20.000",
           "includes": [
             { "text": "Tudo do Refactor Focado", "included": true },
-            { "text": "Redesign completo de schema do backend", "included": true },
+            { "text": "Redesign completo da arquitetura de backend", "included": true },
             { "text": "Reestruturação de arquitetura Next.js", "included": true },
-            { "text": "Introdução de aggregates e components", "included": true },
+            { "text": "Melhoria de métricas e previsibilidade de release", "included": true },
             { "text": "Melhorias de type safety na codebase", "included": true },
             { "text": "Sessões de transferência de conhecimento", "included": true },
             { "text": "Estabilização de CI/CD e deploy", "included": true },
@@ -578,10 +578,10 @@
           "popular": true
         },
         {
-          "title": "Build de Fluxo",
+          "title": "Ferramenta Interna Focada",
           "price": "A partir de $5.000",
           "includes": [
-            { "text": "Build de ferramenta operacional delimitada", "included": true },
+            { "text": "Build de ferramenta interna delimitada", "included": true },
             { "text": "Dashboard interno ou visão admin", "included": true },
             { "text": "Automação de processo e registro de dados", "included": true },
             { "text": "Auth de usuário e controle de acesso por papel", "included": true },
@@ -662,7 +662,7 @@
           "price": "$2.000 – $5.000",
           "includes": [
             {
-              "text": "Revisão completa de codebase (schema, queries, auth, arquitetura)",
+              "text": "Revisão completa de codebase (performance, confiabilidade, auth e arquitetura)",
               "included": true
             },
             {
@@ -685,13 +685,13 @@
   "workflowAudit": {
     "eyebrow": "Comece Aqui",
     "title": "Agende uma Revisão de Código Gratuita",
-    "description": "Em 30 minutos, olhamos sua codebase e dizemos as principais coisas que precisam de correção. Qualquer stack — Convex, Supabase, Next.js, WordPress, você escolhe. Sem pitch. Sem pressão. Apenas feedback honesto de engenharia.",
+    "description": "Em 30 minutos, identificamos o que está desacelerando seu time e o que corrigir primeiro. Sem pitch. Sem pressão. Apenas um plano prático para releases mais rápidos e seguros.",
     "form": {
       "namePlaceholder": "Seu nome",
       "emailPlaceholder": "Email profissional",
       "companyPlaceholder": "Empresa / Nome do projeto",
       "workflowLabel": "Qual é o maior ponto de dor na sua codebase?",
-      "workflowPlaceholder": "ex: Queries lentas, schema bagunçado, lógica de auth espalhada, medo de entregar...",
+      "workflowPlaceholder": "ex: Releases lentas, regressões frequentes e insegurança para lançar novas features...",
       "teamSizeLabel": "Tamanho da equipe",
       "teamSizeOptions": ["Fundador solo", "2-5", "6-15", "15+"],
       "currentToolsLabel": "O que tem no seu stack?",
@@ -713,7 +713,7 @@
     "title": "Pronto Para Estabilizar Sua Codebase?",
     "description": "Comece com uma call gratuita de revisão de código. Identificaremos os principais problemas travando sua equipe e diremos exatamente o que seria necessário para corrigi-los.",
     "cta": "Agendar Revisão de Código",
-    "summary": "Engenheiros web que resolvem gargalos de entrega. Refatoramos backends, otimizamos queries, limpamos arquitetura e construímos ferramentas operacionais focadas — em Convex, Supabase, Next.js, WordPress e mais.",
+    "summary": "Engenheiros web que corrigem codebases que desaceleram equipes. Estabilizamos arquitetura, aumentamos segurança de release e construímos ferramentas internas focadas quando necessário.",
     "social": {
       "google": "Google",
       "apple": "Apple",

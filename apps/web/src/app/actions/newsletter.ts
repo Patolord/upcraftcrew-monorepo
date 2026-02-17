@@ -3,17 +3,82 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+const RESEND_TEST_EMAIL = "rodrigo@upcraftcrew.com";
 
-export async function sendConsultationEmail(email: string) {
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
+export interface ConsultationFormPayload {
+  name: string;
+  email: string;
+  company: string;
+  workflow: string;
+  teamSize: string;
+  currentTools: string[];
+}
+
+/**
+ * Test helper based on Resend's "Hello World" example.
+ * Set RESEND_API_KEY in apps/web/.env.local as:
+ * RESEND_API_KEY=re_xxxxxxxxx
+ * and replace re_xxxxxxxxx with your real API key.
+ */
+export async function sendHelloWorldEmail() {
   try {
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: ["paloma.sq@hotmail.com"],
-      subject: "Nova solicitação de consultoria gratuita",
+      from: RESEND_FROM,
+      to: RESEND_TEST_EMAIL,
+      subject: "Hello World",
+      html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+export async function sendConsultationEmail(payload: ConsultationFormPayload) {
+  try {
+    const name = escapeHtml(payload.name.trim());
+    const email = escapeHtml(payload.email.trim());
+    const tools = escapeHtml(
+      payload.currentTools.length > 0 ? payload.currentTools.join(", ") : "Not provided",
+    );
+    const company = escapeHtml(payload.company.trim() ? payload.company : "Not provided");
+    const workflow = escapeHtml(payload.workflow.trim() ? payload.workflow : "Not provided");
+    const teamSize = escapeHtml(payload.teamSize.trim() ? payload.teamSize : "Not provided");
+
+    const { data, error } = await resend.emails.send({
+      // In Resend sandbox mode, you can only send to your own account email.
+      // After verifying a domain in Resend, set RESEND_FROM_EMAIL to your domain
+      // and replace RESEND_TEST_EMAIL with your real recipient inbox.
+      from: `Upcraft Crew <${RESEND_FROM}>`,
+      to: [RESEND_TEST_EMAIL],
+      replyTo: email,
+      subject: "New Codebase Review Request",
       html: `
-        <h2>Nova pessoa interessada em consultoria gratuita!</h2>
-        <p><strong>E-mail:</strong> ${email}</p>
-        <p>Esta pessoa se inscreveu através do formulário no footer da landing page.</p>
+        <h2>New codebase review request</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company / Project:</strong> ${company}</p>
+        <p><strong>Team size:</strong> ${teamSize}</p>
+        <p><strong>Current stack/tools:</strong> ${tools}</p>
+        <p><strong>Biggest bottleneck:</strong></p>
+        <p>${workflow}</p>
       `,
     });
 

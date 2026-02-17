@@ -42,7 +42,7 @@ export const Portfolio = () => {
 
   const [selectedIndustry, setSelectedIndustry] = useQueryState(
     "sector",
-    parseAsString.withDefault(portfolio.filters.all),
+    parseAsString.withDefault(portfolio.filters.webApp),
   );
 
   // Filter projects by industry

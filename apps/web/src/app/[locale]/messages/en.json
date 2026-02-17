@@ -3,7 +3,7 @@
     "cta": {
       "bookAudit": "Book a Codebase Review",
       "getChecklist": "Get Free Checklist",
-      "startSprint": "Start Codebase Audit",
+      "startSprint": "Book a Codebase Review",
       "contactUs": "Contact Us"
     },
     "status": {
@@ -45,7 +45,7 @@
       { "title": "Process", "target": "process" },
       { "title": "Case Studies", "target": "caseStudies" },
       { "title": "Pricing", "target": "pricing" },
-      { "title": "Start", "target": "contact" }
+      { "title": "Book Review", "target": "contact" }
     ],
     "mobileNavigationLabel": "Navigation",
     "languageSwitch": {
@@ -63,13 +63,13 @@
       "highlight": "Teams With Delivery Bottlenecks"
     },
     "title": {
-      "line1": "Your Team Is Afraid",
-      "line2": "To Ship. We Fix",
-      "highlight": "That."
+      "line1": "We Help Teams Ship Real Products —",
+      "line2": "Even When the Code Is a Mess",
+      "highlight": "or the Idea Is Just Starting."
     },
-    "description": "We refactor messy backends, optimize slow queries, clean up architecture, and fix what's broken — across Convex, Supabase, Next.js, WordPress, and more. So your team can ship with confidence again.",
+    "description": "From refactoring fragile backends to building MVPs from scratch, we help founders move faster with confidence.",
     "primaryCta": "Book a Codebase Review",
-    "secondaryCta": "See What We Fix",
+    "secondaryCta": "Get Free Checklist",
     "cards": {
       "left": {
         "badgeTitle": "Full Stack Expertise",
@@ -106,9 +106,9 @@
     }
   },
   "portfolio": {
-    "eyebrow": "Our Work",
-    "title": "Portfolio Highlights",
-    "description": "Real-world operational systems replacing manual processes with measurable outcomes.",
+    "eyebrow": "Proof of Outcomes",
+    "title": "Refactors and Systems That Improved Delivery",
+    "description": "Projects where teams shipped faster, reduced regressions, and replaced risky manual operations.",
     "controls": {
       "previous": "Previous projects",
       "next": "Next projects"
@@ -127,9 +127,9 @@
       "backToPortfolio": "Back to portfolio",
       "technologies": "Technologies",
       "keyHighlights": "Key Highlights",
-      "interestedInSimilar": "Interested in a similar project?",
-      "ctaDescription": "Get in touch with us to discuss how we can solve your workflow challenge.",
-      "contactUs": "Contact us",
+      "interestedInSimilar": "Want similar delivery results?",
+      "ctaDescription": "Book a codebase review and we will map the fastest path to safer, faster releases.",
+      "contactUs": "Book a Codebase Review",
       "viewMoreProjects": "View more projects",
       "viewMore": "View more"
     },
@@ -347,26 +347,26 @@
   "features": {
     "eyebrow": "What We Do",
     "title": "Problems We Solve in Codebases",
-    "description": "We niche by problem, not industry. Most clients come to us when shipping has slowed down, regressions keep appearing, queries are too slow, and architecture has become hard to change. We fix that across Convex, Supabase, Next.js, WordPress, and more.",
+    "description": "We niche by problem, not industry. Teams call us when releases slow down, regressions keep coming back, and shipping feels risky. We fix the bottlenecks so your team can deliver consistently again.",
     "items": [
       {
         "title": "Backend Refactoring",
-        "description": "Redesign your data model for correctness and performance. Whether it's Convex schemas, Supabase tables, or Postgres queries — we normalize, index, and introduce clean patterns."
+        "description": "We rebuild fragile backend foundations so your product responds faster and feature work stops breaking unexpectedly."
       },
       {
         "title": "Query & Performance Optimization",
-        "description": "Remove bottlenecks, fix slow queries, introduce proper data access patterns, and make your app fast at scale. We've done this across Convex, Supabase, Prisma, and raw SQL."
+        "description": "We remove bottlenecks that make pages slow and teams hesitant. Result: faster screens, happier users, and less firefighting."
       },
       {
         "title": "Frontend Architecture Cleanup",
-        "description": "Restructure Next.js App Router layouts, fix React data flow, clean up WordPress themes, improve type safety, and make your frontend maintainable and shippable."
+        "description": "We untangle frontend architecture so your team can ship changes quickly without causing fragile UI regressions."
       },
       {
         "title": "Authorization & Security",
-        "description": "Centralize auth checks, implement row-level security, clean up scattered permission logic across any stack — Clerk, Supabase Auth, NextAuth, WordPress roles."
+        "description": "We consolidate access rules so permissions are predictable, safer, and easier to maintain as your product grows."
       },
       {
-        "title": "Workflow Automation",
+        "title": "Focused Internal Tools",
         "description": "For teams drowning in spreadsheets: we build focused operational tools that replace one broken process at a time. Bounded scope, measurable outcomes."
       },
       {
@@ -383,7 +383,7 @@
     "items": [
       {
         "title": "Stack-Flexible, Not Stack-Locked",
-        "description": "We go where your code lives. Convex, Supabase, Next.js, WordPress, React Native — we bring senior expertise to whatever stack you're on."
+        "description": "We work in your current stack and improve what already exists, so you get progress without costly rewrites."
       },
       {
         "title": "Zero Downtime Changes",
@@ -410,7 +410,7 @@
   "process": {
     "eyebrow": "How We Work",
     "title": "From Codebase Review to Stable Ship",
-    "description": "Whether it's a Convex refactor or a workflow build, we always start by understanding what exists before changing anything. No guesswork, no big-bang rewrites.",
+    "description": "Whether you need stabilization or a focused internal tool, we start by understanding what exists before changing anything. No guesswork, no big-bang rewrites.",
     "steps": [
       {
         "title": "Codebase Review",
@@ -467,9 +467,9 @@
       {
         "company": "SaaS Startup (Convex)",
         "industry": "Problem: Team Afraid to Ship",
-        "situation": "A Series A startup had grown fast on Convex but their backend was full of O(n) queries, duplicated authorization logic, and a schema that made simple features take weeks to build.",
-        "problem": "Page loads were 3-5 seconds on key screens. Every new feature introduced regressions. The team was afraid to ship.",
-        "solution": "We refactored their Convex schema, replaced .collect().filter() patterns with indexed queries, introduced aggregates for dashboard counts, and centralized their auth logic.",
+        "situation": "A Series A startup grew quickly, but their backend had become hard to change safely and every release felt risky.",
+        "problem": "Key screens took 3-5 seconds to load, regressions kept recurring, and product velocity dropped each sprint.",
+        "solution": "We rebuilt their backend data patterns and centralized authorization logic — cutting load times from seconds to milliseconds and making releases predictable again.",
         "results": [
           { "metric": "10x faster", "label": "Dashboard load times" },
           { "metric": "Zero", "label": "Auth-related bugs post-refactor" },
@@ -481,9 +481,9 @@
       {
         "company": "EdTech Platform",
         "industry": "Problem: Slow Queries at Scale",
-        "situation": "A question-bank platform built on Next.js + Convex needed to scale from hundreds to thousands of users but their query patterns wouldn't hold up.",
-        "problem": "Quiz submission queries were O(n) across all users. Leaderboard calculations timed out. The Next.js app had client/server boundary issues causing hydration errors.",
-        "solution": "We redesigned the Convex data model, added proper indexes, introduced aggregates for leaderboards, and restructured the Next.js App Router layout for clean data flow.",
+        "situation": "A learning platform needed to scale from hundreds to thousands of users, but performance issues were blocking growth.",
+        "problem": "Submissions slowed down under load, leaderboards timed out, and frontend rendering issues hurt reliability.",
+        "solution": "We redesigned core data access and cleaned up app rendering boundaries — so pages stayed fast, rankings remained stable, and growth no longer risked product quality.",
         "results": [
           { "metric": "50x", "label": "Query performance improvement" },
           { "metric": "Zero", "label": "Hydration errors post-fix" },
@@ -542,8 +542,8 @@
     },
     "cta": {
       "solutions": "Book a Codebase Review",
-      "retainers": "Start Retainer",
-      "discovery": "Book a Call"
+      "retainers": "Book a Codebase Review",
+      "discovery": "Book a Codebase Review"
     },
     "plans": {
       "solutions": [
@@ -551,7 +551,7 @@
           "title": "Focused Refactor",
           "price": "$3,000 – $8,000",
           "includes": [
-            { "text": "Targeted schema or query refactor", "included": true },
+            { "text": "Targeted backend and performance refactor", "included": true },
             { "text": "Authorization logic cleanup", "included": true },
             { "text": "Performance bottleneck removal", "included": true },
             { "text": "Architecture documentation", "included": true },
@@ -566,7 +566,7 @@
           "price": "$8,000 – $20,000",
           "includes": [
             { "text": "Everything in Focused Refactor", "included": true },
-            { "text": "Complete backend schema redesign", "included": true },
+            { "text": "Complete backend architecture redesign", "included": true },
             { "text": "Frontend architecture restructuring", "included": true },
             { "text": "Data access pattern optimization", "included": true },
             { "text": "Type safety improvements across codebase", "included": true },
@@ -578,12 +578,12 @@
           "popular": true
         },
         {
-          "title": "Workflow Build",
+          "title": "Focused Internal Tool",
           "price": "From $5,000",
           "includes": [
-            { "text": "Bounded operational tool build", "included": true },
+            { "text": "Bounded internal tool build", "included": true },
             { "text": "Internal dashboard or admin view", "included": true },
-            { "text": "Process automation and data logging", "included": true },
+            { "text": "Focused process improvements and data visibility", "included": true },
             { "text": "User auth and role-based access", "included": true },
             { "text": "API integrations (1-2 systems)", "included": true },
             { "text": "Production deployment and handoff docs", "included": true },
@@ -662,7 +662,7 @@
           "price": "$2,000 – $5,000",
           "includes": [
             {
-              "text": "Full codebase review (schema, queries, auth, architecture)",
+              "text": "Full codebase review (performance, reliability, auth, architecture)",
               "included": true
             },
             { "text": "Prioritized list of issues with severity ratings", "included": true },
@@ -682,13 +682,13 @@
   "workflowAudit": {
     "eyebrow": "Start Here",
     "title": "Book a Free Codebase Review",
-    "description": "In 30 minutes, we'll look at your codebase and tell you the top things that need fixing. Any stack — Convex, Supabase, Next.js, WordPress, you name it. No pitch. No pressure. Just honest engineering feedback.",
+    "description": "In 30 minutes, we identify what is slowing your team down and what to fix first. No pitch. No pressure. Just a practical path to faster, safer releases.",
     "form": {
       "namePlaceholder": "Your name",
       "emailPlaceholder": "Work email",
       "companyPlaceholder": "Company / Project name",
       "workflowLabel": "What's the biggest pain point in your codebase?",
-      "workflowPlaceholder": "e.g., Queries are slow, schema is messy, auth logic is scattered, afraid to ship...",
+      "workflowPlaceholder": "e.g., Releases are slow, regressions keep happening, and shipping feels risky...",
       "teamSizeLabel": "Team size",
       "teamSizeOptions": ["Solo founder", "2-5", "6-15", "15+"],
       "currentToolsLabel": "What's in your stack?",
@@ -710,7 +710,7 @@
     "title": "Ready to Stabilize Your Codebase?",
     "description": "Start with a free codebase review call. We'll identify the top issues holding your team back and tell you exactly what it would take to fix them.",
     "cta": "Book a Codebase Review",
-    "summary": "Web engineers who solve delivery bottlenecks. We refactor backends, optimize queries, clean architecture, and build focused operational tools — across Convex, Supabase, Next.js, WordPress, and more.",
+    "summary": "Web engineers who fix codebases that slow teams down. We stabilize architecture, improve release safety, and build focused internal tools when needed.",
     "social": {
       "google": "Google",
       "apple": "Apple",

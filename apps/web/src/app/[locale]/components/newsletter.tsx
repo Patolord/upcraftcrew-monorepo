@@ -60,7 +60,7 @@ export const Newsletter = () => {
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      const result = await sendConsultationEmail(formData.email);
+      const result = await sendConsultationEmail(formData);
 
       if (result.success) {
         setIsDialogOpen(false);
