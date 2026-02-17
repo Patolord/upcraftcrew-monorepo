@@ -5,7 +5,6 @@ import { CaseStudies } from "./components/case-studies";
 import { Features } from "./components/features";
 import { Footer } from "./components/footer";
 import { Hero } from "./components/hero";
-import { LeadMagnet } from "./components/lead-magnet";
 import { Newsletter } from "./components/newsletter";
 import { Portfolio } from "./components/portfolio";
 import { Pricing } from "./components/pricing";
@@ -24,7 +23,6 @@ const LandingPage = () => {
       <Suspense fallback={<div />}>
         <CaseStudies />
       </Suspense>
-      <LeadMagnet />
       <Benefits />
       <Suspense fallback={<div />}>
         <Pricing />

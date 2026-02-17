@@ -5,6 +5,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const RESEND_FROM = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 const RESEND_TEST_EMAIL = "rodrigo@upcraftcrew.com";
+const RESEND_SANDBOX_FROM = "onboarding@resend.dev";
 
 const escapeHtml = (value: string) =>
   value
@@ -31,7 +32,7 @@ export interface ConsultationFormPayload {
  */
 export async function sendHelloWorldEmail() {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await sendWithVerifiedDomainFallback({
       from: RESEND_FROM,
       to: RESEND_TEST_EMAIL,
       subject: "Hello World",
@@ -62,7 +63,7 @@ export async function sendConsultationEmail(payload: ConsultationFormPayload) {
     const workflow = escapeHtml(payload.workflow.trim() ? payload.workflow : "Not provided");
     const teamSize = escapeHtml(payload.teamSize.trim() ? payload.teamSize : "Not provided");
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await sendWithVerifiedDomainFallback({
       // In Resend sandbox mode, you can only send to your own account email.
       // After verifying a domain in Resend, set RESEND_FROM_EMAIL to your domain
       // and replace RESEND_TEST_EMAIL with your real recipient inbox.
@@ -93,4 +94,39 @@ export async function sendConsultationEmail(payload: ConsultationFormPayload) {
       error: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
+}
+
+type SendEmailArgs = {
+  from: string;
+  to: string | string[];
+  subject: string;
+  html: string;
+  replyTo?: string;
+};
+
+async function sendWithVerifiedDomainFallback(args: SendEmailArgs) {
+  const firstAttempt = await resend.emails.send(args);
+
+  if (!firstAttempt.error) {
+    return firstAttempt;
+  }
+
+  const errorMessage = firstAttempt.error.message?.toLowerCase() || "";
+  const isUnverifiedDomainError =
+    errorMessage.includes("domain") &&
+    errorMessage.includes("not verified") &&
+    !args.from.includes(RESEND_SANDBOX_FROM);
+
+  if (!isUnverifiedDomainError) {
+    return firstAttempt;
+  }
+
+  const senderNameMatch = args.from.match(/^(.*)<.*>$/);
+  const senderName = senderNameMatch ? senderNameMatch[1].trim() : "";
+  const fallbackFrom = senderName ? `${senderName} <${RESEND_SANDBOX_FROM}>` : RESEND_SANDBOX_FROM;
+
+  return resend.emails.send({
+    ...args,
+    from: fallbackFrom,
+  });
 }

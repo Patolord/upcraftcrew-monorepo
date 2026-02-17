@@ -2,7 +2,7 @@
   "common": {
     "cta": {
       "bookAudit": "Book a Codebase Review",
-      "getChecklist": "Get Free Checklist",
+      "getChecklist": "Book a Codebase Review",
       "startSprint": "Book a Codebase Review",
       "contactUs": "Contact Us"
     },
@@ -69,7 +69,7 @@
     },
     "description": "From refactoring fragile backends to building MVPs from scratch, we help founders move faster with confidence.",
     "primaryCta": "Book a Codebase Review",
-    "secondaryCta": "Get Free Checklist",
+    "secondaryCta": "See How We Fix It",
     "cards": {
       "left": {
         "badgeTitle": "Full Stack Expertise",
@@ -723,7 +723,7 @@
     },
     "resources": {
       "title": "Resources",
-      "items": ["Workflow Checklist", "Architecture Guide", "FAQs", "Community", "Blog"]
+      "items": ["Codebase Review Guide", "Architecture Guide", "FAQs", "Community", "Blog"]
     },
     "communityBadge": "New",
     "legal": {

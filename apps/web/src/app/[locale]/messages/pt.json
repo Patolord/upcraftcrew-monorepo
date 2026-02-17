@@ -2,7 +2,7 @@
   "common": {
     "cta": {
       "bookAudit": "Agendar Revisão de Código",
-      "getChecklist": "Baixar Checklist Grátis",
+      "getChecklist": "Agendar Revisão de Código",
       "startSprint": "Agendar Revisão de Código",
       "contactUs": "Fale Conosco"
     },
@@ -69,7 +69,7 @@
     },
     "description": "Da refatoração de backends frágeis à construção de MVPs do zero, ajudamos fundadores a avançar mais rápido com confiança.",
     "primaryCta": "Agendar Revisão de Código",
-    "secondaryCta": "Baixar Checklist Grátis",
+    "secondaryCta": "Veja Como Corrigimos",
     "cards": {
       "left": {
         "badgeTitle": "Expertise Full Stack",
@@ -726,7 +726,7 @@
     },
     "resources": {
       "title": "Recursos",
-      "items": ["Checklist de Fluxo", "Guia de Arquitetura", "FAQs", "Comunidade", "Blog"]
+      "items": ["Guia de Revisão de Código", "Guia de Arquitetura", "FAQs", "Comunidade", "Blog"]
     },
     "communityBadge": "Novo",
     "legal": {
