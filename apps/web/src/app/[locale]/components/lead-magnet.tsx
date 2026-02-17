@@ -26,7 +26,14 @@ export const LeadMagnet = () => {
 
     setIsLoading(true);
     try {
-      const result = await sendConsultationEmail(email);
+      const result = await sendConsultationEmail({
+        name: "Lead Magnet Request",
+        email,
+        company: "",
+        workflow: "Requested codebase checklist from lead magnet form.",
+        teamSize: "",
+        currentTools: [],
+      });
       if (result.success) {
         setIsSubmitted(true);
         toast.success("Checklist sent to your inbox!", {
