@@ -213,6 +213,7 @@ export default defineSchema({
     isPrivate: v.optional(v.boolean()),
     ownerId: v.optional(v.id("users")),
     labelIds: v.optional(v.array(v.id("taskLabels"))),
+    isArchived: v.optional(v.boolean()),
   })
     .index("by_status", ["status"])
     .index("by_assigned", ["assignedTo"])

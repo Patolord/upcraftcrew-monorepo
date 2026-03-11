@@ -1,9 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { getCurrentUser, getCurrentUserOrThrow, requireWrite } from "./users";
 import { throwNotFound, throwUnauthorized } from "./errors";
 
-// Helper to require auth
 async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
 }
@@ -12,7 +11,8 @@ async function requireAuth(ctx: any) {
 export const getLabels = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireAuth(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
 
     const labels = await ctx.db
       .query("taskLabels")

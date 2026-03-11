@@ -92,6 +92,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
   const [newLabelName, setNewLabelName] = useState("");
   const [newLabelColor, setNewLabelColor] = useState(LABEL_COLORS[0].value);
   const [showLabelCreator, setShowLabelCreator] = useState(false);
+  const [showLabelPanel, setShowLabelPanel] = useState(false);
 
   // Queries
   const task = useQuery(api.tasks.getTaskById, taskId ? { id: taskId } : "skip");
@@ -342,65 +343,76 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-md border-brand bg-admin-background"
-              >
-                <TagIcon className="size-4 mr-1 text-brand" /> Labels
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              {labels?.map((label) => (
-                <DropdownMenuItem
-                  key={label._id}
-                  onClick={() => handleToggleLabel(label._id)}
-                  className="flex items-center gap-2"
-                >
-                  <div className="size-4 rounded" style={{ backgroundColor: label.color }} />
-                  <span>{label.name}</span>
-                  {task.labelIds?.includes(label._id) && (
-                    <span className="ml-auto text-green-500">✓</span>
-                  )}
-                </DropdownMenuItem>
-              ))}
-              <Separator className="my-1" />
-              {showLabelCreator ? (
-                <div className="p-2 space-y-2">
-                  <Input
-                    placeholder="Label name"
-                    value={newLabelName}
-                    onChange={(e) => setNewLabelName(e.target.value)}
-                    className="h-8"
-                  />
-                  <div className="flex flex-wrap gap-1">
-                    {LABEL_COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        className={`size-5 rounded ${newLabelColor === color.value ? "ring-2 ring-offset-1 ring-primary" : ""}`}
-                        style={{ backgroundColor: color.value }}
-                        onClick={() => setNewLabelColor(color.value)}
-                      />
-                    ))}
+          <div className="relative">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-md border-brand bg-admin-background"
+              onClick={() => setShowLabelPanel(!showLabelPanel)}
+            >
+              <TagIcon className="size-4 mr-1 text-brand" /> Labels
+            </Button>
+            {showLabelPanel && (
+              <div className="absolute top-full left-0 z-50 mt-1 w-56 rounded-md border bg-popover p-1 shadow-md">
+                {labels?.map((label) => (
+                  <button
+                    key={label._id}
+                    onClick={() => handleToggleLabel(label._id)}
+                    className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent cursor-pointer"
+                  >
+                    <div className="size-4 rounded" style={{ backgroundColor: label.color }} />
+                    <span>{label.name}</span>
+                    {task.labelIds?.includes(label._id) && (
+                      <span className="ml-auto text-green-500">✓</span>
+                    )}
+                  </button>
+                ))}
+                <Separator className="my-1" />
+                {showLabelCreator ? (
+                  <div className="p-2 space-y-2">
+                    <Input
+                      placeholder="Label name"
+                      value={newLabelName}
+                      onChange={(e) => setNewLabelName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleCreateLabel();
+                        }
+                      }}
+                      autoFocus
+                      className="h-8"
+                    />
+                    <div className="flex flex-wrap gap-1">
+                      {LABEL_COLORS.map((color) => (
+                        <button
+                          key={color.value}
+                          className={`size-5 rounded cursor-pointer ${newLabelColor === color.value ? "ring-2 ring-offset-1 ring-primary" : ""}`}
+                          style={{ backgroundColor: color.value }}
+                          onClick={() => setNewLabelColor(color.value)}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex gap-1">
+                      <Button size="sm" className="flex-1" onClick={handleCreateLabel}>
+                        Criar
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setShowLabelCreator(false)}>
+                        Cancelar
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-1">
-                    <Button size="sm" className="flex-1" onClick={handleCreateLabel}>
-                      Criar
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => setShowLabelCreator(false)}>
-                      Cancelar
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <DropdownMenuItem onClick={() => setShowLabelCreator(true)}>
-                  <PlusIcon className="size-4 mr-2" /> Criar nova label
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                ) : (
+                  <button
+                    onClick={() => setShowLabelCreator(true)}
+                    className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent cursor-pointer"
+                  >
+                    <PlusIcon className="size-4" /> Criar nova label
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
