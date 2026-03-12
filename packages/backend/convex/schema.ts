@@ -2,6 +2,18 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  clients: defineTable({
+    name: v.string(),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    company: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_name", ["name"])
+    .index("by_created_at", ["createdAt"]),
+
   users: defineTable({
     // Clerk authentication
     clerkUserId: v.string(),
@@ -52,7 +64,8 @@ export default defineSchema({
 
   projects: defineTable({
     name: v.string(),
-    client: v.string(),
+    client: v.optional(v.string()), // Legacy, prefer clientId
+    clientId: v.optional(v.id("clients")),
     description: v.string(),
     status: v.union(v.literal("planning"), v.literal("in-progress"), v.literal("completed")),
     priority: v.union(
@@ -79,7 +92,9 @@ export default defineSchema({
       ),
     ),
     budgetId: v.optional(v.id("budgets")), // Reference to the budget this project was created from
-  }).index("by_manager", ["managerId"]),
+  })
+    .index("by_manager", ["managerId"])
+    .index("by_clientId", ["clientId"]),
 
   transactions: defineTable({
     description: v.string(),
@@ -88,12 +103,14 @@ export default defineSchema({
     category: v.string(),
     status: v.union(v.literal("pending"), v.literal("completed"), v.literal("failed")),
     date: v.number(),
-    clientId: v.optional(v.string()),
+    clientId: v.optional(v.string()), // Legacy client name
+    clientIdRef: v.optional(v.id("clients")), // Reference to clients table
     projectId: v.optional(v.id("projects")),
     imageUrl: v.optional(v.string()), // Comprovante/recibo da transação
   })
     .index("by_date", ["date"])
-    .index("by_project", ["projectId"]),
+    .index("by_project", ["projectId"])
+    .index("by_clientIdRef", ["clientIdRef"]),
 
   events: defineTable({
     title: v.string(),
@@ -115,7 +132,8 @@ export default defineSchema({
 
     // Basic info
     title: v.string(),
-    client: v.string(),
+    client: v.optional(v.string()), // Legacy, prefer clientId
+    clientId: v.optional(v.id("clients")),
     description: v.string(),
     status: v.union(
       v.literal("draft"),
@@ -184,6 +202,7 @@ export default defineSchema({
   })
     .index("by_status", ["status"])
     .index("by_client", ["client"])
+    .index("by_clientId", ["clientId"])
     .index("by_created_at", ["createdAt"])
     .index("by_type", ["type"]),
 

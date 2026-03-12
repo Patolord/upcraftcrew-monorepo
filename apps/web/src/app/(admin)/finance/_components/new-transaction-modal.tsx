@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { ClientSelect } from "@/components/client-select";
 import { toast } from "sonner";
 import { Loader2Icon, XIcon, PlusCircleIcon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
@@ -30,7 +31,7 @@ const initialFormData = {
   category: "project-payment" as TransactionCategory,
   status: "completed" as PaymentStatus,
   date: new Date().toISOString().split("T")[0],
-  clientId: "",
+  clientIdRef: undefined as Id<"clients"> | undefined,
   projectId: "",
   imageUrl: undefined as string | undefined,
 };
@@ -102,7 +103,7 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
         category: formData.category,
         status: formData.status,
         date: new Date(formData.date).getTime(),
-        clientId: formData.clientId || undefined,
+        clientIdRef: formData.clientIdRef,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         imageUrl: formData.imageUrl,
       });
@@ -331,15 +332,11 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                   </select>
                 </div>
                 <div>
-                  <Label htmlFor="clientId" className="text-sm font-medium mb-2 block">
-                    Cliente (Opcional)
-                  </Label>
-                  <Input
-                    id="clientId"
-                    placeholder="Nome do cliente"
-                    value={formData.clientId}
-                    onChange={(e) => setFormData({ ...formData, clientId: e.target.value })}
-                    className="border border-base-300 rounded-lg focus:border-orange-500"
+                  <Label className="text-sm font-medium mb-2 block">Cliente (Opcional)</Label>
+                  <ClientSelect
+                    value={formData.clientIdRef}
+                    onValueChange={(id) => setFormData({ ...formData, clientIdRef: id })}
+                    placeholder="Selecione um cliente"
                   />
                 </div>
               </div>

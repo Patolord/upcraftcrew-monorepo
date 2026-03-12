@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { ClientSelect } from "@/components/client-select";
 
 interface EditProjectModalProps {
   isOpen: boolean;
@@ -43,6 +44,7 @@ interface EditProjectModalProps {
     _id: Id<"projects">;
     name: string;
     client?: string;
+    clientId?: Id<"clients">;
     description: string;
     status: "planning" | "in-progress" | "completed";
     priority: "low" | "medium" | "high" | "urgent";
@@ -79,7 +81,7 @@ const PRIORITY_OPTIONS = [
 
 type FormData = {
   name: string;
-  client: string;
+  clientId: Id<"clients"> | "";
   description: string;
   status: ProjectStatus;
   priority: ProjectPriority;
@@ -99,7 +101,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
   const [formData, setFormData] = useState<FormData>({
     name: project.name,
-    client: project.client || "",
+    clientId: project.clientId || "",
     description: project.description,
     status: project.status,
     priority: project.priority,
@@ -117,7 +119,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
     if (project) {
       setFormData({
         name: project.name,
-        client: project.client || "",
+        clientId: project.clientId || "",
         description: project.description,
         status: project.status,
         priority: project.priority,
@@ -135,7 +137,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.client || !formData.description) {
+    if (!formData.name || !formData.clientId || !formData.description) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -151,7 +153,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
       await updateProject({
         id: project._id,
         name: formData.name,
-        client: formData.client,
+        clientId: formData.clientId as Id<"clients">,
         description: formData.description,
         status: formData.status,
         priority: formData.priority,
@@ -212,14 +214,11 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="client">Client *</Label>
-              <Input
-                id="client"
-                placeholder="Enter client name"
-                value={formData.client}
-                onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                className="rounded-lg"
-                required
+              <Label>Client *</Label>
+              <ClientSelect
+                value={formData.clientId}
+                onValueChange={(id) => setFormData({ ...formData, clientId: id })}
+                placeholder="Select client"
               />
             </div>
           </div>

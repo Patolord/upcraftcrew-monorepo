@@ -10,10 +10,12 @@
 
 import type * as admin from "../admin.js";
 import type * as budgets from "../budgets.js";
+import type * as clients from "../clients.js";
 import type * as errors from "../errors.js";
 import type * as finance from "../finance.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
+import type * as migrations from "../migrations.js";
 import type * as privateData from "../privateData.js";
 import type * as projects from "../projects.js";
 import type * as schedule from "../schedule.js";
@@ -31,10 +33,12 @@ import type { ApiFromModules, FilterApi, FunctionReference } from "convex/server
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   budgets: typeof budgets;
+  clients: typeof clients;
   errors: typeof errors;
   finance: typeof finance;
   healthCheck: typeof healthCheck;
   http: typeof http;
+  migrations: typeof migrations;
   privateData: typeof privateData;
   projects: typeof projects;
   schedule: typeof schedule;

@@ -35,7 +35,7 @@ export const getProjects = query({
     if (!user) return [];
     const projects = await ctx.db.query("projects").collect();
 
-    // Populate team members and manager for each project
+    // Populate team members, manager, and client for each project
     const projectsWithTeam = await Promise.all(
       projects.map(async (project) => {
         try {
@@ -43,9 +43,12 @@ export const getProjects = query({
             (project.teamIds || []).map((userId) => ctx.db.get(userId)),
           );
           const manager = project.managerId ? await ctx.db.get(project.managerId) : null;
+          const client = project.clientId ? await ctx.db.get(project.clientId) : null;
+          const clientDisplay = client?.name ?? project.client ?? undefined;
 
           return {
             ...project,
+            client: clientDisplay,
             team: team.filter((member) => member !== null).map(transformUserToTeamMember),
             manager: transformUserToTeamMember(manager),
           };
@@ -74,14 +77,17 @@ export const getProjectsPaginated = query({
       .order("desc")
       .paginate(args.paginationOpts);
 
-    // Populate team members and manager for each project in the page
+    // Populate team members, manager, and client for each project in the page
     const projectsWithTeam = await Promise.all(
       paginatedResult.page.map(async (project) => {
         const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
         const manager = await ctx.db.get(project.managerId);
+        const client = project.clientId ? await ctx.db.get(project.clientId) : null;
+        const clientDisplay = client?.name ?? project.client ?? undefined;
 
         return {
           ...project,
+          client: clientDisplay,
           team: team.filter((member) => member !== null).map(transformUserToTeamMember),
           manager: transformUserToTeamMember(manager),
         };
@@ -106,12 +112,15 @@ export const getProjectById = query({
       return null;
     }
 
-    // Populate team members and manager
+    // Populate team members, manager, and client
     const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
     const manager = await ctx.db.get(project.managerId);
+    const client = project.clientId ? await ctx.db.get(project.clientId) : null;
+    const clientDisplay = client?.name ?? project.client ?? undefined;
 
     return {
       ...project,
+      client: clientDisplay,
       team: team.filter((member) => member !== null).map(transformUserToTeamMember),
       manager: transformUserToTeamMember(manager),
     };
@@ -185,7 +194,7 @@ export const getProjectsByManager = query({
 export const createProject = mutation({
   args: {
     name: v.string(),
-    client: v.string(),
+    clientId: v.id("clients"),
     description: v.string(),
     status: v.union(
       v.literal("planning"),
@@ -243,7 +252,7 @@ export const updateProject = mutation({
   args: {
     id: v.id("projects"),
     name: v.optional(v.string()),
-    client: v.optional(v.string()),
+    clientId: v.optional(v.id("clients")),
     description: v.optional(v.string()),
     status: v.optional(
       v.union(v.literal("planning"), v.literal("in-progress"), v.literal("completed")),
@@ -448,13 +457,14 @@ export const createProjectFromBudget = mutation({
 
     console.log("Creating project with data:", {
       name: budget.title,
-      client: budget.client,
+      clientId: budget.clientId,
       description: budget.description,
       managerId: user._id,
     });
 
     const projectId = await ctx.db.insert("projects", {
       name: budget.title,
+      clientId: budget.clientId,
       client: budget.client,
       description: budget.description ?? "",
       status: "planning",

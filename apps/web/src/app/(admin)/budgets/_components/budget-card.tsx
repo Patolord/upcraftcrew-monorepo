@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import Link from "next/link";
 import {
   EyeIcon,
   CalendarIcon,
@@ -84,6 +85,7 @@ interface Budget {
   type?: "budget" | "proposal";
   title: string;
   client: string;
+  clientId?: Id<"clients">;
   description: string;
   status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
@@ -181,7 +183,18 @@ export function BudgetCard({ budget }: { budget: Budget }) {
             </Badge>
           </div>
           <CardTitle className="text-base md:text-lg truncate">{budget.title}</CardTitle>
-          <CardDescription className="mt-1 text-sm truncate">{budget.client}</CardDescription>
+          <CardDescription className="mt-1 text-sm truncate">
+            {budget.clientId ? (
+              <Link
+                href={`/clients/${budget.clientId}`}
+                className="hover:text-orange-600 hover:underline"
+              >
+                {budget.client}
+              </Link>
+            ) : (
+              budget.client
+            )}
+          </CardDescription>
         </div>
         <div className="shrink-0">
           {/* Status Dropdown */}

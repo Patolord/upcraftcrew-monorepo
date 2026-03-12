@@ -17,7 +17,7 @@ interface SelectValueProps extends SelectPrimitive.Value.Props {
 function SelectValue({ className, placeholder, ...props }: SelectValueProps) {
   return (
     <SelectPrimitive.Value data-slot="select-value" className={cn("text-sm", className)} {...props}>
-      {(value) => value.value ?? placeholder}
+      {(value) => value?.value ?? placeholder}
     </SelectPrimitive.Value>
   );
 }
