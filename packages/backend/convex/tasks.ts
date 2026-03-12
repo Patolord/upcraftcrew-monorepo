@@ -1,11 +1,17 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { getCurrentUser, getCurrentUserOrThrow, requireWrite } from "./users";
 import { throwNotFound, throwUnauthorized } from "./errors";
 
 // Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
+}
+
+// Soft auth check for queries - returns null instead of throwing when
+// the client-side subscription fires before Clerk has loaded the auth token
+async function softAuth(ctx: any) {
+  return await getCurrentUser(ctx);
 }
 
 // Helper to transform user to assignedUser format
@@ -22,27 +28,25 @@ function transformUserToAssignedUser(user: any) {
 export const getTasks = query({
   args: {},
   handler: async (ctx) => {
-    const user = await requireAuth(ctx);
+    const user = await softAuth(ctx);
+    if (!user) return [];
+
     const allTasks = await ctx.db.query("tasks").withIndex("by_created_at").order("desc").collect();
 
-    // Filter tasks: show all public tasks + user's private tasks
-    // Tasks without isPrivate field are treated as public (false)
     const tasks = allTasks.filter(
-      (task) => !(task.isPrivate ?? false) || task.ownerId === user._id,
+      (task) =>
+        !(task.isArchived ?? false) && (!(task.isPrivate ?? false) || task.ownerId === user._id),
     );
 
-    // Populate assigned user, project, labels, and subtask stats
     const tasksWithDetails = await Promise.all(
       tasks.map(async (task) => {
         const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
-        // Get labels
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
           : [];
 
-        // Get subtask stats
         const subtasks = await ctx.db
           .query("subtasks")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -52,7 +56,6 @@ export const getTasks = query({
           completed: subtasks.filter((s) => s.completed).length,
         };
 
-        // Get comment count
         const comments = await ctx.db
           .query("taskComments")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -421,6 +424,22 @@ export const updateTaskStatus = mutation({
       updatedAt: Date.now(),
     });
 
+    return { success: true };
+  },
+});
+
+export const archiveTask = mutation({
+  args: { id: v.id("tasks") },
+  handler: async (ctx, args) => {
+    await requireWrite(ctx);
+    const task = await ctx.db.get(args.id);
+    if (!task) {
+      throwNotFound("Task");
+    }
+    await ctx.db.patch(args.id, {
+      isArchived: true,
+      updatedAt: Date.now(),
+    });
     return { success: true };
   },
 });

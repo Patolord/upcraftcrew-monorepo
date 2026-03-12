@@ -1,10 +1,13 @@
 "use client";
 
-import { MessageSquare, CheckSquare, Calendar } from "lucide-react";
+import { Calendar, Archive } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/convex-errors";
 import React from "react";
 
 type TaskPriority = "low" | "medium" | "high" | "urgent";
@@ -41,71 +44,41 @@ interface Task {
 
 interface TaskCardProps {
   task: Task;
+  columnStatus?: string;
   onClick?: () => void;
 }
 
-const priorityConfig: Record<TaskPriority, { label: string; color: string; bgColor: string }> = {
-  low: { label: "Low Priority", color: "#65a30d", bgColor: "#ecfccb" },
-  medium: { label: "Medium", color: "#d97706", bgColor: "#fef3c7" },
-  high: { label: "High Priority", color: "#ea580c", bgColor: "#ffedd5" },
-  urgent: { label: "Urgent", color: "#dc2626", bgColor: "#fee2e2" },
-};
+export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
+  const archiveTask = useMutation(api.tasks.archiveTask);
+  const isDone = columnStatus === "done";
 
-export function TaskCard({ task, onClick }: TaskCardProps) {
-  const priorityStyle = priorityConfig[task.priority];
-  const hasSubtasks = task.subtaskStats && task.subtaskStats.total > 0;
-  const commentCount = task.commentCount ?? 0;
+  const handleArchive = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await archiveTask({ id: task._id });
+      toast.success("Tarefa arquivada!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
 
   return (
     <Card
       className="kanban-card cursor-pointer hover:shadow-md transition-all duration-200 rounded-xl border bg-card"
       onClick={onClick}
     >
-      <CardContent className="p-4 space-y-3">
-        {/* Labels Row */}
-        <div className="flex flex-wrap gap-1">
-          {/* Priority Badge */}
-          <Badge
-            className="text-[10px] px-2 py-0.5 font-medium border-0 rounded-md"
-            style={{
-              backgroundColor: priorityStyle.bgColor,
-              color: priorityStyle.color,
-            }}
-          >
-            {priorityStyle.label}
-          </Badge>
+      <CardContent className="p-3 space-y-1.5">
+        <h4 className="font-semibold text-sm line-clamp-1 text-foreground">{task.title}</h4>
 
-          {/* Custom Labels */}
-          {task.labels?.slice(0, 2).map((label) => (
-            <Badge
-              key={label._id}
-              className="text-[10px] px-2 py-0.5 font-medium border-0 rounded-md text-white"
-              style={{ backgroundColor: label.color }}
-            >
-              {label.name}
-            </Badge>
-          ))}
-          {task.labels && task.labels.length > 2 && (
-            <Badge variant="secondary" className="text-[10px] px-2 py-0.5 rounded-md">
-              +{task.labels.length - 2}
-            </Badge>
-          )}
-        </div>
-
-        {/* Title */}
-        <h4 className="font-semibold text-sm line-clamp-2 text-foreground">{task.title}</h4>
-
-        {/* Description */}
-        {task.description && (
-          <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
+        {task.description && task.description !== "Sem descrição" && (
+          <p className="text-xs text-muted-foreground line-clamp-1">{task.description}</p>
         )}
 
-        {/* Avatar Group */}
-        {task.assignedUser && (
-          <div className="flex -space-x-2">
-            <Avatar className="size-7 border-2 border-background ring-1 ring-background">
+        <div className="flex items-center justify-between pt-1">
+          {task.assignedUser ? (
+            <Avatar className="size-6 border-2 border-background">
               <AvatarImage src={task.assignedUser.imageUrl} alt={task.assignedUser.name} />
-              <AvatarFallback className="text-xs bg-gradient-to-br from-orange-400 to-pink-500 text-white">
+              <AvatarFallback className="text-[10px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
                 {task.assignedUser.name
                   ?.split(" ")
                   .map((n) => n[0])
@@ -114,42 +87,30 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
                   .slice(0, 2)}
               </AvatarFallback>
             </Avatar>
-          </div>
-        )}
+          ) : (
+            <span />
+          )}
 
-        {/* Footer with metadata */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-          <div className="flex items-center gap-3 text-muted-foreground">
-            {/* Comment Count */}
-            {commentCount > 0 && (
-              <div className="flex items-center gap-1">
-                <MessageSquare className="size-3.5" />
-                <span className="text-xs">{commentCount}</span>
-              </div>
-            )}
-
-            {/* Subtask Count */}
-            {hasSubtasks && (
-              <div className="flex items-center gap-1">
-                <CheckSquare className="size-3.5" />
+          {isDone ? (
+            <button
+              onClick={handleArchive}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+              title="Arquivar tarefa"
+            >
+              <Archive className="size-3.5" />
+            </button>
+          ) : (
+            task.dueDate && (
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Calendar className="size-3.5" />
                 <span className="text-xs">
-                  {task.subtaskStats!.completed}/{task.subtaskStats!.total}
+                  {new Date(task.dueDate).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </span>
               </div>
-            )}
-          </div>
-
-          {/* Due date */}
-          {task.dueDate && (
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Calendar className="size-3.5" />
-              <span className="text-xs">
-                {new Date(task.dueDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-            </div>
+            )
           )}
         </div>
       </CardContent>

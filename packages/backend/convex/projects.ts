@@ -1,10 +1,9 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUserOrThrow, requireMember } from "./users";
+import { getCurrentUser, getCurrentUserOrThrow, requireMember } from "./users";
 import { throwNotFound } from "./errors";
 import { paginationOptsValidator } from "convex/server";
 
-// Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
 }
@@ -32,7 +31,8 @@ function transformUserToTeamMember(user: any) {
 export const getProjects = query({
   args: {},
   handler: async (ctx) => {
-    await requireAuth(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
     const projects = await ctx.db.query("projects").collect();
 
     // Populate team members and manager for each project

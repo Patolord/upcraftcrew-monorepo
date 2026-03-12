@@ -18,6 +18,8 @@ import {
   PlusIcon,
   Lock,
   Globe,
+  CheckSquare,
+  Trash2,
 } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
@@ -57,6 +59,8 @@ export function NewTaskModal({
 }: NewTaskModalProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checklistItems, setChecklistItems] = useState<string[]>([]);
+  const [newChecklistItem, setNewChecklistItem] = useState("");
   const { error, clearError, handleError } = useConvexError();
 
   const [formData, setFormData] = useState({
@@ -72,6 +76,7 @@ export function NewTaskModal({
   });
 
   const createTask = useMutation(api.tasks.createTask);
+  const createSubtask = useMutation(api.subtasks.createSubtask);
   const teamMembers = useQuery(api.team.getTeamMembers);
   const projects = useQuery(api.projects.getProjects);
 
@@ -89,7 +94,9 @@ export function NewTaskModal({
         imageUrls: [],
         isPrivate: false,
       });
-      setShowAdvanced(!!defaultProjectId); // Show advanced if project is pre-selected
+      setChecklistItems([]);
+      setNewChecklistItem("");
+      setShowAdvanced(!!defaultProjectId);
       clearError();
     }
   }, [open, defaultStatus, defaultProjectId, clearError]);
@@ -127,7 +134,7 @@ export function NewTaskModal({
 
     setIsSubmitting(true);
     try {
-      await createTask({
+      const taskId = await createTask({
         title: formData.title,
         description: formData.description || "Sem descrição",
         status: formData.status,
@@ -138,6 +145,12 @@ export function NewTaskModal({
         imageUrls: formData.imageUrls.length > 0 ? formData.imageUrls : undefined,
         isPrivate: formData.isPrivate,
       });
+
+      if (checklistItems.length > 0) {
+        for (const item of checklistItems) {
+          await createSubtask({ taskId, title: item });
+        }
+      }
 
       toast.success("Tarefa criada com sucesso!");
       onOpenChange(false);
@@ -402,6 +415,65 @@ export function NewTaskModal({
                       disabled={isSubmitting}
                       maxImages={10}
                     />
+                  </div>
+
+                  {/* Checklist */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">
+                      <CheckSquare className="size-4 inline mr-1.5 -mt-0.5" />
+                      Checklist
+                    </Label>
+                    {checklistItems.length > 0 && (
+                      <ul className="space-y-1.5 mb-2">
+                        {checklistItems.map((item, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center gap-2 p-2 rounded-lg border border-base-300 bg-muted/20"
+                          >
+                            <CheckSquare className="size-3.5 text-muted-foreground shrink-0" />
+                            <span className="text-sm flex-1 truncate">{item}</span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setChecklistItems(checklistItems.filter((_, i) => i !== index))
+                              }
+                              className="text-muted-foreground hover:text-destructive shrink-0"
+                            >
+                              <Trash2 className="size-3.5" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Adicionar item..."
+                        value={newChecklistItem}
+                        onChange={(e) => setNewChecklistItem(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && newChecklistItem.trim()) {
+                            e.preventDefault();
+                            setChecklistItems([...checklistItems, newChecklistItem.trim()]);
+                            setNewChecklistItem("");
+                          }
+                        }}
+                        className="border border-base-300 rounded-lg focus:border-orange-500"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        disabled={!newChecklistItem.trim()}
+                        onClick={() => {
+                          if (newChecklistItem.trim()) {
+                            setChecklistItems([...checklistItems, newChecklistItem.trim()]);
+                            setNewChecklistItem("");
+                          }
+                        }}
+                      >
+                        <PlusIcon className="size-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}

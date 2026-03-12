@@ -76,13 +76,13 @@ interface TaskKanbanBoardProps {
   onAddTask?: (status: TaskStatus) => void;
 }
 
-// Draggable Task Card Component
 interface DraggableTaskCardProps {
   task: Task;
+  columnStatus: TaskStatus;
   onClick?: () => void;
 }
 
-function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
+function DraggableTaskCard({ task, columnStatus, onClick }: DraggableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task._id,
   });
@@ -93,9 +93,7 @@ function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  // Handle click separately from drag
   const handleClick = () => {
-    // Only trigger click if it's not a drag
     if (!isDragging && onClick) {
       onClick();
     }
@@ -103,7 +101,7 @@ function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} onClick={handleClick}>
-      <TaskCard task={task} />
+      <TaskCard task={task} columnStatus={columnStatus} />
     </div>
   );
 }
@@ -194,9 +192,9 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
           items={column.tasks.map((t) => t._id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-320px)] pr-1">
+          <div className="space-y-2 overflow-y-auto max-h-[calc(100vh-280px)] pr-1">
             {column.tasks.length === 0 ? (
-              <div className="flex items-center justify-center h-32 border-2 border-dashed border-muted-foreground/20 rounded-xl text-muted-foreground mx-1">
+              <div className="flex items-center justify-center h-24 border-2 border-dashed border-muted-foreground/20 rounded-xl text-muted-foreground mx-1">
                 <p className="text-xs">No tasks yet</p>
               </div>
             ) : (
@@ -204,6 +202,7 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
                 <DraggableTaskCard
                   key={task._id}
                   task={task}
+                  columnStatus={column.id}
                   onClick={() => onTaskClick?.(task._id)}
                 />
               ))

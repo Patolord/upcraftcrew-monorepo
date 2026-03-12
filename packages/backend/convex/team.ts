@@ -1,9 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUserOrThrow, requireWrite } from "./users";
+import { getCurrentUser, getCurrentUserOrThrow, requireWrite } from "./users";
 import { throwNotFound, throwAlreadyExists } from "./errors";
 
-// Helper to require auth and return user (for backwards compatibility)
 async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
 }
@@ -12,7 +11,8 @@ async function requireAuth(ctx: any) {
 export const getTeamMembers = query({
   args: {},
   handler: async (ctx) => {
-    await requireAuth(ctx);
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
     const members = await ctx.db.query("users").collect();
 
     // Populate projects for each member
