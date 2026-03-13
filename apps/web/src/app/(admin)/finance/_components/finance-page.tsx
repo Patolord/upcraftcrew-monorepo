@@ -15,6 +15,7 @@ import { TransactionsListModal } from "./transactions-list-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
 interface FinancePageProps {
@@ -34,12 +35,91 @@ export function FinancePage({
   const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
   const [isTransactionsListModalOpen, setIsTransactionsListModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currency, setCurrency] = useState<CurrencyCode>("BRL");
+
+  const filteredTransactions = useMemo(() => {
+    if (!transactions) return [];
+    return transactions.filter((t) => {
+      const txCurrency = ("currency" in t && t.currency) || "BRL";
+      return txCurrency === currency;
+    });
+  }, [transactions, currency]);
+
+  const currencySummary = useMemo(() => {
+    const completed = filteredTransactions.filter((t) => t.status === "completed");
+    const totalIncome = completed
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = completed
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+    const pendingIncome = filteredTransactions
+      .filter((t) => t.type === "income" && t.status === "pending")
+      .reduce((sum, t) => sum + t.amount, 0);
+    const pendingExpenses = filteredTransactions
+      .filter((t) => t.type === "expense" && t.status === "pending")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      totalIncome,
+      totalExpenses,
+      netProfit: totalIncome - totalExpenses,
+      pendingIncome,
+      pendingExpenses,
+    };
+  }, [filteredTransactions]);
+
+  const filteredYearlyExpenses = useMemo(() => {
+    if (!yearlyExpenses) return undefined;
+
+    const currentDate = new Date();
+    const targetYear = yearlyExpenses.year;
+    const monthNames = [
+      "Jan",
+      "Fev",
+      "Mar",
+      "Abr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Set",
+      "Out",
+      "Nov",
+      "Dez",
+    ];
+
+    const monthlyData = monthNames.map((month, index) => {
+      const monthExpenses = filteredTransactions
+        .filter((t) => {
+          const transactionDate = new Date(t.date);
+          return (
+            t.type === "expense" &&
+            t.status === "completed" &&
+            transactionDate.getMonth() === index &&
+            transactionDate.getFullYear() === targetYear
+          );
+        })
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      return {
+        month,
+        value: monthExpenses,
+        isHighlighted: index === currentDate.getMonth() && targetYear === currentDate.getFullYear(),
+      };
+    });
+
+    const totalExpenses = monthlyData.reduce((sum, m) => sum + m.value, 0);
+
+    return {
+      monthlyData,
+      averageMonthly: totalExpenses / 12,
+    };
+  }, [filteredTransactions, yearlyExpenses]);
 
   // Transform transactions from Convex format to UI format
   const transformedTransactions = useMemo(() => {
-    if (!transactions) return [];
-
-    return transactions.map((t) => ({
+    return filteredTransactions.map((t) => ({
       id: t._id,
       title: t.description,
       description: t.description,
@@ -52,13 +132,17 @@ export function FinancePage({
       projectName: "project" in t ? t.project?.name : undefined,
       client: "client" in t ? t.client : t.clientId,
     }));
-  }, [transactions]);
+  }, [filteredTransactions]);
 
-  // Show loading state while data is being fetched
   if (!financialSummary) {
     return (
       <div className="p-4 md:p-6 md:pl-12 md:pr-12 space-y-4 md:space-y-6">
-        <FinanceHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <FinanceHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          currency={currency}
+          onCurrencyChange={setCurrency}
+        />
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
             <Skeleton className="h-12 w-12 rounded-full mx-auto" />
@@ -72,18 +156,18 @@ export function FinancePage({
   return (
     <div className="p-4 md:p-6 md:pl-12 md:pr-12 space-y-4 md:space-y-6">
       {/* Header */}
-      <FinanceHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <FinanceHeader
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        currency={currency}
+        onCurrencyChange={setCurrency}
+      />
 
       {/* Stats Section */}
       <FinanceStats
-        summary={{
-          totalIncome: financialSummary.totalIncome,
-          totalExpenses: financialSummary.totalExpense,
-          netProfit: financialSummary.balance,
-          pendingIncome: financialSummary.pendingIncome,
-          pendingExpenses: financialSummary.pendingExpense,
-        }}
+        summary={currencySummary}
         totalTransactions={transformedTransactions.length}
+        currency={currency}
       />
 
       {/* Add Transaction Button */}
@@ -107,27 +191,30 @@ export function FinancePage({
         {/* Balance Card - Takes 2 columns */}
         <div className="lg:col-span-2">
           <FinanceBalanceCard
-            totalIncome={financialSummary.totalIncome}
-            netProfit={financialSummary.balance}
+            totalIncome={currencySummary.totalIncome}
+            netProfit={currencySummary.netProfit}
+            currency={currency}
           />
         </div>
         {/* Transfers Card */}
         <div className="lg:col-span-1">
           <FinanceTransfersCard
-            transactions={transactions}
+            transactions={filteredTransactions}
             onViewAll={() => setIsTransactionsListModalOpen(true)}
+            currency={currency}
           />
         </div>
         {/* Credit Balance Card */}
         <div className="lg:col-span-1">
-          <FinanceCreditCard transactions={transactions} />
+          <FinanceCreditCard transactions={filteredTransactions} currency={currency} />
         </div>
         {/* Total Spent Card - Takes 2 columns */}
         <div className="lg:col-span-2">
           <FinanceSpentCard
-            totalSpent={financialSummary.totalExpense}
-            monthlyData={yearlyExpenses?.monthlyData}
-            averageMonthly={yearlyExpenses?.averageMonthly}
+            totalSpent={currencySummary.totalExpenses}
+            monthlyData={filteredYearlyExpenses?.monthlyData}
+            averageMonthly={filteredYearlyExpenses?.averageMonthly}
+            currency={currency}
           />
         </div>
       </div>
@@ -142,7 +229,7 @@ export function FinancePage({
       <TransactionsListModal
         isOpen={isTransactionsListModalOpen}
         onClose={() => setIsTransactionsListModalOpen(false)}
-        transactions={transactions}
+        transactions={filteredTransactions}
       />
     </div>
   );

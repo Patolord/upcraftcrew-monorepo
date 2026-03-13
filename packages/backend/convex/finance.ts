@@ -268,6 +268,7 @@ export const createTransaction = mutation({
     type: v.union(v.literal("income"), v.literal("expense")),
     category: v.string(),
     status: v.union(v.literal("pending"), v.literal("completed"), v.literal("failed")),
+    currency: v.optional(v.string()),
     date: v.number(),
     clientId: v.optional(v.string()), // Legacy client name
     clientIdRef: v.optional(v.id("clients")), // Reference to clients table
@@ -279,6 +280,7 @@ export const createTransaction = mutation({
     const { clientIdRef, ...insertArgs } = args;
     const transactionId = await ctx.db.insert("transactions", {
       ...insertArgs,
+      currency: insertArgs.currency ?? "BRL",
       ...(clientIdRef && { clientIdRef }),
     });
 
@@ -307,6 +309,7 @@ export const updateTransaction = mutation({
     type: v.optional(v.union(v.literal("income"), v.literal("expense"))),
     category: v.optional(v.string()),
     status: v.optional(v.union(v.literal("pending"), v.literal("completed"), v.literal("failed"))),
+    currency: v.optional(v.string()),
     date: v.optional(v.number()),
     clientId: v.optional(v.string()), // Legacy
     clientIdRef: v.optional(v.id("clients")),

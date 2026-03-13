@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowRightIcon, WalletIcon } from "lucide-react";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 
@@ -22,6 +23,7 @@ interface Transaction {
 interface FinanceTransfersCardProps {
   transactions: Transaction[];
   onViewAll?: () => void;
+  currency?: CurrencyCode;
 }
 
 function formatTransactionDate(timestamp: number): string {
@@ -57,7 +59,12 @@ function getCategoryIcon(category: string): string {
   return icons[category] || "📦";
 }
 
-export function FinanceTransfersCard({ transactions, onViewAll }: FinanceTransfersCardProps) {
+export function FinanceTransfersCard({
+  transactions,
+  onViewAll,
+  currency = "BRL",
+}: FinanceTransfersCardProps) {
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
   // Get the most recent transactions (limit to 3)
   const recentTransactions = useMemo(() => {
     return [...transactions].sort((a, b) => b.date - a.date).slice(0, 3);
@@ -107,8 +114,9 @@ export function FinanceTransfersCard({ transactions, onViewAll }: FinanceTransfe
                   transaction.type === "income" ? "text-emerald-500" : "text-rose-500"
                 }`}
               >
-                {transaction.type === "income" ? "+" : "-"}R${" "}
-                {transaction.amount.toLocaleString("pt-BR")}
+                {transaction.type === "income" ? "+" : "-"}
+                {currencySymbol}{" "}
+                {transaction.amount.toLocaleString(currency === "BRL" ? "pt-BR" : "en-US")}
               </span>
             </div>
           ))}

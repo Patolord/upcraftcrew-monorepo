@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, LogOutIcon, MoonIcon, SunIcon, UserIcon } from "lucide-react";
+import { ChevronDownIcon, LogOutIcon, MoonIcon, Search, SunIcon, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import React from "react";
 import { useTheme } from "@/hooks/use-theme";
 import Link from "next/link";
 
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +17,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CurrencySwitch, type CurrencyCode } from "@/components/ui/currency-switch";
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  searchQuery?: string;
+  onSearchChange?: (value: string) => void;
+  currency: CurrencyCode;
+  onCurrencyChange: (currency: CurrencyCode) => void;
+}
+
+export function DashboardHeader({
+  searchQuery = "",
+  onSearchChange,
+  currency,
+  onCurrencyChange,
+}: DashboardHeaderProps) {
   const router = useRouter();
   const { user } = useUser();
   const { theme, toggleTheme, mounted } = useTheme();
@@ -35,57 +49,120 @@ export function DashboardHeader() {
   const userName = user?.firstName || "User";
 
   return (
-    <header className="flex items-center justify-between py-2">
-      {/* Left side - Profile Avatar and Title */}
-      <div className="flex items-center gap-3">
-        <Link href="/profile" className="group"></Link>
-        <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">
-          Dashboard
-        </h1>
+    <header className="flex flex-col gap-4 py-2 md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-6">
+      {/* Left side - Title */}
+      <div className="flex items-center justify-between md:justify-start">
+        <div className="flex items-center gap-3">
+          <Link href="/profile" className="group"></Link>
+          <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">
+            Dashboard
+          </h1>
+        </div>
+
+        {/* User avatar - visible on mobile only in this position */}
+        <div className="md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer outline-none">
+              <Avatar className="size-9 ring-2 ring-pink-300 ring-offset-2">
+                <AvatarImage src={user?.imageUrl} alt={userName} />
+                <AvatarFallback className="bg-pink-400 text-white text-sm font-medium">
+                  {userInitials}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
+                <UserIcon className="size-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
+                {mounted && theme === "dark" ? (
+                  <>
+                    <SunIcon className="size-4" />
+                    Light mode
+                  </>
+                ) : (
+                  <>
+                    <MoonIcon className="size-4" />
+                    Dark mode
+                  </>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <SignOutButton>
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="cursor-pointer text-destructive"
+                >
+                  <LogOutIcon className="size-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </SignOutButton>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
-      {/* Right side - User */}
-      <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center gap-2 md:gap-3 cursor-pointer outline-none">
-          <Avatar className="size-9 md:size-10 ring-2 ring-pink-300 ring-offset-2">
-            <AvatarImage src={user?.imageUrl} alt={userName} />
-            <AvatarFallback className="bg-pink-400 text-white text-sm font-medium">
-              {userInitials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="text-sm font-medium text-foreground">{userName}</span>
-            <ChevronDownIcon className="size-4 text-muted-foreground" />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
-          <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
-            <UserIcon className="size-4" />
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
-            {mounted && theme === "dark" ? (
-              <>
-                <SunIcon className="size-4" />
-                Light mode
-              </>
-            ) : (
-              <>
-                <MoonIcon className="size-4" />
-                Dark mode
-              </>
-            )}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <SignOutButton>
-            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-              <LogOutIcon className="size-4" />
-              Sign out
+      {/* Center - Search + Currency Switch */}
+      <div className="flex items-center gap-2 justify-center">
+        <div className="relative flex-1 max-w-md">
+          <Input
+            type="search"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            className="w-full h-10 md:h-11 pl-5 pr-12 rounded-full bg-white dark:bg-muted/50 border-0 shadow-sm text-sm"
+          />
+          <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground pointer-events-none" />
+        </div>
+        <CurrencySwitch value={currency} onChange={onCurrencyChange} />
+      </div>
+
+      {/* Right side - User (desktop only) */}
+      <div className="hidden md:block">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-3 cursor-pointer outline-none">
+            <Avatar className="size-10 ring-2 ring-pink-300 ring-offset-2">
+              <AvatarImage src={user?.imageUrl} alt={userName} />
+              <AvatarFallback className="bg-pink-400 text-white text-sm font-medium">
+                {userInitials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-foreground">{userName}</span>
+              <ChevronDownIcon className="size-4 text-muted-foreground" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
+            <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
+              <UserIcon className="size-4" />
+              Profile
             </DropdownMenuItem>
-          </SignOutButton>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
+              {mounted && theme === "dark" ? (
+                <>
+                  <SunIcon className="size-4" />
+                  Light mode
+                </>
+              ) : (
+                <>
+                  <MoonIcon className="size-4" />
+                  Dark mode
+                </>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <SignOutButton>
+              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+                <LogOutIcon className="size-4" />
+                Sign out
+              </DropdownMenuItem>
+            </SignOutButton>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { usePreloadedQuery, type Preloaded } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
 import { DashboardHeader } from "./dashboard-header";
@@ -55,6 +56,7 @@ interface Transaction {
   type: "income" | "expense";
   category: string;
   status: "pending" | "completed" | "failed";
+  currency?: string;
   date: number;
   projectId?: Id<"projects">;
 }
@@ -88,12 +90,18 @@ export function DashboardPage({
   const transactions = usePreloadedQuery(preloadedTransactions) as Transaction[];
   const budgets = usePreloadedQuery(preloadedBudgets) as Budget[];
 
-  // Calculate overview stats
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currency, setCurrency] = useState<CurrencyCode>("BRL");
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) => (t.currency || "BRL") === currency);
+  }, [transactions, currency]);
+
   const stats = useMemo(() => {
     const activeProjects = projects.filter((p) => p.status === "in-progress").length;
     const activeMembers = teamMembers.filter((m) => m.status === "online").length;
 
-    const completedTransactions = transactions.filter((t) => t.status === "completed");
+    const completedTransactions = filteredTransactions.filter((t) => t.status === "completed");
     const totalRevenue = completedTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
@@ -111,30 +119,33 @@ export function DashboardPage({
       netProfit: totalRevenue - totalExpenses,
       avgProgress,
     };
-  }, [projects, teamMembers, transactions]);
-
-  // Error handling
-  // const hasError = !projects && !teamMembers && !transactions;
+  }, [projects, teamMembers, filteredTransactions]);
 
   return (
     <div className="p-4 md:p-6 pb-2 space-y-4 md:space-y-6">
       {/* Header with Search and User */}
-      <DashboardHeader />
+      <DashboardHeader
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        currency={currency}
+        onCurrencyChange={setCurrency}
+      />
 
       {/* Stats Cards */}
       <DashboardStats
         stats={stats}
         totalProjects={projects.length}
         totalMembers={teamMembers.length}
+        currency={currency}
       />
 
       {/* Statistics Chart + Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2">
-          <DashboardStatisticsChart transactions={transactions} />
+          <DashboardStatisticsChart transactions={filteredTransactions} currency={currency} />
         </div>
         <div>
-          <DashboardTransactions transactions={transactions} />
+          <DashboardTransactions transactions={filteredTransactions} currency={currency} />
         </div>
       </div>
 

@@ -102,11 +102,12 @@ export default defineSchema({
     type: v.union(v.literal("income"), v.literal("expense")),
     category: v.string(),
     status: v.union(v.literal("pending"), v.literal("completed"), v.literal("failed")),
+    currency: v.optional(v.string()),
     date: v.number(),
     clientId: v.optional(v.string()), // Legacy client name
     clientIdRef: v.optional(v.id("clients")), // Reference to clients table
     projectId: v.optional(v.id("projects")),
-    imageUrl: v.optional(v.string()), // Comprovante/recibo da transação
+    imageUrl: v.optional(v.string()),
   })
     .index("by_date", ["date"])
     .index("by_project", ["projectId"])

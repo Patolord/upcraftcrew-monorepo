@@ -27,11 +27,14 @@ interface Transaction {
 
 interface StatisticsChartProps {
   transactions: Transaction[];
+  currency?: string;
 }
 
 type TimeFilter = "daily" | "weekly" | "monthly" | "yearly";
 
-export function DashboardStatisticsChart({ transactions }: StatisticsChartProps) {
+export function DashboardStatisticsChart({ transactions, currency = "BRL" }: StatisticsChartProps) {
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
+  const locale = currency === "BRL" ? "pt-BR" : "en-US";
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("monthly");
 
   // Filter only completed transactions
@@ -236,7 +239,7 @@ export function DashboardStatisticsChart({ transactions }: StatisticsChartProps)
               />
               <Tooltip
                 formatter={(value: number, name: string) => [
-                  `R$ ${value.toLocaleString("pt-BR")}`,
+                  `${currencySymbol} ${value.toLocaleString(locale)}`,
                   name === "income" ? "Receita" : "Despesa",
                 ]}
                 contentStyle={{
