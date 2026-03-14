@@ -14,7 +14,10 @@
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F @up-craft-crew-app/backend dev",
     "dev:setup": "turbo -F @up-craft-crew-app/backend dev:setup",
-    "check": "oxlint && oxfmt --write",
+    "lint": "oxlint",
+    "format:check": "oxfmt --check .",
+    "format:write": "oxfmt --write .",
+    "check": "pnpm lint && pnpm format:check",
     "prepare": "husky"
   },
   "dependencies": {
