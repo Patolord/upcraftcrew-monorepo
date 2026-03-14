@@ -6,6 +6,7 @@ import {
   FolderOpenIcon,
   KanbanIcon,
   UserIcon,
+  UserCircleIcon,
   CalendarDaysIcon,
   UsersIcon,
 } from "lucide-react";
@@ -26,6 +27,11 @@ const bottomNavItems = [
     title: "Projetos",
     url: "/projects",
     icon: FolderOpenIcon,
+  },
+  {
+    title: "Clientes",
+    url: "/clients",
+    icon: UserCircleIcon,
   },
   {
     title: "Kanban",

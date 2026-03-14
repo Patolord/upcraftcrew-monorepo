@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 import { Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import { ClientSelect } from "@/components/client-select";
 
 interface NewProjectModalProps {
   isOpen: boolean;
@@ -60,7 +61,7 @@ const PRIORITY_OPTIONS = [
 
 type FormData = {
   name: string;
-  client: string;
+  clientId: Id<"clients"> | "";
   description: string;
   status: ProjectStatus;
   priority: ProjectPriority;
@@ -80,7 +81,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    client: "",
+    clientId: "",
     description: "",
     status: "planning",
     priority: "medium",
@@ -96,7 +97,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.client || !formData.description) {
+    if (!formData.name || !formData.clientId || !formData.description) {
       toast.error("Por favor, preencha todos os campos obrigatórios");
       return;
     }
@@ -111,7 +112,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
     try {
       await createProject({
         name: formData.name,
-        client: formData.client,
+        clientId: formData.clientId as Id<"clients">,
         description: formData.description,
         status: formData.status,
         priority: formData.priority,
@@ -128,7 +129,7 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
       // Reset form
       setFormData({
         name: "",
-        client: "",
+        clientId: "",
         description: "",
         status: "planning",
         priority: "medium",
@@ -188,13 +189,10 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="client">Cliente *</Label>
-              <Input
-                id="client"
-                placeholder="Digite o nome do cliente"
-                value={formData.client}
-                onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                className="rounded-lg"
-                required
+              <ClientSelect
+                value={formData.clientId}
+                onValueChange={(value) => setFormData({ ...formData, clientId: value })}
+                placeholder="Selecione ou cadastre um cliente"
               />
             </div>
           </div>

@@ -15,17 +15,17 @@ export const getBudgets = query({
       .order("desc")
       .collect();
 
-    // Populate project data if exists
+    // Populate project and client data if exists
     const budgetsWithProject = await Promise.all(
       budgets.map(async (budget) => {
-        if (budget.projectId) {
-          const project = await ctx.db.get(budget.projectId);
-          return {
-            ...budget,
-            project,
-          };
-        }
-        return budget;
+        const project = budget.projectId ? await ctx.db.get(budget.projectId) : null;
+        const clientDoc = budget.clientId ? await ctx.db.get(budget.clientId) : null;
+        const clientDisplay = clientDoc?.name ?? budget.client ?? undefined;
+        return {
+          ...budget,
+          client: clientDisplay,
+          project,
+        };
       }),
     );
 
@@ -44,17 +44,17 @@ export const getBudgetsPaginated = query({
       .order("desc")
       .paginate(args.paginationOpts);
 
-    // Populate project data if exists for each budget in the page
+    // Populate project and client data for each budget in the page
     const budgetsWithProject = await Promise.all(
       paginatedResult.page.map(async (budget) => {
-        if (budget.projectId) {
-          const project = await ctx.db.get(budget.projectId);
-          return {
-            ...budget,
-            project,
-          };
-        }
-        return budget;
+        const project = budget.projectId ? await ctx.db.get(budget.projectId) : null;
+        const clientDoc = budget.clientId ? await ctx.db.get(budget.clientId) : null;
+        const clientDisplay = clientDoc?.name ?? budget.client ?? undefined;
+        return {
+          ...budget,
+          client: clientDisplay,
+          project,
+        };
       }),
     );
 
@@ -76,11 +76,14 @@ export const getBudgetById = query({
       return null;
     }
 
-    // Populate project if exists
+    // Populate project and client
     const project = budget.projectId ? await ctx.db.get(budget.projectId) : null;
+    const clientDoc = budget.clientId ? await ctx.db.get(budget.clientId) : null;
+    const clientDisplay = clientDoc?.name ?? budget.client ?? undefined;
 
     return {
       ...budget,
+      client: clientDisplay,
       project,
     };
   },
@@ -109,7 +112,7 @@ export const getBudgetsByStatus = query({
   },
 });
 
-// Query: Get budgets by client
+// Query: Get budgets by client (legacy - by client name string)
 export const getBudgetsByClient = query({
   args: { client: v.string() },
   handler: async (ctx, args) => {
@@ -117,6 +120,20 @@ export const getBudgetsByClient = query({
     const budgets = await ctx.db
       .query("budgets")
       .withIndex("by_client", (q) => q.eq("client", args.client))
+      .collect();
+
+    return budgets;
+  },
+});
+
+// Query: Get budgets by client ID
+export const getBudgetsByClientId = query({
+  args: { clientId: v.id("clients") },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+    const budgets = await ctx.db
+      .query("budgets")
+      .withIndex("by_clientId", (q) => q.eq("clientId", args.clientId))
       .collect();
 
     return budgets;
@@ -168,7 +185,8 @@ export const getBudgetStats = query({
 export const createSimpleBudget = mutation({
   args: {
     title: v.string(),
-    client: v.string(),
+    client: v.optional(v.string()), // Legacy
+    clientId: v.optional(v.id("clients")),
     totalAmount: v.number(),
     currency: v.optional(v.string()),
     status: v.union(
@@ -191,6 +209,7 @@ export const createSimpleBudget = mutation({
       type: "budget",
       title: args.title,
       client: args.client,
+      clientId: args.clientId,
       description: "",
       status: args.status,
       totalAmount: args.totalAmount,
@@ -210,7 +229,8 @@ export const updateSimpleBudget = mutation({
   args: {
     id: v.id("budgets"),
     title: v.string(),
-    client: v.string(),
+    client: v.optional(v.string()), // Legacy
+    clientId: v.optional(v.id("clients")),
     totalAmount: v.number(),
     status: v.union(
       v.literal("draft"),
@@ -233,6 +253,7 @@ export const updateSimpleBudget = mutation({
     await ctx.db.patch(args.id, {
       title: args.title,
       client: args.client,
+      clientId: args.clientId,
       totalAmount: args.totalAmount,
       status: args.status,
       validUntil: args.validUntil,
@@ -247,7 +268,8 @@ export const updateSimpleBudget = mutation({
 export const createBudget = mutation({
   args: {
     title: v.string(),
-    client: v.string(),
+    client: v.optional(v.string()), // Legacy
+    clientId: v.optional(v.id("clients")),
     description: v.string(),
     status: v.union(
       v.literal("draft"),
@@ -326,7 +348,8 @@ export const updateBudget = mutation({
   args: {
     id: v.id("budgets"),
     title: v.optional(v.string()),
-    client: v.optional(v.string()),
+    client: v.optional(v.string()), // Legacy
+    clientId: v.optional(v.id("clients")),
     description: v.optional(v.string()),
     status: v.optional(
       v.union(

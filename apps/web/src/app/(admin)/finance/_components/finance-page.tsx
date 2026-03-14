@@ -50,7 +50,7 @@ export function FinancePage({
       date: new Date(t.date).toISOString(),
       projectId: t.projectId,
       projectName: "project" in t ? t.project?.name : undefined,
-      client: t.clientId,
+      client: "client" in t ? t.client : t.clientId,
     }));
   }, [transactions]);
 

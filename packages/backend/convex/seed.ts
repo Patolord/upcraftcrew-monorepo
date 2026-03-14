@@ -77,11 +77,35 @@ export const seedDatabase = mutation({
 
     console.log(`Seeded ${userIds.length} users`);
 
+    // Seed Clients (must be before projects, budgets, transactions)
+    const clientNames = [
+      "Tech Corp",
+      "Retail Solutions Inc",
+      "StartUp XYZ",
+      "Fashion Outlet",
+      "Local Business",
+      "UpCraft Crew",
+    ];
+    const now = Date.now();
+    const clientIds = await Promise.all(
+      clientNames.map((name) =>
+        ctx.db.insert("clients", {
+          name,
+          createdAt: now,
+          updatedAt: now,
+        }),
+      ),
+    );
+    const clientMap: Record<string, (typeof clientIds)[0]> = Object.fromEntries(
+      clientNames.map((name, i) => [name, clientIds[i]]),
+    );
+    console.log(`Seeded ${clientIds.length} clients`);
+
     // Seed Projects
     const projects = [
       {
         name: "Website Redesign",
-        client: "Tech Corp",
+        clientId: clientMap["Tech Corp"]!,
         description: "Complete overhaul of company website with modern UI/UX",
         status: "in-progress" as const,
         priority: "high" as const,
@@ -94,7 +118,7 @@ export const seedDatabase = mutation({
       },
       {
         name: "Mobile App Development",
-        client: "Retail Solutions Inc",
+        clientId: clientMap["Retail Solutions Inc"]!,
         description: "iOS and Android app for customer engagement",
         status: "in-progress" as const,
         priority: "urgent" as const,
@@ -107,7 +131,7 @@ export const seedDatabase = mutation({
       },
       {
         name: "Brand Identity",
-        client: "StartUp XYZ",
+        clientId: clientMap["StartUp XYZ"]!,
         description: "Create comprehensive brand guidelines and assets",
         status: "completed" as const,
         priority: "medium" as const,
@@ -120,7 +144,7 @@ export const seedDatabase = mutation({
       },
       {
         name: "E-commerce Platform",
-        client: "Fashion Outlet",
+        clientId: clientMap["Fashion Outlet"]!,
         description: "Full-stack e-commerce solution with payment integration",
         status: "planning" as const,
         priority: "high" as const,
@@ -133,7 +157,7 @@ export const seedDatabase = mutation({
       },
       {
         name: "Marketing Campaign",
-        client: "Local Business",
+        clientId: clientMap["Local Business"]!,
         description: "Q1 2026 digital marketing campaign across all channels",
         status: "planning" as const,
         priority: "low" as const,
@@ -146,7 +170,7 @@ export const seedDatabase = mutation({
       },
       {
         name: "Internal CRM System",
-        client: "UpCraft Crew",
+        clientId: clientMap["UpCraft Crew"]!,
         description: "Custom CRM for tracking clients and projects",
         status: "in-progress" as const,
         priority: "medium" as const,
@@ -176,7 +200,7 @@ export const seedDatabase = mutation({
       projectIds: [projectIds[0], projectIds[5]],
     });
 
-    // Seed Transactions
+    // Seed Transactions (use clientIdRef for client reference)
     const transactions = [
       {
         description: "Final milestone payment from Tech Corp",
@@ -185,7 +209,7 @@ export const seedDatabase = mutation({
         category: "project-payment",
         status: "completed" as const,
         date: new Date("2025-10-01").getTime(),
-        clientId: "Tech Corp",
+        clientIdRef: clientMap["Tech Corp"],
         projectId: projectIds[0],
       },
       {
@@ -195,7 +219,7 @@ export const seedDatabase = mutation({
         category: "project-payment",
         status: "completed" as const,
         date: new Date("2025-09-28").getTime(),
-        clientId: "Retail Solutions Inc",
+        clientIdRef: clientMap["Retail Solutions Inc"],
         projectId: projectIds[1],
       },
       {
@@ -229,7 +253,7 @@ export const seedDatabase = mutation({
         category: "project-payment",
         status: "pending" as const,
         date: new Date("2025-10-15").getTime(),
-        clientId: "Fashion Outlet",
+        clientIdRef: clientMap["Fashion Outlet"],
         projectId: projectIds[3],
       },
       {
@@ -263,7 +287,7 @@ export const seedDatabase = mutation({
         category: "project-payment",
         status: "completed" as const,
         date: new Date("2025-09-20").getTime(),
-        clientId: "StartUp XYZ",
+        clientIdRef: clientMap["StartUp XYZ"],
         projectId: projectIds[2],
       },
       {

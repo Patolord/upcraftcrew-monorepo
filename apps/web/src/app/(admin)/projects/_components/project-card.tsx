@@ -61,7 +61,18 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="flex-1 min-w-0">
             <CardTitle className="text-base md:text-lg truncate">{project.name}</CardTitle>
             {project.client && (
-              <CardDescription className="mt-1 text-sm truncate">{project.client}</CardDescription>
+              <CardDescription className="mt-1 text-sm truncate">
+                {project.clientId ? (
+                  <Link
+                    href={`/clients/${project.clientId}`}
+                    className="hover:text-orange-500 hover:underline"
+                  >
+                    {project.client}
+                  </Link>
+                ) : (
+                  project.client
+                )}
+              </CardDescription>
             )}
           </div>
           <CardAction>

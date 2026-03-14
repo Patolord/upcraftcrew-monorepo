@@ -11,12 +11,14 @@ import { toast } from "sonner";
 import { SaveIcon, Loader2Icon, XIcon } from "lucide-react";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
+import { ClientSelect } from "@/components/client-select";
 import React from "react";
 
 interface BudgetData {
   _id: Id<"budgets">;
   title: string;
-  client: string;
+  client?: string;
+  clientId?: Id<"clients">;
   totalAmount: number;
   status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   validUntil: number;
@@ -53,11 +55,11 @@ export function SimpleBudgetModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    client: "",
+    clientId: undefined as Id<"clients"> | undefined,
     totalAmount: 0,
     status: "draft" as "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired",
-    validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000, // 15 days from now
-    budgetDate: "", // Data retroativa opcional
+    validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000,
+    budgetDate: "",
   });
 
   // Reset form when modal opens or initialData changes
@@ -67,7 +69,7 @@ export function SimpleBudgetModal({
         // Editing mode: populate with existing data
         setFormData({
           title: initialData.title,
-          client: initialData.client,
+          clientId: initialData.clientId,
           totalAmount: initialData.totalAmount,
           status: initialData.status,
           validUntil: initialData.validUntil,
@@ -79,7 +81,7 @@ export function SimpleBudgetModal({
         // Create mode: reset form
         setFormData({
           title: "",
-          client: "",
+          clientId: undefined,
           totalAmount: 0,
           status: "draft",
           validUntil: Date.now() + 15 * 24 * 60 * 60 * 1000,
@@ -124,7 +126,7 @@ export function SimpleBudgetModal({
         await updateSimpleBudget({
           id: initialData._id,
           title: formData.title,
-          client: formData.client,
+          clientId: formData.clientId,
           totalAmount: formData.totalAmount,
           status: formData.status,
           validUntil: formData.validUntil,
@@ -134,7 +136,7 @@ export function SimpleBudgetModal({
         // Create new budget
         await createSimpleBudget({
           title: formData.title,
-          client: formData.client,
+          clientId: formData.clientId,
           totalAmount: formData.totalAmount,
           status: formData.status,
           validUntil: formData.validUntil,
@@ -220,16 +222,14 @@ export function SimpleBudgetModal({
               </div>
 
               <div>
-                <Label htmlFor="client" className="text-sm font-medium mb-2 block">
-                  Cliente
-                </Label>
-                <Input
-                  id="client"
-                  value={formData.client}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, client: e.target.value }))}
-                  placeholder="Nome do cliente"
-                  required
-                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                <Label className="text-sm font-medium mb-2 block">Cliente</Label>
+                <ClientSelect
+                  value={formData.clientId}
+                  onValueChange={(id) =>
+                    setFormData((prev) => ({ ...prev, clientId: id ?? undefined }))
+                  }
+                  placeholder="Selecione o cliente"
+                  className="border border-base-300 rounded-lg"
                 />
               </div>
 

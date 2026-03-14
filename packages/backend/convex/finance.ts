@@ -14,17 +14,17 @@ export const getTransactions = query({
       .order("desc")
       .collect();
 
-    // Populate project data for each transaction
+    // Populate project and client data for each transaction
     const transactionsWithProject = await Promise.all(
       transactions.map(async (transaction) => {
-        if (transaction.projectId) {
-          const project = await ctx.db.get(transaction.projectId);
-          return {
-            ...transaction,
-            project,
-          };
-        }
-        return transaction;
+        const project = transaction.projectId ? await ctx.db.get(transaction.projectId) : null;
+        const client = transaction.clientIdRef ? await ctx.db.get(transaction.clientIdRef) : null;
+        const clientDisplay = client?.name ?? transaction.clientId ?? undefined;
+        return {
+          ...transaction,
+          project,
+          client: clientDisplay,
+        };
       }),
     );
 
@@ -269,13 +269,18 @@ export const createTransaction = mutation({
     category: v.string(),
     status: v.union(v.literal("pending"), v.literal("completed"), v.literal("failed")),
     date: v.number(),
-    clientId: v.optional(v.string()),
+    clientId: v.optional(v.string()), // Legacy client name
+    clientIdRef: v.optional(v.id("clients")), // Reference to clients table
     projectId: v.optional(v.id("projects")),
     imageUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireMember(ctx);
-    const transactionId = await ctx.db.insert("transactions", args);
+    const { clientIdRef, ...insertArgs } = args;
+    const transactionId = await ctx.db.insert("transactions", {
+      ...insertArgs,
+      ...(clientIdRef && { clientIdRef }),
+    });
 
     // If transaction is linked to a project and is completed, update project budget
     if (args.projectId && args.status === "completed") {
@@ -303,7 +308,8 @@ export const updateTransaction = mutation({
     category: v.optional(v.string()),
     status: v.optional(v.union(v.literal("pending"), v.literal("completed"), v.literal("failed"))),
     date: v.optional(v.number()),
-    clientId: v.optional(v.string()),
+    clientId: v.optional(v.string()), // Legacy
+    clientIdRef: v.optional(v.id("clients")),
     projectId: v.optional(v.id("projects")),
     imageUrl: v.optional(v.string()),
   },

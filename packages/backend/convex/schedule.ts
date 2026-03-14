@@ -416,6 +416,10 @@ export const getAllScheduleItemsByMonth = query({
         const manager = await ctx.db.get(project.managerId);
         const team = await Promise.all(project.teamIds.map((userId) => ctx.db.get(userId)));
 
+        const projectClient = project.clientId
+          ? await ctx.db.get(project.clientId).then((c) => c?.name)
+          : project.client;
+
         return {
           sourceType: "project" as const,
           sourceId: project._id,
@@ -429,7 +433,7 @@ export const getAllScheduleItemsByMonth = query({
           team: team.map(transformUserToAttendee).filter((t) => t !== null),
           projectStatus: project.status,
           projectProgress: project.progress,
-          client: project.client,
+          client: projectClient,
           project: { _id: project._id, name: project.name },
           projectId: project._id,
         };
@@ -446,22 +450,29 @@ export const getAllScheduleItemsByMonth = query({
         b.status !== "rejected",
     );
 
-    const budgetItems = budgetsInMonth.map((budget) => ({
-      sourceType: "budget" as const,
-      sourceId: budget._id,
-      title: `Follow-up: ${budget.title}`,
-      description: budget.description,
-      date: budget.validUntil,
-      endDate: budget.validUntil,
-      type: "reminder",
-      priority: "medium" as const,
-      budgetStatus: budget.status,
-      budgetAmount: budget.totalAmount,
-      budgetCurrency: budget.currency,
-      client: budget.client,
-      project: null,
-      projectId: budget.projectId,
-    }));
+    const budgetItems = await Promise.all(
+      budgetsInMonth.map(async (budget) => {
+        const budgetClient = budget.clientId
+          ? await ctx.db.get(budget.clientId).then((c) => c?.name)
+          : budget.client;
+        return {
+          sourceType: "budget" as const,
+          sourceId: budget._id,
+          title: `Follow-up: ${budget.title}`,
+          description: budget.description,
+          date: budget.validUntil,
+          endDate: budget.validUntil,
+          type: "reminder",
+          priority: "medium" as const,
+          budgetStatus: budget.status,
+          budgetAmount: budget.totalAmount,
+          budgetCurrency: budget.currency,
+          client: budgetClient,
+          project: null,
+          projectId: budget.projectId,
+        };
+      }),
+    );
 
     // 4. Get pending transactions with date in this month
     const allTransactions = await ctx.db.query("transactions").collect();
@@ -472,6 +483,9 @@ export const getAllScheduleItemsByMonth = query({
     const transactionItems = await Promise.all(
       transactionsInMonth.map(async (transaction) => {
         const project = transaction.projectId ? await ctx.db.get(transaction.projectId) : null;
+        const txClient = transaction.clientIdRef
+          ? await ctx.db.get(transaction.clientIdRef).then((c) => c?.name)
+          : transaction.clientId;
 
         return {
           sourceType: "transaction" as const,
@@ -486,7 +500,7 @@ export const getAllScheduleItemsByMonth = query({
           transactionAmount: transaction.amount,
           transactionCategory: transaction.category,
           transactionStatus: transaction.status,
-          client: transaction.clientId,
+          client: txClient,
           project: project ? { _id: project._id, name: project.name } : null,
           projectId: transaction.projectId,
         };

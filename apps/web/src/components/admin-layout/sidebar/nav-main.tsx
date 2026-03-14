@@ -5,6 +5,7 @@ import {
   FileText,
   FolderOpen,
   Users,
+  UserCircle,
   CalendarDays,
   DollarSign,
   Kanban,
@@ -59,6 +60,12 @@ const menuItems: MenuItem[] = [
     title: "Projetos",
     url: "/projects",
     icon: FolderOpen,
+    prefetch: true,
+  },
+  {
+    title: "Clientes",
+    url: "/clients",
+    icon: UserCircle,
     prefetch: true,
   },
   {
