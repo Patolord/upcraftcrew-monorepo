@@ -31,7 +31,7 @@ import {
   CheckCircleIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import { Doc, Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { ClientSelect } from "@/components/client-select";
@@ -370,13 +370,16 @@ export function NewProjectModal({ isOpen, onClose }: NewProjectModalProps) {
                       )}
                     >
                       <Checkbox checked={isSelected} />
-                      <Image
-                        src={member.imageUrl || ""}
-                        alt={`${member.firstName} ${member.lastName}`}
-                        width={24}
-                        height={24}
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage
+                          src={member.imageUrl || undefined}
+                          alt={`${member.firstName} ${member.lastName}`}
+                        />
+                        <AvatarFallback className="text-xs">
+                          {member.firstName?.charAt(0)}
+                          {member.lastName?.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
                       <span className={cn("text-sm", isSelected && "text-orange-700 font-medium")}>
                         {member.firstName} {member.lastName}
                       </span>

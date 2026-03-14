@@ -61,7 +61,9 @@ export function ClientCard({ client }: ClientCardProps) {
         <Link
           href={`/clients/${client._id}`}
           className={buttonVariants({
-            className: "bg-orange-500 text-white rounded-md text-xs hover:bg-orange-600",
+            variant: "outline",
+            className:
+              "bg-orange-500! text-white! border border-orange-600! rounded-xl text-xs hover:bg-orange-600! hover:border-orange-700!",
           })}
         >
           <EyeIcon className="size-4 mr-1" />
