@@ -9,7 +9,7 @@ import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 interface Budget {
   _id: Id<"budgets">;
   title: string;
-  client: string;
+  client?: string;
   status: "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
   totalAmount: number;
   currency: string;

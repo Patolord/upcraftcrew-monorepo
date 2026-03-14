@@ -18,7 +18,7 @@ interface TeamMember {
 interface Project {
   _id: Id<"projects">;
   name: string;
-  client: string;
+  client?: string;
   description: string;
   status: "planning" | "in-progress" | "completed";
   priority: "low" | "medium" | "high" | "urgent";

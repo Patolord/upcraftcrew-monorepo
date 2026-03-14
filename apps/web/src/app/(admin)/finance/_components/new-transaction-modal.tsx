@@ -353,7 +353,9 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                   <Label className="text-sm font-medium mb-2 block">Cliente (Opcional)</Label>
                   <ClientSelect
                     value={formData.clientIdRef}
-                    onValueChange={(id) => setFormData({ ...formData, clientIdRef: id })}
+                    onValueChange={(id) =>
+                      setFormData({ ...formData, clientIdRef: id || undefined })
+                    }
                     placeholder="Selecione um cliente"
                   />
                 </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,9 +45,9 @@ export function ClientProfile({ clientId }: ClientProfileProps) {
     return (
       <Card className="p-8 text-center">
         <p className="text-muted-foreground">Cliente não encontrado</p>
-        <Button asChild variant="outline" className="mt-4">
-          <Link href="/clients">Voltar para clientes</Link>
-        </Button>
+        <Link href="/clients" className={buttonVariants({ variant: "outline", className: "mt-4" })}>
+          Voltar para clientes
+        </Link>
       </Card>
     );
   }
