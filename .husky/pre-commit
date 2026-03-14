@@ -1,9 +1,1 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Add common node paths to PATH if node is not found
-if ! command -v node >/dev/null 2>&1; then
-  export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-fi
-
 lint-staged
