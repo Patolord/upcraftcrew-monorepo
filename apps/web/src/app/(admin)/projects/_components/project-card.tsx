@@ -55,17 +55,19 @@ export function ProjectCard({ project }: { project: Project }) {
   const priority = priorityConfig[project.priority];
 
   return (
-    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full">
-      <CardHeader className="p-4 md:p-6">
-        <div className="flex items-start justify-between gap-2 md:gap-3">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base md:text-lg truncate">{project.name}</CardTitle>
+    <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full min-w-0 overflow-hidden">
+      <CardHeader className="p-4 md:p-6 min-w-0">
+        <div className="flex items-start justify-between gap-2 md:gap-3 min-w-0">
+          <div className="flex-1 min-w-0 overflow-hidden">
+            <CardTitle className="text-base md:text-lg truncate min-w-0" title={project.name}>
+              {project.name}
+            </CardTitle>
             {project.client && (
-              <CardDescription className="mt-1 text-sm truncate">
+              <CardDescription className="mt-1 text-sm truncate min-w-0" title={project.client}>
                 {project.clientId ? (
                   <Link
                     href={`/clients/${project.clientId}`}
-                    className="hover:text-orange-500 hover:underline"
+                    className="hover:text-orange-500 hover:underline truncate block min-w-0"
                   >
                     {project.client}
                   </Link>
@@ -91,16 +93,19 @@ export function ProjectCard({ project }: { project: Project }) {
 
         {/* Manager */}
         {project.manager && project.manager.name && (
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-[10px] md:text-xs text-muted-foreground">Manager:</span>
-            <div className="flex items-center gap-2">
-              <Avatar className="w-5 h-5 md:w-6 md:h-6">
+          <div className="mt-3 flex items-center gap-2 min-w-0">
+            <span className="text-[10px] md:text-xs text-muted-foreground shrink-0">Manager:</span>
+            <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+              <Avatar className="w-5 h-5 md:w-6 md:h-6 shrink-0">
                 <AvatarImage src={project.manager.imageUrl} alt={project.manager.name} />
                 <AvatarFallback className="text-[10px] md:text-xs">
                   {project.manager.name.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-[10px] md:text-xs font-medium truncate">
+              <span
+                className="text-[10px] md:text-xs font-medium truncate min-w-0"
+                title={project.manager.name}
+              >
                 {project.manager.name}
               </span>
             </div>
@@ -117,16 +122,21 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
 
         {/* Budget & Team */}
-        <div className="grid grid-cols-2 gap-2 md:gap-3 mt-3 md:mt-4">
+        <div className="grid grid-cols-2 gap-2 md:gap-3 mt-3 md:mt-4 min-w-0">
           {project.budget && (
-            <div>
+            <div className="min-w-0 overflow-hidden">
               <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Orçamento</p>
-              <p className="text-xs md:text-sm font-medium">{project.budget.toLocaleString()}</p>
+              <p
+                className="text-xs md:text-sm font-medium truncate"
+                title={String(project.budget.toLocaleString())}
+              >
+                {project.budget.toLocaleString()}
+              </p>
             </div>
           )}
-          <div>
+          <div className="min-w-0 overflow-hidden">
             <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Cronograma</p>
-            <p className="text-xs md:text-sm font-medium">
+            <p className="text-xs md:text-sm font-medium truncate">
               {new Date(project.startDate).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
