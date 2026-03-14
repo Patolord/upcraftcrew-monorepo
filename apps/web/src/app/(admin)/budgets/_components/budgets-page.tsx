@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -55,18 +55,6 @@ interface Budget {
   projectId?: Id<"projects">;
 }
 
-interface BudgetStats {
-  total: number;
-  draft: number;
-  sent: number;
-  approved: number;
-  rejected: number;
-  cancelled: number;
-  totalValue: number;
-  approvedValue: number;
-  conversionRate: number;
-}
-
 export function BudgetsPage() {
   // Query paginada para exibir os budgets na lista
   const { results, status, loadMore, isLoading } = usePaginatedQuery(
@@ -75,9 +63,6 @@ export function BudgetsPage() {
     { initialNumItems: 3 },
   );
   const budgets = (results || []) as Budget[];
-
-  // Query para estatísticas (precisa de todos os dados)
-  const stats = useQuery(api.budgets.getBudgetStats) as BudgetStats | undefined;
 
   const [newBudget, setNewBudget] = useQueryState("new");
 
