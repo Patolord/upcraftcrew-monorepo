@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -58,12 +58,15 @@ export function ClientCard({ client }: ClientCardProps) {
       </CardContent>
 
       <CardFooter className="justify-end">
-        <Button asChild className="bg-orange-500 text-white rounded-md text-xs hover:bg-orange-600">
-          <Link href={`/clients/${client._id}`}>
-            <EyeIcon className="size-4 mr-1" />
-            Ver perfil
-          </Link>
-        </Button>
+        <Link
+          href={`/clients/${client._id}`}
+          className={buttonVariants({
+            className: "bg-orange-500 text-white rounded-md text-xs hover:bg-orange-600",
+          })}
+        >
+          <EyeIcon className="size-4 mr-1" />
+          Ver perfil
+        </Link>
       </CardFooter>
     </Card>
   );

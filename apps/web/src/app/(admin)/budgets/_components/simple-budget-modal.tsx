@@ -226,7 +226,7 @@ export function SimpleBudgetModal({
                 <ClientSelect
                   value={formData.clientId}
                   onValueChange={(id) =>
-                    setFormData((prev) => ({ ...prev, clientId: id ?? undefined }))
+                    setFormData((prev) => ({ ...prev, clientId: id || undefined }))
                   }
                   placeholder="Selecione o cliente"
                   className="border border-base-300 rounded-lg"

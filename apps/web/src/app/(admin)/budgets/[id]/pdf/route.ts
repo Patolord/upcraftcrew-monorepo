@@ -75,7 +75,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const budget: Budget = {
       _id: budgetData._id,
       title: budgetData.title,
-      client: budgetData.client,
+      client: budgetData.client ?? "",
       description: budgetData.description,
       status: budgetData.status,
       totalAmount: budgetData.totalAmount,
