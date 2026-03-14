@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, LogOut, Moon, Search, Sun, User } from "lucide-react";
+import { ChevronDown, LogOut, Moon, Sun, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import React from "react";
 import { useTheme } from "@/hooks/use-theme";
 import Link from "next/link";
 
-import { Input } from "@/components/ui/input";
+import { GlobalSearchInput } from "@/components/admin-layout/global-search-input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,15 +106,12 @@ export function FinanceHeader({
 
       {/* Center - Search + Currency Switch */}
       <div className="flex items-center gap-2 justify-center">
-        <div className="relative flex-1 max-w-md">
-          <Input
-            type="search"
-            placeholder="Search..."
+        <div className="flex-1 max-w-md">
+          <GlobalSearchInput
             value={searchQuery}
-            onChange={(e) => onSearchChange?.(e.target.value)}
-            className="w-full h-10 md:h-11 pl-5 pr-12 rounded-full bg-white dark:bg-muted/50 border-0 shadow-sm text-sm"
+            onChange={onSearchChange}
+            placeholder="Search..."
           />
-          <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground pointer-events-none" />
         </div>
         <CurrencySwitch value={currency} onChange={onCurrencyChange} />
       </div>

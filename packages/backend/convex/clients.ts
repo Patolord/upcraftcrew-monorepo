@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireMember } from "./users";
 import { throwNotFound } from "./errors";
+import type { Id } from "./_generated/dataModel";
 
 // Query: Get all clients
 export const getClients = query({
@@ -87,6 +88,86 @@ export const getClientsSearch = query({
     }
 
     return clients;
+  },
+});
+
+export const searchGlobal = query({
+  args: {
+    term: v.string(),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+
+    const term = args.term.trim();
+    if (term.length < 2) {
+      return [];
+    }
+
+    const limit = Math.min(Math.max(args.limit ?? 12, 1), 24);
+    const perEntityLimit = Math.max(1, Math.ceil(limit / 3));
+
+    const [clients, projects, proposals] = await Promise.all([
+      ctx.db
+        .query("clients")
+        .withSearchIndex("search_name", (q) => q.search("name", term))
+        .take(perEntityLimit),
+      ctx.db
+        .query("projects")
+        .withSearchIndex("search_name", (q) => q.search("name", term))
+        .take(perEntityLimit),
+      ctx.db
+        .query("budgets")
+        .withSearchIndex("search_title", (q) => q.search("title", term).eq("type", "proposal"))
+        .take(perEntityLimit),
+    ]);
+
+    const clientIds = new Set<Id<"clients">>();
+    for (const project of projects) {
+      if (project.clientId) clientIds.add(project.clientId);
+    }
+    for (const proposal of proposals) {
+      if (proposal.clientId) clientIds.add(proposal.clientId);
+    }
+
+    const relatedClients = await Promise.all(Array.from(clientIds).map((id) => ctx.db.get(id)));
+    const clientNameById = new Map(
+      relatedClients
+        .filter((c): c is NonNullable<(typeof relatedClients)[number]> => c !== null)
+        .map((c) => [c._id, c.name] as const),
+    );
+
+    const clientResults = clients.map((client) => ({
+      id: client._id,
+      type: "client" as const,
+      title: client.name,
+      subtitle: [client.company, client.email].filter(Boolean).join(" • ") || "Cliente",
+      href: `/clients/${client._id}`,
+    }));
+
+    const contractResults = projects.map((project) => ({
+      id: project._id,
+      type: "contract" as const,
+      title: project.name,
+      subtitle:
+        (project.clientId ? clientNameById.get(project.clientId) : undefined) ||
+        project.client ||
+        "Contrato / Projeto",
+      href: `/projects/${project._id}`,
+    }));
+
+    const proposalResults = proposals.map((proposal) => ({
+      id: proposal._id,
+      type: "proposal" as const,
+      title: proposal.title,
+      subtitle:
+        (proposal.clientId ? clientNameById.get(proposal.clientId) : undefined) ||
+        proposal.client ||
+        "Proposta",
+      href: `/budgets/${proposal._id}`,
+    }));
+
+    return [...clientResults, ...contractResults, ...proposalResults].slice(0, limit);
   },
 });
 

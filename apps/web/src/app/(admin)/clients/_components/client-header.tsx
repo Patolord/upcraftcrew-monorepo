@@ -1,11 +1,11 @@
 "use client";
 
-import { ChevronDown, LogOut, Moon, Search, Sun, User } from "lucide-react";
+import { ChevronDown, LogOut, Moon, Sun, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useTheme } from "@/hooks/use-theme";
-import { Input } from "@/components/ui/input";
+import { GlobalSearchInput } from "@/components/admin-layout/global-search-input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,15 +45,12 @@ export function ClientHeader({ searchQuery = "", onSearchChange }: ClientHeaderP
           Clientes
         </h1>
 
-        <div className="relative flex-1 md:max-w-md md:mx-4 order-3 md:order-2">
-          <Input
-            type="search"
-            placeholder="Buscar clientes..."
+        <div className="flex-1 md:max-w-md md:mx-4 order-3 md:order-2">
+          <GlobalSearchInput
             value={searchQuery}
-            onChange={(e) => onSearchChange?.(e.target.value)}
-            className="w-full h-10 md:h-11 pl-5 pr-12 rounded-full bg-white dark:bg-muted/50 border-0 shadow-sm text-sm"
+            onChange={onSearchChange}
+            placeholder="Buscar clientes..."
           />
-          <Search className="absolute right-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground pointer-events-none" />
         </div>
 
         <div className="order-2 md:order-3 shrink-0">
