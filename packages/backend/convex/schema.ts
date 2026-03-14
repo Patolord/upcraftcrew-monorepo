@@ -11,7 +11,6 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-    .searchIndex("search_name", { searchField: "name" })
     .index("by_name", ["name"])
     .index("by_created_at", ["createdAt"]),
 
@@ -94,7 +93,6 @@ export default defineSchema({
     ),
     budgetId: v.optional(v.id("budgets")), // Reference to the budget this project was created from
   })
-    .searchIndex("search_name", { searchField: "name" })
     .index("by_manager", ["managerId"])
     .index("by_clientId", ["clientId"]),
 
@@ -203,7 +201,6 @@ export default defineSchema({
     projectId: v.optional(v.id("projects")),
     notes: v.optional(v.string()),
   })
-    .searchIndex("search_title", { searchField: "title", filterFields: ["type"] })
     .index("by_status", ["status"])
     .index("by_client", ["client"])
     .index("by_clientId", ["clientId"])

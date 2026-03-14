@@ -9,7 +9,6 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { GlobalSearch } from "@/components/admin-layout/global-search";
 
 import NavLogo from "./nav-logo";
 import NavMain from "./nav-main";
@@ -20,9 +19,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" variant="floating" {...props}>
       <SidebarHeader className="px-4 pt-5 pb-2">
         <NavLogo />
-        <div className="mt-3">
-          <GlobalSearch />
-        </div>
       </SidebarHeader>
       <SidebarSeparator className="opacity-50" />
       <SidebarContent className="py-2">
