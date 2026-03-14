@@ -7,6 +7,8 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { EnsureUserSynced } from "@/components/ensure-user-synced";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <Providers>
