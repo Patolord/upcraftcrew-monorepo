@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUpIcon, TrendingDownIcon, WalletIcon, ReceiptIcon } from "lucide-react";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
 interface FinancialSummary {
@@ -15,39 +16,41 @@ interface FinancialSummary {
 interface FinanceStatsProps {
   summary: FinancialSummary;
   totalTransactions: number;
+  currency: CurrencyCode;
 }
 
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("en-US", {
+function formatCurrency(value: number, currency: CurrencyCode) {
+  const locale = currency === "BRL" ? "pt-BR" : "en-US";
+  return new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: "USD",
+    currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
-};
+}
 
-export function FinanceStats({ summary, totalTransactions }: FinanceStatsProps) {
+export function FinanceStats({ summary, totalTransactions, currency }: FinanceStatsProps) {
   const statCards = [
     {
       key: "income",
       label: "Total",
       icon: TrendingUpIcon,
       iconBg: "bg-emerald-500",
-      value: formatCurrency(summary.totalIncome),
+      value: formatCurrency(summary.totalIncome, currency),
     },
     {
       key: "expenses",
       label: "Despesas",
       icon: TrendingDownIcon,
       iconBg: "bg-rose-500",
-      value: formatCurrency(summary.totalExpenses),
+      value: formatCurrency(summary.totalExpenses, currency),
     },
     {
       key: "profit",
       label: "Lucro",
       icon: WalletIcon,
       iconBg: summary.netProfit >= 0 ? "bg-blue-500" : "bg-red-500",
-      value: formatCurrency(summary.netProfit),
+      value: formatCurrency(summary.netProfit, currency),
     },
     {
       key: "transactions",

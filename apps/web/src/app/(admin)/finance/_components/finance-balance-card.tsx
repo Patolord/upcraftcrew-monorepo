@@ -10,11 +10,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CheckCircle2Icon } from "lucide-react";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
 interface FinanceBalanceCardProps {
   totalIncome?: number;
   netProfit?: number;
+  currency?: CurrencyCode;
 }
 
 // Gráfico de linha SVG estilo lilás
@@ -48,10 +50,14 @@ const BalanceChart = () => (
   </svg>
 );
 
-export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBalanceCardProps) {
-  // Calcula a porcentagem de economia
+export function FinanceBalanceCard({
+  totalIncome = 0,
+  netProfit = 0,
+  currency = "BRL",
+}: FinanceBalanceCardProps) {
   const income = totalIncome ?? 0;
   const profit = netProfit ?? 0;
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
 
   const savingsPercentage = income > 0 ? ((profit / income) * 100).toFixed(2) : "0.00";
 
@@ -98,7 +104,8 @@ export function FinanceBalanceCard({ totalIncome = 0, netProfit = 0 }: FinanceBa
               <span
                 className={`text-3xl font-bold ${profit >= 0 ? "text-gray-900" : "text-rose-600"}`}
               >
-                R${profit.toLocaleString()}
+                {currencySymbol}
+                {profit.toLocaleString()}
               </span>
             </div>
           </div>

@@ -30,6 +30,7 @@ const initialFormData = {
   type: "income" as TransactionType,
   category: "project-payment" as TransactionCategory,
   status: "completed" as PaymentStatus,
+  currency: "BRL" as "BRL" | "USD",
   date: new Date().toISOString().split("T")[0],
   clientIdRef: undefined as Id<"clients"> | undefined,
   projectId: "",
@@ -102,6 +103,7 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
         type: formData.type,
         category: formData.category,
         status: formData.status,
+        currency: formData.currency,
         date: new Date(formData.date).getTime(),
         clientIdRef: formData.clientIdRef,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
@@ -238,11 +240,27 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                 />
               </div>
 
-              {/* Amount and Date */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Currency, Amount and Date */}
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="currency" className="text-sm font-medium mb-2 block">
+                    Moeda *
+                  </Label>
+                  <select
+                    id="currency"
+                    value={formData.currency}
+                    onChange={(e) =>
+                      setFormData({ ...formData, currency: e.target.value as "BRL" | "USD" })
+                    }
+                    className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="BRL">🇧🇷 BRL (R$)</option>
+                    <option value="USD">🇺🇸 USD ($)</option>
+                  </select>
+                </div>
                 <div>
                   <Label htmlFor="amount" className="text-sm font-medium mb-2 block">
-                    Valor (R$) *
+                    Valor ({formData.currency === "BRL" ? "R$" : "$"}) *
                   </Label>
                   <Input
                     id="amount"

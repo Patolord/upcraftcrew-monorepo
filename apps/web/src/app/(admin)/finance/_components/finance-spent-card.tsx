@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3Icon } from "lucide-react";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
 interface MonthlyData {
@@ -14,6 +15,7 @@ interface FinanceSpentCardProps {
   totalSpent?: number;
   monthlyData?: MonthlyData[];
   averageMonthly?: number;
+  currency?: CurrencyCode;
 }
 
 // Dados padrão (vazio) quando não há transações
@@ -36,9 +38,11 @@ export function FinanceSpentCard({
   totalSpent = 0,
   monthlyData = emptyMonthlyData,
   averageMonthly = 0,
+  currency = "BRL",
 }: FinanceSpentCardProps) {
   const displaySpent = totalSpent ?? 0;
   const displayAverage = averageMonthly ?? 0;
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
 
   // Calcula a altura máxima para normalização (mínimo 1 para evitar divisão por zero)
   const maxValue = Math.max(...monthlyData.map((d) => d.value), 1);
@@ -51,7 +55,8 @@ export function FinanceSpentCard({
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Total de Gastos</p>
             <span className="text-3xl font-bold text-gray-900">
-              R${displaySpent.toLocaleString()}
+              {currencySymbol}
+              {displaySpent.toLocaleString()}
             </span>
           </div>
           <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -66,7 +71,8 @@ export function FinanceSpentCard({
             <div className="absolute top-0 left-0 right-0 flex items-center z-10">
               <div className="flex-1 border-t-2 border-dashed border-amber-400" />
               <span className="text-xs text-amber-600 font-medium ml-2">
-                Média: R${displayAverage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                Média: {currencySymbol}
+                {displayAverage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </span>
             </div>
           )}

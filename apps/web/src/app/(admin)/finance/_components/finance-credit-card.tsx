@@ -13,6 +13,7 @@ import {
   PackageIcon,
 } from "lucide-react";
 import type { Doc } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
+import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React, { useMemo } from "react";
 
 type Transaction = Doc<"transactions"> & {
@@ -21,6 +22,7 @@ type Transaction = Doc<"transactions"> & {
 
 interface FinanceCreditCardProps {
   transactions?: Transaction[];
+  currency?: CurrencyCode;
 }
 
 // Mini gráfico decorativo SVG
@@ -98,7 +100,8 @@ function formatTransactionDate(timestamp: number): string {
   });
 }
 
-export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps) {
+export function FinanceCreditCard({ transactions = [], currency = "BRL" }: FinanceCreditCardProps) {
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
   // Filtrar apenas transações de despesa (expense) e calcular o total
   const { totalExpenses, recentExpenses } = useMemo(() => {
     const expenses = transactions.filter((t) => t.type === "expense");
@@ -133,7 +136,8 @@ export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps)
             </div>
             <div className="flex items-center justify-between">
               <span className="text-3xl font-bold text-white">
-                R${displayBalance.toLocaleString()}
+                {currencySymbol}
+                {displayBalance.toLocaleString()}
               </span>
               <MiniWaveChart />
             </div>
@@ -161,7 +165,8 @@ export function FinanceCreditCard({ transactions = [] }: FinanceCreditCardProps)
                       </div>
                     </div>
                     <span className="font-semibold text-gray-900">
-                      -R${Math.abs(expense.amount).toFixed(2)}
+                      -{currencySymbol}
+                      {Math.abs(expense.amount).toFixed(2)}
                     </span>
                   </div>
                 );

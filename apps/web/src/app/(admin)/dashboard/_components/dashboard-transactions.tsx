@@ -24,6 +24,7 @@ interface Transaction {
 
 interface DashboardTransactionsProps {
   transactions: Transaction[];
+  currency?: string;
 }
 
 const categoryIcons: Record<
@@ -46,7 +47,11 @@ function getCategoryIcon(category: string) {
   return categoryIcons.default;
 }
 
-export function DashboardTransactions({ transactions }: DashboardTransactionsProps) {
+export function DashboardTransactions({
+  transactions,
+  currency = "BRL",
+}: DashboardTransactionsProps) {
+  const currencySymbol = currency === "BRL" ? "R$" : "$";
   const recentTransactions = transactions
     .filter((t) => t.status === "completed")
     .sort((a, b) => b.date - a.date)
@@ -82,7 +87,9 @@ export function DashboardTransactions({ transactions }: DashboardTransactionsPro
                 <span
                   className={`text-sm font-semibold ${isIncome ? "text-green-500" : "text-red-500"}`}
                 >
-                  {isIncome ? "+" : "-"}${Math.abs(transaction.amount).toFixed(2)}
+                  {isIncome ? "+" : "-"}
+                  {currencySymbol}
+                  {Math.abs(transaction.amount).toFixed(2)}
                 </span>
               </div>
             );
