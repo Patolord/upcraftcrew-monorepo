@@ -531,7 +531,10 @@ export default function BudgetDetailPage() {
         <BudgetFormModal
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
-          initialData={budget}
+          initialData={{
+            ...budget,
+            client: budget.client ?? "",
+          }}
           onSuccess={() => setShowEditModal(false)}
         />
       )}
