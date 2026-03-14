@@ -29,14 +29,24 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
   const normalizedTerm = term.trim();
+  const [debouncedTerm, setDebouncedTerm] = useState(normalizedTerm);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setDebouncedTerm(normalizedTerm);
+    }, 250);
+    return () => window.clearTimeout(timeout);
+  }, [normalizedTerm]);
 
   const results = useQuery(
     api.clients.searchGlobal,
-    normalizedTerm.length >= 2 ? { term: normalizedTerm, limit: 12 } : "skip",
+    debouncedTerm.length >= 2 ? { term: debouncedTerm, limit: 12 } : "skip",
   );
 
-  const isLoading = normalizedTerm.length >= 2 && results === undefined;
-  const hasNoResults = normalizedTerm.length >= 2 && results?.length === 0;
+  const isLoading =
+    normalizedTerm.length >= 2 && (debouncedTerm !== normalizedTerm || results === undefined);
+  const hasNoResults =
+    debouncedTerm.length >= 2 && debouncedTerm === normalizedTerm && results?.length === 0;
 
   const shortcut = useMemo(
     () => (typeof window !== "undefined" && navigator.platform.includes("Mac") ? "⌘K" : "Ctrl+K"),

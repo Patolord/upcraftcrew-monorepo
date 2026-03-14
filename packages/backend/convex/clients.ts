@@ -105,7 +105,7 @@ export const searchGlobal = query({
     }
 
     const limit = Math.min(Math.max(args.limit ?? 12, 1), 24);
-    const perEntityLimit = Math.max(3, Math.ceil(limit / 3));
+    const perEntityLimit = Math.max(1, Math.ceil(limit / 3));
 
     const [clients, projects, proposals] = await Promise.all([
       ctx.db
@@ -132,7 +132,9 @@ export const searchGlobal = query({
 
     const relatedClients = await Promise.all(Array.from(clientIds).map((id) => ctx.db.get(id)));
     const clientNameById = new Map(
-      relatedClients.filter((c) => c !== null).map((c) => [c._id, c.name] as const),
+      relatedClients
+        .filter((c): c is NonNullable<(typeof relatedClients)[number]> => c !== null)
+        .map((c) => [c._id, c.name] as const),
     );
 
     const clientResults = clients.map((client) => ({
