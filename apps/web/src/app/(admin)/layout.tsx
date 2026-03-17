@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <EnsureUserSynced />
       <SidebarProvider className="bg-admin-background">
         <AppSidebar />
-        <SidebarInset className="bg-admin-background pb-20 md:pb-0">{children}</SidebarInset>
+        <SidebarInset className="bg-admin-background pb-20 md:pb-0 overflow-x-hidden">{children}</SidebarInset>
         <BottomNav />
       </SidebarProvider>
     </Providers>

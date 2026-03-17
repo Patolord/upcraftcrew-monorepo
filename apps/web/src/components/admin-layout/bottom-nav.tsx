@@ -9,6 +9,7 @@ import {
   UserCircleIcon,
   CalendarDaysIcon,
   UsersIcon,
+  MailIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +23,11 @@ const bottomNavItems = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboardIcon,
+  },
+  {
+    title: "Assistente",
+    url: "/assistant",
+    icon: MailIcon,
   },
   {
     title: "Projetos",

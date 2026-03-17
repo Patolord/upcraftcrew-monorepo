@@ -272,4 +272,19 @@ export default defineSchema({
     ownerId: v.id("users"),
     createdAt: v.number(),
   }).index("by_owner", ["ownerId"]),
+
+  // Connected email accounts for unified inbox (supports N accounts per provider)
+  emailAccounts: defineTable({
+    userId: v.id("users"),
+    provider: v.union(v.literal("gmail"), v.literal("outlook")),
+    email: v.string(),
+    accessToken: v.string(),
+    refreshToken: v.string(),
+    tokenExpiry: v.number(),
+    isActive: v.boolean(),
+    connectedAt: v.number(),
+    lastSyncAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_email", ["userId", "email"]),
 });
