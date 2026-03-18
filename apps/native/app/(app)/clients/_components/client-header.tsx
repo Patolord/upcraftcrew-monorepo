@@ -1,7 +1,6 @@
 import { View, Text, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useUser, useAuth } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface ClientHeaderProps {
@@ -11,8 +10,6 @@ interface ClientHeaderProps {
 
 export function ClientHeader({ searchQuery, onSearchChange }: ClientHeaderProps) {
   const { user } = useUser();
-  const { signOut: _signOut } = useAuth();
-  const _router = useRouter();
 
   const userInitials =
     user?.firstName?.charAt(0)?.toUpperCase() ||
