@@ -23,8 +23,8 @@ export default function KanbanPage() {
   const teamMembers = useQuery(api.team.getTeamMembers);
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
-  const [_newTaskDefaultStatus, setNewTaskDefaultStatus] = useState<TaskStatus>("todo");
-  const [_selectedTaskId, setSelectedTaskId] = useState<Id<"tasks"> | null>(null);
+  const [, setNewTaskDefaultStatus] = useState<TaskStatus>("todo");
+  const [, setSelectedTaskId] = useState<Id<"tasks"> | null>(null);
 
   // Transform tasks to match the expected interface
   const transformedTasks = useMemo(() => {
