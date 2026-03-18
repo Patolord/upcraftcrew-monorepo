@@ -21,7 +21,7 @@ export default function AppLayout() {
 
   return (
     <Tabs
-      tabBar={(_props) => <BottomBar />}
+      tabBar={() => <BottomBar />}
       screenOptions={{
         headerShown: false,
       }}
