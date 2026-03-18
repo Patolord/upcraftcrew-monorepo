@@ -352,7 +352,7 @@ export const updateTask = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireWrite(ctx);
-    const { id, imageUrl, ...updates } = args;
+    const { id, imageUrl: _imageUrl, ...updates } = args;
 
     const existingTask = await ctx.db.get(id);
     if (!existingTask) {

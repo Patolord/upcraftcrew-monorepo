@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, type ViewProps, type TextProps } from "react-native";
+import { View, Text, type ViewProps } from "react-native";
 import { cn } from "@/lib/utils";
 
 type BadgeVariant = "default" | "secondary" | "destructive" | "success" | "warning" | "outline";

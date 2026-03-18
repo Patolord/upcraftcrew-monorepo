@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -34,7 +33,6 @@ const statusConfig = {
 };
 
 function ProjectRow({ project }: { project: Project }) {
-  const router = useRouter();
   const status = statusConfig[project.status];
 
   const handlePress = () => {

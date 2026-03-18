@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Card,
@@ -9,10 +9,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { colors } from "@/lib/colors";
 
 type BudgetStatus = "draft" | "sent" | "approved" | "rejected" | "cancelled" | "expired";
 

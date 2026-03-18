@@ -15,13 +15,12 @@ import {
   Trash2Icon,
   PlusIcon,
   MailIcon,
-  Loader2Icon,
   RefreshCwIcon,
-  FilterIcon,
 } from "lucide-react";
 import { ConnectAccountDialog } from "./connect-account-dialog";
 import { EmailList } from "./email-list";
-import { EmailDetailSheet } from "./email-detail-sheet";
+import { EmailDetailSheet, type EmailDetail } from "./email-detail-sheet";
+import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
@@ -60,10 +59,10 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
     id: string;
     accountId: string;
   } | null>(null);
-  const [emailDetail, setEmailDetail] = useState<any>(null);
+  const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [connectDialogOpen, setConnectDialogOpen] = useState(false);
-  const [filterAccountId, setFilterAccountId] = useState<string | null>(null);
+  const [filterAccountId, setFilterAccountId] = useState<Id<"emailAccounts"> | null>(null);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
 
@@ -101,7 +100,7 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
       const result = await fetchEmails({
         folder,
         limit: 50,
-        ...(filterAccountId ? { accountId: filterAccountId as any } : {}),
+        ...(filterAccountId ? { accountId: filterAccountId } : {}),
       });
       setEmails(result.messages as EmailMessage[]);
     } catch (err) {
@@ -146,7 +145,7 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
       setLoadingDetail(true);
       try {
         const detail = await fetchEmailDetail({
-          accountId: accountId as any,
+          accountId: accountId as Id<"emailAccounts">,
           messageId: emailId,
         });
         setEmailDetail(detail);

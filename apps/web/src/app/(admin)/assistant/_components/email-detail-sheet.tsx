@@ -17,7 +17,7 @@ import {
   CalendarIcon,
 } from "lucide-react";
 
-interface EmailDetail {
+export interface EmailDetail {
   id: string;
   threadId: string;
   from: string;
