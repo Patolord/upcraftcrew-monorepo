@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, type Theme, ThemeProvider } from "@react-navigation/native";
+import { DefaultTheme, type Theme, ThemeProvider } from "@react-navigation/native";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import Constants from "expo-constants";
 import { Stack } from "expo-router";
@@ -15,10 +15,6 @@ import * as SecureStore from "expo-secure-store";
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
   colors: NAV_THEME.light,
-};
-const _DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
 };
 
 const convexUrl =
