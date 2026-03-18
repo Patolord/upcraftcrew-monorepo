@@ -34,7 +34,7 @@ const statusConfig = {
 };
 
 function ProjectRow({ project }: { project: Project }) {
-  const router = useRouter();
+  const _router = useRouter();
   const status = statusConfig[project.status];
 
   const handlePress = () => {

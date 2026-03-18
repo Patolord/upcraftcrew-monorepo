@@ -1,7 +1,7 @@
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";

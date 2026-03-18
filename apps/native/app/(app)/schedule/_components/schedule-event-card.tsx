@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { colors } from "@/lib/colors";
 

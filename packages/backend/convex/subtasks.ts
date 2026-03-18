@@ -1,11 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUser, getCurrentUserOrThrow, requireWrite } from "./users";
+import { getCurrentUser, requireWrite } from "./users";
 import { throwNotFound } from "./errors";
-
-async function requireAuth(ctx: any) {
-  return await getCurrentUserOrThrow(ctx);
-}
 
 // Query: Get subtasks by task ID
 export const getSubtasksByTask = query({

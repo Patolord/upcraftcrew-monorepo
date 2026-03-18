@@ -11,8 +11,8 @@ interface ClientHeaderProps {
 
 export function ClientHeader({ searchQuery, onSearchChange }: ClientHeaderProps) {
   const { user } = useUser();
-  const { signOut } = useAuth();
-  const router = useRouter();
+  const { signOut: _signOut } = useAuth();
+  const _router = useRouter();
 
   const userInitials =
     user?.firstName?.charAt(0)?.toUpperCase() ||

@@ -1,7 +1,7 @@
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, RefreshControl, ScrollView, View, Text } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { DashboardHeader } from "./_components/dashboard-header";

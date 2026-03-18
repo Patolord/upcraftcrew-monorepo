@@ -3,7 +3,6 @@ import { Link, useRouter, Redirect } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,

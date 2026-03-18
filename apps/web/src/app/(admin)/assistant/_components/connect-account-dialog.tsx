@@ -9,11 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  MailIcon,
-  Trash2Icon,
-  ExternalLinkIcon,
-} from "lucide-react";
+import { MailIcon, Trash2Icon } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { toast } from "sonner";

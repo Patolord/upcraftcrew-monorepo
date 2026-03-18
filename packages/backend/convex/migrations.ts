@@ -1,5 +1,4 @@
 import { mutation } from "./_generated/server";
-import { v } from "convex/values";
 
 /**
  * Migration: Convert legacy client strings to clients table references.
