@@ -1,5 +1,5 @@
-import { useSignIn, useOAuth } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { useSignIn, useOAuth, useAuth } from "@clerk/clerk-expo";
+import { Link, useRouter, Redirect } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -18,6 +18,7 @@ import * as WebBrowser from "expo-web-browser";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function SignInPage() {
+  const { isSignedIn } = useAuth();
   const { signIn, setActive, isLoaded } = useSignIn();
   const { startOAuthFlow: googleOAuth } = useOAuth({ strategy: "oauth_google" });
   const { startOAuthFlow: githubOAuth } = useOAuth({ strategy: "oauth_github" });
@@ -27,6 +28,10 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (isSignedIn) {
+    return <Redirect href="/(app)/dashboard" />;
+  }
 
   const onSignInPress = async () => {
     if (!isLoaded) return;
