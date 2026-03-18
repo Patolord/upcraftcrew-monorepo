@@ -2,7 +2,7 @@ export type EventType = "meeting" | "deadline" | "task" | "reminder" | "mileston
 
 export type EventPriority = "low" | "medium" | "high";
 
-export type SourceType = "event" | "project" | "budget" | "transaction" | "task";
+export type SourceType = "event" | "project" | "budget" | "transaction" | "task" | "google-calendar" | "outlook-calendar";
 
 export type Attendee = {
   id: string;
@@ -58,4 +58,9 @@ export type ScheduleEvent = {
 
   // Task-specific fields
   taskStatus?: "todo" | "in-progress" | "review" | "done" | "blocked";
+
+  // External calendar fields
+  calendarProvider?: "gmail" | "outlook";
+  calendarAccountEmail?: string;
+  calendarEventLink?: string;
 };

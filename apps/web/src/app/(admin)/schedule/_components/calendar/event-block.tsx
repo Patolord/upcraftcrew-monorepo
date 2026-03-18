@@ -18,7 +18,24 @@ import {
 } from "lucide-react";
 import React from "react";
 
-// Get icon component based on source type
+function GoogleCalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="2" fill="#fff" stroke="#ea4335" strokeWidth="1.5" />
+      <path d="M8 12h8M12 8v8" stroke="#ea4335" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function OutlookCalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="2" fill="#fff" stroke="#0078d4" strokeWidth="1.5" />
+      <path d="M8 12h8M12 8v8" stroke="#0078d4" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function getSourceTypeIcon(sourceType: SourceType, transactionType?: "income" | "expense") {
   const iconClass = "h-3 w-3 flex-shrink-0";
 
@@ -37,9 +54,17 @@ function getSourceTypeIcon(sourceType: SourceType, transactionType?: "income" | 
       );
     case "task":
       return <CheckSquareIcon className={iconClass} />;
+    case "google-calendar":
+      return <GoogleCalendarIcon className={iconClass} />;
+    case "outlook-calendar":
+      return <OutlookCalendarIcon className={iconClass} />;
     default:
       return <CalendarIcon className={iconClass} />;
   }
+}
+
+function isExternalCalendar(sourceType: SourceType): boolean {
+  return sourceType === "google-calendar" || sourceType === "outlook-calendar";
 }
 
 interface EventBlockProps {
@@ -67,7 +92,7 @@ export function EventBlock({ event, onClick, variant = "pill", showTime = true }
         style={{ borderLeftColor: event.color }}
       >
         <span className={iconColor}>{Icon}</span>
-        {showTime && event.startTime && event.sourceType === "event" && (
+        {showTime && event.startTime && (event.sourceType === "event" || isExternalCalendar(event.sourceType)) && (
           <span className="font-medium">{formatTime(event.startTime)}</span>
         )}
         <span className="truncate">{event.title}</span>
@@ -86,7 +111,7 @@ export function EventBlock({ event, onClick, variant = "pill", showTime = true }
         )}
       >
         <span className={cn("flex-shrink-0", iconColor)}>{Icon}</span>
-        {showTime && event.startTime && event.sourceType === "event" && (
+        {showTime && event.startTime && (event.sourceType === "event" || isExternalCalendar(event.sourceType)) && (
           <span className="font-semibold whitespace-nowrap">{formatTime(event.startTime)}</span>
         )}
         <span className="truncate">{event.title}</span>
@@ -111,7 +136,7 @@ export function EventBlock({ event, onClick, variant = "pill", showTime = true }
         <span className={cn("flex-shrink-0", iconColor)}>{Icon}</span>
         <div className={cn("text-sm font-medium truncate", textColor)}>{event.title}</div>
       </div>
-      {showTime && event.startTime && event.sourceType === "event" && (
+      {showTime && event.startTime && (event.sourceType === "event" || isExternalCalendar(event.sourceType)) && (
         <div className={cn("text-xs mt-0.5 opacity-80 ml-4.5", textColor)}>
           {formatTime(event.startTime)}
         </div>
@@ -169,7 +194,7 @@ export function TimeGridEventBlock({
           <span className={cn("flex-shrink-0", iconColor)}>{Icon}</span>
           <div className={cn("text-xs font-medium truncate", textColor)}>{event.title}</div>
         </div>
-        {height > 40 && event.startTime && event.sourceType === "event" && (
+        {height > 40 && event.startTime && (event.sourceType === "event" || isExternalCalendar(event.sourceType)) && (
           <div className={cn("text-[10px] mt-0.5 opacity-75 ml-4", textColor)}>
             {formatTime(event.startTime)}
           </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useQuery, useAction } from "convex/react";
 import type { EventType, ScheduleEvent, SourceType } from "@/types/schedule";
 import { CalendarMonthView } from "./_components/calendar/calendar-month-view";
 import { CalendarHeader } from "./_components/calendar/calendar-header";
@@ -13,6 +13,7 @@ import { NewEventModal } from "./_components/calendar/new-event-modal";
 import { getSourceTypeColor, getTransactionColor } from "./_components/calendar/calendar-utils";
 import { useEnsureCurrentUser } from "@/hooks/use-ensure-current-user";
 import { ScheduleHeader } from "./_components/schedule-header";
+import { CalendarSourceLegend } from "./_components/calendar/calendar-source-legend";
 import React from "react";
 
 export type ViewMode = "month" | "week" | "day";
@@ -24,6 +25,8 @@ export default function SchedulePage() {
   const [selectedDayForSidebar, setSelectedDayForSidebar] = useState<Date | null>(null);
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [externalCalendarEvents, setExternalCalendarEvents] = useState<ScheduleEvent[]>([]);
+  const [hiddenSources, setHiddenSources] = useState<Set<string>>(new Set());
 
   // Check authentication and ensure user exists
   const { isSignedIn, isLoaded } = useEnsureCurrentUser();
@@ -42,6 +45,78 @@ export default function SchedulePage() {
         }
       : "skip",
   );
+
+  // Fetch connected email accounts (for calendar integration)
+  const emailAccounts = useQuery(
+    api.emailAccounts.getMyAccounts,
+    isSignedIn ? {} : "skip",
+  );
+
+  const fetchCalendarEventsAction = useAction(api.emailAccounts.fetchCalendarEvents);
+
+  const fetchExternalEvents = useCallback(async () => {
+    if (!emailAccounts || emailAccounts.length === 0) return;
+
+    const monthStart = new Date(year, month, 1);
+    const monthEnd = new Date(year, month + 1, 0, 23, 59, 59);
+
+    try {
+      const result = await fetchCalendarEventsAction({
+        timeMin: monthStart.toISOString(),
+        timeMax: monthEnd.toISOString(),
+      });
+
+      const mapped: ScheduleEvent[] = result.events.map((evt) => {
+        const sourceType: SourceType =
+          evt.provider === "gmail" ? "google-calendar" : "outlook-calendar";
+        const startDate = new Date(evt.startTime);
+        const endDate = new Date(evt.endTime);
+
+        return {
+          id: `cal-${evt.provider}-${evt.id}`,
+          sourceId: evt.id,
+          sourceType,
+          title: evt.title,
+          description: evt.description,
+          type: "meeting" as EventType,
+          priority: "medium" as const,
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: endDate.toISOString().split("T")[0],
+          startTime: evt.isAllDay
+            ? undefined
+            : startDate.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }),
+          endTime: evt.isAllDay
+            ? undefined
+            : endDate.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }),
+          allDay: evt.isAllDay,
+          location: evt.location,
+          color: getSourceTypeColor(sourceType),
+          calendarProvider: evt.provider,
+          calendarAccountEmail: evt.accountEmail,
+          calendarEventLink: evt.link,
+        };
+      });
+
+      setExternalCalendarEvents(mapped);
+    } catch (err) {
+      console.error("Failed to fetch external calendar events:", err);
+      setExternalCalendarEvents([]);
+    }
+  }, [emailAccounts, year, month, fetchCalendarEventsAction]);
+
+  useEffect(() => {
+    if (isSignedIn && emailAccounts && emailAccounts.length > 0) {
+      fetchExternalEvents();
+    }
+  }, [isSignedIn, emailAccounts, fetchExternalEvents]);
 
   // Show loading only while auth is loading or items are loading (when signed in)
   const isLoading = !isLoaded || (isSignedIn && scheduleItems === undefined);
@@ -155,12 +230,66 @@ export default function SchedulePage() {
     }) as ScheduleEvent[];
   }, [scheduleItems]);
 
-  // Filter events based on search query
+  // Merge internal + external events
+  const allEvents = useMemo(() => {
+    const merged = [...transformedEvents, ...externalCalendarEvents];
+    merged.sort((a, b) => {
+      const aTime = new Date(`${a.startDate}T${a.startTime || "00:00"}`).getTime();
+      const bTime = new Date(`${b.startDate}T${b.startTime || "00:00"}`).getTime();
+      return aTime - bTime;
+    });
+    return merged;
+  }, [transformedEvents, externalCalendarEvents]);
+
+  // Collect all unique sources for the legend
+  const availableSources = useMemo(() => {
+    const sources = new Map<string, { sourceType: SourceType; label?: string }>();
+    for (const evt of allEvents) {
+      const key =
+        evt.sourceType === "google-calendar" || evt.sourceType === "outlook-calendar"
+          ? `${evt.sourceType}:${evt.calendarAccountEmail}`
+          : evt.sourceType;
+      if (!sources.has(key)) {
+        sources.set(key, { sourceType: evt.sourceType, label: evt.calendarAccountEmail });
+      }
+    }
+    return Array.from(sources.entries()).map(([key, val]) => ({
+      key,
+      sourceType: val.sourceType,
+      accountEmail: val.label,
+    }));
+  }, [allEvents]);
+
+  const handleToggleSource = useCallback((key: string) => {
+    setHiddenSources((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  }, []);
+
+  // Filter events based on search query and hidden sources
   const filteredEvents = useMemo(() => {
-    if (!searchQuery.trim()) return transformedEvents;
+    let events = allEvents;
+
+    if (hiddenSources.size > 0) {
+      events = events.filter((evt) => {
+        const key =
+          evt.sourceType === "google-calendar" || evt.sourceType === "outlook-calendar"
+            ? `${evt.sourceType}:${evt.calendarAccountEmail}`
+            : evt.sourceType;
+        return !hiddenSources.has(key);
+      });
+    }
+
+    if (!searchQuery.trim()) return events;
 
     const query = searchQuery.toLowerCase();
-    return transformedEvents.filter((event) => {
+    return events.filter((event) => {
       return (
         event.title?.toLowerCase().includes(query) ||
         event.description?.toLowerCase().includes(query) ||
@@ -169,7 +298,7 @@ export default function SchedulePage() {
         event.sourceType?.toLowerCase().includes(query)
       );
     });
-  }, [transformedEvents, searchQuery]);
+  }, [allEvents, searchQuery, hiddenSources]);
 
   // Handle date selection from mini calendar
   const handleDateSelect = (date: Date) => {
@@ -222,6 +351,15 @@ export default function SchedulePage() {
                 onDateChange={setSelectedDate}
                 onAddEvent={() => setIsNewEventModalOpen(true)}
               />
+
+              {/* Source legend */}
+              {availableSources.length > 0 && (
+                <CalendarSourceLegend
+                  sources={availableSources}
+                  hiddenSources={hiddenSources}
+                  onToggle={handleToggleSource}
+                />
+              )}
 
               {/* Calendar content */}
               <div className="p-2 md:p-4">

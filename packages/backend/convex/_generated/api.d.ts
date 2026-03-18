@@ -11,6 +11,7 @@
 import type * as admin from "../admin.js";
 import type * as budgets from "../budgets.js";
 import type * as clients from "../clients.js";
+import type * as emailAccounts from "../emailAccounts.js";
 import type * as errors from "../errors.js";
 import type * as finance from "../finance.js";
 import type * as healthCheck from "../healthCheck.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   budgets: typeof budgets;
   clients: typeof clients;
+  emailAccounts: typeof emailAccounts;
   errors: typeof errors;
   finance: typeof finance;
   healthCheck: typeof healthCheck;

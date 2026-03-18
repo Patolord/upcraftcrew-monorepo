@@ -12,6 +12,7 @@ import {
   ChevronDown,
   type LucideIcon,
   User,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -50,6 +51,7 @@ const menuItems: MenuItem[] = [
     icon: LayoutDashboard,
     prefetch: true,
   },
+
   {
     title: "Orçamentos",
     url: "/budgets",
@@ -96,6 +98,12 @@ const menuItems: MenuItem[] = [
     title: "Perfil",
     url: "/profile",
     icon: User,
+    prefetch: true,
+  },
+  {
+    title: "Assistente",
+    url: "/assistant",
+    icon: Mail,
     prefetch: true,
   },
 ];

@@ -230,6 +230,8 @@ export function getSourceTypeColor(sourceType: SourceType): string {
     budget: "#f97316", // orange
     transaction: "#10b981", // green (for income), we'll handle expense separately
     task: "#14b8a6", // teal
+    "google-calendar": "#ea4335", // Google red
+    "outlook-calendar": "#0078d4", // Microsoft blue
   };
   return colorMap[sourceType];
 }
@@ -254,6 +256,8 @@ export function getSourceTypeBgColor(
     budget: "bg-orange-50 border-orange-200",
     transaction: "bg-emerald-50 border-emerald-200",
     task: "bg-teal-50 border-teal-200",
+    "google-calendar": "bg-red-50 border-red-200",
+    "outlook-calendar": "bg-sky-50 border-sky-200",
   };
   return colorMap[sourceType];
 }
@@ -273,6 +277,8 @@ export function getSourceTypeTextColor(
     budget: "text-orange-700",
     transaction: "text-emerald-700",
     task: "text-teal-700",
+    "google-calendar": "text-red-700",
+    "outlook-calendar": "text-sky-700",
   };
   return colorMap[sourceType];
 }
@@ -292,6 +298,8 @@ export function getSourceTypeIconColor(
     budget: "text-orange-500",
     transaction: "text-emerald-500",
     task: "text-teal-500",
+    "google-calendar": "text-red-500",
+    "outlook-calendar": "text-sky-500",
   };
   return colorMap[sourceType];
 }
@@ -311,6 +319,8 @@ export function getSourceTypeBadgeColor(
     budget: "bg-orange-100 text-orange-700",
     transaction: "bg-emerald-100 text-emerald-700",
     task: "bg-teal-100 text-teal-700",
+    "google-calendar": "bg-red-100 text-red-700",
+    "outlook-calendar": "bg-sky-100 text-sky-700",
   };
   return colorMap[sourceType];
 }
@@ -323,6 +333,8 @@ export function getSourceTypeLabel(sourceType: SourceType): string {
     budget: "Follow-up",
     transaction: "Payment",
     task: "Task",
+    "google-calendar": "Google Calendar",
+    "outlook-calendar": "Outlook Calendar",
   };
   return labelMap[sourceType];
 }
