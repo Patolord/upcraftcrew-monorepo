@@ -128,11 +128,7 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
   const unreadCount = emailsWithReadState.filter((e) => !e.isRead).length;
 
   const handleMarkAsRead = useCallback(
-    (
-      emailId: string,
-      accountId: Id<"emailAccounts">,
-      e: React.MouseEvent,
-    ) => {
+    (emailId: string, accountId: string, e: React.MouseEvent) => {
       e.stopPropagation();
       setReadIds((prev) => new Set(prev).add(`${accountId}-${emailId}`));
     },
@@ -144,12 +140,12 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
   }, [loadEmails]);
 
   const handleSelectEmail = useCallback(
-    async (emailId: string, accountId: Id<"emailAccounts">) => {
+    async (emailId: string, accountId: string) => {
       setSelectedEmail({ id: emailId, accountId });
       setLoadingDetail(true);
       try {
         const detail = await fetchEmailDetail({
-          accountId,
+          accountId: accountId as Id<"emailAccounts">,
           messageId: emailId,
         });
         setEmailDetail(detail);
