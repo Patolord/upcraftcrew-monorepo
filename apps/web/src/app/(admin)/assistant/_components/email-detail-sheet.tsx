@@ -100,7 +100,10 @@ export function EmailDetailSheet({
                   <SheetTitle className="text-base font-semibold leading-tight">
                     {email.subject || "(sem assunto)"}
                   </SheetTitle>
-                  <SheetDescription className="mt-1">
+                  <SheetDescription className="sr-only">
+                    {email.subject || "Detalhes do e-mail"}
+                  </SheetDescription>
+                  <span className="mt-1 block">
                     <Badge
                       variant="outline"
                       className="text-[10px] font-medium"
@@ -112,7 +115,7 @@ export function EmailDetailSheet({
                       )}
                       {email.accountEmail}
                     </Badge>
-                  </SheetDescription>
+                  </span>
                 </div>
               </div>
             </SheetHeader>

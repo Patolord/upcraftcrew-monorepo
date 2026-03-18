@@ -8,11 +8,28 @@ export async function GET() {
   }
 
   const clientId = process.env.MICROSOFT_CLIENT_ID;
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/email/outlook/callback`;
+  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-  if (!clientId) {
+  if (!clientId || !clientSecret) {
     return NextResponse.json(
-      { error: "Microsoft OAuth not configured" },
+      {
+        error: "Microsoft OAuth not configured",
+        hint: "Add MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET to apps/web/.env.local",
+      },
+      { status: 500 },
+    );
+  }
+
+  const redirectUri = appUrl
+    ? `${appUrl}/api/email/outlook/callback`
+    : undefined;
+  if (!redirectUri) {
+    return NextResponse.json(
+      {
+        error: "NEXT_PUBLIC_APP_URL not set",
+        hint: "Add NEXT_PUBLIC_APP_URL (e.g. http://localhost:3001) to apps/web/.env.local",
+      },
       { status: 500 },
     );
   }
@@ -21,7 +38,8 @@ export async function GET() {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: "code",
-    scope: "https://graph.microsoft.com/Mail.Read offline_access User.Read",
+    scope:
+      "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Calendars.Read offline_access User.Read",
     response_mode: "query",
     state: userId,
   });

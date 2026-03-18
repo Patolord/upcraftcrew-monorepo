@@ -53,6 +53,9 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
     }).format(amount);
   };
 
+  const isExternalCalendar =
+    event.sourceType === "google-calendar" || event.sourceType === "outlook-calendar";
+
   // Get link to source
   const getSourceLink = (): string | null => {
     switch (event.sourceType) {
@@ -166,20 +169,29 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
           </div>
         </div>
 
-        {/* Time - only show for events */}
-        {event.sourceType === "event" && (
+        {/* Time - show for events and external calendar */}
+        {(event.sourceType === "event" || isExternalCalendar) && (
           <>
             <div className="flex items-start gap-2">
               <ClockIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
               <p className="text-xs text-foreground">{timeRange}</p>
             </div>
 
-            {/* Reminder - only for events */}
-            <div className="flex items-start gap-2">
-              <BellIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
-              <p className="text-xs text-foreground">10 min antes</p>
-            </div>
+            {event.sourceType === "event" && (
+              <div className="flex items-start gap-2">
+                <BellIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
+                <p className="text-xs text-foreground">10 min antes</p>
+              </div>
+            )}
           </>
+        )}
+
+        {/* External calendar account info */}
+        {isExternalCalendar && event.calendarAccountEmail && (
+          <div className="flex items-start gap-2">
+            <CalendarIcon className="h-3.5 w-3.5 text-muted-foreground mt-0.5" />
+            <p className="text-xs text-muted-foreground">{event.calendarAccountEmail}</p>
+          </div>
         )}
 
         {/* Location - only for events */}
@@ -376,6 +388,18 @@ export function EventDetailPanel({ event }: EventDetailPanelProps) {
                 Visualizar {getSourceTypeLabel(event.sourceType)}
               </Button>
             </Link>
+          </div>
+        )}
+
+        {/* External calendar link */}
+        {isExternalCalendar && event.calendarEventLink && (
+          <div className="pt-2">
+            <a href={event.calendarEventLink} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="w-full h-7 text-xs rounded-lg">
+                <ExternalLinkIcon className="h-3 w-3 mr-1" />
+                Abrir no {event.sourceType === "google-calendar" ? "Google Calendar" : "Outlook"}
+              </Button>
+            </a>
           </div>
         )}
       </div>

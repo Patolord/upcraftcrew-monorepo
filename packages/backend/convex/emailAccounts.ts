@@ -187,7 +187,7 @@ async function refreshOutlookToken(refreshToken: string) {
         client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
         refresh_token: refreshToken,
         grant_type: "refresh_token",
-        scope: "https://graph.microsoft.com/Mail.Read offline_access",
+        scope: "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Calendars.Read offline_access",
       }),
     },
   );
@@ -533,6 +533,181 @@ export const fetchEmailDetail = action({
   },
   handler: async (ctx, args) => {
     return fetchEmailDetailHandler(ctx, args);
+  },
+});
+
+// ============================================================================
+// CALENDAR ACTIONS
+// ============================================================================
+
+type CalendarEventResult = {
+  id: string;
+  title: string;
+  description: string;
+  startTime: number;
+  endTime: number;
+  location: string;
+  isAllDay: boolean;
+  provider: "gmail" | "outlook";
+  accountEmail: string;
+  accountId: string;
+  link: string;
+};
+
+async function fetchGoogleCalendarEvents(
+  accessToken: string,
+  timeMin: string,
+  timeMax: string,
+): Promise<Omit<CalendarEventResult, "provider" | "accountEmail" | "accountId">[]> {
+  const params = new URLSearchParams({
+    timeMin,
+    timeMax,
+    singleEvents: "true",
+    orderBy: "startTime",
+    maxResults: "100",
+  });
+
+  const res = await fetch(
+    `https://www.googleapis.com/calendar/v3/calendars/primary/events?${params}`,
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
+  if (!res.ok) {
+    const errorBody = await res.text();
+    console.error(`Google Calendar API failed (${res.status}):`, errorBody);
+    return [];
+  }
+  const data = await res.json();
+
+  return (data.items || []).map(
+    (event: {
+      id: string;
+      summary?: string;
+      description?: string;
+      start?: { dateTime?: string; date?: string };
+      end?: { dateTime?: string; date?: string };
+      location?: string;
+      htmlLink?: string;
+    }) => {
+      const isAllDay = !event.start?.dateTime;
+      const startStr = event.start?.dateTime || event.start?.date || "";
+      const endStr = event.end?.dateTime || event.end?.date || "";
+
+      return {
+        id: event.id,
+        title: event.summary || "(sem titulo)",
+        description: event.description || "",
+        startTime: new Date(startStr).getTime(),
+        endTime: new Date(endStr).getTime(),
+        location: event.location || "",
+        isAllDay,
+        link: event.htmlLink || "",
+      };
+    },
+  );
+}
+
+async function fetchOutlookCalendarEvents(
+  accessToken: string,
+  timeMin: string,
+  timeMax: string,
+): Promise<Omit<CalendarEventResult, "provider" | "accountEmail" | "accountId">[]> {
+  const params = new URLSearchParams({
+    startDateTime: timeMin,
+    endDateTime: timeMax,
+    $top: "100",
+    $select: "id,subject,bodyPreview,start,end,location,isAllDay,webLink",
+    $orderby: "start/dateTime",
+  });
+
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/me/calendarView?${params}`,
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
+  if (!res.ok) {
+    const errorBody = await res.text();
+    console.error(`Outlook Calendar API failed (${res.status}):`, errorBody);
+    return [];
+  }
+  const data = await res.json();
+
+  return (data.value || []).map(
+    (event: {
+      id: string;
+      subject?: string;
+      bodyPreview?: string;
+      start?: { dateTime?: string; timeZone?: string };
+      end?: { dateTime?: string; timeZone?: string };
+      location?: { displayName?: string };
+      isAllDay?: boolean;
+      webLink?: string;
+    }) => ({
+      id: event.id,
+      title: event.subject || "(sem titulo)",
+      description: event.bodyPreview || "",
+      startTime: new Date(event.start?.dateTime + "Z").getTime(),
+      endTime: new Date(event.end?.dateTime + "Z").getTime(),
+      location: event.location?.displayName || "",
+      isAllDay: event.isAllDay || false,
+      link: event.webLink || "",
+    }),
+  );
+}
+
+export const fetchCalendarEvents = action({
+  args: {
+    accountId: v.optional(v.id("emailAccounts")),
+    timeMin: v.string(),
+    timeMax: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const accounts: EmailAccountDoc[] = [];
+
+    if (args.accountId) {
+      const account: EmailAccountDoc | null = await ctx.runQuery(
+        internal.emailAccounts.internalGetAccount,
+        { accountId: args.accountId },
+      );
+      if (!account) throw new Error("Account not found");
+      accounts.push(account);
+    } else {
+      const allAccounts = await ctx.runQuery(
+        internal.emailAccounts.internalGetUserAccounts,
+        { clerkUserId: identity.subject },
+      );
+      accounts.push(...allAccounts);
+    }
+
+    const results = await Promise.allSettled(
+      accounts.map(async (account) => {
+        const token = await ensureValidToken(ctx, account);
+        const fetchFn =
+          account.provider === "gmail"
+            ? fetchGoogleCalendarEvents
+            : fetchOutlookCalendarEvents;
+        const events = await fetchFn(token, args.timeMin, args.timeMax);
+        return events.map(
+          (e): CalendarEventResult => ({
+            ...e,
+            provider: account.provider,
+            accountEmail: account.email,
+            accountId: account._id,
+          }),
+        );
+      }),
+    );
+
+    const allEvents: CalendarEventResult[] = [];
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        allEvents.push(...result.value);
+      }
+    }
+
+    allEvents.sort((a, b) => a.startTime - b.startTime);
+    return { events: allEvents };
   },
 });
 

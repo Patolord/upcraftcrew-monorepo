@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
           redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/email/outlook/callback`,
           grant_type: "authorization_code",
           scope:
-            "https://graph.microsoft.com/Mail.Read offline_access User.Read",
+            "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Calendars.Read offline_access User.Read",
         }),
       },
     );

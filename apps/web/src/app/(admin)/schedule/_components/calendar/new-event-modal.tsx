@@ -328,13 +328,19 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
                     )}
                   >
                     <Checkbox checked={isSelected} />
-                    <Image
-                      src={member.imageUrl || ""}
-                      alt={`${member.firstName} ${member.lastName}`}
-                      width={24}
-                      height={24}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
+                    {member.imageUrl ? (
+                      <Image
+                        src={member.imageUrl}
+                        alt={`${member.firstName} ${member.lastName}`}
+                        width={24}
+                        height={24}
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground">
+                        {member.firstName?.[0]}{member.lastName?.[0]}
+                      </div>
+                    )}
                     <span className={cn("text-sm", isSelected && "text-orange-700 font-medium")}>
                       {member.firstName} {member.lastName}
                     </span>
