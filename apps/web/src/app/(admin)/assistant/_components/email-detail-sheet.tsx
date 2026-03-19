@@ -15,7 +15,10 @@ import {
   ReplyIcon,
   UserIcon,
   CalendarIcon,
+  StarIcon,
+  ArchiveIcon,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface EmailDetail {
   id: string;
@@ -36,6 +39,9 @@ interface EmailDetailSheetProps {
   onClose: () => void;
   email: EmailDetail | null;
   loading: boolean;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  onArchive?: () => void;
 }
 
 function getReplyUrl(email: EmailDetail) {
@@ -73,6 +79,9 @@ export function EmailDetailSheet({
   onClose,
   email,
   loading,
+  isFavorite,
+  onToggleFavorite,
+  onArchive,
 }: EmailDetailSheetProps) {
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
@@ -148,8 +157,8 @@ export function EmailDetailSheet({
                 )}
               </div>
 
-              {/* Reply button */}
-              <div className="flex gap-2">
+              {/* Action buttons */}
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant="outline"
                   size="sm"
@@ -160,6 +169,32 @@ export function EmailDetailSheet({
                   Responder
                   <ExternalLinkIcon className="size-3 ml-1.5 text-muted-foreground" />
                 </Button>
+                {onToggleFavorite && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "rounded-md",
+                      isFavorite && "border-yellow-400 text-yellow-600 hover:text-yellow-700",
+                    )}
+                    onClick={onToggleFavorite}
+                    title={isFavorite ? "Remover remetente dos favoritos" : "Favoritar remetente"}
+                  >
+                    <StarIcon className={cn("size-4 mr-2", isFavorite && "fill-current")} />
+                    {isFavorite ? "Remetente favorito" : "Favoritar remetente"}
+                  </Button>
+                )}
+                {onArchive && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-md"
+                    onClick={onArchive}
+                  >
+                    <ArchiveIcon className="size-4 mr-2" />
+                    Arquivar
+                  </Button>
+                )}
               </div>
 
               {/* Email body */}

@@ -9,11 +9,15 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const { token } = await requireAuthWithToken();
 
-  const preloadedAccounts = await preloadQuery(
-    api.emailAccounts.getMyAccounts,
-    {},
-    { token },
-  );
+  const [preloadedAccounts, preloadedFavorites] = await Promise.all([
+    preloadQuery(api.emailAccounts.getMyAccounts, {}, { token }),
+    preloadQuery(api.emailAccounts.getMyFavorites, {}, { token }),
+  ]);
 
-  return <AssistantPage preloadedAccounts={preloadedAccounts} />;
+  return (
+    <AssistantPage
+      preloadedAccounts={preloadedAccounts}
+      preloadedFavorites={preloadedFavorites}
+    />
+  );
 }

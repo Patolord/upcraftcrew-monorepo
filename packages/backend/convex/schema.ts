@@ -288,4 +288,14 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_email", ["userId", "email"]),
+
+  // Favorited sender addresses (all emails from these addresses appear in Favorites)
+  emailFavorites: defineTable({
+    userId: v.id("users"),
+    emailAddress: v.string(),
+    displayName: v.optional(v.string()),
+    favoritedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_address", ["userId", "emailAddress"]),
 });

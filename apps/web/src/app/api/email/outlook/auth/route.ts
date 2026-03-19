@@ -39,7 +39,7 @@ export async function GET() {
     redirect_uri: redirectUri,
     response_type: "code",
     scope:
-      "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Calendars.Read offline_access User.Read",
+      "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access User.Read",
     response_mode: "query",
     state: userId,
   });

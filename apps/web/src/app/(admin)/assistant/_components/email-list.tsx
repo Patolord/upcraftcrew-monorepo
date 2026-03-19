@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { MailCheckIcon } from "lucide-react";
+import { MailCheckIcon, StarIcon, ArchiveIcon } from "lucide-react";
 import type { EmailMessage } from "./assistant-page";
 
 function formatDate(dateStr: string) {
@@ -48,9 +48,27 @@ interface EmailListProps {
   onSelect: (emailId: string, accountId: string) => void;
   onMarkAsRead?: (emailId: string, accountId: string, e: React.MouseEvent) => void;
   selectedId: string | null;
+  favoriteAddresses?: Set<string>;
+  onToggleFavorite?: (email: EmailMessage, e: React.MouseEvent) => void;
+  onArchive?: (emailId: string, accountId: string, e: React.MouseEvent) => void;
+  folder?: string;
 }
 
-export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailListProps) {
+function extractEmailAddress(from: string): string {
+  const match = from.match(/<(.+?)>/);
+  return (match ? match[1] : from).toLowerCase();
+}
+
+export function EmailList({
+  emails,
+  onSelect,
+  onMarkAsRead,
+  selectedId,
+  favoriteAddresses,
+  onToggleFavorite,
+  onArchive,
+  folder,
+}: EmailListProps) {
   return (
     <div className="w-full min-w-0 bg-white dark:bg-card divide-y divide-border">
       {emails.map((email) => {
@@ -58,6 +76,7 @@ export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailL
         const initials = getInitials(fromName);
         const isSelected = selectedId === email.id;
         const isGmail = email.provider === "gmail";
+        const isFav = favoriteAddresses?.has(extractEmailAddress(email.from)) ?? false;
 
         return (
           <div
@@ -121,6 +140,29 @@ export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailL
                 <span className="text-xs text-muted-foreground whitespace-nowrap">
                   {formatDate(email.date)}
                 </span>
+                {onToggleFavorite && (
+                  <button
+                    onClick={(e) => onToggleFavorite(email, e)}
+                    className={cn(
+                      "transition-colors",
+                      isFav
+                        ? "text-yellow-500 hover:text-yellow-600"
+                        : "text-muted-foreground hover:text-yellow-500",
+                    )}
+                    title={isFav ? "Remover remetente dos favoritos" : "Favoritar remetente"}
+                  >
+                    <StarIcon className={cn("size-3.5", isFav && "fill-current")} />
+                  </button>
+                )}
+                {onArchive && folder === "inbox" && (
+                  <button
+                    onClick={(e) => onArchive(email.id, email.accountId, e)}
+                    className="text-muted-foreground hover:text-orange-500 transition-colors"
+                    title="Arquivar"
+                  >
+                    <ArchiveIcon className="size-3.5" />
+                  </button>
+                )}
                 {!email.isRead && onMarkAsRead && (
                   <button
                     onClick={(e) => onMarkAsRead(email.id, email.accountId, e)}

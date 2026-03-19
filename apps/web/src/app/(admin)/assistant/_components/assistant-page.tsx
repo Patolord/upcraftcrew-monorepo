@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { usePreloadedQuery, useAction } from "convex/react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { usePreloadedQuery, useAction, useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Preloaded } from "convex/react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/input";
 import {
   InboxIcon,
   SendIcon,
@@ -16,6 +17,8 @@ import {
   PlusIcon,
   MailIcon,
   RefreshCwIcon,
+  SearchIcon,
+  StarIcon,
 } from "lucide-react";
 import { ConnectAccountDialog } from "./connect-account-dialog";
 import { EmailList } from "./email-list";
@@ -24,7 +27,7 @@ import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel"
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
-type Folder = "inbox" | "sent" | "trash";
+type Folder = "inbox" | "sent" | "trash" | "favorites";
 
 export interface EmailMessage {
   id: string;
@@ -42,12 +45,16 @@ export interface EmailMessage {
 
 interface AssistantPageProps {
   preloadedAccounts: Preloaded<typeof api.emailAccounts.getMyAccounts>;
+  preloadedFavorites: Preloaded<typeof api.emailAccounts.getMyFavorites>;
 }
 
-export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
+export function AssistantPage({ preloadedAccounts, preloadedFavorites }: AssistantPageProps) {
   const accounts = usePreloadedQuery(preloadedAccounts);
+  const favorites = usePreloadedQuery(preloadedFavorites);
   const fetchEmails = useAction(api.emailAccounts.fetchEmails);
   const fetchEmailDetail = useAction(api.emailAccounts.fetchEmailDetail);
+  const toggleFavoriteAddress = useMutation(api.emailAccounts.toggleFavoriteAddress);
+  const archiveEmailAction = useAction(api.emailAccounts.archiveEmail);
 
   const ITEMS_PER_PAGE = 7;
 
@@ -65,6 +72,7 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
   const [filterAccountId, setFilterAccountId] = useState<Id<"emailAccounts"> | null>(null);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const searchParams = useSearchParams();
 
@@ -97,8 +105,9 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
     setLoading(true);
     setCurrentPage(1);
     try {
+      const apiFolder = folder === "favorites" ? "inbox" : folder;
       const result = await fetchEmails({
-        folder,
+        folder: apiFolder as "inbox" | "sent" | "trash",
         limit: 50,
         ...(filterAccountId ? { accountId: filterAccountId } : {}),
       });
@@ -113,13 +122,32 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
     }
   }, [accounts.length, fetchEmails, folder, filterAccountId]);
 
+  const favoriteAddresses = useMemo(
+    () => new Set(favorites.map((f) => f.emailAddress.toLowerCase())),
+    [favorites],
+  );
+
   const emailsWithReadState = emails.map((e) => ({
     ...e,
     isRead: e.isRead || readIds.has(`${e.accountId}-${e.id}`),
   }));
-  const filteredEmails = showUnreadOnly
-    ? emailsWithReadState.filter((e) => !e.isRead)
+  const searchLower = searchQuery.toLowerCase();
+  const afterFavFilter = folder === "favorites"
+    ? emailsWithReadState.filter((e) => {
+        const m = e.from.match(/<(.+?)>/);
+        const addr = (m ? m[1] : e.from).toLowerCase();
+        return favoriteAddresses.has(addr);
+      })
     : emailsWithReadState;
+  const searchFiltered = afterFavFilter.filter((e) =>
+    !searchQuery ||
+    e.from.toLowerCase().includes(searchLower) ||
+    e.subject.toLowerCase().includes(searchLower) ||
+    e.snippet.toLowerCase().includes(searchLower)
+  );
+  const filteredEmails = showUnreadOnly
+    ? searchFiltered.filter((e) => !e.isRead)
+    : searchFiltered;
   const totalPages = Math.ceil(filteredEmails.length / ITEMS_PER_PAGE);
   const paginatedEmails = filteredEmails.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -163,6 +191,67 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
     setSelectedEmail(null);
     setEmailDetail(null);
   }, []);
+
+  const handleToggleFavorite = useCallback(
+    async (email: EmailMessage, e: React.MouseEvent) => {
+      e.stopPropagation();
+      const match = email.from.match(/<(.+?)>/);
+      const address = match ? match[1] : email.from;
+      const nameMatch = email.from.match(/^(.+?)\s*<.+>$/);
+      const displayName = nameMatch ? nameMatch[1].replace(/"/g, "") : undefined;
+      try {
+        const result = await toggleFavoriteAddress({ emailAddress: address, displayName });
+        toast.success(result.favorited ? `${address} adicionado aos favoritos` : `${address} removido dos favoritos`);
+      } catch {
+        toast.error("Erro ao atualizar favorito");
+      }
+    },
+    [toggleFavoriteAddress],
+  );
+
+  const handleArchiveEmail = useCallback(
+    async (emailId: string, accountId: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      try {
+        const result = await archiveEmailAction({
+          accountId: accountId as Id<"emailAccounts">,
+          messageId: emailId,
+        });
+        setEmails((prev) => prev.filter((em) => em.id !== emailId));
+        if (selectedEmail?.id === emailId) {
+          setSelectedEmail(null);
+          setEmailDetail(null);
+        }
+        const providerName = result.provider === "gmail" ? "Gmail" : "Outlook";
+        toast.success(`E-mail arquivado no ${providerName}`);
+      } catch {
+        toast.error("Erro ao arquivar e-mail", {
+          description: "Pode ser necessario reconectar a conta com novas permissoes",
+        });
+      }
+    },
+    [archiveEmailAction, selectedEmail],
+  );
+
+  const handleArchiveFromDetail = useCallback(async () => {
+    if (!emailDetail || !selectedEmail) return;
+    const fakeEvent = { stopPropagation: () => {} } as React.MouseEvent;
+    await handleArchiveEmail(selectedEmail.id, selectedEmail.accountId, fakeEvent);
+  }, [emailDetail, selectedEmail, handleArchiveEmail]);
+
+  const handleToggleFavoriteFromDetail = useCallback(async () => {
+    if (!emailDetail) return;
+    const match = emailDetail.from.match(/<(.+?)>/);
+    const address = match ? match[1] : emailDetail.from;
+    const nameMatch = emailDetail.from.match(/^(.+?)\s*<.+>$/);
+    const displayName = nameMatch ? nameMatch[1].replace(/"/g, "") : undefined;
+    try {
+      const result = await toggleFavoriteAddress({ emailAddress: address, displayName });
+      toast.success(result.favorited ? `${address} adicionado aos favoritos` : `${address} removido dos favoritos`);
+    } catch {
+      toast.error("Erro ao atualizar favorito");
+    }
+  }, [emailDetail, toggleFavoriteAddress]);
 
   const activeAccounts = accounts.filter((a) => a.isActive);
   const hasAccounts = activeAccounts.length > 0;
@@ -240,6 +329,20 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
         </div>
       )}
 
+      {/* Search */}
+      {hasAccounts && (
+        <div className="relative">
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Buscar por remetente, assunto ou conteudo..."
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+      )}
+
       {/* Folder tabs + content */}
       {hasAccounts ? (
         <>
@@ -250,6 +353,16 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
                   <InboxIcon className="size-4" />
                   <span className="hidden sm:inline">Caixa de Entrada</span>
                   <span className="sm:hidden">Entrada</span>
+                </TabsTrigger>
+                <TabsTrigger value="favorites" className="gap-1.5">
+                  <StarIcon className="size-4" />
+                  <span className="hidden sm:inline">Favoritos</span>
+                  <span className="sm:hidden">Fav</span>
+                  {favorites.length > 0 && (
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0 ml-0.5 h-4">
+                      {favorites.length}
+                    </Badge>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="sent" className="gap-1.5">
                   <SendIcon className="size-4" />
@@ -296,12 +409,16 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
                 </div>
               ))}
             </div>
-          ) : emails.length === 0 ? (
+          ) : filteredEmails.length === 0 ? (
             <div className="bg-white dark:bg-card rounded-lg shadow-sm p-4">
               <EmptyState
-                icon={MailIcon}
-                title="Nenhum e-mail encontrado"
-                description={`A pasta "${folder === "inbox" ? "Caixa de Entrada" : folder === "sent" ? "Enviados" : "Lixeira"}" está vazia`}
+                icon={folder === "favorites" ? StarIcon : MailIcon}
+                title={folder === "favorites" ? "Nenhum favorito encontrado" : "Nenhum e-mail encontrado"}
+                description={
+                  folder === "favorites"
+                    ? "Favorite enderecos de e-mail clicando na estrela para ve-los aqui"
+                    : `A pasta "${folder === "inbox" ? "Caixa de Entrada" : folder === "sent" ? "Enviados" : "Lixeira"}" esta vazia`
+                }
               />
             </div>
           ) : (
@@ -312,6 +429,10 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
                   onSelect={handleSelectEmail}
                   onMarkAsRead={handleMarkAsRead}
                   selectedId={selectedEmail?.id ?? null}
+                  favoriteAddresses={favoriteAddresses}
+                  onToggleFavorite={handleToggleFavorite}
+                  onArchive={folder === "inbox" ? handleArchiveEmail : undefined}
+                  folder={folder}
                 />
               </div>
 
@@ -351,7 +472,7 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
                       onClick={() => setCurrentPage(groupEnd + 1)}
                       className="rounded-md px-3 text-xs"
                     >
-                      Próxima
+                      Proxima
                     </Button>
                   </div>
                 );
@@ -384,6 +505,9 @@ export function AssistantPage({ preloadedAccounts }: AssistantPageProps) {
         onClose={handleCloseDetail}
         email={emailDetail}
         loading={loadingDetail}
+        isFavorite={emailDetail ? (() => { const m = emailDetail.from.match(/<(.+?)>/); return favoriteAddresses.has((m ? m[1] : emailDetail.from).toLowerCase()); })() : false}
+        onToggleFavorite={handleToggleFavoriteFromDetail}
+        onArchive={handleArchiveFromDetail}
       />
 
       {/* Connect account dialog */}
