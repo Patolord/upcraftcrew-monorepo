@@ -21,17 +21,15 @@ import React from "react";
 interface FinancePageProps {
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
   preloadedSummary: Preloaded<typeof api.finance.getFinancialSummary>;
-  preloadedYearlyExpenses: Preloaded<typeof api.finance.getYearlyExpensesByMonth>;
+  preloadedYearlyExpenses?: Preloaded<typeof api.finance.getYearlyExpensesByMonth>;
 }
 
 export function FinancePage({
   preloadedTransactions,
   preloadedSummary,
-  preloadedYearlyExpenses,
 }: FinancePageProps) {
   const transactions = usePreloadedQuery(preloadedTransactions);
   const financialSummary = usePreloadedQuery(preloadedSummary);
-  const yearlyExpenses = usePreloadedQuery(preloadedYearlyExpenses);
   const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
   const [isTransactionsListModalOpen, setIsTransactionsListModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,54 +66,6 @@ export function FinancePage({
       pendingExpenses,
     };
   }, [filteredTransactions]);
-
-  const filteredYearlyExpenses = useMemo(() => {
-    if (!yearlyExpenses) return undefined;
-
-    const currentDate = new Date();
-    const targetYear = yearlyExpenses.year;
-    const monthNames = [
-      "Jan",
-      "Fev",
-      "Mar",
-      "Abr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Set",
-      "Out",
-      "Nov",
-      "Dez",
-    ];
-
-    const monthlyData = monthNames.map((month, index) => {
-      const monthExpenses = filteredTransactions
-        .filter((t) => {
-          const transactionDate = new Date(t.date);
-          return (
-            t.type === "expense" &&
-            t.status === "completed" &&
-            transactionDate.getMonth() === index &&
-            transactionDate.getFullYear() === targetYear
-          );
-        })
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      return {
-        month,
-        value: monthExpenses,
-        isHighlighted: index === currentDate.getMonth() && targetYear === currentDate.getFullYear(),
-      };
-    });
-
-    const totalExpenses = monthlyData.reduce((sum, m) => sum + m.value, 0);
-
-    return {
-      monthlyData,
-      averageMonthly: totalExpenses / 12,
-    };
-  }, [filteredTransactions, yearlyExpenses]);
 
   // Transform transactions from Convex format to UI format
   const transformedTransactions = useMemo(() => {
@@ -208,13 +158,18 @@ export function FinancePage({
         <div className="lg:col-span-1">
           <FinanceCreditCard transactions={filteredTransactions} currency={currency} />
         </div>
-        {/* Total Spent Card - Takes 2 columns */}
+        {/* Forecast Card - Takes 2 columns */}
         <div className="lg:col-span-2">
           <FinanceSpentCard
-            totalSpent={currencySummary.totalExpenses}
-            monthlyData={filteredYearlyExpenses?.monthlyData}
-            averageMonthly={filteredYearlyExpenses?.averageMonthly}
             currency={currency}
+            pendingIncome={currencySummary.pendingIncome}
+            pendingExpenses={currencySummary.pendingExpenses}
+            currentBalance={currencySummary.netProfit}
+            projectedBalance={
+              currencySummary.netProfit +
+              currencySummary.pendingIncome -
+              currencySummary.pendingExpenses
+            }
           />
         </div>
       </div>

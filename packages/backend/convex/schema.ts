@@ -226,7 +226,8 @@ export default defineSchema({
       v.literal("high"),
       v.literal("urgent"),
     ),
-    assignedTo: v.optional(v.id("users")),
+    assignedTo: v.optional(v.id("users")), // @deprecated - usar assignedToIds
+    assignedToIds: v.optional(v.array(v.id("users"))),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
     imageUrl: v.optional(v.string()), // @deprecated - usar imageUrls

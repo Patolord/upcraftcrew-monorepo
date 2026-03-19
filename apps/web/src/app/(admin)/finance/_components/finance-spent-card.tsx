@@ -1,103 +1,117 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3Icon } from "lucide-react";
+import {
+  CalendarClockIcon,
+  TrendingUpIcon,
+  TrendingDownIcon,
+  ArrowRightIcon,
+} from "lucide-react";
 import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
-interface MonthlyData {
-  month: string;
-  value: number;
-  isHighlighted?: boolean;
-}
-
 interface FinanceSpentCardProps {
-  totalSpent?: number;
-  monthlyData?: MonthlyData[];
-  averageMonthly?: number;
   currency?: CurrencyCode;
+  pendingIncome?: number;
+  pendingExpenses?: number;
+  projectedBalance?: number;
+  currentBalance?: number;
 }
 
-// Dados padrão (vazio) quando não há transações
-const emptyMonthlyData: MonthlyData[] = [
-  { month: "Jan", value: 0 },
-  { month: "Fev", value: 0 },
-  { month: "Mar", value: 0 },
-  { month: "Abr", value: 0 },
-  { month: "Mai", value: 0 },
-  { month: "Jun", value: 0 },
-  { month: "Jul", value: 0 },
-  { month: "Ago", value: 0 },
-  { month: "Set", value: 0 },
-  { month: "Out", value: 0 },
-  { month: "Nov", value: 0 },
-  { month: "Dez", value: 0 },
-];
+function formatCurrency(value: number, symbol: string) {
+  return `${symbol}${Math.abs(value).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+}
 
 export function FinanceSpentCard({
-  totalSpent = 0,
-  monthlyData = emptyMonthlyData,
-  averageMonthly = 0,
   currency = "BRL",
+  pendingIncome = 0,
+  pendingExpenses = 0,
+  projectedBalance = 0,
+  currentBalance = 0,
 }: FinanceSpentCardProps) {
-  const displaySpent = totalSpent ?? 0;
-  const displayAverage = averageMonthly ?? 0;
   const currencySymbol = currency === "BRL" ? "R$" : "$";
-
-  // Calcula a altura máxima para normalização (mínimo 1 para evitar divisão por zero)
-  const maxValue = Math.max(...monthlyData.map((d) => d.value), 1);
+  const hasPending = pendingIncome > 0 || pendingExpenses > 0;
 
   return (
-    <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white h-full">
-      <CardContent className="p-6">
+    <Card className="rounded-2xl border border-gray-100 shadow-sm bg-white h-full flex flex-col">
+      <CardContent className="p-6 flex flex-col flex-1">
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <p className="text-sm text-gray-500 font-medium mb-1">Total de Gastos</p>
-            <span className="text-3xl font-bold text-gray-900">
-              {currencySymbol}
-              {displaySpent.toLocaleString()}
-            </span>
-          </div>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <BarChart3Icon className="size-5 text-indigo-600" />
-          </button>
-        </div>
-
-        {/* Chart */}
-        <div className="relative mt-6">
-          {/* Average line */}
-          {displayAverage > 0 && (
-            <div className="absolute top-0 left-0 right-0 flex items-center z-10">
-              <div className="flex-1 border-t-2 border-dashed border-amber-400" />
-              <span className="text-xs text-amber-600 font-medium ml-2">
-                Média: {currencySymbol}
-                {displayAverage.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </span>
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-indigo-50">
+              <CalendarClockIcon className="size-[18px] text-indigo-600" />
             </div>
-          )}
-
-          {/* Bars */}
-          <div className="flex items-end justify-between gap-2 pt-6 h-40">
-            {monthlyData.map((data) => {
-              const heightPercent = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
-              return (
-                <div key={data.month} className="flex-1 flex flex-col items-center">
-                  <div
-                    className={`w-full max-w-[24px] rounded-t-md transition-all ${
-                      data.isHighlighted ? "bg-indigo-600" : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                    style={{
-                      height: `${heightPercent}%`,
-                      minHeight: data.value > 0 ? "8px" : "2px",
-                    }}
-                  />
-                  <span className="text-xs text-gray-500 mt-2">{data.month}</span>
-                </div>
-              );
-            })}
+            <div>
+              <p className="text-sm font-semibold text-gray-900">Previsão Financeira</p>
+              <p className="text-xs text-gray-400">Entradas e saídas programadas</p>
+            </div>
           </div>
         </div>
+
+        {hasPending && (
+          <div className="grid grid-cols-2 gap-3 flex-1">
+            <div className="flex items-center gap-3 rounded-xl bg-emerald-50/60 border border-emerald-100 px-5 py-5">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-100 shrink-0">
+                <TrendingUpIcon className="size-4 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-xs text-emerald-500 font-medium mb-0.5">Entradas previstas</p>
+                <p className="text-lg font-bold text-emerald-700">
+                  +{formatCurrency(pendingIncome, currencySymbol)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-red-50/60 border border-red-100 px-5 py-5">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-red-100 shrink-0">
+                <TrendingDownIcon className="size-4 text-red-600" />
+              </div>
+              <div>
+                <p className="text-xs text-red-500 font-medium mb-0.5">Saídas previstas</p>
+                <p className="text-lg font-bold text-red-700">
+                  -{formatCurrency(pendingExpenses, currencySymbol)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-gray-50 border border-gray-100 px-5 py-5">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gray-100 shrink-0">
+                <ArrowRightIcon className="size-4 text-gray-500" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 font-medium mb-0.5">Saldo atual</p>
+                <p
+                  className={`text-lg font-bold ${currentBalance >= 0 ? "text-gray-900" : "text-red-600"}`}
+                >
+                  {formatCurrency(currentBalance, currencySymbol)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-indigo-50/60 border border-indigo-100 px-5 py-5">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100 shrink-0">
+                <ArrowRightIcon className="size-4 text-indigo-600" />
+              </div>
+              <div>
+                <p className="text-xs text-indigo-400 font-medium mb-0.5">Saldo previsto</p>
+                <p
+                  className={`text-lg font-bold ${projectedBalance >= 0 ? "text-indigo-700" : "text-red-600"}`}
+                >
+                  {projectedBalance >= 0 ? "" : "-"}
+                  {formatCurrency(projectedBalance, currencySymbol)}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!hasPending && (
+          <div className="flex flex-col items-center justify-center flex-1 py-8 text-center">
+            <CalendarClockIcon className="size-8 text-gray-200 mb-2" />
+            <p className="text-sm text-gray-400">Nenhuma transação programada</p>
+            <p className="text-xs text-gray-300 mt-0.5">
+              Transações pendentes aparecerão aqui
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

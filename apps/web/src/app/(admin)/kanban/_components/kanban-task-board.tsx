@@ -39,6 +39,12 @@ interface TaskLabel {
   color: string;
 }
 
+export interface AssignedUser {
+  _id: string;
+  name: string;
+  imageUrl?: string;
+}
+
 export interface Task {
   _id: Id<"tasks">;
   title: string;
@@ -46,11 +52,7 @@ export interface Task {
   status: TaskStatus;
   priority: "low" | "medium" | "high" | "urgent";
   ownerId?: string;
-  assignedUser: {
-    _id: string;
-    name: string;
-    imageUrl?: string;
-  } | null;
+  assignedUsers: AssignedUser[];
   project: {
     _id: string;
     name: string;

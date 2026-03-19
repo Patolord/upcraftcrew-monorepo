@@ -22,11 +22,11 @@ interface TaskLabel {
 
 type TaskWithDetails = Doc<"tasks"> & {
   ownerId?: Id<"users">;
-  assignedUser: {
+  assignedUsers: {
     _id: Id<"users">;
     name: string;
     imageUrl?: string;
-  } | null;
+  }[];
   project: Doc<"projects"> | null;
   labels?: TaskLabel[];
   subtaskStats?: {
@@ -68,13 +68,11 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         status: task.status,
         priority: task.priority,
         ownerId: task.ownerId,
-        assignedUser: task.assignedUser
-          ? {
-              _id: task.assignedUser._id,
-              name: task.assignedUser.name,
-              imageUrl: task.assignedUser.imageUrl,
-            }
-          : null,
+        assignedUsers: (task.assignedUsers ?? []).map((u) => ({
+          _id: u._id,
+          name: u.name,
+          imageUrl: u.imageUrl,
+        })),
         project: task.project
           ? {
               _id: task.project._id,
@@ -100,18 +98,10 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       return tasks;
     }
 
-    // Default mode - show only my tasks
     return tasks.filter((task) => {
       const isOwner = task.ownerId === currentUser._id;
-      const isAssignedToMe = task.assignedUser?._id === currentUser._id;
-
-      // Task I created (I'm the owner)
-      if (isOwner) return true;
-
-      // Task someone sent to me (I'm assigned but not the owner)
-      if (isAssignedToMe) return true;
-
-      return false;
+      const isAssignedToMe = task.assignedUsers?.some((u) => u._id === currentUser._id);
+      return isOwner || isAssignedToMe;
     });
   }, [tasks, currentUser, viewAllPublicTasks]);
 
@@ -125,7 +115,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         task.title?.toLowerCase().includes(query) ||
         task.description?.toLowerCase().includes(query) ||
         task.project?.name?.toLowerCase().includes(query) ||
-        task.assignedUser?.name?.toLowerCase().includes(query) ||
+        task.assignedUsers?.some((u) => u.name?.toLowerCase().includes(query)) ||
         task.priority?.toLowerCase().includes(query) ||
         task.status?.toLowerCase().includes(query) ||
         task.labels?.some((label) => label.name.toLowerCase().includes(query))

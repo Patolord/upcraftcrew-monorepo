@@ -47,11 +47,11 @@ interface Task {
   description: string;
   status: TaskStatus;
   priority: "low" | "medium" | "high" | "urgent";
-  assignedUser: {
+  assignedUsers: {
     _id: string;
     name: string;
     imageUrl?: string;
-  } | null;
+  }[];
   project: {
     _id: string;
     name: string;
@@ -247,13 +247,13 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
         description: task.description,
         status: task.status,
         priority: task.priority,
-        assignedUser: task.assignedUser
-          ? {
-              _id: task.assignedUser._id,
-              name: task.assignedUser.name,
-              imageUrl: task.assignedUser.imageUrl,
-            }
-          : null,
+        assignedUsers: (task.assignedUsers ?? [])
+          .filter((u): u is NonNullable<typeof u> => u !== null)
+          .map((u) => ({
+            _id: u._id,
+            name: u.name,
+            imageUrl: u.imageUrl,
+          })),
         project: task.project
           ? {
               _id: task.project._id,

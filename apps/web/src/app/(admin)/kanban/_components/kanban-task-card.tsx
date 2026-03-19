@@ -18,17 +18,19 @@ interface TaskLabel {
   color: string;
 }
 
+interface AssignedUser {
+  _id: string;
+  name: string;
+  imageUrl?: string;
+}
+
 interface Task {
   _id: Id<"tasks">;
   title: string;
   description: string;
   status: "todo" | "in-progress" | "review" | "done" | "blocked";
   priority: TaskPriority;
-  assignedUser: {
-    _id: string;
-    name: string;
-    imageUrl?: string;
-  } | null;
+  assignedUsers: AssignedUser[];
   project: {
     _id: string;
     name: string;
@@ -75,18 +77,29 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
         )}
 
         <div className="flex items-center justify-between pt-1">
-          {task.assignedUser ? (
-            <Avatar className="size-6 border-2 border-background">
-              <AvatarImage src={task.assignedUser.imageUrl} alt={task.assignedUser.name} />
-              <AvatarFallback className="text-[10px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
-                {task.assignedUser.name
-                  ?.split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()
-                  .slice(0, 2)}
-              </AvatarFallback>
-            </Avatar>
+          {task.assignedUsers.length > 0 ? (
+            <div className="flex -space-x-1.5">
+              {task.assignedUsers.slice(0, 3).map((user) => (
+                <Avatar key={user._id} className="size-6 border-2 border-background">
+                  <AvatarImage src={user.imageUrl} alt={user.name} />
+                  <AvatarFallback className="text-[10px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
+                    {user.name
+                      ?.split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+              {task.assignedUsers.length > 3 && (
+                <Avatar className="size-6 border-2 border-background">
+                  <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
+                    +{task.assignedUsers.length - 3}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+            </div>
           ) : (
             <span />
           )}

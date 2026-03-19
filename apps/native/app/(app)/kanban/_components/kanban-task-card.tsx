@@ -13,17 +13,19 @@ interface TaskLabel {
   color: string;
 }
 
+interface AssignedUser {
+  _id: string;
+  name: string;
+  imageUrl?: string;
+}
+
 interface Task {
   _id: Id<"tasks">;
   title: string;
   description?: string;
   status: "todo" | "in-progress" | "review" | "done" | "blocked";
   priority: TaskPriority;
-  assignedUser: {
-    _id: string;
-    name: string;
-    imageUrl?: string;
-  } | null;
+  assignedUsers: AssignedUser[];
   project: {
     _id: string;
     name: string;
@@ -99,22 +101,31 @@ export function KanbanTaskCard({ task, onClick }: TaskCardProps) {
             </Text>
           )}
 
-          {/* Assigned User Avatar */}
-          {task.assignedUser && (
-            <View className="flex-row">
-              <Avatar size="sm" className="border-2 border-card">
-                <AvatarImage src={task.assignedUser.imageUrl} alt={task.assignedUser.name} />
-                <AvatarFallback className="bg-brand">
-                  <Text className="text-xs text-white font-medium">
-                    {task.assignedUser.name
-                      ?.split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
+          {/* Assigned User Avatars */}
+          {task.assignedUsers.length > 0 && (
+            <View className="flex-row -space-x-1.5">
+              {task.assignedUsers.slice(0, 3).map((user) => (
+                <Avatar key={user._id} size="sm" className="border-2 border-card">
+                  <AvatarImage src={user.imageUrl} alt={user.name} />
+                  <AvatarFallback className="bg-brand">
+                    <Text className="text-xs text-white font-medium">
+                      {user.name
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </Text>
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+              {task.assignedUsers.length > 3 && (
+                <View className="size-6 rounded-full bg-muted items-center justify-center border-2 border-card">
+                  <Text className="text-[10px] text-muted-foreground font-medium">
+                    +{task.assignedUsers.length - 3}
                   </Text>
-                </AvatarFallback>
-              </Avatar>
+                </View>
+              )}
             </View>
           )}
 
