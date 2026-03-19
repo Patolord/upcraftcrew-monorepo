@@ -19,6 +19,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@imagekit/react": "^5.0.1",
     "@serwist/next": "^9.5.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.80.6",
     "@types/sortablejs": "^1.15.9",
     "@up-craft-crew-app/backend": "workspace:*",
