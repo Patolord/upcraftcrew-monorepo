@@ -757,14 +757,16 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             {task.assignedUsers && task.assignedUsers.length > 0 ? (
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  {task.assignedUsers.slice(0, 4).map((user) => (
-                    <Avatar key={user._id} className="size-8 border-2 border-background">
-                      <AvatarImage src={user.imageUrl} />
-                      <AvatarFallback className="text-xs bg-linear-to-br from-orange-400 to-pink-500 text-white">
-                        {user.name?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                  ))}
+                  {task.assignedUsers.slice(0, 4).map((user) =>
+                    user ? (
+                      <Avatar key={user._id} className="size-8 border-2 border-background">
+                        <AvatarImage src={user.imageUrl} />
+                        <AvatarFallback className="text-xs bg-linear-to-br from-orange-400 to-pink-500 text-white">
+                          {user.name?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : null,
+                  )}
                   {task.assignedUsers.length > 4 && (
                     <Avatar className="size-8 border-2 border-background">
                       <AvatarFallback className="text-xs bg-muted text-muted-foreground">
@@ -776,7 +778,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                 <div>
                   <p className="text-sm font-medium">
                     {task.assignedUsers.length === 1
-                      ? task.assignedUsers[0].name
+                      ? task.assignedUsers[0]?.name
                       : `${task.assignedUsers.length} membros`}
                   </p>
                   <p className="text-xs text-muted-foreground">Atribuídos</p>

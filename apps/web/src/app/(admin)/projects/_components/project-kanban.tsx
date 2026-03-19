@@ -247,11 +247,13 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
         description: task.description,
         status: task.status,
         priority: task.priority,
-        assignedUsers: (task.assignedUsers ?? []).map((u) => ({
-          _id: u._id,
-          name: u.name,
-          imageUrl: u.imageUrl,
-        })),
+        assignedUsers: (task.assignedUsers ?? [])
+          .filter((u): u is NonNullable<typeof u> => u !== null)
+          .map((u) => ({
+            _id: u._id,
+            name: u.name,
+            imageUrl: u.imageUrl,
+          })),
         project: task.project
           ? {
               _id: task.project._id,
