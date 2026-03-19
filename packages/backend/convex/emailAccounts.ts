@@ -19,6 +19,17 @@ export const getMyAccounts = query({
   },
 });
 
+export const getMyFavorites = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUserOrThrow(ctx);
+    return ctx.db
+      .query("emailFavorites")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+  },
+});
+
 // ============================================================================
 // MUTATIONS
 // ============================================================================
@@ -94,6 +105,36 @@ export const removeAccount = mutation({
     if (account.userId !== user._id) throwUnauthorized();
 
     await ctx.db.delete(args.accountId);
+  },
+});
+
+export const toggleFavoriteAddress = mutation({
+  args: {
+    emailAddress: v.string(),
+    displayName: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    const existing = await ctx.db
+      .query("emailFavorites")
+      .withIndex("by_user_address", (q) =>
+        q.eq("userId", user._id).eq("emailAddress", args.emailAddress),
+      )
+      .unique();
+
+    if (existing) {
+      await ctx.db.delete(existing._id);
+      return { favorited: false };
+    }
+
+    await ctx.db.insert("emailFavorites", {
+      userId: user._id,
+      emailAddress: args.emailAddress,
+      displayName: args.displayName,
+      favoritedAt: Date.now(),
+    });
+    return { favorited: true };
   },
 });
 
@@ -187,7 +228,7 @@ async function refreshOutlookToken(refreshToken: string) {
         client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
         refresh_token: refreshToken,
         grant_type: "refresh_token",
-        scope: "https://graph.microsoft.com/Mail.Read https://graph.microsoft.com/Calendars.Read offline_access",
+        scope: "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access",
       }),
     },
   );
@@ -533,6 +574,68 @@ export const fetchEmailDetail = action({
   },
   handler: async (ctx, args) => {
     return fetchEmailDetailHandler(ctx, args);
+  },
+});
+
+async function archiveEmailHandler(
+  ctx: { auth: { getUserIdentity: () => Promise<any> }; runQuery: any; runMutation: any },
+  args: { accountId: string; messageId: string },
+): Promise<{ archived: boolean; provider: "gmail" | "outlook" }> {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw new Error("Not authenticated");
+
+  const account: EmailAccountDoc | null = await ctx.runQuery(
+    internal.emailAccounts.internalGetAccount,
+    { accountId: args.accountId },
+  );
+  if (!account) throw new Error("Account not found");
+
+  const accessToken = await ensureValidToken(ctx, account);
+
+  if (account.provider === "gmail") {
+    const res = await fetch(
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${args.messageId}/modify`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ removeLabelIds: ["INBOX"] }),
+      },
+    );
+    if (!res.ok) {
+      const errorBody = await res.text();
+      throw new Error(`Gmail archive failed (${res.status}): ${errorBody}`);
+    }
+  } else {
+    const res = await fetch(
+      `https://graph.microsoft.com/v1.0/me/messages/${args.messageId}/move`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ destinationId: "archive" }),
+      },
+    );
+    if (!res.ok) {
+      const errorBody = await res.text();
+      throw new Error(`Outlook archive failed (${res.status}): ${errorBody}`);
+    }
+  }
+
+  return { archived: true, provider: account.provider };
+}
+
+export const archiveEmail = action({
+  args: {
+    accountId: v.id("emailAccounts"),
+    messageId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return archiveEmailHandler(ctx, args);
   },
 });
 
