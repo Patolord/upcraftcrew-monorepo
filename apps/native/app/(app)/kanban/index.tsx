@@ -35,13 +35,11 @@ export default function KanbanPage() {
       description: task.description,
       status: task.status,
       priority: task.priority,
-      assignedUser: task.assignedUser
-        ? {
-            _id: task.assignedUser._id,
-            name: task.assignedUser.name || "",
-            imageUrl: task.assignedUser.imageUrl,
-          }
-        : null,
+      assignedUsers: (task.assignedUsers ?? []).map((u: any) => ({
+        _id: u._id,
+        name: u.name || "",
+        imageUrl: u.imageUrl,
+      })),
       project: task.project
         ? {
             _id: task.project._id,
@@ -65,7 +63,7 @@ export default function KanbanPage() {
         task.title?.toLowerCase().includes(query) ||
         task.description?.toLowerCase().includes(query) ||
         task.project?.name?.toLowerCase().includes(query) ||
-        task.assignedUser?.name?.toLowerCase().includes(query) ||
+        task.assignedUsers?.some((u: any) => u.name?.toLowerCase().includes(query)) ||
         task.priority?.toLowerCase().includes(query) ||
         task.status?.toLowerCase().includes(query)
       );

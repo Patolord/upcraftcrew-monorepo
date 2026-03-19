@@ -20,7 +20,10 @@ import {
   Globe,
   CheckSquare,
   Trash2,
+  UsersIcon,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useConvexError } from "@/hooks/use-convex-error";
 import { ErrorAlert } from "@/components/ui/error-alert";
 import { MultiImageUpload } from "@/components/ui/multi-image-upload";
@@ -68,7 +71,7 @@ export function NewTaskModal({
     description: "",
     status: defaultStatus,
     priority: "medium" as TaskPriority,
-    assignedTo: "",
+    assignedToIds: [] as string[],
     projectId: "",
     dueDate: "",
     imageUrls: [] as string[],
@@ -88,7 +91,7 @@ export function NewTaskModal({
         description: "",
         status: defaultStatus,
         priority: "medium",
-        assignedTo: "",
+        assignedToIds: [],
         projectId: defaultProjectId ?? "",
         dueDate: "",
         imageUrls: [],
@@ -139,7 +142,9 @@ export function NewTaskModal({
         description: formData.description || "Sem descrição",
         status: formData.status,
         priority: formData.priority,
-        assignedTo: formData.assignedTo ? (formData.assignedTo as Id<"users">) : undefined,
+        assignedToIds: formData.assignedToIds.length > 0
+          ? formData.assignedToIds.map((id) => id as Id<"users">)
+          : undefined,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
         imageUrls: formData.imageUrls.length > 0 ? formData.imageUrls : undefined,
@@ -341,29 +346,82 @@ export function NewTaskModal({
                     />
                   </div>
 
-                  {/* Assignee */}
+                  {/* Assignees (multi-select) */}
                   <div>
-                    <Label htmlFor="assignedTo" className="text-sm font-medium mb-2 block">
+                    <Label className="text-sm font-medium mb-2 block">
+                      <UsersIcon className="size-4 inline mr-1.5 -mt-0.5" />
                       Atribuir para
                     </Label>
-                    <select
-                      id="assignedTo"
-                      value={formData.assignedTo || ""}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          assignedTo: e.target.value,
-                        })
-                      }
-                      className="w-full h-10 px-3 text-sm border border-base-300 rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    >
-                      <option value="">Não atribuído</option>
-                      {teamMembers?.map((member) => (
-                        <option key={member._id} value={member._id}>
-                          {member.firstName} {member.lastName}
-                        </option>
-                      ))}
-                    </select>
+                    {formData.assignedToIds.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {formData.assignedToIds.map((id) => {
+                          const member = teamMembers?.find((m) => m._id === id);
+                          if (!member) return null;
+                          const name = `${member.firstName} ${member.lastName}`.trim();
+                          return (
+                            <span
+                              key={id}
+                              className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs"
+                            >
+                              <Avatar className="size-4">
+                                <AvatarImage src={member.imageUrl} />
+                                <AvatarFallback className="text-[8px] bg-orange-400 text-white">
+                                  {name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                                </AvatarFallback>
+                              </Avatar>
+                              {name}
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setFormData({
+                                    ...formData,
+                                    assignedToIds: formData.assignedToIds.filter((x) => x !== id),
+                                  })
+                                }
+                                className="hover:text-orange-900 dark:hover:text-orange-100"
+                              >
+                                <XIcon className="size-3" />
+                              </button>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                    <div className="space-y-1 max-h-40 overflow-y-auto border border-base-300 rounded-lg p-2">
+                      {teamMembers?.map((member) => {
+                        const isSelected = formData.assignedToIds.includes(member._id);
+                        const name = `${member.firstName} ${member.lastName}`.trim();
+                        return (
+                          <label
+                            key={member._id}
+                            className="flex items-center gap-2 p-1.5 rounded-md hover:bg-muted/50 cursor-pointer"
+                          >
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={(checked) => {
+                                setFormData({
+                                  ...formData,
+                                  assignedToIds: checked
+                                    ? [...formData.assignedToIds, member._id]
+                                    : formData.assignedToIds.filter((id) => id !== member._id),
+                                });
+                              }}
+                              className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                            />
+                            <Avatar className="size-5">
+                              <AvatarImage src={member.imageUrl} />
+                              <AvatarFallback className="text-[8px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
+                                {name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">{name}</span>
+                          </label>
+                        );
+                      })}
+                      {(!teamMembers || teamMembers.length === 0) && (
+                        <p className="text-xs text-muted-foreground text-center py-2">Nenhum membro encontrado</p>
+                      )}
+                    </div>
                   </div>
 
                   {/* Project */}

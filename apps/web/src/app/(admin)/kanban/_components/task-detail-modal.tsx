@@ -165,13 +165,15 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
     }
   };
 
-  const handleUpdateAssignee = async (userId: string) => {
+  const handleToggleAssignee = async (userId: string) => {
+    const currentIds = task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
+    const isAssigned = currentIds.includes(userId as Id<"users">);
+    const newIds = isAssigned
+      ? currentIds.filter((id) => id !== userId)
+      : [...currentIds, userId as Id<"users">];
     try {
-      await updateTask({
-        id: taskId,
-        assignedTo: userId === "none" ? undefined : (userId as Id<"users">),
-      });
-      toast.success("Assignee updated!");
+      await updateTask({ id: taskId, assignedToIds: newIds });
+      toast.success(isAssigned ? "Membro removido!" : "Membro atribuído!");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -460,36 +462,42 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-md border-brand bg-admin-background  "
+                className="rounded-md border-brand bg-admin-background"
               >
                 <UsersIcon className="size-4 mr-1 text-brand" /> Atribuir para
+                {(task.assignedUsers?.length ?? 0) > 0 && (
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    {task.assignedUsers?.length}
+                  </Badge>
+                )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => handleUpdateAssignee("none")}>
-                <span className="text-muted-foreground">Não atribuído</span>
-              </DropdownMenuItem>
-              {teamMembers?.map((member) => (
-                <DropdownMenuItem
-                  key={member._id}
-                  onClick={() => handleUpdateAssignee(member._id)}
-                  className="flex items-center gap-2"
-                >
-                  <Avatar className="size-6">
-                    <AvatarImage src={member.imageUrl} />
-                    <AvatarFallback className="text-xs">
-                      {member.firstName?.[0]}
-                      {member.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span>
-                    {member.firstName} {member.lastName}
-                  </span>
-                  {task.assignedTo === member._id && (
-                    <span className="ml-auto text-green-500">✓</span>
-                  )}
-                </DropdownMenuItem>
-              ))}
+            <DropdownMenuContent className="w-56">
+              {teamMembers?.map((member) => {
+                const assignedIds = task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
+                const isAssigned = assignedIds.includes(member._id);
+                return (
+                  <DropdownMenuItem
+                    key={member._id}
+                    onClick={() => handleToggleAssignee(member._id)}
+                    className="flex items-center gap-2"
+                  >
+                    <Avatar className="size-6">
+                      <AvatarImage src={member.imageUrl} />
+                      <AvatarFallback className="text-xs">
+                        {member.firstName?.[0]}
+                        {member.lastName?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="flex-1">
+                      {member.firstName} {member.lastName}
+                    </span>
+                    {isAssigned && (
+                      <span className="text-green-500">✓</span>
+                    )}
+                  </DropdownMenuItem>
+                );
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -746,17 +754,36 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         {/* Footer with Delete */}
         <div className="border-t p-4 mt-auto">
           <div className="flex items-center justify-between">
-            {task.assignedUser && (
+            {task.assignedUsers && task.assignedUsers.length > 0 ? (
               <div className="flex items-center gap-2">
-                <Avatar className="size-8">
-                  <AvatarImage src={task.assignedUser.imageUrl} />
-                  <AvatarFallback className="text-xs">{task.assignedUser.name?.[0]}</AvatarFallback>
-                </Avatar>
+                <div className="flex -space-x-2">
+                  {task.assignedUsers.slice(0, 4).map((user) => (
+                    <Avatar key={user._id} className="size-8 border-2 border-background">
+                      <AvatarImage src={user.imageUrl} />
+                      <AvatarFallback className="text-xs bg-linear-to-br from-orange-400 to-pink-500 text-white">
+                        {user.name?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                  {task.assignedUsers.length > 4 && (
+                    <Avatar className="size-8 border-2 border-background">
+                      <AvatarFallback className="text-xs bg-muted text-muted-foreground">
+                        +{task.assignedUsers.length - 4}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
                 <div>
-                  <p className="text-sm font-medium">{task.assignedUser.name}</p>
-                  <p className="text-xs text-muted-foreground">Assigned</p>
+                  <p className="text-sm font-medium">
+                    {task.assignedUsers.length === 1
+                      ? task.assignedUsers[0].name
+                      : `${task.assignedUsers.length} membros`}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Atribuídos</p>
                 </div>
               </div>
+            ) : (
+              <span />
             )}
             <Button variant="destructive" size="sm" onClick={handleDeleteTask}>
               <TrashIcon className="size-4 mr-1" /> Delete

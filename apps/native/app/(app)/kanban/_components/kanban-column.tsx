@@ -11,11 +11,11 @@ interface Task {
   description?: string;
   status: TaskStatus;
   priority: "low" | "medium" | "high" | "urgent";
-  assignedUser: {
+  assignedUsers: {
     _id: string;
     name: string;
     imageUrl?: string;
-  } | null;
+  }[];
   project: {
     _id: string;
     name: string;

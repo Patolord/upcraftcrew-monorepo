@@ -14,7 +14,6 @@ async function softAuth(ctx: any) {
   return await getCurrentUser(ctx);
 }
 
-// Helper to transform user to assignedUser format
 function transformUserToAssignedUser(user: any) {
   if (!user) return null;
   return {
@@ -22,6 +21,12 @@ function transformUserToAssignedUser(user: any) {
     name: `${user.firstName} ${user.lastName}`,
     imageUrl: user.imageUrl,
   };
+}
+
+async function resolveAssignedUsers(ctx: any, task: any) {
+  const ids = task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
+  const users = await Promise.all(ids.map((id: any) => ctx.db.get(id)));
+  return users.filter(Boolean).map(transformUserToAssignedUser);
 }
 
 // Query: Get all tasks
@@ -40,7 +45,7 @@ export const getTasks = query({
 
     const tasksWithDetails = await Promise.all(
       tasks.map(async (task) => {
-        const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+        const assignedUsers = await resolveAssignedUsers(ctx, task);
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
         const labels = task.labelIds
@@ -63,7 +68,7 @@ export const getTasks = query({
 
         return {
           ...task,
-          assignedUser: transformUserToAssignedUser(assignedUser),
+          assignedUsers,
           project,
           labels: labels.filter(Boolean),
           subtaskStats,
@@ -93,15 +98,13 @@ export const getTaskById = query({
       throwUnauthorized("You don't have permission to view this private task");
     }
 
-    const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+    const assignedUsers = await resolveAssignedUsers(ctx, task);
     const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
-    // Get labels
     const labels = task.labelIds
       ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
       : [];
 
-    // Get subtask stats
     const subtasks = await ctx.db
       .query("subtasks")
       .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -111,7 +114,6 @@ export const getTaskById = query({
       completed: subtasks.filter((s) => s.completed).length,
     };
 
-    // Get comment count
     const comments = await ctx.db
       .query("taskComments")
       .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -119,7 +121,7 @@ export const getTaskById = query({
 
     return {
       ...task,
-      assignedUser: transformUserToAssignedUser(assignedUser),
+      assignedUsers,
       project,
       labels: labels.filter(Boolean),
       subtaskStats,
@@ -165,18 +167,15 @@ export const getTasksByProject = query({
       (task) => !(task.isPrivate ?? false) || task.ownerId === user._id,
     );
 
-    // Populate assigned user, project, labels, and subtask stats
     const tasksWithDetails = await Promise.all(
       tasks.map(async (task) => {
-        const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+        const assignedUsers = await resolveAssignedUsers(ctx, task);
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
-        // Get labels
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
           : [];
 
-        // Get subtask stats
         const subtasks = await ctx.db
           .query("subtasks")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -186,7 +185,6 @@ export const getTasksByProject = query({
           completed: subtasks.filter((s) => s.completed).length,
         };
 
-        // Get comment count
         const comments = await ctx.db
           .query("taskComments")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -194,7 +192,7 @@ export const getTasksByProject = query({
 
         return {
           ...task,
-          assignedUser: transformUserToAssignedUser(assignedUser),
+          assignedUsers,
           project,
           labels: labels.filter(Boolean),
           subtaskStats,
@@ -207,17 +205,18 @@ export const getTasksByProject = query({
   },
 });
 
-// Query: Get tasks assigned to user
+// Query: Get tasks assigned to user (supports both legacy assignedTo and new assignedToIds)
 export const getTasksByUser = query({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
     await requireAuth(ctx);
-    const tasks = await ctx.db
-      .query("tasks")
-      .withIndex("by_assigned", (q) => q.eq("assignedTo", args.userId))
-      .collect();
-
-    return tasks;
+    const allTasks = await ctx.db.query("tasks").collect();
+    return allTasks.filter((task) => {
+      if (task.assignedToIds && task.assignedToIds.length > 0) {
+        return task.assignedToIds.includes(args.userId);
+      }
+      return task.assignedTo === args.userId;
+    });
   },
 });
 
@@ -232,19 +231,16 @@ export const getAllPublicTasks = query({
     // Filter only public tasks (isPrivate === false or undefined)
     const publicTasks = allTasks.filter((task) => !(task.isPrivate ?? false));
 
-    // Populate assigned user, project, labels, and subtask stats
     const tasksWithDetails = await Promise.all(
       publicTasks.map(async (task) => {
-        const assignedUser = task.assignedTo ? await ctx.db.get(task.assignedTo) : null;
+        const assignedUsers = await resolveAssignedUsers(ctx, task);
         const owner = task.ownerId ? await ctx.db.get(task.ownerId) : null;
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
 
-        // Get labels
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
           : [];
 
-        // Get subtask stats
         const subtasks = await ctx.db
           .query("subtasks")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -254,7 +250,6 @@ export const getAllPublicTasks = query({
           completed: subtasks.filter((s) => s.completed).length,
         };
 
-        // Get comment count
         const comments = await ctx.db
           .query("taskComments")
           .withIndex("by_task", (q) => q.eq("taskId", task._id))
@@ -262,7 +257,7 @@ export const getAllPublicTasks = query({
 
         return {
           ...task,
-          assignedUser: transformUserToAssignedUser(assignedUser),
+          assignedUsers,
           owner: owner
             ? {
                 _id: owner._id,
@@ -300,7 +295,8 @@ export const createTask = mutation({
       v.literal("high"),
       v.literal("urgent"),
     ),
-    assignedTo: v.optional(v.id("users")),
+    assignedTo: v.optional(v.id("users")), // @deprecated - usar assignedToIds
+    assignedToIds: v.optional(v.array(v.id("users"))),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
     imageUrls: v.optional(v.array(v.string())),
@@ -313,7 +309,6 @@ export const createTask = mutation({
 
     const taskId = await ctx.db.insert("tasks", {
       ...args,
-      // Default isPrivate to false if not specified
       isPrivate: args.isPrivate ?? false,
       ownerId: user._id,
       createdAt: now,
@@ -342,11 +337,12 @@ export const updateTask = mutation({
     priority: v.optional(
       v.union(v.literal("low"), v.literal("medium"), v.literal("high"), v.literal("urgent")),
     ),
-    assignedTo: v.optional(v.id("users")),
+    assignedTo: v.optional(v.id("users")), // @deprecated - usar assignedToIds
+    assignedToIds: v.optional(v.array(v.id("users"))),
     projectId: v.optional(v.id("projects")),
     dueDate: v.optional(v.number()),
     imageUrl: v.optional(v.string()), // @deprecated - mantido para compatibilidade
-    imageUrls: v.optional(v.array(v.string())), // Array de URLs das imagens
+    imageUrls: v.optional(v.array(v.string())),
     isPrivate: v.optional(v.boolean()),
     labelIds: v.optional(v.array(v.id("taskLabels"))),
   },
@@ -359,21 +355,21 @@ export const updateTask = mutation({
       throwNotFound("Task");
     }
 
-    // Only owner can update private tasks
-    // Tasks without isPrivate field are treated as public (false)
     if ((existingTask.isPrivate ?? false) && existingTask.ownerId !== user._id) {
       throwUnauthorized("Only the owner can update this private task");
     }
 
-    // Se imageUrls for atualizado, limpar o campo imageUrl antigo
     const patchData: Record<string, unknown> = {
       ...updates,
       updatedAt: Date.now(),
     };
 
-    // Se está atualizando imageUrls, remover imageUrl antigo
     if (updates.imageUrls !== undefined) {
       patchData.imageUrl = undefined;
+    }
+
+    if (updates.assignedToIds !== undefined) {
+      patchData.assignedTo = undefined;
     }
 
     await ctx.db.patch(id, patchData);
