@@ -149,13 +149,13 @@ export const Footer = () => {
         </p>
         <div className="inline-flex items-center gap-4">
           <Link
-            href="#"
+            href="/legal/terms"
             className="text-sm text-muted-foreground transition-colors hover:text-primary hover:underline"
           >
             {footer.legal.terms}
           </Link>
           <Link
-            href="#"
+            href="/legal/privacy"
             className="text-sm text-muted-foreground transition-colors hover:text-primary hover:underline"
           >
             {footer.legal.privacy}

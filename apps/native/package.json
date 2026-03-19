@@ -23,6 +23,7 @@
     "@up-craft-crew-app/backend": "workspace:*",
     "clsx": "^2.1.1",
     "convex": "^1.27.0",
+    "eas-cli": "^18.4.0",
     "expo": "^54.0.23",
     "expo-auth-session": "^7.0.10",
     "expo-constants": "~18.0.10",
