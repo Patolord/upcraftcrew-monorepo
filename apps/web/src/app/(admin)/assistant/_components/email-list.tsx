@@ -112,14 +112,14 @@ export function EmailList({
                 <span
                   className={cn(
                     "text-sm truncate",
-                    !email.isRead ? "font-semibold text-foreground" : "font-medium text-foreground/80",
+                    !email.isRead
+                      ? "font-semibold text-foreground"
+                      : "font-medium text-foreground/80",
                   )}
                 >
                   {fromName}
                 </span>
-                {!email.isRead && (
-                  <span className="shrink-0 w-2 h-2 rounded-full bg-orange-500" />
-                )}
+                {!email.isRead && <span className="shrink-0 w-2 h-2 rounded-full bg-orange-500" />}
               </div>
               <p
                 className={cn(
@@ -129,9 +129,7 @@ export function EmailList({
               >
                 {email.subject || "(sem assunto)"}
               </p>
-              <p className="text-xs text-muted-foreground truncate mt-0.5">
-                {email.snippet}
-              </p>
+              <p className="text-xs text-muted-foreground truncate mt-0.5">{email.snippet}</p>
             </div>
 
             {/* Meta */}

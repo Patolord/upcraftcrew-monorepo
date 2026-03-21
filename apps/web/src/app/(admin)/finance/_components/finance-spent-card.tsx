@@ -1,12 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  CalendarClockIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
-  ArrowRightIcon,
-} from "lucide-react";
+import { CalendarClockIcon, TrendingUpIcon, TrendingDownIcon, ArrowRightIcon } from "lucide-react";
 import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
 
@@ -107,9 +102,7 @@ export function FinanceSpentCard({
           <div className="flex flex-col items-center justify-center flex-1 py-8 text-center">
             <CalendarClockIcon className="size-8 text-gray-200 mb-2" />
             <p className="text-sm text-gray-400">Nenhuma transação programada</p>
-            <p className="text-xs text-gray-300 mt-0.5">
-              Transações pendentes aparecerão aqui
-            </p>
+            <p className="text-xs text-gray-300 mt-0.5">Transações pendentes aparecerão aqui</p>
           </div>
         )}
       </CardContent>

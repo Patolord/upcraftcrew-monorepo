@@ -72,9 +72,7 @@ export function ProfileUserCard({ user }: ProfileUserCardProps) {
 
           {/* Bio */}
           {user.bio && (
-            <Text className="mt-4 text-sm text-muted-foreground leading-5">
-              {user.bio}
-            </Text>
+            <Text className="mt-4 text-sm text-muted-foreground leading-5">{user.bio}</Text>
           )}
 
           {/* Divider */}
@@ -147,10 +145,7 @@ export function ProfileUserCard({ user }: ProfileUserCardProps) {
 
           {/* Edit Button */}
           <View className="items-end mt-4">
-            <Button
-              onPress={() => setIsEditOpen(true)}
-              className="bg-brand rounded-full px-6"
-            >
+            <Button onPress={() => setIsEditOpen(true)} className="bg-brand rounded-full px-6">
               <Text className="text-white text-sm font-medium">Editar perfil</Text>
             </Button>
           </View>

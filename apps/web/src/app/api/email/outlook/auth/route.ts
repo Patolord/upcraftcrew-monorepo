@@ -21,9 +21,7 @@ export async function GET() {
     );
   }
 
-  const redirectUri = appUrl
-    ? `${appUrl}/api/email/outlook/callback`
-    : undefined;
+  const redirectUri = appUrl ? `${appUrl}/api/email/outlook/callback` : undefined;
   if (!redirectUri) {
     return NextResponse.json(
       {

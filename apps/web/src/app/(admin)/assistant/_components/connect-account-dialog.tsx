@@ -28,11 +28,7 @@ interface ConnectAccountDialogProps {
   accounts: Account[];
 }
 
-export function ConnectAccountDialog({
-  open,
-  onOpenChange,
-  accounts,
-}: ConnectAccountDialogProps) {
+export function ConnectAccountDialog({ open, onOpenChange, accounts }: ConnectAccountDialogProps) {
   const removeAccount = useMutation(api.emailAccounts.removeAccount);
 
   const gmailAccounts = accounts.filter((a) => a.provider === "gmail");
@@ -54,8 +50,7 @@ export function ConnectAccountDialog({
         <DialogHeader>
           <DialogTitle>Gerenciar Contas de E-mail</DialogTitle>
           <DialogDescription>
-            Conecte suas contas Gmail e Outlook para visualizar todos os e-mails
-            em um unico lugar.
+            Conecte suas contas Gmail e Outlook para visualizar todos os e-mails em um unico lugar.
           </DialogDescription>
         </DialogHeader>
 
@@ -92,9 +87,7 @@ export function ConnectAccountDialog({
                     key={account._id}
                     className="flex items-center justify-between py-1.5 px-3 bg-muted/50 rounded-md"
                   >
-                    <span className="text-sm text-foreground truncate">
-                      {account.email}
-                    </span>
+                    <span className="text-sm text-foreground truncate">{account.email}</span>
                     <button
                       onClick={() => handleRemove(account._id, account.email)}
                       className="text-muted-foreground hover:text-destructive transition-colors p-1"
@@ -140,9 +133,7 @@ export function ConnectAccountDialog({
                     key={account._id}
                     className="flex items-center justify-between py-1.5 px-3 bg-muted/50 rounded-md"
                   >
-                    <span className="text-sm text-foreground truncate">
-                      {account.email}
-                    </span>
+                    <span className="text-sm text-foreground truncate">{account.email}</span>
                     <button
                       onClick={() => handleRemove(account._id, account.email)}
                       className="text-muted-foreground hover:text-destructive transition-colors p-1"
@@ -158,9 +149,8 @@ export function ConnectAccountDialog({
 
           {/* Info */}
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Suas credenciais sao armazenadas de forma segura e usadas apenas para
-            leitura dos e-mails. Ao responder, voce sera redirecionado para o app
-            do provedor.
+            Suas credenciais sao armazenadas de forma segura e usadas apenas para leitura dos
+            e-mails. Ao responder, voce sera redirecionado para o app do provedor.
           </p>
         </div>
       </DialogContent>

@@ -15,6 +15,7 @@
     "dev:server": "turbo -F @up-craft-crew-app/backend dev",
     "dev:setup": "turbo -F @up-craft-crew-app/backend dev:setup",
     "lint": "oxlint",
+    "format": "oxfmt",
     "format:check": "oxfmt --check .",
     "format:write": "oxfmt --write .",
     "check": "pnpm lint && pnpm format:check",

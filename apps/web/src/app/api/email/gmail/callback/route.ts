@@ -17,9 +17,7 @@ export async function GET(request: NextRequest) {
   const error = request.nextUrl.searchParams.get("error");
 
   if (error || !code) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/assistant?error=oauth_denied`,
-    );
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/assistant?error=oauth_denied`);
   }
 
   try {
@@ -45,10 +43,9 @@ export async function GET(request: NextRequest) {
 
     const tokenData = await tokenRes.json();
 
-    const profileRes = await fetch(
-      "https://www.googleapis.com/oauth2/v2/userinfo",
-      { headers: { Authorization: `Bearer ${tokenData.access_token}` } },
-    );
+    const profileRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+      headers: { Authorization: `Bearer ${tokenData.access_token}` },
+    });
     const profile = await profileRes.json();
 
     const convexToken = await getToken({ template: "convex" });

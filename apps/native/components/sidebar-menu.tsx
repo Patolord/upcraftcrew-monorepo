@@ -25,13 +25,33 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { title: "Dashboard", route: "/(app)/dashboard", icon: "grid-outline", iconFamily: "ionicons" },
-  { title: "Projetos", route: "/(app)/projects", icon: "briefcase-outline", iconFamily: "ionicons" },
-  { title: "Clientes", route: "/(app)/clients", icon: "people-circle-outline", iconFamily: "ionicons" },
+  {
+    title: "Projetos",
+    route: "/(app)/projects",
+    icon: "briefcase-outline",
+    iconFamily: "ionicons",
+  },
+  {
+    title: "Clientes",
+    route: "/(app)/clients",
+    icon: "people-circle-outline",
+    iconFamily: "ionicons",
+  },
   { title: "Equipe", route: "/(app)/team", icon: "people-outline", iconFamily: "ionicons" },
   { title: "Agenda", route: "/(app)/schedule", icon: "calendar-outline", iconFamily: "ionicons" },
-  { title: "Kanban", route: "/(app)/kanban", icon: "view-column", iconFamily: "material-community" },
+  {
+    title: "Kanban",
+    route: "/(app)/kanban",
+    icon: "view-column",
+    iconFamily: "material-community",
+  },
   { title: "Finanças", route: "/(app)/finance", icon: "cash-outline", iconFamily: "ionicons" },
-  { title: "Orçamentos", route: "/(app)/budgets", icon: "document-text-outline", iconFamily: "ionicons" },
+  {
+    title: "Orçamentos",
+    route: "/(app)/budgets",
+    icon: "document-text-outline",
+    iconFamily: "ionicons",
+  },
 ];
 
 interface SidebarMenuProps {
@@ -169,7 +189,10 @@ export function SidebarMenu({ visible, onClose }: SidebarMenuProps) {
             </ScrollView>
 
             {/* Sign out */}
-            <View className="border-t border-border px-5 py-4" style={{ paddingBottom: insets.bottom + 16 }}>
+            <View
+              className="border-t border-border px-5 py-4"
+              style={{ paddingBottom: insets.bottom + 16 }}
+            >
               <TouchableOpacity
                 onPress={handleSignOut}
                 activeOpacity={0.7}

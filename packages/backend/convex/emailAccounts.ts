@@ -47,9 +47,7 @@ export const storeAccount = mutation({
 
     const existing = await ctx.db
       .query("emailAccounts")
-      .withIndex("by_user_email", (q) =>
-        q.eq("userId", user._id).eq("email", args.email),
-      )
+      .withIndex("by_user_email", (q) => q.eq("userId", user._id).eq("email", args.email))
       .unique();
 
     if (existing) {
@@ -218,22 +216,19 @@ async function refreshGmailToken(refreshToken: string) {
 }
 
 async function refreshOutlookToken(refreshToken: string) {
-  const res = await fetch(
-    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        client_id: process.env.MICROSOFT_CLIENT_ID!,
-        client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
-        refresh_token: refreshToken,
-        grant_type: "refresh_token",
-        scope: "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access",
-      }),
-    },
-  );
-  if (!res.ok)
-    throw new Error(`Outlook token refresh failed: ${res.status}`);
+  const res = await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: process.env.MICROSOFT_CLIENT_ID!,
+      client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
+      refresh_token: refreshToken,
+      grant_type: "refresh_token",
+      scope:
+        "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access",
+    }),
+  });
+  if (!res.ok) throw new Error(`Outlook token refresh failed: ${res.status}`);
   const data = await res.json();
   return {
     accessToken: data.access_token as string,
@@ -256,8 +251,7 @@ async function ensureValidToken(
     return account.accessToken;
   }
 
-  const refreshFn =
-    account.provider === "gmail" ? refreshGmailToken : refreshOutlookToken;
+  const refreshFn = account.provider === "gmail" ? refreshGmailToken : refreshOutlookToken;
   const tokens = await refreshFn(account.refreshToken);
 
   await ctx.runMutation(internal.emailAccounts.internalUpdateTokens, {
@@ -283,10 +277,9 @@ async function fetchGmailMessages(
   });
   if (pageToken) params.set("pageToken", pageToken);
 
-  const listRes = await fetch(
-    `https://gmail.googleapis.com/gmail/v1/users/me/messages?${params}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } },
-  );
+  const listRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?${params}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
   if (!listRes.ok) throw new Error(`Gmail list failed: ${listRes.status}`);
   const listData = await listRes.json();
 
@@ -305,8 +298,8 @@ async function fetchGmailMessages(
 
       const headers = msgData.payload?.headers || [];
       const getHeader = (name: string) =>
-        headers.find((h: { name: string }) => h.name.toLowerCase() === name.toLowerCase())
-          ?.value || "";
+        headers.find((h: { name: string }) => h.name.toLowerCase() === name.toLowerCase())?.value ||
+        "";
 
       return {
         id: msgData.id,
@@ -364,11 +357,10 @@ async function fetchOutlookMessages(
       from: msg.from?.emailAddress
         ? `${msg.from.emailAddress.name} <${msg.from.emailAddress.address}>`
         : "",
-      to: msg.toRecipients
-        ?.map(
-          (r) => `${r.emailAddress.name} <${r.emailAddress.address}>`,
-        )
-        .join(", ") || "",
+      to:
+        msg.toRecipients
+          ?.map((r) => `${r.emailAddress.name} <${r.emailAddress.address}>`)
+          .join(", ") || "",
       subject: msg.subject || "",
       date: msg.receivedDateTime || "",
       snippet: msg.bodyPreview || "",
@@ -376,9 +368,7 @@ async function fetchOutlookMessages(
     }),
   );
 
-  const nextSkip = data["@odata.nextLink"]
-    ? String(parseInt(pageToken || "0") + limit)
-    : null;
+  const nextSkip = data["@odata.nextLink"] ? String(parseInt(pageToken || "0") + limit) : null;
 
   return { messages, nextPageToken: nextSkip };
 }
@@ -386,11 +376,7 @@ async function fetchOutlookMessages(
 export const fetchEmails = action({
   args: {
     accountId: v.optional(v.id("emailAccounts")),
-    folder: v.union(
-      v.literal("inbox"),
-      v.literal("sent"),
-      v.literal("trash"),
-    ),
+    folder: v.union(v.literal("inbox"), v.literal("sent"), v.literal("trash")),
     limit: v.optional(v.number()),
     pageToken: v.optional(v.string()),
   },
@@ -402,27 +388,22 @@ export const fetchEmails = action({
     const accounts: EmailAccountDoc[] = [];
 
     if (args.accountId) {
-      const account = await ctx.runQuery(
-        internal.emailAccounts.internalGetAccount,
-        { accountId: args.accountId },
-      );
+      const account = await ctx.runQuery(internal.emailAccounts.internalGetAccount, {
+        accountId: args.accountId,
+      });
       if (!account) throw new Error("Account not found");
       accounts.push(account);
     } else {
-      const allAccounts = await ctx.runQuery(
-        internal.emailAccounts.internalGetUserAccounts,
-        { clerkUserId: identity.subject },
-      );
+      const allAccounts = await ctx.runQuery(internal.emailAccounts.internalGetUserAccounts, {
+        clerkUserId: identity.subject,
+      });
       accounts.push(...allAccounts);
     }
 
     const results = await Promise.allSettled(
       accounts.map(async (account) => {
         const token = await ensureValidToken(ctx, account);
-        const fetchFn =
-          account.provider === "gmail"
-            ? fetchGmailMessages
-            : fetchOutlookMessages;
+        const fetchFn = account.provider === "gmail" ? fetchGmailMessages : fetchOutlookMessages;
         const result = await fetchFn(token, args.folder, limit, args.pageToken ?? undefined);
         return {
           accountId: account._id,
@@ -460,9 +441,7 @@ export const fetchEmails = action({
       }
     }
 
-    allMessages.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    allMessages.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return { messages: allMessages };
   },
@@ -493,26 +472,20 @@ async function fetchEmailDetailHandler(
 
     const headers = data.payload?.headers || [];
     const getHeader = (name: string) =>
-      headers.find((h: { name: string }) => h.name.toLowerCase() === name.toLowerCase())
-        ?.value || "";
+      headers.find((h: { name: string }) => h.name.toLowerCase() === name.toLowerCase())?.value ||
+      "";
 
     let body = "";
     const parts = data.payload?.parts || [];
-    const htmlPart = parts.find(
-      (p: { mimeType: string }) => p.mimeType === "text/html",
-    );
-    const textPart = parts.find(
-      (p: { mimeType: string }) => p.mimeType === "text/plain",
-    );
+    const htmlPart = parts.find((p: { mimeType: string }) => p.mimeType === "text/html");
+    const textPart = parts.find((p: { mimeType: string }) => p.mimeType === "text/plain");
 
     if (htmlPart?.body?.data) {
       body = atob(htmlPart.body.data.replace(/-/g, "+").replace(/_/g, "/"));
     } else if (textPart?.body?.data) {
       body = atob(textPart.body.data.replace(/-/g, "+").replace(/_/g, "/"));
     } else if (data.payload?.body?.data) {
-      body = atob(
-        data.payload.body.data.replace(/-/g, "+").replace(/_/g, "/"),
-      );
+      body = atob(data.payload.body.data.replace(/-/g, "+").replace(/_/g, "/"));
     }
 
     return {
@@ -609,17 +582,14 @@ async function archiveEmailHandler(
       throw new Error(`Gmail archive failed (${res.status}): ${errorBody}`);
     }
   } else {
-    const res = await fetch(
-      `https://graph.microsoft.com/v1.0/me/messages/${args.messageId}/move`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ destinationId: "archive" }),
+    const res = await fetch(`https://graph.microsoft.com/v1.0/me/messages/${args.messageId}/move`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({ destinationId: "archive" }),
+    });
     if (!res.ok) {
       const errorBody = await res.text();
       throw new Error(`Outlook archive failed (${res.status}): ${errorBody}`);
@@ -722,10 +692,9 @@ async function fetchOutlookCalendarEvents(
     $orderby: "start/dateTime",
   });
 
-  const res = await fetch(
-    `https://graph.microsoft.com/v1.0/me/calendarView?${params}`,
-    { headers: { Authorization: `Bearer ${accessToken}` } },
-  );
+  const res = await fetch(`https://graph.microsoft.com/v1.0/me/calendarView?${params}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
   if (!res.ok) {
     const errorBody = await res.text();
     console.error(`Outlook Calendar API failed (${res.status}):`, errorBody);
@@ -776,10 +745,9 @@ export const fetchCalendarEvents = action({
       if (!account) throw new Error("Account not found");
       accounts.push(account);
     } else {
-      const allAccounts = await ctx.runQuery(
-        internal.emailAccounts.internalGetUserAccounts,
-        { clerkUserId: identity.subject },
-      );
+      const allAccounts = await ctx.runQuery(internal.emailAccounts.internalGetUserAccounts, {
+        clerkUserId: identity.subject,
+      });
       accounts.push(...allAccounts);
     }
 
@@ -787,9 +755,7 @@ export const fetchCalendarEvents = action({
       accounts.map(async (account) => {
         const token = await ensureValidToken(ctx, account);
         const fetchFn =
-          account.provider === "gmail"
-            ? fetchGoogleCalendarEvents
-            : fetchOutlookCalendarEvents;
+          account.provider === "gmail" ? fetchGoogleCalendarEvents : fetchOutlookCalendarEvents;
         const events = await fetchFn(token, args.timeMin, args.timeMax);
         return events.map(
           (e): CalendarEventResult => ({

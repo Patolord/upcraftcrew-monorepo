@@ -63,9 +63,7 @@ export function ProfileProjectsSection({ projects }: ProfileProjectsSectionProps
                 {/* Project color banner */}
                 <View className="h-24 bg-orange-50 items-center justify-center">
                   <View className="h-14 w-14 rounded-full bg-white/70 items-center justify-center">
-                    <Text className="text-2xl font-bold text-brand">
-                      {project.name.charAt(0)}
-                    </Text>
+                    <Text className="text-2xl font-bold text-brand">{project.name.charAt(0)}</Text>
                   </View>
                 </View>
 
@@ -83,7 +81,9 @@ export function ProfileProjectsSection({ projects }: ProfileProjectsSectionProps
                   <View className="gap-1">
                     <View className="flex-row items-center justify-between">
                       <Text className="text-xs text-muted-foreground">Progresso</Text>
-                      <Text className="text-xs font-medium text-foreground">{project.progress}%</Text>
+                      <Text className="text-xs font-medium text-foreground">
+                        {project.progress}%
+                      </Text>
                     </View>
                     <Progress value={project.progress} className="h-1.5" />
                   </View>
@@ -101,7 +101,8 @@ export function ProfileProjectsSection({ projects }: ProfileProjectsSectionProps
                           <AvatarImage src={member.imageUrl} alt={member.name} />
                           <AvatarFallback className="bg-orange-100">
                             <Text className="text-orange-600 text-[8px] font-medium">
-                              {member.firstName?.charAt(0)}{member.lastName?.charAt(0)}
+                              {member.firstName?.charAt(0)}
+                              {member.lastName?.charAt(0)}
                             </Text>
                           </AvatarFallback>
                         </Avatar>

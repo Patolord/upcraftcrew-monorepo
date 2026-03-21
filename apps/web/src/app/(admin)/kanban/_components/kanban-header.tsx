@@ -44,11 +44,7 @@ export function KanbanHeader({ searchQuery = "", onSearchChange }: KanbanHeaderP
       <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">Kanban</h1>
 
       <div className="w-full">
-        <GlobalSearchInput
-          value={searchQuery}
-          onChange={onSearchChange}
-          placeholder="Search..."
-        />
+        <GlobalSearchInput value={searchQuery} onChange={onSearchChange} placeholder="Search..." />
       </div>
 
       <DropdownMenu>

@@ -168,9 +168,7 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
                     title={`${linkCount} links`}
                   >
                     <ArrowUpRight className="size-3.5" />
-                    <span className="text-[10px] font-medium">
-                      Visitar link +{linkCount - 1}
-                    </span>
+                    <span className="text-[10px] font-medium">Visitar link +{linkCount - 1}</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
@@ -188,27 +186,27 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
               </DropdownMenu>
             )}
 
-          {isDone ? (
-            <button
-              onClick={handleArchive}
-              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-              title="Arquivar tarefa"
-            >
-              <Archive className="size-3.5" />
-            </button>
-          ) : (
-            task.dueDate && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Calendar className="size-3.5" />
-                <span className="text-xs">
-                  {new Date(task.dueDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
-              </div>
-            )
-          )}
+            {isDone ? (
+              <button
+                onClick={handleArchive}
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                title="Arquivar tarefa"
+              >
+                <Archive className="size-3.5" />
+              </button>
+            ) : (
+              task.dueDate && (
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="size-3.5" />
+                  <span className="text-xs">
+                    {new Date(task.dueDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </CardContent>
