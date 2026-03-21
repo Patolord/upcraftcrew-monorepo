@@ -185,15 +185,15 @@ export function NewTaskModal({
 
       {/* Modal */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
         onClick={handleClose}
       >
         <div
-          className="relative w-full max-w-lg bg-admin-background rounded-2xl shadow-2xl transform transition-all duration-300 ease-out animate-in fade-in zoom-in-95 overflow-hidden pointer-events-auto"
+          className="relative w-full max-w-lg max-h-[95vh] md:max-h-none bg-admin-background rounded-t-2xl sm:rounded-2xl shadow-2xl transform transition-all duration-300 ease-out animate-in fade-in slide-in-from-bottom-4 sm:zoom-in-95 overflow-hidden pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="relative px-6 pt-6 pb-4 bg-admin-background border-b border-border">
+          <div className="relative px-4 sm:px-6 pt-5 sm:pt-6 pb-4 bg-admin-background border-b border-border">
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -213,7 +213,7 @@ export function NewTaskModal({
           </div>
 
           {/* Content */}
-          <div className="px-6 py-6 max-h-[70vh] overflow-y-auto">
+          <div className="px-4 sm:px-6 py-4 sm:py-6 max-h-[70vh] overflow-y-auto">
             {error && (
               <div className="mb-4">
                 <ErrorAlert

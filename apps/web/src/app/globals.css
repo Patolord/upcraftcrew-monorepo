@@ -255,4 +255,12 @@
     line-height: var(--font-size-body-sm--line-height);
     font-weight: 400;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
