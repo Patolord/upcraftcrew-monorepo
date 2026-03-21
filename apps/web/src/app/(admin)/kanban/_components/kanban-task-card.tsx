@@ -1,10 +1,16 @@
 "use client";
 
-import { Calendar, Archive } from "lucide-react";
+import { Calendar, Archive, ArrowUpRight, ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/convex-errors";
@@ -50,9 +56,46 @@ interface TaskCardProps {
   onClick?: () => void;
 }
 
+const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/g;
+
+function extractUrls(...texts: (string | undefined)[]): string[] {
+  const urls: string[] = [];
+  for (const text of texts) {
+    if (text) {
+      const matches = text.match(URL_REGEX);
+      if (matches) urls.push(...matches);
+    }
+  }
+  return [...new Set(urls)];
+}
+
+function formatUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const path = parsed.pathname === "/" ? "" : parsed.pathname;
+    const label = parsed.hostname + path;
+    return label.length > 40 ? label.slice(0, 37) + "..." : label;
+  } catch {
+    return url.length > 40 ? url.slice(0, 37) + "..." : url;
+  }
+}
+
 export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
   const archiveTask = useMutation(api.tasks.archiveTask);
+  const comments = useQuery(api.taskComments.getCommentsByTask, { taskId: task._id });
+  const subtasks = useQuery(api.subtasks.getSubtasksByTask, { taskId: task._id });
   const isDone = columnStatus === "done";
+  const commentTexts = comments?.map((c) => c.content) ?? [];
+  const subtaskTexts = subtasks?.map((s) => s.title) ?? [];
+  const links = extractUrls(task.title, task.description, ...commentTexts, ...subtaskTexts);
+  const linkCount = links.length;
+
+  const handleSingleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (links.length === 1) {
+      window.open(links[0], "_blank", "noopener,noreferrer");
+    }
+  };
 
   const handleArchive = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -104,6 +147,47 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
             <span />
           )}
 
+          <div className="flex items-center gap-1.5">
+            {linkCount === 1 && (
+              <button
+                onClick={handleSingleLinkClick}
+                className="flex items-center gap-0.5 text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
+                title="Visitar link"
+              >
+                <ArrowUpRight className="size-3.5" />
+                <span className="text-[10px] font-medium">Visitar link</span>
+              </button>
+            )}
+
+            {linkCount > 1 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-0.5 text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
+                    title={`${linkCount} links`}
+                  >
+                    <ArrowUpRight className="size-3.5" />
+                    <span className="text-[10px] font-medium">
+                      Visitar link +{linkCount - 1}
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                  {links.map((url, i) => (
+                    <DropdownMenuItem
+                      key={i}
+                      onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <ExternalLink className="size-3.5 shrink-0 text-blue-500" />
+                      <span className="text-xs truncate">{formatUrl(url)}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
           {isDone ? (
             <button
               onClick={handleArchive}
@@ -125,6 +209,7 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
               </div>
             )
           )}
+          </div>
         </div>
       </CardContent>
     </Card>
