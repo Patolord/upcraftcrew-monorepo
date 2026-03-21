@@ -47,10 +47,7 @@ export default function SchedulePage() {
   );
 
   // Fetch connected email accounts (for calendar integration)
-  const emailAccounts = useQuery(
-    api.emailAccounts.getMyAccounts,
-    isSignedIn ? {} : "skip",
-  );
+  const emailAccounts = useQuery(api.emailAccounts.getMyAccounts, isSignedIn ? {} : "skip");
 
   const fetchCalendarEventsAction = useAction(api.emailAccounts.fetchCalendarEvents);
 

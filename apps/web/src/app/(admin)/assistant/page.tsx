@@ -15,9 +15,6 @@ export default async function Page() {
   ]);
 
   return (
-    <AssistantPage
-      preloadedAccounts={preloadedAccounts}
-      preloadedFavorites={preloadedFavorites}
-    />
+    <AssistantPage preloadedAccounts={preloadedAccounts} preloadedFavorites={preloadedFavorites} />
   );
 }

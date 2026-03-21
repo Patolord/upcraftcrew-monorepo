@@ -132,22 +132,22 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
     isRead: e.isRead || readIds.has(`${e.accountId}-${e.id}`),
   }));
   const searchLower = searchQuery.toLowerCase();
-  const afterFavFilter = folder === "favorites"
-    ? emailsWithReadState.filter((e) => {
-        const m = e.from.match(/<(.+?)>/);
-        const addr = (m ? m[1] : e.from).toLowerCase();
-        return favoriteAddresses.has(addr);
-      })
-    : emailsWithReadState;
-  const searchFiltered = afterFavFilter.filter((e) =>
-    !searchQuery ||
-    e.from.toLowerCase().includes(searchLower) ||
-    e.subject.toLowerCase().includes(searchLower) ||
-    e.snippet.toLowerCase().includes(searchLower)
+  const afterFavFilter =
+    folder === "favorites"
+      ? emailsWithReadState.filter((e) => {
+          const m = e.from.match(/<(.+?)>/);
+          const addr = (m ? m[1] : e.from).toLowerCase();
+          return favoriteAddresses.has(addr);
+        })
+      : emailsWithReadState;
+  const searchFiltered = afterFavFilter.filter(
+    (e) =>
+      !searchQuery ||
+      e.from.toLowerCase().includes(searchLower) ||
+      e.subject.toLowerCase().includes(searchLower) ||
+      e.snippet.toLowerCase().includes(searchLower),
   );
-  const filteredEmails = showUnreadOnly
-    ? searchFiltered.filter((e) => !e.isRead)
-    : searchFiltered;
+  const filteredEmails = showUnreadOnly ? searchFiltered.filter((e) => !e.isRead) : searchFiltered;
   const totalPages = Math.ceil(filteredEmails.length / ITEMS_PER_PAGE);
   const paginatedEmails = filteredEmails.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -201,7 +201,11 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
       const displayName = nameMatch ? nameMatch[1].replace(/"/g, "") : undefined;
       try {
         const result = await toggleFavoriteAddress({ emailAddress: address, displayName });
-        toast.success(result.favorited ? `${address} adicionado aos favoritos` : `${address} removido dos favoritos`);
+        toast.success(
+          result.favorited
+            ? `${address} adicionado aos favoritos`
+            : `${address} removido dos favoritos`,
+        );
       } catch {
         toast.error("Erro ao atualizar favorito");
       }
@@ -247,7 +251,11 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
     const displayName = nameMatch ? nameMatch[1].replace(/"/g, "") : undefined;
     try {
       const result = await toggleFavoriteAddress({ emailAddress: address, displayName });
-      toast.success(result.favorited ? `${address} adicionado aos favoritos` : `${address} removido dos favoritos`);
+      toast.success(
+        result.favorited
+          ? `${address} adicionado aos favoritos`
+          : `${address} removido dos favoritos`,
+      );
     } catch {
       toast.error("Erro ao atualizar favorito");
     }
@@ -261,9 +269,7 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-semibold text-foreground">
-            Assistente
-          </h1>
+          <h1 className="text-xl md:text-2xl font-semibold text-foreground">Assistente</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Todas as suas caixas de e-mail em um só lugar
           </p>
@@ -277,9 +283,7 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
               disabled={loading}
               className="rounded-md"
             >
-              <RefreshCwIcon
-                className={`size-4 mr-2 ${loading ? "animate-spin" : ""}`}
-              />
+              <RefreshCwIcon className={`size-4 mr-2 ${loading ? "animate-spin" : ""}`} />
               Atualizar
             </Button>
           )}
@@ -300,14 +304,10 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
           {activeAccounts.map((account) => (
             <Badge
               key={account._id}
-              variant={
-                filterAccountId === account._id ? "default" : "outline"
-              }
+              variant={filterAccountId === account._id ? "default" : "outline"}
               className="cursor-pointer text-xs"
               onClick={() =>
-                setFilterAccountId(
-                  filterAccountId === account._id ? null : account._id,
-                )
+                setFilterAccountId(filterAccountId === account._id ? null : account._id)
               }
             >
               {account.provider === "gmail" ? (
@@ -337,7 +337,10 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
             type="text"
             placeholder="Buscar por remetente, assunto ou conteudo..."
             value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             className="pl-9 h-9 text-sm"
           />
         </div>
@@ -347,7 +350,13 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
       {hasAccounts ? (
         <>
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <Tabs value={folder} onValueChange={(v) => { setFolder(v as Folder); setCurrentPage(1); }}>
+            <Tabs
+              value={folder}
+              onValueChange={(v) => {
+                setFolder(v as Folder);
+                setCurrentPage(1);
+              }}
+            >
               <TabsList>
                 <TabsTrigger value="inbox" className="gap-1.5">
                   <InboxIcon className="size-4" />
@@ -379,7 +388,10 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
             <Button
               variant={showUnreadOnly ? "default" : "outline"}
               size="sm"
-              onClick={() => { setShowUnreadOnly((v) => !v); setCurrentPage(1); }}
+              onClick={() => {
+                setShowUnreadOnly((v) => !v);
+                setCurrentPage(1);
+              }}
               className={`rounded-md text-xs gap-1.5 ${showUnreadOnly ? "bg-orange-500 hover:bg-orange-600 text-white" : ""}`}
             >
               <MailIcon className="size-3.5" />
@@ -413,7 +425,9 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
             <div className="bg-white dark:bg-card rounded-lg shadow-sm p-4">
               <EmptyState
                 icon={folder === "favorites" ? StarIcon : MailIcon}
-                title={folder === "favorites" ? "Nenhum favorito encontrado" : "Nenhum e-mail encontrado"}
+                title={
+                  folder === "favorites" ? "Nenhum favorito encontrado" : "Nenhum e-mail encontrado"
+                }
                 description={
                   folder === "favorites"
                     ? "Favorite enderecos de e-mail clicando na estrela para ve-los aqui"
@@ -436,47 +450,51 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
                 />
               </div>
 
-              {totalPages > 1 && (() => {
-                const GROUP_SIZE = 3;
-                const groupIndex = Math.floor((currentPage - 1) / GROUP_SIZE);
-                const groupStart = groupIndex * GROUP_SIZE + 1;
-                const groupEnd = Math.min(groupStart + GROUP_SIZE - 1, totalPages);
-                const pages = Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
+              {totalPages > 1 &&
+                (() => {
+                  const GROUP_SIZE = 3;
+                  const groupIndex = Math.floor((currentPage - 1) / GROUP_SIZE);
+                  const groupStart = groupIndex * GROUP_SIZE + 1;
+                  const groupEnd = Math.min(groupStart + GROUP_SIZE - 1, totalPages);
+                  const pages = Array.from(
+                    { length: groupEnd - groupStart + 1 },
+                    (_, i) => groupStart + i,
+                  );
 
-                return (
-                  <div className="flex items-center justify-center gap-1 pt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={groupStart === 1}
-                      onClick={() => setCurrentPage(groupStart - 1)}
-                      className="rounded-md px-3 text-xs"
-                    >
-                      Anterior
-                    </Button>
-                    {pages.map((page) => (
+                  return (
+                    <div className="flex items-center justify-center gap-1 pt-2">
                       <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
+                        variant="outline"
                         size="sm"
-                        onClick={() => setCurrentPage(page)}
-                        className={`rounded-md px-3 text-xs min-w-8 ${currentPage === page ? "bg-orange-500 hover:bg-orange-600 text-white" : ""}`}
+                        disabled={groupStart === 1}
+                        onClick={() => setCurrentPage(groupStart - 1)}
+                        className="rounded-md px-3 text-xs"
                       >
-                        {page}
+                        Anterior
                       </Button>
-                    ))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={groupEnd === totalPages}
-                      onClick={() => setCurrentPage(groupEnd + 1)}
-                      className="rounded-md px-3 text-xs"
-                    >
-                      Proxima
-                    </Button>
-                  </div>
-                );
-              })()}
+                      {pages.map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setCurrentPage(page)}
+                          className={`rounded-md px-3 text-xs min-w-8 ${currentPage === page ? "bg-orange-500 hover:bg-orange-600 text-white" : ""}`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={groupEnd === totalPages}
+                        onClick={() => setCurrentPage(groupEnd + 1)}
+                        className="rounded-md px-3 text-xs"
+                      >
+                        Proxima
+                      </Button>
+                    </div>
+                  );
+                })()}
             </>
           )}
         </>
@@ -505,7 +523,14 @@ export function AssistantPage({ preloadedAccounts, preloadedFavorites }: Assista
         onClose={handleCloseDetail}
         email={emailDetail}
         loading={loadingDetail}
-        isFavorite={emailDetail ? (() => { const m = emailDetail.from.match(/<(.+?)>/); return favoriteAddresses.has((m ? m[1] : emailDetail.from).toLowerCase()); })() : false}
+        isFavorite={
+          emailDetail
+            ? (() => {
+                const m = emailDetail.from.match(/<(.+?)>/);
+                return favoriteAddresses.has((m ? m[1] : emailDetail.from).toLowerCase());
+              })()
+            : false
+        }
         onToggleFavorite={handleToggleFavoriteFromDetail}
         onArchive={handleArchiveFromDetail}
       />

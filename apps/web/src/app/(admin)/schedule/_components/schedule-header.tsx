@@ -59,11 +59,7 @@ export function ScheduleHeader({ searchQuery = "", onSearchChange }: ScheduleHea
 
       {/* Center - Search */}
       <div className="w-full md:max-w-md">
-        <GlobalSearchInput
-          value={searchQuery}
-          onChange={onSearchChange}
-          placeholder="Search..."
-        />
+        <GlobalSearchInput value={searchQuery} onChange={onSearchChange} placeholder="Search..." />
       </div>
 
       {/* Right side - User */}

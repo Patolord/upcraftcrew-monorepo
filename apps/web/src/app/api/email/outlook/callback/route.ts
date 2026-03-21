@@ -17,28 +17,23 @@ export async function GET(request: NextRequest) {
   const error = request.nextUrl.searchParams.get("error");
 
   if (error || !code) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/assistant?error=oauth_denied`,
-    );
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/assistant?error=oauth_denied`);
   }
 
   try {
-    const tokenRes = await fetch(
-      "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          code,
-          client_id: process.env.MICROSOFT_CLIENT_ID!,
-          client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
-          redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/email/outlook/callback`,
-          grant_type: "authorization_code",
-          scope:
-            "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access User.Read",
-        }),
-      },
-    );
+    const tokenRes = await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: process.env.MICROSOFT_CLIENT_ID!,
+        client_secret: process.env.MICROSOFT_CLIENT_SECRET!,
+        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/email/outlook/callback`,
+        grant_type: "authorization_code",
+        scope:
+          "https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/Calendars.Read offline_access User.Read",
+      }),
+    });
 
     if (!tokenRes.ok) {
       const errData = await tokenRes.text();
@@ -54,8 +49,7 @@ export async function GET(request: NextRequest) {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
     });
     const profile = await profileRes.json();
-    const email =
-      profile.mail || profile.userPrincipalName || profile.id;
+    const email = profile.mail || profile.userPrincipalName || profile.id;
 
     const convexToken = await getToken({ template: "convex" });
     if (!convexToken) {

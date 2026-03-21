@@ -17,10 +17,7 @@ export function BottomBar() {
 
   return (
     <>
-      <View
-        className="bg-card border-t border-border"
-        style={{ paddingBottom: insets.bottom }}
-      >
+      <View className="bg-card border-t border-border" style={{ paddingBottom: insets.bottom }}>
         <View className="flex-row items-center justify-around h-16">
           {/* Menu */}
           <TouchableOpacity
@@ -29,9 +26,7 @@ export function BottomBar() {
             className="flex-1 items-center justify-center py-2"
           >
             <Ionicons name="menu-outline" size={24} color="#737373" />
-            <Text className="text-[10px] mt-1 font-medium text-muted-foreground">
-              Menu
-            </Text>
+            <Text className="text-[10px] mt-1 font-medium text-muted-foreground">Menu</Text>
           </TouchableOpacity>
 
           {/* Profile */}

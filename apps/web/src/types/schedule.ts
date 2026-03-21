@@ -2,7 +2,14 @@ export type EventType = "meeting" | "deadline" | "task" | "reminder" | "mileston
 
 export type EventPriority = "low" | "medium" | "high";
 
-export type SourceType = "event" | "project" | "budget" | "transaction" | "task" | "google-calendar" | "outlook-calendar";
+export type SourceType =
+  | "event"
+  | "project"
+  | "budget"
+  | "transaction"
+  | "task"
+  | "google-calendar"
+  | "outlook-calendar";
 
 export type Attendee = {
   id: string;

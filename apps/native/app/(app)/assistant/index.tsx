@@ -1,14 +1,7 @@
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { useQuery, useAction } from "convex/react";
 import { useState, useCallback, useEffect } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { RefreshControl, ScrollView, View, Text, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +33,9 @@ export default function AssistantPage() {
   const [emails, setEmails] = useState<EmailMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedEmail, setSelectedEmail] = useState<{ id: string; accountId: string } | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<{ id: string; accountId: string } | null>(
+    null,
+  );
   const [emailDetail, setEmailDetail] = useState<any>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [connectDialogOpen, setConnectDialogOpen] = useState(false);
@@ -164,9 +159,7 @@ export default function AssistantPage() {
                 <TouchableOpacity
                   key={account._id}
                   onPress={() =>
-                    setFilterAccountId(
-                      filterAccountId === account._id ? null : account._id,
-                    )
+                    setFilterAccountId(filterAccountId === account._id ? null : account._id)
                   }
                   activeOpacity={0.7}
                 >
@@ -244,9 +237,7 @@ export default function AssistantPage() {
                   }}
                   className={cn(
                     "flex-row items-center gap-1 px-2.5 py-1.5 rounded-lg border",
-                    showUnreadOnly
-                      ? "bg-brand border-brand"
-                      : "bg-transparent border-border",
+                    showUnreadOnly ? "bg-brand border-brand" : "bg-transparent border-border",
                   )}
                 >
                   <Ionicons
@@ -334,10 +325,7 @@ export default function AssistantPage() {
                 title="Nenhuma conta conectada"
                 description="Conecte suas contas Gmail e Outlook para ver todos os seus e-mails em um só lugar"
                 action={
-                  <Button
-                    onPress={() => setConnectDialogOpen(true)}
-                    className="bg-brand"
-                  >
+                  <Button onPress={() => setConnectDialogOpen(true)} className="bg-brand">
                     <View className="flex-row items-center gap-1.5">
                       <Ionicons name="add" size={16} color="#fff" />
                       <Text className="text-sm text-white font-medium">Conectar Conta</Text>

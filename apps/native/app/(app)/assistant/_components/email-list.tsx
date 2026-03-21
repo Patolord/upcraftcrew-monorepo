@@ -93,15 +93,15 @@ export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailL
                 <Text
                   className={cn(
                     "text-sm flex-1",
-                    !email.isRead ? "font-semibold text-foreground" : "font-medium text-foreground/80",
+                    !email.isRead
+                      ? "font-semibold text-foreground"
+                      : "font-medium text-foreground/80",
                   )}
                   numberOfLines={1}
                 >
                   {fromName}
                 </Text>
-                {!email.isRead && (
-                  <View className="h-2 w-2 rounded-full bg-brand" />
-                )}
+                {!email.isRead && <View className="h-2 w-2 rounded-full bg-brand" />}
               </View>
               <Text
                 className={cn(
@@ -131,10 +131,7 @@ export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailL
                 )}
               </View>
               <View
-                className={cn(
-                  "px-1.5 py-0.5 rounded-full",
-                  isGmail ? "bg-red-100" : "bg-blue-100",
-                )}
+                className={cn("px-1.5 py-0.5 rounded-full", isGmail ? "bg-red-100" : "bg-blue-100")}
               >
                 <Text
                   className={cn(
@@ -149,9 +146,7 @@ export function EmailList({ emails, onSelect, onMarkAsRead, selectedId }: EmailL
             </View>
 
             {/* Divider */}
-            {showDivider && (
-              <View className="absolute bottom-0 left-16 right-0 h-px bg-border" />
-            )}
+            {showDivider && <View className="absolute bottom-0 left-16 right-0 h-px bg-border" />}
           </TouchableOpacity>
         );
       })}

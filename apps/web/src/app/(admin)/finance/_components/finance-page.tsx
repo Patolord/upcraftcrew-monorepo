@@ -24,10 +24,7 @@ interface FinancePageProps {
   preloadedYearlyExpenses?: Preloaded<typeof api.finance.getYearlyExpensesByMonth>;
 }
 
-export function FinancePage({
-  preloadedTransactions,
-  preloadedSummary,
-}: FinancePageProps) {
+export function FinancePage({ preloadedTransactions, preloadedSummary }: FinancePageProps) {
   const transactions = usePreloadedQuery(preloadedTransactions);
   const financialSummary = usePreloadedQuery(preloadedSummary);
   const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);

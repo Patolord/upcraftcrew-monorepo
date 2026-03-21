@@ -23,13 +23,41 @@ interface ProfileBudgetsCardProps {
   budgets: Budget[];
 }
 
-const statusConfig: Record<string, { label: string; icon: keyof typeof Ionicons.glyphMap; bgColor: string; iconColor: string }> = {
-  draft: { label: "Rascunho", icon: "document-text-outline", bgColor: "bg-gray-100", iconColor: "#6b7280" },
+const statusConfig: Record<
+  string,
+  { label: string; icon: keyof typeof Ionicons.glyphMap; bgColor: string; iconColor: string }
+> = {
+  draft: {
+    label: "Rascunho",
+    icon: "document-text-outline",
+    bgColor: "bg-gray-100",
+    iconColor: "#6b7280",
+  },
   sent: { label: "Enviado", icon: "send-outline", bgColor: "bg-blue-100", iconColor: "#3b82f6" },
-  approved: { label: "Aprovado", icon: "checkmark-circle-outline", bgColor: "bg-green-100", iconColor: "#22c55e" },
-  rejected: { label: "Rejeitado", icon: "close-circle-outline", bgColor: "bg-red-100", iconColor: "#ef4444" },
-  expired: { label: "Expirado", icon: "warning-outline", bgColor: "bg-yellow-100", iconColor: "#eab308" },
-  cancelled: { label: "Cancelado", icon: "warning-outline", bgColor: "bg-gray-100", iconColor: "#9ca3af" },
+  approved: {
+    label: "Aprovado",
+    icon: "checkmark-circle-outline",
+    bgColor: "bg-green-100",
+    iconColor: "#22c55e",
+  },
+  rejected: {
+    label: "Rejeitado",
+    icon: "close-circle-outline",
+    bgColor: "bg-red-100",
+    iconColor: "#ef4444",
+  },
+  expired: {
+    label: "Expirado",
+    icon: "warning-outline",
+    bgColor: "bg-yellow-100",
+    iconColor: "#eab308",
+  },
+  cancelled: {
+    label: "Cancelado",
+    icon: "warning-outline",
+    bgColor: "bg-gray-100",
+    iconColor: "#9ca3af",
+  },
 };
 
 function formatCurrency(amount: number, currency: string) {
@@ -68,7 +96,9 @@ export function ProfileBudgetsCard({ budgets }: ProfileBudgetsCardProps) {
                 activeOpacity={0.7}
                 className="flex-row items-start gap-3 p-2 rounded-xl"
               >
-                <View className={`h-8 w-8 rounded-full items-center justify-center ${config.bgColor}`}>
+                <View
+                  className={`h-8 w-8 rounded-full items-center justify-center ${config.bgColor}`}
+                >
                   <Ionicons name={config.icon} size={16} color={config.iconColor} />
                 </View>
                 <View className="flex-1 min-w-0">
@@ -93,10 +123,7 @@ export function ProfileBudgetsCard({ budgets }: ProfileBudgetsCardProps) {
         )}
 
         {budgets.length > 0 && (
-          <TouchableOpacity
-            onPress={() => router.push("/(app)/budgets" as any)}
-            className="pt-2"
-          >
+          <TouchableOpacity onPress={() => router.push("/(app)/budgets" as any)} className="pt-2">
             <Text className="text-sm text-brand font-medium text-center">
               Ver todos os orçamentos →
             </Text>

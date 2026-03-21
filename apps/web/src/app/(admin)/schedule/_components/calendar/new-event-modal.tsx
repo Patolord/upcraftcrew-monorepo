@@ -338,7 +338,8 @@ export function NewEventModal({ open, onOpenChange, preSelectedDate }: NewEventM
                       />
                     ) : (
                       <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground">
-                        {member.firstName?.[0]}{member.lastName?.[0]}
+                        {member.firstName?.[0]}
+                        {member.lastName?.[0]}
                       </div>
                     )}
                     <span className={cn("text-sm", isSelected && "text-orange-700 font-medium")}>

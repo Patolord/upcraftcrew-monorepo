@@ -100,13 +100,8 @@ export function ProfileEventsCard({ events }: ProfileEventsCardProps) {
         )}
 
         {events.length > 0 && (
-          <TouchableOpacity
-            onPress={() => router.push("/(app)/schedule" as any)}
-            className="pt-2"
-          >
-            <Text className="text-sm text-brand font-medium text-center">
-              Ver agenda →
-            </Text>
+          <TouchableOpacity onPress={() => router.push("/(app)/schedule" as any)} className="pt-2">
+            <Text className="text-sm text-brand font-medium text-center">Ver agenda →</Text>
           </TouchableOpacity>
         )}
       </CardContent>

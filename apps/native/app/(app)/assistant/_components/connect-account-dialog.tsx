@@ -28,7 +28,8 @@ interface ConnectAccountDialogProps {
   accounts: Account[];
 }
 
-const WEB_URL = process.env.EXPO_PUBLIC_WEB_URL || Constants.expoConfig?.extra?.EXPO_PUBLIC_WEB_URL || "";
+const WEB_URL =
+  process.env.EXPO_PUBLIC_WEB_URL || Constants.expoConfig?.extra?.EXPO_PUBLIC_WEB_URL || "";
 
 export function ConnectAccountDialog({ open, onOpenChange, accounts }: ConnectAccountDialogProps) {
   const removeAccount = useMutation(api.emailAccounts.removeAccount);
@@ -53,25 +54,21 @@ export function ConnectAccountDialog({ open, onOpenChange, accounts }: ConnectAc
   };
 
   const handleRemove = async (accountId: Id<"emailAccounts">, email: string) => {
-    Alert.alert(
-      "Remover conta",
-      `Deseja remover ${email}?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Remover",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await removeAccount({ accountId });
-            } catch (err) {
-              console.error("Failed to remove account:", err);
-              Alert.alert("Erro", "Falha ao remover conta");
-            }
-          },
+    Alert.alert("Remover conta", `Deseja remover ${email}?`, [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Remover",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await removeAccount({ accountId });
+          } catch (err) {
+            console.error("Failed to remove account:", err);
+            Alert.alert("Erro", "Falha ao remover conta");
+          }
         },
-      ],
-    );
+      },
+    ]);
   };
 
   return (

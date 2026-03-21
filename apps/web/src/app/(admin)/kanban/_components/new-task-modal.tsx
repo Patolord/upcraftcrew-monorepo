@@ -142,9 +142,10 @@ export function NewTaskModal({
         description: formData.description || "Sem descrição",
         status: formData.status,
         priority: formData.priority,
-        assignedToIds: formData.assignedToIds.length > 0
-          ? formData.assignedToIds.map((id) => id as Id<"users">)
-          : undefined,
+        assignedToIds:
+          formData.assignedToIds.length > 0
+            ? formData.assignedToIds.map((id) => id as Id<"users">)
+            : undefined,
         projectId: formData.projectId ? (formData.projectId as Id<"projects">) : undefined,
         dueDate: formData.dueDate ? new Date(formData.dueDate).getTime() : undefined,
         imageUrls: formData.imageUrls.length > 0 ? formData.imageUrls : undefined,
@@ -366,7 +367,12 @@ export function NewTaskModal({
                               <Avatar className="size-4">
                                 <AvatarImage src={member.imageUrl} />
                                 <AvatarFallback className="text-[8px] bg-orange-400 text-white">
-                                  {name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                                  {name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()
+                                    .slice(0, 2)}
                                 </AvatarFallback>
                               </Avatar>
                               {name}
@@ -411,7 +417,12 @@ export function NewTaskModal({
                             <Avatar className="size-5">
                               <AvatarImage src={member.imageUrl} />
                               <AvatarFallback className="text-[8px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
-                                {name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                                {name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .toUpperCase()
+                                  .slice(0, 2)}
                               </AvatarFallback>
                             </Avatar>
                             <span className="text-sm">{name}</span>
@@ -419,7 +430,9 @@ export function NewTaskModal({
                         );
                       })}
                       {(!teamMembers || teamMembers.length === 0) && (
-                        <p className="text-xs text-muted-foreground text-center py-2">Nenhum membro encontrado</p>
+                        <p className="text-xs text-muted-foreground text-center py-2">
+                          Nenhum membro encontrado
+                        </p>
                       )}
                     </div>
                   </div>

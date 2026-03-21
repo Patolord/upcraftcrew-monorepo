@@ -2,7 +2,13 @@ import { useState } from "react";
 import { View, Text, TextInput, Alert } from "react-native";
 import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -169,19 +175,10 @@ export function EditProfileSheet({ open, onClose, currentData }: EditProfileShee
 
           {/* Actions */}
           <View className="flex-row gap-3 mt-2">
-            <Button
-              variant="outline"
-              onPress={onClose}
-              disabled={isSubmitting}
-              className="flex-1"
-            >
+            <Button variant="outline" onPress={onClose} disabled={isSubmitting} className="flex-1">
               <Text className="text-foreground text-sm font-medium">Cancelar</Text>
             </Button>
-            <Button
-              onPress={handleSubmit}
-              loading={isSubmitting}
-              className="flex-1 bg-brand"
-            >
+            <Button onPress={handleSubmit} loading={isSubmitting} className="flex-1 bg-brand">
               <Text className="text-white text-sm font-medium">Salvar</Text>
             </Button>
           </View>

@@ -474,7 +474,8 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               {teamMembers?.map((member) => {
-                const assignedIds = task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
+                const assignedIds =
+                  task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
                 const isAssigned = assignedIds.includes(member._id);
                 return (
                   <DropdownMenuItem
@@ -492,9 +493,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                     <span className="flex-1">
                       {member.firstName} {member.lastName}
                     </span>
-                    {isAssigned && (
-                      <span className="text-green-500">✓</span>
-                    )}
+                    {isAssigned && <span className="text-green-500">✓</span>}
                   </DropdownMenuItem>
                 );
               })}

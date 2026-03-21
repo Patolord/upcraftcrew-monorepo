@@ -53,7 +53,9 @@ export function GlobalSearchInput({
   const hasNoResults =
     debouncedTerm.length >= 2 && debouncedTerm === normalizedTerm && results?.length === 0;
   const showDropdown =
-    focused && normalizedTerm.length >= 2 && (isLoading || hasNoResults || (results && results.length > 0));
+    focused &&
+    normalizedTerm.length >= 2 &&
+    (isLoading || hasNoResults || (results && results.length > 0));
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
     if (containerRef.current && !containerRef.current.contains(event.target as Node)) {

@@ -8,11 +8,10 @@ const content = {
     lastUpdated: "Last updated: March 18, 2026",
     intro: (
       <p>
-        <strong>Up Craft Crew</strong> (&quot;we&quot;, &quot;our&quot;, or
-        &quot;company&quot;) operates the <strong>Up Craft Crew</strong> application
-        (hereinafter referred to as &quot;Application&quot;). This page informs you of our
-        policies regarding the collection, use, and disclosure of personal information when
-        you use our Application.
+        <strong>Up Craft Crew</strong> (&quot;we&quot;, &quot;our&quot;, or &quot;company&quot;)
+        operates the <strong>Up Craft Crew</strong> application (hereinafter referred to as
+        &quot;Application&quot;). This page informs you of our policies regarding the collection,
+        use, and disclosure of personal information when you use our Application.
       </p>
     ),
     sections: [
@@ -23,27 +22,27 @@ const content = {
             <h3>1.1 Information you provide</h3>
             <ul>
               <li>
-                <strong>Registration data:</strong> name, email address, and profile picture
-                when creating an account.
+                <strong>Registration data:</strong> name, email address, and profile picture when
+                creating an account.
               </li>
               <li>
-                <strong>Service usage data:</strong> information about projects, budgets,
-                clients, and tasks you create and manage within the Application.
+                <strong>Service usage data:</strong> information about projects, budgets, clients,
+                and tasks you create and manage within the Application.
               </li>
             </ul>
             <h3>1.2 Information collected automatically</h3>
             <ul>
               <li>
-                <strong>Device data:</strong> device model, operating system, unique
-                identifiers, and mobile network data.
+                <strong>Device data:</strong> device model, operating system, unique identifiers,
+                and mobile network data.
               </li>
               <li>
-                <strong>Usage data:</strong> pages visited, features used, time of use, and
-                browsing patterns.
+                <strong>Usage data:</strong> pages visited, features used, time of use, and browsing
+                patterns.
               </li>
               <li>
-                <strong>Log data:</strong> IP address, browser type, pages accessed, date and
-                time of access.
+                <strong>Log data:</strong> IP address, browser type, pages accessed, date and time
+                of access.
               </li>
             </ul>
           </>
@@ -70,22 +69,22 @@ const content = {
         content: (
           <>
             <p>
-              We do not sell, rent, or share your personal information with third parties,
-              except in the following situations:
+              We do not sell, rent, or share your personal information with third parties, except in
+              the following situations:
             </p>
             <ul>
               <li>
-                <strong>Service providers:</strong> we share data with service providers who
-                assist us in operating the Application (such as authentication, hosting, and
-                data storage), subject to confidentiality obligations.
+                <strong>Service providers:</strong> we share data with service providers who assist
+                us in operating the Application (such as authentication, hosting, and data storage),
+                subject to confidentiality obligations.
               </li>
               <li>
-                <strong>Legal requirements:</strong> we may disclose information when required
-                by law, court order, or legal process.
+                <strong>Legal requirements:</strong> we may disclose information when required by
+                law, court order, or legal process.
               </li>
               <li>
-                <strong>Protection of rights:</strong> when necessary to protect our rights,
-                safety, or property.
+                <strong>Protection of rights:</strong> when necessary to protect our rights, safety,
+                or property.
               </li>
             </ul>
           </>
@@ -104,14 +103,10 @@ const content = {
                 <strong>Convex:</strong> for real-time data storage and synchronization.
               </li>
               <li>
-                <strong>Google Play Services:</strong> for application distribution and
-                updates.
+                <strong>Google Play Services:</strong> for application distribution and updates.
               </li>
             </ul>
-            <p>
-              Each of these services has its own privacy policy governing the use of your
-              data.
-            </p>
+            <p>Each of these services has its own privacy policy governing the use of your data.</p>
           </>
         ),
       },
@@ -120,15 +115,14 @@ const content = {
         content: (
           <>
             <p>
-              Your data is stored on secure servers with encryption in transit and at rest.
-              We implement technical and organizational security measures to protect your
-              information against unauthorized access, alteration, disclosure, or
-              destruction.
+              Your data is stored on secure servers with encryption in transit and at rest. We
+              implement technical and organizational security measures to protect your information
+              against unauthorized access, alteration, disclosure, or destruction.
             </p>
             <p>
-              However, no method of Internet transmission or electronic storage is 100%
-              secure. While we strive to protect your information, we cannot guarantee its
-              absolute security.
+              However, no method of Internet transmission or electronic storage is 100% secure.
+              While we strive to protect your information, we cannot guarantee its absolute
+              security.
             </p>
           </>
         ),
@@ -158,14 +152,14 @@ const content = {
         content: (
           <>
             <p>
-              We retain your personal information only for as long as necessary to fulfill
-              the purposes described in this policy, unless a longer retention period is
-              required or permitted by law.
+              We retain your personal information only for as long as necessary to fulfill the
+              purposes described in this policy, unless a longer retention period is required or
+              permitted by law.
             </p>
             <p>
-              When you delete your account, your personal data will be removed from our
-              systems within 30 days, except when retention is necessary for compliance with
-              legal obligations.
+              When you delete your account, your personal data will be removed from our systems
+              within 30 days, except when retention is necessary for compliance with legal
+              obligations.
             </p>
           </>
         ),
@@ -174,10 +168,9 @@ const content = {
         title: "8. Children",
         content: (
           <p>
-            The Application is not intended for children under 13 years of age. We do not
-            knowingly collect personal information from children under 13. If we become aware
-            that we have collected data from a child under 13, we will take steps to delete
-            that information.
+            The Application is not intended for children under 13 years of age. We do not knowingly
+            collect personal information from children under 13. If we become aware that we have
+            collected data from a child under 13, we will take steps to delete that information.
           </p>
         ),
       },
@@ -186,13 +179,12 @@ const content = {
         content: (
           <>
             <p>
-              We may update this Privacy Policy periodically. We will notify you of any
-              changes by posting the new policy on this page and updating the &quot;Last
-              updated&quot; date.
+              We may update this Privacy Policy periodically. We will notify you of any changes by
+              posting the new policy on this page and updating the &quot;Last updated&quot; date.
             </p>
             <p>
-              We recommend that you review this policy periodically to stay informed about
-              how we protect your information.
+              We recommend that you review this policy periodically to stay informed about how we
+              protect your information.
             </p>
           </>
         ),
@@ -202,8 +194,8 @@ const content = {
         content: (
           <>
             <p>
-              If you have questions about this Privacy Policy or wish to exercise your
-              rights, please contact us:
+              If you have questions about this Privacy Policy or wish to exercise your rights,
+              please contact us:
             </p>
             <ul>
               <li>
@@ -212,11 +204,7 @@ const content = {
               </li>
               <li>
                 <strong>Website:</strong>{" "}
-                <a
-                  href="https://upcraftcrew.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://upcraftcrew.com" target="_blank" rel="noopener noreferrer">
                   upcraftcrew.com
                 </a>
               </li>
@@ -231,11 +219,10 @@ const content = {
     lastUpdated: "Última atualização: 18 de março de 2026",
     intro: (
       <p>
-        A <strong>Up Craft Crew</strong> (&quot;nós&quot;, &quot;nosso&quot; ou
-        &quot;empresa&quot;) opera o aplicativo <strong>Up Craft Crew</strong>{" "}
-        (doravante referido como &quot;Aplicativo&quot;). Esta página informa sobre nossas
-        políticas relativas à coleta, uso e divulgação de informações pessoais quando você
-        utiliza nosso Aplicativo.
+        A <strong>Up Craft Crew</strong> (&quot;nós&quot;, &quot;nosso&quot; ou &quot;empresa&quot;)
+        opera o aplicativo <strong>Up Craft Crew</strong> (doravante referido como
+        &quot;Aplicativo&quot;). Esta página informa sobre nossas políticas relativas à coleta, uso
+        e divulgação de informações pessoais quando você utiliza nosso Aplicativo.
       </p>
     ),
     sections: [
@@ -246,27 +233,27 @@ const content = {
             <h3>1.1 Informações fornecidas por você</h3>
             <ul>
               <li>
-                <strong>Dados de cadastro:</strong> nome, endereço de e-mail e foto de perfil
-                ao criar uma conta.
+                <strong>Dados de cadastro:</strong> nome, endereço de e-mail e foto de perfil ao
+                criar uma conta.
               </li>
               <li>
-                <strong>Dados de uso do serviço:</strong> informações sobre projetos,
-                orçamentos, clientes e tarefas que você cria e gerencia dentro do Aplicativo.
+                <strong>Dados de uso do serviço:</strong> informações sobre projetos, orçamentos,
+                clientes e tarefas que você cria e gerencia dentro do Aplicativo.
               </li>
             </ul>
             <h3>1.2 Informações coletadas automaticamente</h3>
             <ul>
               <li>
-                <strong>Dados do dispositivo:</strong> modelo do dispositivo, sistema
-                operacional, identificadores únicos e dados de rede móvel.
+                <strong>Dados do dispositivo:</strong> modelo do dispositivo, sistema operacional,
+                identificadores únicos e dados de rede móvel.
               </li>
               <li>
-                <strong>Dados de uso:</strong> páginas visitadas, funcionalidades utilizadas,
-                tempo de uso e padrões de navegação.
+                <strong>Dados de uso:</strong> páginas visitadas, funcionalidades utilizadas, tempo
+                de uso e padrões de navegação.
               </li>
               <li>
-                <strong>Dados de log:</strong> endereço IP, tipo de navegador, páginas
-                acessadas, data e hora de acesso.
+                <strong>Dados de log:</strong> endereço IP, tipo de navegador, páginas acessadas,
+                data e hora de acesso.
               </li>
             </ul>
           </>
@@ -293,19 +280,18 @@ const content = {
         content: (
           <>
             <p>
-              Não vendemos, alugamos ou compartilhamos suas informações pessoais com
-              terceiros, exceto nas seguintes situações:
+              Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros,
+              exceto nas seguintes situações:
             </p>
             <ul>
               <li>
-                <strong>Provedores de serviço:</strong> compartilhamos dados com prestadores
-                de serviço que nos auxiliam na operação do Aplicativo (como autenticação,
-                hospedagem e armazenamento de dados), sujeitos a obrigações de
-                confidencialidade.
+                <strong>Provedores de serviço:</strong> compartilhamos dados com prestadores de
+                serviço que nos auxiliam na operação do Aplicativo (como autenticação, hospedagem e
+                armazenamento de dados), sujeitos a obrigações de confidencialidade.
               </li>
               <li>
-                <strong>Requisitos legais:</strong> podemos divulgar informações quando
-                exigido por lei, ordem judicial ou processo legal.
+                <strong>Requisitos legais:</strong> podemos divulgar informações quando exigido por
+                lei, ordem judicial ou processo legal.
               </li>
               <li>
                 <strong>Proteção de direitos:</strong> quando necessário para proteger nossos
@@ -325,8 +311,7 @@ const content = {
                 <strong>Clerk:</strong> para autenticação e gerenciamento de identidade.
               </li>
               <li>
-                <strong>Convex:</strong> para armazenamento e sincronização de dados em tempo
-                real.
+                <strong>Convex:</strong> para armazenamento e sincronização de dados em tempo real.
               </li>
               <li>
                 <strong>Google Play Services:</strong> para distribuição e atualizações do
@@ -334,8 +319,8 @@ const content = {
               </li>
             </ul>
             <p>
-              Cada um desses serviços possui sua própria política de privacidade que governa
-              o uso dos seus dados.
+              Cada um desses serviços possui sua própria política de privacidade que governa o uso
+              dos seus dados.
             </p>
           </>
         ),
@@ -345,15 +330,14 @@ const content = {
         content: (
           <>
             <p>
-              Seus dados são armazenados em servidores seguros com criptografia em trânsito
-              e em repouso. Implementamos medidas de segurança técnicas e organizacionais
-              para proteger suas informações contra acesso não autorizado, alteração,
-              divulgação ou destruição.
+              Seus dados são armazenados em servidores seguros com criptografia em trânsito e em
+              repouso. Implementamos medidas de segurança técnicas e organizacionais para proteger
+              suas informações contra acesso não autorizado, alteração, divulgação ou destruição.
             </p>
             <p>
-              No entanto, nenhum método de transmissão pela Internet ou método de
-              armazenamento eletrônico é 100% seguro. Embora nos esforcemos para proteger
-              suas informações, não podemos garantir sua segurança absoluta.
+              No entanto, nenhum método de transmissão pela Internet ou método de armazenamento
+              eletrônico é 100% seguro. Embora nos esforcemos para proteger suas informações, não
+              podemos garantir sua segurança absoluta.
             </p>
           </>
         ),
@@ -363,16 +347,14 @@ const content = {
         content: (
           <>
             <p>
-              Em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº
-              13.709/2018), você tem direito a:
+              Em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), você
+              tem direito a:
             </p>
             <ul>
               <li>Confirmar a existência de tratamento de seus dados;</li>
               <li>Acessar seus dados pessoais;</li>
               <li>Corrigir dados incompletos, inexatos ou desatualizados;</li>
-              <li>
-                Solicitar a anonimização, bloqueio ou eliminação de dados desnecessários;
-              </li>
+              <li>Solicitar a anonimização, bloqueio ou eliminação de dados desnecessários;</li>
               <li>Solicitar a portabilidade dos dados;</li>
               <li>Revogar o consentimento a qualquer momento;</li>
               <li>Solicitar a exclusão de seus dados pessoais.</li>
@@ -386,13 +368,12 @@ const content = {
           <>
             <p>
               Retemos suas informações pessoais apenas pelo tempo necessário para cumprir as
-              finalidades descritas nesta política, a menos que um período de retenção mais
-              longo seja exigido ou permitido por lei.
+              finalidades descritas nesta política, a menos que um período de retenção mais longo
+              seja exigido ou permitido por lei.
             </p>
             <p>
-              Ao excluir sua conta, seus dados pessoais serão removidos de nossos sistemas
-              em até 30 dias, exceto quando a retenção for necessária para cumprimento de
-              obrigações legais.
+              Ao excluir sua conta, seus dados pessoais serão removidos de nossos sistemas em até 30
+              dias, exceto quando a retenção for necessária para cumprimento de obrigações legais.
             </p>
           </>
         ),
@@ -401,10 +382,10 @@ const content = {
         title: "8. Menores de Idade",
         content: (
           <p>
-            O Aplicativo não se destina a menores de 13 anos. Não coletamos
-            intencionalmente informações pessoais de crianças menores de 13 anos. Se
-            tomarmos conhecimento de que coletamos dados de uma criança menor de 13 anos,
-            tomaremos medidas para excluir essas informações.
+            O Aplicativo não se destina a menores de 13 anos. Não coletamos intencionalmente
+            informações pessoais de crianças menores de 13 anos. Se tomarmos conhecimento de que
+            coletamos dados de uma criança menor de 13 anos, tomaremos medidas para excluir essas
+            informações.
           </p>
         ),
       },
@@ -413,13 +394,13 @@ const content = {
         content: (
           <>
             <p>
-              Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos
-              sobre quaisquer alterações publicando a nova política nesta página e
-              atualizando a data de &quot;Última atualização&quot;.
+              Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos sobre
+              quaisquer alterações publicando a nova política nesta página e atualizando a data de
+              &quot;Última atualização&quot;.
             </p>
             <p>
-              Recomendamos que você revise esta política periodicamente para se manter
-              informado sobre como protegemos suas informações.
+              Recomendamos que você revise esta política periodicamente para se manter informado
+              sobre como protegemos suas informações.
             </p>
           </>
         ),
@@ -429,8 +410,8 @@ const content = {
         content: (
           <>
             <p>
-              Se você tiver dúvidas sobre esta Política de Privacidade ou desejar exercer
-              seus direitos, entre em contato conosco:
+              Se você tiver dúvidas sobre esta Política de Privacidade ou desejar exercer seus
+              direitos, entre em contato conosco:
             </p>
             <ul>
               <li>
@@ -439,11 +420,7 @@ const content = {
               </li>
               <li>
                 <strong>Website:</strong>{" "}
-                <a
-                  href="https://upcraftcrew.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://upcraftcrew.com" target="_blank" rel="noopener noreferrer">
                   upcraftcrew.com
                 </a>
               </li>

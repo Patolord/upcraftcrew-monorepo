@@ -113,19 +113,10 @@ export function NewClientModal({ isOpen, onClose }: NewClientModalProps) {
           </View>
 
           <View className="flex-row gap-3 mt-2">
-            <Button
-              variant="outline"
-              onPress={onClose}
-              disabled={isSubmitting}
-              className="flex-1"
-            >
+            <Button variant="outline" onPress={onClose} disabled={isSubmitting} className="flex-1">
               <Text className="text-foreground text-sm font-medium">Cancelar</Text>
             </Button>
-            <Button
-              onPress={handleSubmit}
-              loading={isSubmitting}
-              className="flex-1 bg-brand"
-            >
+            <Button onPress={handleSubmit} loading={isSubmitting} className="flex-1 bg-brand">
               <Text className="text-white text-sm font-medium">Cadastrar</Text>
             </Button>
           </View>
