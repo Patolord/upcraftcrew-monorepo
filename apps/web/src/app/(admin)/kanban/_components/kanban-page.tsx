@@ -173,9 +173,9 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
         <KanbanHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
         {/* Team Members + Ver todas - mesma linha */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <h2 className="text-base md:text-lg font-semibold">Membros da Equipe</h2>
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <h2 className="text-sm sm:text-base md:text-lg font-semibold shrink-0">Equipe</h2>
             <div className="flex -space-x-2">
               {teamMembers.slice(0, 5).map((member: TeamMember) => {
                 const fullName = `${member.firstName || ""} ${member.lastName || ""}`.trim();
@@ -242,7 +242,7 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
       </div>
 
       {/* Kanban Board */}
-      <div className="px-4 md:px-6 pb-6">
+      <div className="pl-4 md:px-6 pb-6 overflow-hidden">
         <TaskKanbanBoard
           columns={columns}
           onTaskClick={handleTaskClick}
