@@ -1,5 +1,6 @@
 import { DefaultTheme, type Theme, ThemeProvider } from "@react-navigation/native";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 import Constants from "expo-constants";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -9,7 +10,7 @@ import React, { useRef } from "react";
 import { Platform } from "react-native";
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar";
 import { NAV_THEME } from "@/lib/constants";
-import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
+import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 
 const LIGHT_THEME: Theme = {
@@ -76,7 +77,7 @@ export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
-        <ConvexProvider client={convex}>
+        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <ThemeProvider value={LIGHT_THEME}>
             <StatusBar style="light" />
             <GestureHandlerRootView style={{ flex: 1 }}>
@@ -87,7 +88,7 @@ export default function RootLayout() {
               </Stack>
             </GestureHandlerRootView>
           </ThemeProvider>
-        </ConvexProvider>
+        </ConvexProviderWithClerk>
       </ClerkLoaded>
     </ClerkProvider>
   );
