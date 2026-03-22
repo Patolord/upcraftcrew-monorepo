@@ -17,6 +17,7 @@ import {
   closestCorners,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragStartEvent,
@@ -194,7 +195,7 @@ function DroppableColumn({ column, onTaskClick, onAddTask }: DroppableColumnProp
           items={column.tasks.map((t) => t._id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-2 overflow-y-auto max-h-[calc(100vh-280px)] pr-1">
+          <div className="space-y-2 overflow-y-auto max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)] pr-1">
             {column.tasks.length === 0 ? (
               <div className="flex items-center justify-center h-24 border-2 border-dashed border-muted-foreground/20 rounded-xl text-muted-foreground mx-1">
                 <p className="text-xs">No tasks yet</p>
@@ -231,11 +232,16 @@ export function TaskKanbanBoard({ columns, onTaskClick, onAddTask }: TaskKanbanB
   const [activeId, setActiveId] = useState<string | null>(null);
   const updateTaskStatus = useMutation(api.tasks.updateTaskStatus);
 
-  // DnD Kit sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 6,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -295,14 +301,15 @@ export function TaskKanbanBoard({ columns, onTaskClick, onAddTask }: TaskKanbanB
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-4 gap-4 h-full">
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 md:grid md:grid-cols-4 md:overflow-x-visible md:snap-none md:pb-0 scrollbar-hide">
         {columns.map((column) => (
-          <DroppableColumn
-            key={column.id}
-            column={column}
-            onTaskClick={onTaskClick}
-            onAddTask={() => onAddTask?.(column.id)}
-          />
+          <div key={column.id} className="min-w-[80vw] snap-center sm:min-w-[45vw] md:min-w-0">
+            <DroppableColumn
+              column={column}
+              onTaskClick={onTaskClick}
+              onAddTask={() => onAddTask?.(column.id)}
+            />
+          </div>
         ))}
       </div>
 

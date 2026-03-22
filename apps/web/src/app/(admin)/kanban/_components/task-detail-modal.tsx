@@ -291,8 +291,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="bg-admin-background rounded-lg shadow-sm overflow-y-auto p-0"
-        style={{ width: "60vw", maxWidth: "none" }}
+        className="bg-admin-background rounded-lg shadow-sm overflow-y-auto p-0 w-full sm:w-[85vw] md:w-[60vw] max-w-none"
       >
         {/* Header */}
         <SheetHeader className="p-4 pb-0">
@@ -327,7 +326,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         </SheetHeader>
 
         {/* Action Bar */}
-        <div className="flex flex-wrap gap-2 p-4 border-b">
+        <div className="flex flex-wrap gap-2 p-3 md:p-4 border-b overflow-x-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -501,7 +500,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </DropdownMenu>
 
           {/* Privacy Toggle */}
-          <div className="flex items-center gap-2 ml-auto px-3 py-1.5 rounded-md border border-brand bg-admin-background">
+          <div className="flex items-center gap-2 ml-auto px-2 md:px-3 py-1.5 rounded-md border border-brand bg-admin-background shrink-0">
             {task.isPrivate ? (
               <Lock className="size-4 text-orange-500" />
             ) : (
@@ -520,9 +519,9 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         </div>
 
         {/* Main Content */}
-        <div className="grid md:grid-cols-5 gap-4 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-3 md:p-4">
           {/* Left Column - Main Content */}
-          <div className="md:col-span-3 space-y-6">
+          <div className="md:col-span-3 space-y-4 md:space-y-6">
             {/* Labels Display */}
             {task.labels && task.labels.length > 0 && (
               <div className="flex flex-wrap gap-1">
@@ -676,7 +675,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </div>
 
           {/* Right Column - Comments & Activity */}
-          <div className="md:col-span-2 space-y-4 p-4">
+          <div className="md:col-span-2 space-y-4 p-0 md:p-4">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium flex items-center gap-2">
                 <MessageSquareIcon className="size-4 text-brand" /> Comentários e atividades
