@@ -43,8 +43,31 @@ interface CardContentProps extends ViewProps {
   className?: string;
 }
 
-function CardContent({ className, ...props }: CardContentProps) {
-  return <View className={cn("py-2", className)} {...props} />;
+function CardContent({ className, children, ...props }: CardContentProps) {
+  const content = React.Children.map(children, (child, index) => {
+    if (typeof child === "string") {
+      if (child.trim() === "") return null;
+      return (
+        <Text key={`card-content-text-${index}`} className="text-foreground">
+          {child}
+        </Text>
+      );
+    }
+    if (typeof child === "number") {
+      return (
+        <Text key={`card-content-text-${index}`} className="text-foreground">
+          {child}
+        </Text>
+      );
+    }
+    return child;
+  });
+
+  return (
+    <View className={cn("py-2", className)} {...props}>
+      {content}
+    </View>
+  );
 }
 
 interface CardFooterProps extends ViewProps {

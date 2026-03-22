@@ -18,17 +18,15 @@ export default function SchedulePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewEventModalOpen, setIsNewEventModalOpen] = useState(false);
 
-  // Get month range for query
-  const monthRange = useMemo(() => {
-    const start = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-    const end = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
-    return {
-      startDate: start.getTime(),
-      endDate: end.getTime(),
-    };
-  }, [selectedDate]);
+  const monthQueryArgs = useMemo(
+    () => ({
+      year: selectedDate.getFullYear(),
+      month: selectedDate.getMonth() + 1, // API expects 1–12
+    }),
+    [selectedDate],
+  );
 
-  const events = useQuery(api.schedule.getEventsByMonth, monthRange);
+  const events = useQuery(api.schedule.getEventsByMonth, monthQueryArgs);
 
   // Filter events based on search query
   const filteredEvents = useMemo(() => {

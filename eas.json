@@ -1,32 +1,21 @@
 {
   "cli": {
-    "version": ">= 16.27.0",
+    "version": ">= 16.28.0",
     "appVersionSource": "remote"
   },
   "build": {
-    "base": {
-      "pnpm": "10.14.0"
-    },
     "development": {
-      "extends": "base",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
-      "extends": "base",
       "distribution": "internal"
     },
     "production": {
-      "extends": "base",
       "autoIncrement": true
     }
   },
   "submit": {
-    "production": {
-      "android": {
-        "releaseStatus": "draft",
-        "track": "internal"
-      }
-    }
+    "production": {}
   }
 }

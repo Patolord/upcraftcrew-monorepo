@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "09dbc8f7-428c-470a-92e3-56e3d4cb0561"
+      }
+    },
+    "android": {
+      "package": "com.sqpaloma.upcraftcrewapp"
+    }
+  }
+}
