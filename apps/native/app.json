@@ -29,7 +29,6 @@
     },
     "android": {
       "package": "com.sqpaloma.upcraftcrewapp",
-      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/android/mipmap-xxxhdpi/ic_launcher_foreground.png",
         "backgroundColor": "#ffffff"
