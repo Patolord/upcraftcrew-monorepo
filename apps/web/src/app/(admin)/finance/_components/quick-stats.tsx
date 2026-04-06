@@ -28,18 +28,32 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Média por Transação</span>
-            <span className="font-medium">R${avgTransaction.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="font-medium">
+              R$
+              {avgTransaction.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Maior Receita</span>
             <span className="font-medium text-green-600 dark:text-green-500">
-              R${largestIncome.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              R$
+              {largestIncome.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Maior Despesa</span>
             <span className="font-medium text-red-600 dark:text-red-500">
-              R${largestExpense.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              R$
+              {largestExpense.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">

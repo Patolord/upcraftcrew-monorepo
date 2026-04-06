@@ -6,10 +6,7 @@ import {
 } from "./_generated/server";
 import { TableAggregate } from "@convex-dev/aggregate";
 import { Triggers } from "convex-helpers/server/triggers";
-import {
-  customMutation,
-  customCtx,
-} from "convex-helpers/server/customFunctions";
+import { customMutation, customCtx } from "convex-helpers/server/customFunctions";
 
 /**
  * Aggregate keyed by [currency, status] for efficient per-currency
@@ -40,10 +37,7 @@ const triggers = new Triggers<DataModel>();
 triggers.register("budgets", budgetsByStatus.trigger());
 triggers.register("budgets", budgetsByCurrency.trigger());
 
-export const mutationWithBudgetTriggers = customMutation(
-  rawMutation,
-  customCtx(triggers.wrapDB),
-);
+export const mutationWithBudgetTriggers = customMutation(rawMutation, customCtx(triggers.wrapDB));
 
 export const internalMutationWithBudgetTriggers = customMutation(
   rawInternalMutation,
