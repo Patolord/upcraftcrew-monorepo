@@ -238,7 +238,11 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                               : "text-gray-700"
                           }
                         >
-                          {status === "pending" ? "Pendente" : status === "completed" ? "Concluído" : "Falhou"}
+                          {status === "pending"
+                            ? "Pendente"
+                            : status === "completed"
+                              ? "Concluído"
+                              : "Falhou"}
                         </Text>
                       </TouchableOpacity>
                     ))}

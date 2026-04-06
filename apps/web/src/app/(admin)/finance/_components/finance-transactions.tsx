@@ -118,7 +118,11 @@ export function FinanceTransactions({ transactions }: FinanceTransactionsProps) 
                         isIncome ? "text-green-600" : "text-red-600",
                       )}
                     >
-                      {isIncome ? "+" : "-"}R${transaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {isIncome ? "+" : "-"}R$
+                      {transaction.amount.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </div>
                     <Badge
                       className={cn(

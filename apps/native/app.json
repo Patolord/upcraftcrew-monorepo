@@ -8,11 +8,7 @@
     },
     "name": "up-craft-crew-app",
     "slug": "up-craft-crew-app",
-    "plugins": [
-      "expo-font",
-      "expo-web-browser",
-      "expo-router"
-    ],
+    "plugins": ["expo-font", "expo-web-browser", "expo-router"],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

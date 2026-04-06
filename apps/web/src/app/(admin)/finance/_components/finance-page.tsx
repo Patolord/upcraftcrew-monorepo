@@ -26,10 +26,7 @@ const periodLabels: Record<PeriodFilter, string> = {
   year: "Ano",
 };
 
-function filterByPeriod<T extends { date: number }>(
-  items: T[],
-  period: PeriodFilter,
-): T[] {
+function filterByPeriod<T extends { date: number }>(items: T[], period: PeriodFilter): T[] {
   const now = new Date();
   return items.filter((item) => {
     const d = new Date(item.date);
@@ -41,10 +38,7 @@ function filterByPeriod<T extends { date: number }>(
           d.getDate() === now.getDate()
         );
       case "month":
-        return (
-          d.getFullYear() === now.getFullYear() &&
-          d.getMonth() === now.getMonth()
-        );
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
       case "year":
         return d.getFullYear() === now.getFullYear();
     }

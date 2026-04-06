@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import { getCurrentUser, getCurrentUserOrThrow, requireMember } from "./users";
 import { throwNotFound } from "./errors";
 import { paginationOptsValidator } from "convex/server";
+import { mutationWithBudgetTriggers } from "./budgetAggregates";
 
 async function requireAuth(ctx: any) {
   return await getCurrentUserOrThrow(ctx);
@@ -420,7 +421,8 @@ export const deleteProject = mutation({
 });
 
 // Mutation: Create project from approved budget
-export const createProjectFromBudget = mutation({
+// Uses trigger-wrapped mutation to keep budget aggregates in sync
+export const createProjectFromBudget = mutationWithBudgetTriggers({
   args: {
     budgetId: v.id("budgets"),
   },

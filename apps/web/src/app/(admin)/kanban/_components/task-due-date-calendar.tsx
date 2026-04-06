@@ -109,7 +109,8 @@ export function TaskDueDateCalendar({
             "flex items-center justify-center h-9 w-full rounded-lg text-sm cursor-pointer transition-colors";
 
           if (isSelected) {
-            cls += " bg-orange-600 text-white font-semibold ring-2 ring-orange-300 ring-offset-1 ring-offset-background";
+            cls +=
+              " bg-orange-600 text-white font-semibold ring-2 ring-orange-300 ring-offset-1 ring-offset-background";
           } else if (isToday) {
             cls += " bg-orange-500 text-white font-semibold";
           } else {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { usePaginatedQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import type { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -56,11 +56,10 @@ interface Budget {
 }
 
 export function BudgetsPage() {
-  // Query paginada para exibir os budgets na lista
   const { results, status, loadMore, isLoading } = usePaginatedQuery(
     api.budgets.getBudgetsPaginated,
     {},
-    { initialNumItems: 3 },
+    { initialNumItems: 6 },
   );
   const budgets = (results || []) as Budget[];
 
@@ -75,6 +74,9 @@ export function BudgetsPage() {
     budgetId: Id<"budgets"> | null;
     title: string;
   }>({ budgetId: null, title: "" });
+
+  // Aggregate-backed stats from the backend — stable regardless of pagination
+  const aggregateStats = useQuery(api.budgets.getBudgetStatsByCurrency, { currency });
 
   const currencyBudgets = useMemo(() => {
     return budgets.filter((budget) => (budget.currency || "BRL") === currency);
@@ -93,33 +95,6 @@ export function BudgetsPage() {
       );
     });
   }, [currencyBudgets, searchQuery]);
-
-  const currencyStats = useMemo(() => {
-    const total = currencyBudgets.length;
-    const draft = currencyBudgets.filter((b) => b.status === "draft").length;
-    const sentStatuses = ["sent", "approved", "rejected"];
-    const sent = currencyBudgets.filter((b) => sentStatuses.includes(b.status)).length;
-    const approved = currencyBudgets.filter((b) => b.status === "approved").length;
-    const rejected = currencyBudgets.filter((b) => b.status === "rejected").length;
-    const cancelled = currencyBudgets.filter((b) => b.status === "cancelled").length;
-    const totalValue = currencyBudgets.reduce((sum, b) => sum + b.totalAmount, 0);
-    const approvedValue = currencyBudgets
-      .filter((b) => b.status === "approved")
-      .reduce((sum, b) => sum + b.totalAmount, 0);
-    const conversionRate = sent > 0 ? (approved / sent) * 100 : 0;
-
-    return {
-      total,
-      draft,
-      sent,
-      approved,
-      rejected,
-      cancelled,
-      totalValue,
-      approvedValue,
-      conversionRate,
-    };
-  }, [currencyBudgets]);
 
   // Sync query string with modal state (for proposal modal)
   useEffect(() => {
@@ -170,7 +145,7 @@ export function BudgetsPage() {
         onCurrencyChange={setCurrency}
       />
 
-      <BudgetDashboard stats={currencyStats} currency={currency} />
+      <BudgetDashboard stats={aggregateStats ?? undefined} currency={currency} />
 
       {/* Our Budgets Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6">
@@ -241,7 +216,7 @@ export function BudgetsPage() {
             </div>
           )}
 
-          {!searchQuery && status === "Exhausted" && budgets.length > 3 && (
+          {!searchQuery && status === "Exhausted" && budgets.length > 6 && (
             <div className="flex justify-center pt-4">
               <p className="text-sm text-muted-foreground">Todos os orçamentos foram carregados</p>
             </div>
