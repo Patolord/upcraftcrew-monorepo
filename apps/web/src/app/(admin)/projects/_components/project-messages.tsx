@@ -14,13 +14,14 @@ import { MessageDetailModal } from "./message-detail-modal";
 
 interface ProjectMessagesProps {
   projectId: Id<"projects">;
+  projectManagerId: Id<"users">;
   currentUser: {
     _id: Id<"users">;
     role: string;
   };
 }
 
-export function ProjectMessages({ projectId, currentUser }: ProjectMessagesProps) {
+export function ProjectMessages({ projectId, projectManagerId, currentUser }: ProjectMessagesProps) {
   const [showNewModal, setShowNewModal] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<Id<"messages"> | null>(null);
 
@@ -109,6 +110,7 @@ export function ProjectMessages({ projectId, currentUser }: ProjectMessagesProps
           messageId={selectedMessageId}
           currentUserId={currentUser._id}
           currentUserRole={currentUser.role}
+          projectManagerId={projectManagerId}
         />
       )}
     </div>

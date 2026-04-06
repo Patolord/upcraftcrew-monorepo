@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { getCurrentUser, requireWrite } from "./users";
 import { throwNotFound, throwUnauthorized } from "./errors";
 
@@ -19,10 +19,6 @@ export const getMessagesByProject = query({
     return await Promise.all(
       messages.map(async (message) => {
         const author = await ctx.db.get(message.authorId);
-        const replies = await ctx.db
-          .query("messageReplies")
-          .withIndex("by_message", (q) => q.eq("messageId", message._id))
-          .collect();
         return {
           ...message,
           author: author
@@ -33,7 +29,7 @@ export const getMessagesByProject = query({
                 imageUrl: author.imageUrl,
               }
             : null,
-          replyCount: replies.length,
+          replyCount: message.replyCount ?? 0,
         };
       }),
     );
@@ -119,6 +115,7 @@ export const createMessage = mutation({
       title: args.title,
       content: args.content,
       isPinned: false,
+      replyCount: 0,
       createdAt: now,
       updatedAt: now,
     });
@@ -221,12 +218,17 @@ export const createReply = mutation({
       throwNotFound("Message");
     }
 
-    return await ctx.db.insert("messageReplies", {
+    const replyId = await ctx.db.insert("messageReplies", {
       messageId: args.messageId,
       authorId: user._id,
       content: args.content,
       createdAt: Date.now(),
     });
+
+    const currentCount = message.replyCount ?? 0;
+    await ctx.db.patch(args.messageId, { replyCount: currentCount + 1 });
+
+    return replyId;
   },
 });
 
@@ -245,7 +247,33 @@ export const deleteReply = mutation({
       throwUnauthorized("Only the author can delete this reply");
     }
 
+    const parentMessage = await ctx.db.get(reply.messageId);
+    if (parentMessage) {
+      const currentCount = parentMessage.replyCount ?? 0;
+      await ctx.db.patch(reply.messageId, {
+        replyCount: Math.max(0, currentCount - 1),
+      });
+    }
+
     await ctx.db.delete(args.id);
     return { success: true };
+  },
+});
+
+/** One-time / maintenance: set replyCount from actual replies (fixes legacy docs). */
+export const backfillMessageReplyCounts = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const allMessages = await ctx.db.query("messages").collect();
+    let updated = 0;
+    for (const m of allMessages) {
+      const replies = await ctx.db
+        .query("messageReplies")
+        .withIndex("by_message", (q) => q.eq("messageId", m._id))
+        .collect();
+      await ctx.db.patch(m._id, { replyCount: replies.length });
+      updated += 1;
+    }
+    return { updated };
   },
 });

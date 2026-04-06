@@ -237,11 +237,20 @@ export default function ProjectDetailPage() {
           />
         </TabsContent>
         <TabsContent value="messages">
-          {currentUser && (
+          {currentUser === undefined ? (
+            <div className="flex justify-center py-16">
+              <Loader2Icon className="h-8 w-8 animate-spin text-orange-500" />
+            </div>
+          ) : currentUser ? (
             <ProjectMessages
               projectId={projectId as Id<"projects">}
+              projectManagerId={project.managerId}
               currentUser={{ _id: currentUser._id, role: currentUser.role }}
             />
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-16">
+              Sign in to view the message board.
+            </p>
           )}
         </TabsContent>
       </Tabs>

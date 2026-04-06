@@ -16,6 +16,7 @@ import type * as errors from "../errors.js";
 import type * as finance from "../finance.js";
 import type * as healthCheck from "../healthCheck.js";
 import type * as http from "../http.js";
+import type * as messages from "../messages.js";
 import type * as migrations from "../migrations.js";
 import type * as privateData from "../privateData.js";
 import type * as projects from "../projects.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   finance: typeof finance;
   healthCheck: typeof healthCheck;
   http: typeof http;
+  messages: typeof messages;
   migrations: typeof migrations;
   privateData: typeof privateData;
   projects: typeof projects;

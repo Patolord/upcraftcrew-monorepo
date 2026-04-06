@@ -283,6 +283,8 @@ export default defineSchema({
     title: v.string(),
     content: v.string(),
     isPinned: v.optional(v.boolean()),
+    /** Denormalized count of replies; maintained by createReply/deleteReply */
+    replyCount: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
