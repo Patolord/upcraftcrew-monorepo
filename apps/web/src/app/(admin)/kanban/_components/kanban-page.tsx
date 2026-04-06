@@ -28,6 +28,7 @@ type TaskWithDetails = Doc<"tasks"> & {
     imageUrl?: string;
   }[];
   project: Doc<"projects"> | null;
+  clientName?: string | null;
   labels?: TaskLabel[];
   subtaskStats?: {
     total: number;
@@ -80,6 +81,8 @@ export function KanbanPage({ preloadedTasks, preloadedTeamMembers }: KanbanPageP
             }
           : null,
         dueDate: task.dueDate,
+        createdAt: task.createdAt,
+        clientName: task.clientName,
         labels: task.labels,
         subtaskStats: task.subtaskStats,
         commentCount: task.commentCount,

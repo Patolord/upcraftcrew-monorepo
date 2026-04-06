@@ -1,8 +1,9 @@
 "use client";
 
-import { Calendar, Archive, ArrowUpRight, ExternalLink } from "lucide-react";
+import { Calendar, Archive, ArrowUpRight, ExternalLink, CheckSquare, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/convex-errors";
@@ -42,6 +43,8 @@ interface Task {
     name: string;
   } | null;
   dueDate?: number;
+  createdAt: number;
+  clientName?: string | null;
   labels?: TaskLabel[];
   subtaskStats?: {
     total: number;
@@ -58,7 +61,7 @@ interface TaskCardProps {
 
 const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/g;
 
-function extractUrls(...texts: (string | undefined)[]): string[] {
+function extractUrlsFromText(...texts: (string | undefined)[]): string[] {
   const urls: string[] = [];
   for (const text of texts) {
     if (text) {
@@ -80,14 +83,27 @@ function formatUrl(url: string): string {
   }
 }
 
+function formatShortDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "short",
+  });
+}
+
+const priorityDisplay: Record<
+  TaskPriority,
+  { label: string; color: string }
+> = {
+  low: { label: "Baixa", color: "#84cc16" },
+  medium: { label: "Média", color: "#f59e0b" },
+  high: { label: "Alta", color: "#f97316" },
+  urgent: { label: "Urgente", color: "#ef4444" },
+};
+
 export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
   const archiveTask = useMutation(api.tasks.archiveTask);
-  const comments = useQuery(api.taskComments.getCommentsByTask, { taskId: task._id });
-  const subtasks = useQuery(api.subtasks.getSubtasksByTask, { taskId: task._id });
   const isDone = columnStatus === "done";
-  const commentTexts = comments?.map((c) => c.content) ?? [];
-  const subtaskTexts = subtasks?.map((s) => s.title) ?? [];
-  const links = extractUrls(task.title, task.description, ...commentTexts, ...subtaskTexts);
+  const links = extractUrlsFromText(task.title, task.description);
   const linkCount = links.length;
 
   const handleSingleLinkClick = (e: React.MouseEvent) => {
@@ -107,45 +123,75 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
     }
   };
 
+  const hasSubtasks = task.subtaskStats && task.subtaskStats.total > 0;
+
   return (
     <Card
       className="kanban-card cursor-pointer hover:shadow-md transition-all duration-200 rounded-xl border bg-card"
       onClick={onClick}
     >
-      <CardContent className="p-3 space-y-1.5">
-        <h4 className="font-semibold text-sm line-clamp-1 text-foreground">{task.title}</h4>
+      <CardContent className="px-3 pt-3 pb-1 space-y-1.5">
+        <div className="flex items-center gap-2 min-w-0">
+          <h4 className="font-semibold text-sm line-clamp-1 text-foreground min-w-0 flex-1">
+            {task.title}
+          </h4>
+          <Badge
+            className="shrink-0 text-[10px] px-1.5 py-0 font-medium border-0 text-white"
+            style={{ backgroundColor: priorityDisplay[task.priority].color }}
+          >
+            {priorityDisplay[task.priority].label}
+          </Badge>
+        </div>
 
         {task.description && task.description !== "Sem descrição" && (
           <p className="text-xs text-muted-foreground line-clamp-1">{task.description}</p>
         )}
 
-        <div className="flex items-center justify-between pt-1">
-          {task.assignedUsers.length > 0 ? (
-            <div className="flex -space-x-1.5">
-              {task.assignedUsers.slice(0, 3).map((user) => (
-                <Avatar key={user._id} className="size-6 border-2 border-background">
-                  <AvatarImage src={user.imageUrl} alt={user.name} />
-                  <AvatarFallback className="text-[10px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
-                    {user.name
-                      ?.split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-              {task.assignedUsers.length > 3 && (
-                <Avatar className="size-6 border-2 border-background">
-                  <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
-                    +{task.assignedUsers.length - 3}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-            </div>
-          ) : (
-            <span />
-          )}
+        {/* Client tag */}
+        {task.clientName && (
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5 gap-1 font-normal">
+            <User className="size-2.5" />
+            {task.clientName}
+          </Badge>
+        )}
+
+        {/* Middle row: avatars + checklist + links */}
+        <div className="flex items-center justify-between pt-0.5">
+          <div className="flex items-center gap-2">
+            {task.assignedUsers.length > 0 && (
+              <div className="flex -space-x-1.5">
+                {task.assignedUsers.slice(0, 3).map((user) => (
+                  <Avatar key={user._id} className="size-6 border-2 border-background">
+                    <AvatarImage src={user.imageUrl} alt={user.name} />
+                    <AvatarFallback className="text-[10px] bg-linear-to-br from-orange-400 to-pink-500 text-white">
+                      {user.name
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                {task.assignedUsers.length > 3 && (
+                  <Avatar className="size-6 border-2 border-background">
+                    <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
+                      +{task.assignedUsers.length - 3}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            )}
+
+            {hasSubtasks && (
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <CheckSquare className="size-3.5" />
+                <span className="text-[10px] font-medium">
+                  {task.subtaskStats!.completed}/{task.subtaskStats!.total}
+                </span>
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center gap-1.5">
             {linkCount === 1 && (
@@ -186,7 +232,7 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
               </DropdownMenu>
             )}
 
-            {isDone ? (
+            {isDone && (
               <button
                 onClick={handleArchive}
                 className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
@@ -194,20 +240,24 @@ export function TaskCard({ task, columnStatus, onClick }: TaskCardProps) {
               >
                 <Archive className="size-3.5" />
               </button>
-            ) : (
-              task.dueDate && (
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <Calendar className="size-3.5" />
-                  <span className="text-xs">
-                    {new Date(task.dueDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-              )
             )}
           </div>
+        </div>
+
+        {/* Footer: created date (left) + delivery date (right) */}
+        <div className="flex items-center justify-between pt-1 border-t border-border/50">
+          <span className="text-[10px] text-muted-foreground">
+            Criado {formatShortDate(task.createdAt)}
+          </span>
+
+          {task.dueDate ? (
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Calendar className="size-3" />
+              <span className="text-[10px]">{formatShortDate(task.dueDate)}</span>
+            </div>
+          ) : (
+            <span />
+          )}
         </div>
       </CardContent>
     </Card>

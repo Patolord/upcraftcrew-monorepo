@@ -237,13 +237,15 @@ export default defineSchema({
     isPrivate: v.optional(v.boolean()),
     ownerId: v.optional(v.id("users")),
     labelIds: v.optional(v.array(v.id("taskLabels"))),
+    clientId: v.optional(v.id("clients")),
     isArchived: v.optional(v.boolean()),
   })
     .index("by_status", ["status"])
     .index("by_assigned", ["assignedTo"])
     .index("by_project", ["projectId"])
     .index("by_created_at", ["createdAt"])
-    .index("by_owner", ["ownerId"]),
+    .index("by_owner", ["ownerId"])
+    .index("by_client", ["clientId"]),
 
   // Subtasks for tasks (checklist items)
   subtasks: defineTable({

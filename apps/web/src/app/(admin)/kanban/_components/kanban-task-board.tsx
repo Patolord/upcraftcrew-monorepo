@@ -59,6 +59,8 @@ export interface Task {
     name: string;
   } | null;
   dueDate?: number;
+  createdAt: number;
+  clientName?: string | null;
   labels?: TaskLabel[];
   subtaskStats?: {
     total: number;
