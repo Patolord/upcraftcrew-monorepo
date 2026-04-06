@@ -3,7 +3,11 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { auth } from "@clerk/nextjs/server";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+function getConvexClient() {
+  const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+  if (!url) throw new Error("NEXT_PUBLIC_CONVEX_URL is not set");
+  return new ConvexHttpClient(url);
+}
 
 export async function GET(request: NextRequest) {
   const { userId, getToken } = await auth();
@@ -58,6 +62,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const convex = getConvexClient();
     convex.setAuth(convexToken);
     await convex.mutation(api.emailAccounts.storeAccount, {
       provider: "outlook",
