@@ -43,10 +43,14 @@ import {
   ImageIcon,
   Lock,
   Globe,
+  UserIcon,
+  FolderIcon,
+  PencilIcon,
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { MultiImageUpload } from "@/components/ui/multi-image-upload";
+import { TaskDueDateCalendar } from "./task-due-date-calendar";
 import React from "react";
 
 type TaskPriority = "low" | "medium" | "high" | "urgent";
@@ -93,6 +97,13 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
   const [newLabelColor, setNewLabelColor] = useState(LABEL_COLORS[0].value);
   const [showLabelCreator, setShowLabelCreator] = useState(false);
   const [showLabelPanel, setShowLabelPanel] = useState(false);
+  const [editingSubtaskId, setEditingSubtaskId] = useState<Id<"subtasks"> | null>(null);
+  const [editingSubtaskTitle, setEditingSubtaskTitle] = useState("");
+  const [showDatePanel, setShowDatePanel] = useState(false);
+  const [calendarViewMonth, setCalendarViewMonth] = useState(() => {
+    const n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), 1);
+  });
 
   // Queries
   const task = useQuery(api.tasks.getTaskById, taskId ? { id: taskId } : "skip");
@@ -100,6 +111,8 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
   const comments = useQuery(api.taskComments.getCommentsByTask, taskId ? { taskId } : "skip");
   const labels = useQuery(api.taskLabels.getLabels);
   const teamMembers = useQuery(api.team.getTeamMembers);
+  const clients = useQuery(api.clients.getClients);
+  const projects = useQuery(api.projects.getProjects);
 
   // Mutations
   const updateTask = useMutation(api.tasks.updateTask);
@@ -107,6 +120,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
   const createSubtask = useMutation(api.subtasks.createSubtask);
   const toggleSubtask = useMutation(api.subtasks.toggleSubtask);
   const deleteSubtask = useMutation(api.subtasks.deleteSubtask);
+  const updateSubtask = useMutation(api.subtasks.updateSubtask);
   const createComment = useMutation(api.taskComments.createComment);
   const deleteComment = useMutation(api.taskComments.deleteComment);
   const createLabel = useMutation(api.taskLabels.createLabel);
@@ -118,6 +132,21 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
       setEditedDescription(task.description);
     }
   }, [task]);
+
+  useEffect(() => {
+    if (!task) return;
+    if (task.dueDate) {
+      const d = new Date(task.dueDate);
+      setCalendarViewMonth(new Date(d.getFullYear(), d.getMonth(), 1));
+    } else {
+      const n = new Date();
+      setCalendarViewMonth(new Date(n.getFullYear(), n.getMonth(), 1));
+    }
+  }, [task?._id, task?.dueDate]);
+
+  useEffect(() => {
+    setShowDatePanel(false);
+  }, [taskId]);
 
   if (!taskId || !task) return null;
 
@@ -183,6 +212,49 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
     try {
       await updateTask({ id: taskId, isPrivate });
       toast.success(isPrivate ? "Tarefa agora é privada" : "Tarefa agora é pública");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleUpdateClient = async (clientId: Id<"clients"> | null) => {
+    try {
+      await updateTask({
+        id: taskId,
+        clientId: clientId ?? undefined,
+      });
+      toast.success(clientId ? "Cliente vinculado!" : "Cliente removido!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleUpdateProject = async (projectId: Id<"projects"> | null) => {
+    try {
+      await updateTask({
+        id: taskId,
+        projectId: projectId ?? undefined,
+      });
+      toast.success(projectId ? "Projeto vinculado!" : "Projeto removido!");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleStartEditSubtask = (subtaskId: Id<"subtasks">, title: string) => {
+    setEditingSubtaskId(subtaskId);
+    setEditingSubtaskTitle(title);
+  };
+
+  const handleSaveEditSubtask = async () => {
+    if (!editingSubtaskId || !editingSubtaskTitle.trim()) {
+      setEditingSubtaskId(null);
+      return;
+    }
+    try {
+      await updateSubtask({ id: editingSubtaskId, title: editingSubtaskTitle });
+      setEditingSubtaskId(null);
+      setEditingSubtaskTitle("");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -291,7 +363,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="bg-admin-background rounded-lg shadow-sm overflow-y-auto p-0 w-full sm:w-[85vw] md:w-[60vw] max-w-none"
+        className="bg-admin-background rounded-lg shadow-sm overflow-y-auto p-0 w-full sm:w-[92vw] md:w-[85vw] lg:w-[80vw] sm:!max-w-none"
       >
         {/* Header */}
         <SheetHeader className="p-4 pb-0">
@@ -326,24 +398,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         </SheetHeader>
 
         {/* Action Bar */}
-        <div className="flex flex-wrap gap-2 p-3 md:p-4 border-b overflow-x-auto">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-md border-brand bg-admin-background"
-              >
-                <PlusIcon className="size-4 mr-1 text-brand" /> Adicionar
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setShowSubtaskInput(true)}>
-                <CheckSquareIcon className="size-4 mr-2 text-brand" /> Subtarefa
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
+        <div className="flex flex-wrap gap-2 p-3 md:p-4 border-b">
           <div className="relative">
             <Button
               variant="outline"
@@ -415,37 +470,34 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             )}
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-md border-brand bg-admin-background"
-              >
-                <CalendarIcon className="size-4 mr-1 text-brand" /> Datas
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <div className="p-2">
-                <Input
-                  type="date"
-                  onChange={async (e) => {
-                    if (e.target.value) {
-                      try {
-                        await updateTask({
-                          id: taskId,
-                          dueDate: new Date(e.target.value).getTime(),
-                        });
-                        toast.success("Due date updated!");
-                      } catch (error) {
-                        toast.error(getErrorMessage(error));
-                      }
+          <div className="relative">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-md border-brand bg-admin-background"
+              onClick={() => setShowDatePanel(!showDatePanel)}
+            >
+              <CalendarIcon className="size-4 mr-1 text-brand" /> Datas
+            </Button>
+            {showDatePanel && (
+              <div className="absolute top-full left-0 z-50 mt-1">
+                <TaskDueDateCalendar
+                  viewMonth={calendarViewMonth}
+                  onViewMonthChange={setCalendarViewMonth}
+                  selectedDueDate={task.dueDate}
+                  onSelectDay={async (ms) => {
+                    try {
+                      await updateTask({ id: taskId, dueDate: ms });
+                      toast.success("Data de entrega atualizada!");
+                      setShowDatePanel(false);
+                    } catch (error) {
+                      toast.error(getErrorMessage(error));
                     }
                   }}
                 />
               </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            )}
+          </div>
 
           <Button
             variant="outline"
@@ -499,6 +551,94 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* Client */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background"
+              >
+                <UserIcon className="size-4 mr-1 text-brand" /> Cliente
+                {task.clientId && (
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    1
+                  </Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 max-h-64 overflow-y-auto">
+              <DropdownMenuItem
+                onClick={() => handleUpdateClient(null)}
+                className="flex items-center gap-2"
+              >
+                <span className="flex-1 text-muted-foreground">Nenhum cliente</span>
+                {!task.clientId && <span className="text-green-500">✓</span>}
+              </DropdownMenuItem>
+              <Separator className="my-1" />
+              {clients?.map((client) => (
+                <DropdownMenuItem
+                  key={client._id}
+                  onClick={() => handleUpdateClient(client._id)}
+                  className="flex items-center gap-2"
+                >
+                  <UserIcon className="size-4 text-muted-foreground" />
+                  <span className="flex-1">{client.name}</span>
+                  {task.clientId === client._id && <span className="text-green-500">✓</span>}
+                </DropdownMenuItem>
+              ))}
+              {(!clients || clients.length === 0) && (
+                <div className="px-2 py-1.5 text-xs text-muted-foreground text-center">
+                  Nenhum cliente cadastrado
+                </div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Project */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-md border-brand bg-admin-background"
+              >
+                <FolderIcon className="size-4 mr-1 text-brand" /> Projeto
+                {task.projectId && (
+                  <Badge variant="secondary" className="ml-1 px-1.5 py-0 text-[10px]">
+                    1
+                  </Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 max-h-64 overflow-y-auto">
+              <DropdownMenuItem
+                onClick={() => handleUpdateProject(null)}
+                className="flex items-center gap-2"
+              >
+                <span className="flex-1 text-muted-foreground">Nenhum projeto</span>
+                {!task.projectId && <span className="text-green-500">✓</span>}
+              </DropdownMenuItem>
+              <Separator className="my-1" />
+              {projects?.map((project) => (
+                <DropdownMenuItem
+                  key={project._id}
+                  onClick={() => handleUpdateProject(project._id)}
+                  className="flex items-center gap-2"
+                >
+                  <FolderIcon className="size-4 text-muted-foreground" />
+                  <span className="flex-1 truncate">{project.name}</span>
+                  {task.projectId === project._id && <span className="text-green-500">✓</span>}
+                </DropdownMenuItem>
+              ))}
+              {(!projects || projects.length === 0) && (
+                <div className="px-2 py-1.5 text-xs text-muted-foreground text-center">
+                  Nenhum projeto cadastrado
+                </div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Privacy Toggle */}
           <div className="flex items-center gap-2 ml-auto px-2 md:px-3 py-1.5 rounded-md border border-brand bg-admin-background shrink-0">
             {task.isPrivate ? (
@@ -519,12 +659,12 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-3 md:p-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-3 md:p-5">
           {/* Left Column - Main Content */}
-          <div className="md:col-span-3 space-y-4 md:space-y-6">
+          <div className="md:col-span-3 space-y-4">
             {/* Labels Display */}
             {task.labels && task.labels.length > 0 && (
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1.5 px-1">
                 {task.labels.map((label) => (
                   <Badge
                     key={label?._id}
@@ -538,7 +678,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             )}
 
             {/* Priority */}
-            <div className="space-y-2 p-2">
+            <div className="rounded-xl border bg-card p-4 space-y-2">
               <h4 className="text-sm font-medium flex items-center gap-2">
                 <TagIcon className="size-4 text-brand" /> Prioridade
               </h4>
@@ -547,7 +687,13 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                 onValueChange={(value) => handleUpdatePriority(value as TaskPriority)}
               >
                 <SelectTrigger className="w-40">
-                  <SelectValue />
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="size-3 rounded"
+                      style={{ backgroundColor: priorityLabels[task.priority].color }}
+                    />
+                    {priorityLabels[task.priority].label}
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(priorityLabels).map(([key, { label, color }]) => (
@@ -563,7 +709,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </div>
 
             {/* Description */}
-            <div className="space-y-2 p-2">
+            <div className="rounded-xl border bg-card p-4 space-y-2">
               <h4 className="text-sm font-medium flex items-center gap-2">
                 <AlignLeftIcon className="size-4 text-brand" /> Descrição
               </h4>
@@ -577,7 +723,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </div>
 
             {/* Subtasks/Checklist */}
-            <div className="space-y-3 p-2">
+            <div className="rounded-xl border bg-card p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                   <CheckSquareIcon className="size-4 text-brand" /> Checklist
@@ -594,25 +740,48 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                     <Progress value={subtaskProgress} className="flex-1" />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="divide-y divide-border/60">
                     {subtasks.map((subtask) => (
-                      <div key={subtask._id} className="flex items-center gap-2 group">
+                      <div key={subtask._id} className="flex items-start gap-2 group py-2 first:pt-0">
                         <Checkbox
                           checked={subtask.completed}
                           onCheckedChange={() => handleToggleSubtask(subtask._id)}
-                          className="data-checked:bg-white data-checked:text-brand data-checked:border-brand border-brand rounded-xs"
+                          className="mt-0.5 shrink-0 data-checked:bg-white data-checked:text-brand data-checked:border-brand border-brand rounded-xs"
                         />
-                        <span
-                          className={`flex-1 text-sm ${subtask.completed ? "line-through text-muted-foreground" : ""}`}
-                        >
-                          {subtask.title}
-                        </span>
 
-                        {/* Delete Subtask */}
+                        {editingSubtaskId === subtask._id ? (
+                          <Input
+                            value={editingSubtaskTitle}
+                            onChange={(e) => setEditingSubtaskTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleSaveEditSubtask();
+                              if (e.key === "Escape") setEditingSubtaskId(null);
+                            }}
+                            onBlur={handleSaveEditSubtask}
+                            autoFocus
+                            className="flex-1 h-7 text-sm"
+                          />
+                        ) : (
+                          <span
+                            className={`flex-1 text-sm break-all cursor-pointer ${subtask.completed ? "line-through text-muted-foreground" : ""}`}
+                            onDoubleClick={() => handleStartEditSubtask(subtask._id, subtask.title)}
+                          >
+                            {subtask.title}
+                          </span>
+                        )}
+
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          className="opacity-0 group-hover:opacity-100"
+                          className="shrink-0 mt-0.5 opacity-0 group-hover:opacity-100"
+                          onClick={() => handleStartEditSubtask(subtask._id, subtask.title)}
+                        >
+                          <PencilIcon className="size-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          className="shrink-0 mt-0.5 opacity-0 group-hover:opacity-100"
                           onClick={() => handleDeleteSubtask(subtask._id)}
                         >
                           <TrashIcon className="size-3" />
@@ -631,13 +800,19 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
                     onChange={(e) => setNewSubtaskTitle(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddSubtask()}
                     autoFocus
+                    className="rounded-lg border-orange-400 focus-visible:ring-orange-400"
                   />
-                  <Button size="sm" onClick={handleAddSubtask}>
+                  <Button
+                    size="sm"
+                    onClick={handleAddSubtask}
+                    className="rounded-lg bg-orange-500 hover:bg-orange-600 text-white"
+                  >
                     Adicionar
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
+                    className="rounded-lg"
                     onClick={() => {
                       setShowSubtaskInput(false);
                       setNewSubtaskTitle("");
@@ -661,7 +836,7 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
             </div>
 
             {/* Images/Attachments */}
-            <div className="space-y-2 p-2">
+            <div className="rounded-xl border bg-card p-4 space-y-2">
               <h4 className="text-sm font-medium flex items-center gap-2">
                 <ImageIcon className="size-4 text-brand" /> Fotos / Anexos
               </h4>
@@ -675,76 +850,78 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
           </div>
 
           {/* Right Column - Comments & Activity */}
-          <div className="md:col-span-2 space-y-4 p-0 md:p-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium flex items-center gap-2">
-                <MessageSquareIcon className="size-4 text-brand" /> Comentários e atividades
-              </h4>
-            </div>
+          <div className="md:col-span-2">
+            <div className="rounded-xl border bg-card p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-medium flex items-center gap-2">
+                  <MessageSquareIcon className="size-4 text-brand" /> Comentários e atividades
+                </h4>
+              </div>
 
-            {/* Comment Input */}
-            <div className="flex gap-2">
-              <Textarea
-                placeholder="Escreva um comentário..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="min-h-16 rounded-md p-2"
-              />
-            </div>
-            <Button
-              size="sm"
-              onClick={handleAddComment}
-              disabled={!newComment.trim()}
-              className="w-full rounded-md border-brand bg-white text-brand hover:bg-brand hover:text-white"
-            >
-              <SendIcon className="size-4 mr-1 text-brand" /> Enviar
-            </Button>
+              {/* Comment Input */}
+              <div className="flex gap-2">
+                <Textarea
+                  placeholder="Escreva um comentário..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="min-h-16 rounded-md p-2"
+                />
+              </div>
+              <Button
+                size="sm"
+                onClick={handleAddComment}
+                disabled={!newComment.trim()}
+                className="w-full rounded-md border-brand bg-white text-brand hover:bg-brand hover:text-white"
+              >
+                <SendIcon className="size-4 mr-1 text-brand" /> Enviar
+              </Button>
 
-            {/* Comments List */}
-            <div className="space-y-3 max-h-64 overflow-y-auto">
-              {comments?.map((comment) => (
-                <div key={comment._id} className="space-y-1 group">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarImage src={comment.user?.imageUrl} />
-                      <AvatarFallback className="text-xs">
-                        {comment.user?.firstName?.[0]}
-                        {comment.user?.lastName?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium">
-                      {comment.user?.firstName} {comment.user?.lastName}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDate(comment.createdAt)}
-                    </span>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          className="ml-auto opacity-0 group-hover:opacity-100"
-                        >
-                          <MoreHorizontalIcon className="size-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleDeleteComment(comment._id)}
-                        >
-                          <TrashIcon className="size-4 mr-2" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+              {/* Comments List */}
+              <div className="space-y-3 max-h-64 overflow-y-auto">
+                {comments?.map((comment) => (
+                  <div key={comment._id} className="space-y-1 group">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="size-6">
+                        <AvatarImage src={comment.user?.imageUrl} />
+                        <AvatarFallback className="text-xs">
+                          {comment.user?.firstName?.[0]}
+                          {comment.user?.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium">
+                        {comment.user?.firstName} {comment.user?.lastName}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {formatDate(comment.createdAt)}
+                      </span>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            className="ml-auto opacity-0 group-hover:opacity-100"
+                          >
+                            <MoreHorizontalIcon className="size-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => handleDeleteComment(comment._id)}
+                          >
+                            <TrashIcon className="size-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <p className="text-sm pl-8">{comment.content}</p>
                   </div>
-                  <p className="text-sm pl-8">{comment.content}</p>
-                </div>
-              ))}
+                ))}
 
-              {(!comments || comments.length === 0) && (
-                <p className="text-sm text-muted-foreground text-center py-4">No comments yet</p>
-              )}
+                {(!comments || comments.length === 0) && (
+                  <p className="text-sm text-muted-foreground text-center py-4">No comments yet</p>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -312,6 +312,20 @@ export function NewTaskModal({
                 />
               </div>
 
+              {/* Due Date - always visible */}
+              <div>
+                <Label htmlFor="dueDate" className="text-sm font-medium mb-2 block">
+                  Data de Entrega
+                </Label>
+                <Input
+                  id="dueDate"
+                  type="date"
+                  value={formData.dueDate}
+                  onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                  className="border border-base-300 rounded-lg focus:border-orange-500"
+                />
+              </div>
+
               {/* Toggle Advanced Options */}
               <Button
                 type="button"
@@ -460,20 +474,6 @@ export function NewTaskModal({
                         </option>
                       ))}
                     </select>
-                  </div>
-
-                  {/* Due Date */}
-                  <div>
-                    <Label htmlFor="dueDate" className="text-sm font-medium mb-2 block">
-                      Data de Entrega
-                    </Label>
-                    <Input
-                      id="dueDate"
-                      type="date"
-                      value={formData.dueDate}
-                      onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                      className="border border-base-300 rounded-lg focus:border-orange-500"
-                    />
                   </div>
 
                   {/* Multi Image Upload */}

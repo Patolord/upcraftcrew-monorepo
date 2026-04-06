@@ -23,6 +23,18 @@ function transformUserToAssignedUser(user: any) {
   };
 }
 
+async function resolveClientName(ctx: any, task: any, project: any) {
+  if (task.clientId) {
+    const client = await ctx.db.get(task.clientId);
+    if (client) return client.name;
+  }
+  if (project?.clientId) {
+    const client = await ctx.db.get(project.clientId);
+    if (client) return client.name;
+  }
+  return null;
+}
+
 async function resolveAssignedUsers(ctx: any, task: any) {
   const ids = task.assignedToIds ?? (task.assignedTo ? [task.assignedTo] : []);
   const users = await Promise.all(ids.map((id: any) => ctx.db.get(id)));
@@ -47,6 +59,7 @@ export const getTasks = query({
       tasks.map(async (task) => {
         const assignedUsers = await resolveAssignedUsers(ctx, task);
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+        const clientName = await resolveClientName(ctx, task, project);
 
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
@@ -70,6 +83,7 @@ export const getTasks = query({
           ...task,
           assignedUsers,
           project,
+          clientName,
           labels: labels.filter(Boolean),
           subtaskStats,
           commentCount: comments.length,
@@ -171,6 +185,7 @@ export const getTasksByProject = query({
       tasks.map(async (task) => {
         const assignedUsers = await resolveAssignedUsers(ctx, task);
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+        const clientName = await resolveClientName(ctx, task, project);
 
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
@@ -194,6 +209,7 @@ export const getTasksByProject = query({
           ...task,
           assignedUsers,
           project,
+          clientName,
           labels: labels.filter(Boolean),
           subtaskStats,
           commentCount: comments.length,
@@ -236,6 +252,7 @@ export const getAllPublicTasks = query({
         const assignedUsers = await resolveAssignedUsers(ctx, task);
         const owner = task.ownerId ? await ctx.db.get(task.ownerId) : null;
         const project = task.projectId ? await ctx.db.get(task.projectId) : null;
+        const clientName = await resolveClientName(ctx, task, project);
 
         const labels = task.labelIds
           ? await Promise.all(task.labelIds.map((id) => ctx.db.get(id)))
@@ -266,6 +283,7 @@ export const getAllPublicTasks = query({
               }
             : null,
           project,
+          clientName,
           labels: labels.filter(Boolean),
           subtaskStats,
           commentCount: comments.length,
@@ -302,6 +320,7 @@ export const createTask = mutation({
     imageUrls: v.optional(v.array(v.string())),
     isPrivate: v.optional(v.boolean()),
     labelIds: v.optional(v.array(v.id("taskLabels"))),
+    clientId: v.optional(v.id("clients")),
   },
   handler: async (ctx, args) => {
     const user = await requireWrite(ctx);
@@ -345,6 +364,7 @@ export const updateTask = mutation({
     imageUrls: v.optional(v.array(v.string())),
     isPrivate: v.optional(v.boolean()),
     labelIds: v.optional(v.array(v.id("taskLabels"))),
+    clientId: v.optional(v.id("clients")),
   },
   handler: async (ctx, args) => {
     const user = await requireWrite(ctx);

@@ -57,6 +57,8 @@ interface Task {
     name: string;
   } | null;
   dueDate?: number;
+  createdAt: number;
+  clientName?: string | null;
   labels?: TaskLabel[];
   subtaskStats?: {
     total: number;
@@ -261,6 +263,8 @@ export function ProjectKanban({ projectId }: ProjectKanbanProps) {
             }
           : null,
         dueDate: task.dueDate,
+        createdAt: task.createdAt,
+        clientName: task.clientName ?? null,
         labels: task.labels
           ?.filter((label) => label !== null)
           .map((label) => ({ _id: label._id, name: label.name, color: label.color })),
