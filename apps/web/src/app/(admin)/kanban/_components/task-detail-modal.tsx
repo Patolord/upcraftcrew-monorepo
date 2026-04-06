@@ -15,13 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -742,7 +736,10 @@ export function TaskDetailModal({ taskId, open, onOpenChange }: TaskDetailModalP
 
                   <div className="divide-y divide-border/60">
                     {subtasks.map((subtask) => (
-                      <div key={subtask._id} className="flex items-start gap-2 group py-2 first:pt-0">
+                      <div
+                        key={subtask._id}
+                        className="flex items-start gap-2 group py-2 first:pt-0"
+                      >
                         <Checkbox
                           checked={subtask.completed}
                           onCheckedChange={() => handleToggleSubtask(subtask._id)}

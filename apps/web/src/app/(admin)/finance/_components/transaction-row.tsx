@@ -82,7 +82,11 @@ export function TransactionRow({
             isIncome ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500",
           )}
         >
-          {isIncome ? "+" : "-"}R${transaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {isIncome ? "+" : "-"}R$
+          {transaction.amount.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </div>
       </TableCell>
       <TableCell>

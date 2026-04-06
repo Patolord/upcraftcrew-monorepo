@@ -90,10 +90,7 @@ function formatShortDate(timestamp: number): string {
   });
 }
 
-const priorityDisplay: Record<
-  TaskPriority,
-  { label: string; color: string }
-> = {
+const priorityDisplay: Record<TaskPriority, { label: string; color: string }> = {
   low: { label: "Baixa", color: "#84cc16" },
   medium: { label: "Média", color: "#f59e0b" },
   high: { label: "Alta", color: "#f97316" },

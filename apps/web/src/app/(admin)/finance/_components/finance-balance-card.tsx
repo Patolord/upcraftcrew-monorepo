@@ -88,7 +88,10 @@ export function FinanceBalanceCard({
                 className={`text-3xl font-bold ${profit >= 0 ? "text-gray-900" : "text-rose-600"}`}
               >
                 {currencySymbol}
-                {profit.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {profit.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
             </div>
           </div>

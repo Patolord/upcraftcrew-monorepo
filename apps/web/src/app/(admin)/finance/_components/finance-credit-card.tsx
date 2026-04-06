@@ -137,7 +137,10 @@ export function FinanceCreditCard({ transactions = [], currency = "BRL" }: Finan
             <div className="flex items-center justify-between">
               <span className="text-3xl font-bold text-white">
                 {currencySymbol}
-                {displayBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {displayBalance.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </span>
               <MiniWaveChart />
             </div>
@@ -149,7 +152,9 @@ export function FinanceCreditCard({ transactions = [], currency = "BRL" }: Finan
           <p className="text-sm text-gray-500 font-medium mb-4">Recente</p>
           <div className="space-y-4 flex-1">
             {recentExpenses.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-4 flex-1 flex items-center justify-center">Nenhuma despesa registrada</p>
+              <p className="text-sm text-gray-400 text-center py-4 flex-1 flex items-center justify-center">
+                Nenhuma despesa registrada
+              </p>
             ) : (
               recentExpenses.map((expense) => {
                 const config = categoryConfig[expense.category] || categoryConfig.other;
