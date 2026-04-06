@@ -1,8 +1,13 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query, internalMutation } from "./_generated/server";
 import { requireMember } from "./users";
 import { throwNotFound } from "./errors";
 import { paginationOptsValidator } from "convex/server";
+import {
+  mutationWithBudgetTriggers as mutation,
+  budgetsByStatus,
+  budgetsByCurrency,
+} from "./budgetAggregates";
 
 // Query: Get all budgets
 export const getBudgets = query({
@@ -140,40 +145,79 @@ export const getBudgetsByClientId = query({
   },
 });
 
-// Query: Get budget statistics
+// Query: Get budget statistics (aggregate-backed, no full-table scan)
+// Defaults to BRL; used by native app
 export const getBudgetStats = query({
   args: {},
   handler: async (ctx) => {
     await requireMember(ctx);
-    const budgets = await ctx.db.query("budgets").collect();
 
-    const total = budgets.length;
-    const draft = budgets.filter((b) => b.status === "draft").length;
+    const [total, draft, sentCount, approvedCount, rejectedCount, cancelledCount] =
+      await Promise.all([
+        budgetsByStatus.count(ctx),
+        budgetsByStatus.count(ctx, { bounds: { prefix: ["BRL", "draft"] as const } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: ["BRL", "sent"] as const } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: ["BRL", "approved"] as const } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: ["BRL", "rejected"] as const } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: ["BRL", "cancelled"] as const } }),
+      ]);
 
-    // "Sent" includes all budgets that have been sent, including those that
-    // later received a response (approved/rejected). Once sent, always sent.
-    const sentStatuses = ["sent", "approved", "rejected"];
-    const sent = budgets.filter((b) => sentStatuses.includes(b.status)).length;
+    const sent = sentCount + approvedCount + rejectedCount;
 
-    const approved = budgets.filter((b) => b.status === "approved").length;
-    const rejected = budgets.filter((b) => b.status === "rejected").length;
-    const cancelled = budgets.filter((b) => b.status === "cancelled").length;
+    const [totalValue, approvedValue] = await Promise.all([
+      budgetsByStatus.sum(ctx, { bounds: { prefix: ["BRL"] as [string] } }),
+      budgetsByStatus.sum(ctx, { bounds: { prefix: ["BRL", "approved"] as const } }),
+    ]);
 
-    const totalValue = budgets.reduce((sum, b) => sum + b.totalAmount, 0);
-    const approvedValue = budgets
-      .filter((b) => b.status === "approved")
-      .reduce((sum, b) => sum + b.totalAmount, 0);
-
-    // Conversion rate: percentage of sent budgets that were approved
-    const conversionRate = sent > 0 ? (approved / sent) * 100 : 0;
+    const conversionRate = sent > 0 ? (approvedCount / sent) * 100 : 0;
 
     return {
       total,
       draft,
       sent,
-      approved,
-      rejected,
-      cancelled,
+      approved: approvedCount,
+      rejected: rejectedCount,
+      cancelled: cancelledCount,
+      totalValue,
+      approvedValue,
+      conversionRate,
+    };
+  },
+});
+
+// Query: Get budget statistics by currency (aggregate-backed)
+export const getBudgetStatsByCurrency = query({
+  args: { currency: v.string() },
+  handler: async (ctx, args) => {
+    await requireMember(ctx);
+    const c = args.currency;
+
+    const [total, draft, sentCount, approvedCount, rejectedCount, cancelledCount] =
+      await Promise.all([
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c] as [string] } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c, "draft"] as [string, string] } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c, "sent"] as [string, string] } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c, "approved"] as [string, string] } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c, "rejected"] as [string, string] } }),
+        budgetsByStatus.count(ctx, { bounds: { prefix: [c, "cancelled"] as [string, string] } }),
+      ]);
+
+    const sent = sentCount + approvedCount + rejectedCount;
+
+    const [totalValue, approvedValue] = await Promise.all([
+      budgetsByStatus.sum(ctx, { bounds: { prefix: [c] as [string] } }),
+      budgetsByStatus.sum(ctx, { bounds: { prefix: [c, "approved"] as [string, string] } }),
+    ]);
+
+    const conversionRate = sent > 0 ? (approvedCount / sent) * 100 : 0;
+
+    return {
+      total,
+      draft,
+      sent,
+      approved: approvedCount,
+      rejected: rejectedCount,
+      cancelled: cancelledCount,
       totalValue,
       approvedValue,
       conversionRate,
@@ -468,5 +512,19 @@ export const updateBudgetStatus = mutation({
     });
 
     return { success: true };
+  },
+});
+
+// Internal mutation: Backfill aggregates for existing budgets.
+// Run once via `npx convex run budgets:backfillAggregates`
+export const backfillAggregates = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const allBudgets = await ctx.db.query("budgets").collect();
+    for (const doc of allBudgets) {
+      await budgetsByStatus.insertIfDoesNotExist(ctx, doc);
+      await budgetsByCurrency.insertIfDoesNotExist(ctx, doc);
+    }
+    return { backfilledCount: allBudgets.length };
   },
 });
