@@ -276,6 +276,29 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_owner", ["ownerId"]),
 
+  // Message board posts per project
+  messages: defineTable({
+    projectId: v.id("projects"),
+    authorId: v.id("users"),
+    title: v.string(),
+    content: v.string(),
+    isPinned: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_project", ["projectId"])
+    .index("by_project_created", ["projectId", "createdAt"]),
+
+  // Replies to message board posts
+  messageReplies: defineTable({
+    messageId: v.id("messages"),
+    authorId: v.id("users"),
+    content: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_message", ["messageId"])
+    .index("by_message_created", ["messageId", "createdAt"]),
+
   // Connected email accounts for unified inbox (supports N accounts per provider)
   emailAccounts: defineTable({
     userId: v.id("users"),
