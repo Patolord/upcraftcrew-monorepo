@@ -591,7 +591,7 @@ export function TransactionsListModal({
                             )}
                           >
                             {transaction.type === "income" ? "+" : "-"}R${" "}
-                            {transaction.amount.toLocaleString("pt-BR")}
+                            {transaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
 
                           <div className="flex items-center gap-1">

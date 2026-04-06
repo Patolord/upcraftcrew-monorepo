@@ -14,7 +14,7 @@ interface FinanceSpentCardProps {
 }
 
 function formatCurrency(value: number, symbol: string) {
-  return `${symbol}${Math.abs(value).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  return `${symbol}${Math.abs(value).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function FinanceSpentCard({

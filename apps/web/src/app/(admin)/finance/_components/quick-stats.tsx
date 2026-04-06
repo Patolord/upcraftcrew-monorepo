@@ -22,28 +22,28 @@ export function QuickStats({ transactions }: { transactions: Transaction[] }) {
   return (
     <Card className="border shadow-sm rounded-lg">
       <CardHeader>
-        <CardTitle className="text-base">Quick Stats</CardTitle>
+        <CardTitle className="text-base">Resumo Rápido</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Avg Transaction</span>
-            <span className="font-medium">R${avgTransaction.toFixed(0)}</span>
+            <span className="text-muted-foreground">Média por Transação</span>
+            <span className="font-medium">R${avgTransaction.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Largest Income</span>
+            <span className="text-muted-foreground">Maior Receita</span>
             <span className="font-medium text-green-600 dark:text-green-500">
-              R${largestIncome.toFixed(0)}
+              R${largestIncome.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Largest Expense</span>
+            <span className="text-muted-foreground">Maior Despesa</span>
             <span className="font-medium text-red-600 dark:text-red-500">
-              R${largestExpense.toFixed(0)}
+              R${largestExpense.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Active Projects</span>
+            <span className="text-muted-foreground">Projetos Ativos</span>
             <span className="font-medium">
               {new Set(transactions.filter((t) => t.projectId).map((t) => t.projectId)).size}
             </span>

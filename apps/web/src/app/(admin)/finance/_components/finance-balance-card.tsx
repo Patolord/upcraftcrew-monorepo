@@ -2,13 +2,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CheckCircle2Icon } from "lucide-react";
 import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
@@ -75,16 +68,6 @@ export function FinanceBalanceCard({
               {profit >= 0 ? "Positivo" : "Negativo"}
             </Badge>
           </div>
-          <Select defaultValue="monthly">
-            <SelectTrigger className="w-[120px] border-gray-200 text-gray-600">
-              <SelectValue placeholder="Period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="weekly">Semanal</SelectItem>
-              <SelectItem value="monthly">Mensal</SelectItem>
-              <SelectItem value="yearly">Anual</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
         {/* Stats Row */}
@@ -105,7 +88,7 @@ export function FinanceBalanceCard({
                 className={`text-3xl font-bold ${profit >= 0 ? "text-gray-900" : "text-rose-600"}`}
               >
                 {currencySymbol}
-                {profit.toLocaleString()}
+                {profit.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
           </div>

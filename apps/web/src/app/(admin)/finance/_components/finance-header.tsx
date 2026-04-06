@@ -37,7 +37,7 @@ export function FinanceHeader({
   const { theme, toggleTheme, mounted } = useTheme();
 
   const handleSignOut = () => {
-    toast.success("Logged out successfully");
+    toast.success("Sessão encerrada com sucesso");
     router.push("/");
   };
 
@@ -46,7 +46,7 @@ export function FinanceHeader({
     user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() ||
     "U";
 
-  const userName = user?.firstName || "User";
+  const userName = user?.firstName || "Usuário";
 
   return (
     <header className="flex flex-col gap-4 py-4 md:py-6 md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-6">
@@ -55,7 +55,7 @@ export function FinanceHeader({
         <div className="flex items-center gap-3">
           <Link href="/profile" className="group"></Link>
           <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">
-            Finance
+            Financeiro
           </h1>
         </div>
 
@@ -73,19 +73,19 @@ export function FinanceHeader({
             <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
               <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
                 <User className="size-4" />
-                Profile
+                Perfil
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
                 {mounted && theme === "dark" ? (
                   <>
                     <Sun className="size-4" />
-                    Light mode
+                    Modo claro
                   </>
                 ) : (
                   <>
                     <Moon className="size-4" />
-                    Dark mode
+                    Modo escuro
                   </>
                 )}
               </DropdownMenuItem>
@@ -96,7 +96,7 @@ export function FinanceHeader({
                   className="cursor-pointer text-destructive"
                 >
                   <LogOut className="size-4" />
-                  Sign out
+                  Sair
                 </DropdownMenuItem>
               </SignOutButton>
             </DropdownMenuContent>
@@ -110,7 +110,7 @@ export function FinanceHeader({
           <GlobalSearchInput
             value={searchQuery}
             onChange={onSearchChange}
-            placeholder="Search..."
+            placeholder="Buscar..."
           />
         </div>
         <CurrencySwitch value={currency} onChange={onCurrencyChange} />
@@ -134,19 +134,19 @@ export function FinanceHeader({
           <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
             <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
               <User className="size-4" />
-              Profile
+              Perfil
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
               {mounted && theme === "dark" ? (
                 <>
                   <Sun className="size-4" />
-                  Light mode
+                  Modo claro
                 </>
               ) : (
                 <>
                   <Moon className="size-4" />
-                  Dark mode
+                  Modo escuro
                 </>
               )}
             </DropdownMenuItem>
@@ -154,7 +154,7 @@ export function FinanceHeader({
             <SignOutButton>
               <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                 <LogOut className="size-4" />
-                Sign out
+                Sair
               </DropdownMenuItem>
             </SignOutButton>
           </DropdownMenuContent>
