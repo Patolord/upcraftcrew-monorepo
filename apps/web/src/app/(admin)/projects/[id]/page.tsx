@@ -10,12 +10,14 @@ import { useParams, useRouter } from "next/navigation";
 import { ProjectDashboard } from "../_components/project-dashboard";
 import { ProjectInfo } from "../_components/project-info";
 import { ProjectKanban } from "../_components/project-kanban";
+import { ProjectMessages } from "../_components/project-messages";
 import { EditProjectModal } from "../_components/edit-project-modal";
 import {
   ArrowLeftIcon,
   InfoIcon,
   BarChart3Icon,
   KanbanIcon,
+  MessageSquareIcon,
   Trash2Icon,
   Loader2Icon,
   PencilIcon,
@@ -43,7 +45,8 @@ export default function ProjectDetailPage() {
 
   useEnsureCurrentUser();
 
-  const [activeTab, setActiveTab] = useState<"info" | "kanban" | "dashboard">("info");
+  const [activeTab, setActiveTab] = useState<"info" | "kanban" | "dashboard" | "messages">("info");
+  const currentUser = useQuery(api.users.current);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -175,6 +178,10 @@ export default function ProjectDetailPage() {
               <BarChart3Icon className="h-4 w-4" />
               <span>Dashboard</span>
             </TabsTrigger>
+            <TabsTrigger value="messages" className="gap-2">
+              <MessageSquareIcon className="h-4 w-4" />
+              <span>Messages</span>
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -228,6 +235,23 @@ export default function ProjectDetailPage() {
               } as unknown as Project & { _id: Id<"projects"> }
             }
           />
+        </TabsContent>
+        <TabsContent value="messages">
+          {currentUser === undefined ? (
+            <div className="flex justify-center py-16">
+              <Loader2Icon className="h-8 w-8 animate-spin text-orange-500" />
+            </div>
+          ) : currentUser ? (
+            <ProjectMessages
+              projectId={projectId as Id<"projects">}
+              projectManagerId={project.managerId}
+              currentUser={{ _id: currentUser._id, role: currentUser.role }}
+            />
+          ) : (
+            <p className="text-sm text-muted-foreground text-center py-16">
+              Sign in to view the message board.
+            </p>
+          )}
         </TabsContent>
       </Tabs>
 
