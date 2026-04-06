@@ -116,7 +116,7 @@ export function FinanceTransfersCard({
               >
                 {transaction.type === "income" ? "+" : "-"}
                 {currencySymbol}{" "}
-                {transaction.amount.toLocaleString(currency === "BRL" ? "pt-BR" : "en-US")}
+                {transaction.amount.toLocaleString(currency === "BRL" ? "pt-BR" : "en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
           ))}

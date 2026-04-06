@@ -53,7 +53,7 @@ export function FinanceTransactions({ transactions }: FinanceTransactionsProps) 
         <Card className="border shadow-sm rounded-xl">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <ReceiptIcon className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground text-center">No transactions found</p>
+            <p className="text-muted-foreground text-center">Nenhuma transação encontrada</p>
           </CardContent>
         </Card>
       ) : (
@@ -100,7 +100,7 @@ export function FinanceTransactions({ transactions }: FinanceTransactionsProps) 
                         )}
                         <span className="text-gray-400">•</span>
                         <span>
-                          {new Date(transaction.date).toLocaleDateString("en-US", {
+                          {new Date(transaction.date).toLocaleDateString("pt-BR", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",
@@ -118,7 +118,7 @@ export function FinanceTransactions({ transactions }: FinanceTransactionsProps) 
                         isIncome ? "text-green-600" : "text-red-600",
                       )}
                     >
-                      {isIncome ? "+" : "-"}R${transaction.amount.toLocaleString()}
+                      {isIncome ? "+" : "-"}R${transaction.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                     <Badge
                       className={cn(

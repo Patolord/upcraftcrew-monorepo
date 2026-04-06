@@ -14,9 +14,42 @@ import { NewTransactionModal } from "./new-transaction-modal";
 import { TransactionsListModal } from "./transactions-list-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, CalendarDaysIcon } from "lucide-react";
 import type { CurrencyCode } from "@/components/ui/currency-switch";
 import React from "react";
+
+export type PeriodFilter = "day" | "month" | "year";
+
+const periodLabels: Record<PeriodFilter, string> = {
+  day: "Dia",
+  month: "Mês",
+  year: "Ano",
+};
+
+function filterByPeriod<T extends { date: number }>(
+  items: T[],
+  period: PeriodFilter,
+): T[] {
+  const now = new Date();
+  return items.filter((item) => {
+    const d = new Date(item.date);
+    switch (period) {
+      case "day":
+        return (
+          d.getFullYear() === now.getFullYear() &&
+          d.getMonth() === now.getMonth() &&
+          d.getDate() === now.getDate()
+        );
+      case "month":
+        return (
+          d.getFullYear() === now.getFullYear() &&
+          d.getMonth() === now.getMonth()
+        );
+      case "year":
+        return d.getFullYear() === now.getFullYear();
+    }
+  });
+}
 
 interface FinancePageProps {
   preloadedTransactions: Preloaded<typeof api.finance.getTransactions>;
@@ -31,14 +64,16 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
   const [isTransactionsListModalOpen, setIsTransactionsListModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currency, setCurrency] = useState<CurrencyCode>("BRL");
+  const [period, setPeriod] = useState<PeriodFilter>("year");
 
   const filteredTransactions = useMemo(() => {
     if (!transactions) return [];
-    return transactions.filter((t) => {
+    const byCurrency = transactions.filter((t) => {
       const txCurrency = ("currency" in t && t.currency) || "BRL";
       return txCurrency === currency;
     });
-  }, [transactions, currency]);
+    return filterByPeriod(byCurrency, period);
+  }, [transactions, currency, period]);
 
   const currencySummary = useMemo(() => {
     const completed = filteredTransactions.filter((t) => t.status === "completed");
@@ -117,20 +152,39 @@ export function FinancePage({ preloadedTransactions, preloadedSummary }: Finance
         currency={currency}
       />
 
-      {/* Add Transaction Button */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-3">
+      {/* Period Filter + Add Transaction */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-3">
         <div className="flex-1">
           <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-            All transactions
+            Todas as transações
           </h2>
         </div>
-        <Button
-          onClick={() => setIsNewTransactionModalOpen(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-4 sm:px-6 text-sm w-full sm:w-auto"
-        >
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Add New
-        </Button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex items-center gap-1 bg-white rounded-full p-1 border border-gray-200">
+            <CalendarDaysIcon className="h-4 w-4 text-gray-400 ml-2 mr-1 shrink-0" />
+            {(Object.keys(periodLabels) as PeriodFilter[]).map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setPeriod(key)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  period === key
+                    ? "bg-orange-500 text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {periodLabels[key]}
+              </button>
+            ))}
+          </div>
+          <Button
+            onClick={() => setIsNewTransactionModalOpen(true)}
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-4 sm:px-6 text-sm w-full sm:w-auto"
+          >
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Nova
+          </Button>
+        </div>
       </div>
 
       {/* Dashboard Cards Grid 2x2 */}

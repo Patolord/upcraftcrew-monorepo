@@ -119,8 +119,8 @@ export function FinanceCreditCard({ transactions = [], currency = "BRL" }: Finan
   const displayBalance = totalExpenses;
 
   return (
-    <Card className="rounded-2xl border-0 shadow-sm bg-white overflow-hidden">
-      <CardContent className="p-0">
+    <Card className="rounded-2xl border-0 shadow-sm bg-white overflow-hidden h-full flex flex-col">
+      <CardContent className="p-0 flex flex-col flex-1">
         {/* Credit Balance Section */}
         <div className="bg-linear-to-br from-brand via-brand/60 to-brand/30 p-5 rounded-xl mx-4 mt-4 relative overflow-hidden">
           {/* Decorative circles */}
@@ -137,7 +137,7 @@ export function FinanceCreditCard({ transactions = [], currency = "BRL" }: Finan
             <div className="flex items-center justify-between">
               <span className="text-3xl font-bold text-white">
                 {currencySymbol}
-                {displayBalance.toLocaleString()}
+                {displayBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               <MiniWaveChart />
             </div>
@@ -145,11 +145,11 @@ export function FinanceCreditCard({ transactions = [], currency = "BRL" }: Finan
         </div>
 
         {/* Recent Section */}
-        <div className="p-4 pt-5">
+        <div className="p-4 pt-5 flex-1 flex flex-col">
           <p className="text-sm text-gray-500 font-medium mb-4">Recente</p>
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1">
             {recentExpenses.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-4">Nenhuma despesa registrada</p>
+              <p className="text-sm text-gray-400 text-center py-4 flex-1 flex items-center justify-center">Nenhuma despesa registrada</p>
             ) : (
               recentExpenses.map((expense) => {
                 const config = categoryConfig[expense.category] || categoryConfig.other;

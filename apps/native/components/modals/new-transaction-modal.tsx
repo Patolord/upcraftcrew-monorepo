@@ -89,23 +89,23 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
   if (!isOpen) return null;
 
   const incomeCategories = [
-    "Project Payment",
-    "Consulting",
+    "Pagamento de Projeto",
+    "Consultoria",
     "Retainer",
-    "Licensing",
-    "Investment",
-    "Other Income",
+    "Licenciamento",
+    "Investimento",
+    "Outra Receita",
   ];
 
   const expenseCategories = [
-    "Salaries",
-    "Software & Tools",
+    "Salários",
+    "Software & Ferramentas",
     "Marketing",
-    "Office Rent",
-    "Equipment",
-    "Travel",
-    "Training",
-    "Other Expense",
+    "Aluguel",
+    "Equipamento",
+    "Viagem",
+    "Treinamento",
+    "Outra Despesa",
   ];
 
   const categories = formData.type === "income" ? incomeCategories : expenseCategories;
@@ -238,7 +238,7 @@ export function NewTransactionModal({ isOpen, onClose }: NewTransactionModalProp
                               : "text-gray-700"
                           }
                         >
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                          {status === "pending" ? "Pendente" : status === "completed" ? "Concluído" : "Falhou"}
                         </Text>
                       </TouchableOpacity>
                     ))}

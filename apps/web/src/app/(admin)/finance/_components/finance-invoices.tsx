@@ -30,9 +30,9 @@ export function FinanceInvoices({ invoices = [] }: FinanceInvoicesProps) {
     <Card className="border shadow-sm">
       <CardHeader className="border-b bg-muted/5">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Invoices</CardTitle>
+          <CardTitle className="text-lg font-semibold">Faturas</CardTitle>
           <Button variant="link" className="text-orange-500 hover:text-orange-600">
-            View all
+            Ver todas
           </Button>
         </div>
       </CardHeader>
@@ -40,9 +40,9 @@ export function FinanceInvoices({ invoices = [] }: FinanceInvoicesProps) {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead>Name</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Price</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Valor</TableHead>
               <TableHead className="text-right">PDF</TableHead>
             </TableRow>
           </TableHeader>
@@ -69,7 +69,7 @@ export function FinanceInvoices({ invoices = [] }: FinanceInvoicesProps) {
                     className="text-orange-500 hover:text-orange-600 hover:bg-orange-50"
                   >
                     <Download className="h-4 w-4 mr-1" />
-                    Download
+                    Baixar
                   </Button>
                 </TableCell>
               </TableRow>

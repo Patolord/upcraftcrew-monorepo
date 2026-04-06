@@ -23,9 +23,9 @@ const formatLargeNumber = (
   formatFn: (val: number, opts?: Intl.NumberFormatOptions) => string,
 ) => {
   if (Math.abs(value) >= 1000) {
-    return `${formatFn(value / 1000, { maximumFractionDigits: 0 })}k`;
+    return `${formatFn(value / 1000, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}k`;
   }
-  return formatFn(value, { maximumFractionDigits: 0 });
+  return formatFn(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 export function FinancialSummaryCards({
@@ -38,37 +38,37 @@ export function FinancialSummaryCards({
 
   const stats = [
     {
-      title: "Total Income",
+      title: "Receita Total",
       value: formatLargeNumber(summary.totalIncome, (val) => val.toLocaleString()),
       className: "text-green-600 dark:text-green-500",
       description: "",
     },
     {
-      title: "Total Expenses",
+      title: "Despesas Totais",
       value: formatLargeNumber(summary.totalExpenses, (val) => val.toLocaleString()),
       className: "text-red-600 dark:text-red-500",
       description: "",
     },
     {
-      title: "Net Profit",
+      title: "Lucro Líquido",
       value: formatLargeNumber(summary.netProfit, (val) => val.toLocaleString()),
       className:
         summary.netProfit >= 0
           ? "text-green-600 dark:text-green-500"
           : "text-red-600 dark:text-red-500",
-      description: `${summary.netProfit >= 0 ? "Profit" : "Loss"} this period`,
+      description: `${summary.netProfit >= 0 ? "Lucro" : "Prejuízo"} no período`,
     },
     {
-      title: "Transactions",
+      title: "Transações",
       value: totalTransactions.toString(),
       className: "",
-      description: `${pendingTransactions} pending`,
+      description: `${pendingTransactions} pendentes`,
     },
     {
-      title: "Profit Margin",
+      title: "Margem de Lucro",
       value: `${profitMargin}%`,
       className: "",
-      description: "Revenue efficiency",
+      description: "Eficiência da receita",
     },
   ];
 
