@@ -8,7 +8,11 @@
     },
     "name": "up-craft-crew-app",
     "slug": "up-craft-crew-app",
-    "plugins": ["expo-font", "expo-web-browser", "expo-router"],
+    "plugins": [
+      "expo-font",
+      "expo-web-browser",
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
@@ -21,7 +25,10 @@
     "icon": "./assets/ios/Icon-Store-1024.png",
     "ios": {
       "icon": "./assets/ios/Icon-Store-1024.png",
-      "bundleIdentifier": "com.sqpaloma.upcraftcrewapp"
+      "bundleIdentifier": "com.sqpaloma.upcraftcrewapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.sqpaloma.upcraftcrewapp",
