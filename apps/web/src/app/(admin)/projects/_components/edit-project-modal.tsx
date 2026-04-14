@@ -138,12 +138,12 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
     e.preventDefault();
 
     if (!formData.name || !formData.clientId || !formData.description) {
-      toast.error("Please fill in all required fields");
+      toast.error("Preencha todos os campos obrigatórios");
       return;
     }
 
     if (!formData.managerId) {
-      toast.error("Please select a project manager");
+      toast.error("Selecione um responsável pelo projeto");
       return;
     }
 
@@ -166,11 +166,11 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
         notes: formData.notes,
       });
 
-      toast.success("Project updated successfully!");
+      toast.success("Projeto atualizado com sucesso!");
       onClose();
     } catch (error) {
       console.error("Failed to update project:", error);
-      toast.error("Failed to update project. Please try again.");
+      toast.error("Não foi possível atualizar o projeto. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -195,18 +195,18 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-xl">
         <DialogHeader>
-          <DialogTitle className="text-lg">Edit Project</DialogTitle>
-          <DialogDescription>Update the project details below</DialogDescription>
+          <DialogTitle className="text-lg">Editar projeto</DialogTitle>
+          <DialogDescription>Atualize os dados do projeto abaixo</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name and Client */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="name">Project Name *</Label>
+              <Label htmlFor="name">Nome do projeto *</Label>
               <Input
                 id="name"
-                placeholder="Enter project name"
+                placeholder="Nome do projeto"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="rounded-lg"
@@ -214,21 +214,21 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               />
             </div>
             <div className="space-y-2">
-              <Label>Client *</Label>
+              <Label>Cliente *</Label>
               <ClientSelect
                 value={formData.clientId}
                 onValueChange={(id) => setFormData({ ...formData, clientId: id })}
-                placeholder="Select client"
+                placeholder="Selecione o cliente"
               />
             </div>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description *</Label>
+            <Label htmlFor="description">Descrição *</Label>
             <Textarea
               id="description"
-              placeholder="Enter project description"
+              placeholder="Descrição do projeto"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
@@ -239,7 +239,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           {/* Project Manager */}
           <div className="space-y-2">
-            <Label>Project Manager *</Label>
+            <Label>Responsável *</Label>
             <Select
               value={formData.managerId}
               onValueChange={(value) =>
@@ -247,7 +247,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               }
             >
               <SelectTrigger className="rounded-lg">
-                <SelectValue placeholder="Select a manager" />
+                <SelectValue placeholder="Selecione o responsável" />
               </SelectTrigger>
               <SelectContent>
                 {teamMembers.map((member) => (
@@ -289,7 +289,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           {/* Priority */}
           <div className="space-y-2">
-            <Label>Priority</Label>
+            <Label>Prioridade</Label>
             <div className="flex gap-2">
               {PRIORITY_OPTIONS.map((priority) => (
                 <button
@@ -311,7 +311,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
           {/* Dates */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date *</Label>
+              <Label htmlFor="startDate">Data de início *</Label>
               <Input
                 id="startDate"
                 type="date"
@@ -322,7 +322,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
+              <Label htmlFor="endDate">Data de término</Label>
               <Input
                 id="endDate"
                 type="date"
@@ -335,7 +335,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           {/* Budget */}
           <div className="space-y-2">
-            <Label htmlFor="budget">Budget</Label>
+            <Label htmlFor="budget">Orçamento</Label>
             <Input
               id="budget"
               type="number"
@@ -349,7 +349,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           {/* Progress */}
           <div className="space-y-2">
-            <Label htmlFor="progress">Progress: {formData.progress}%</Label>
+            <Label htmlFor="progress">Progresso: {formData.progress}%</Label>
             <Input
               id="progress"
               type="range"
@@ -365,7 +365,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
           <div className="space-y-2">
             <Label>
               <UsersIcon className="h-3.5 w-3.5 inline mr-1" />
-              Team Members ({formData.teamIds.length} selected)
+              Equipe ({formData.teamIds.length} selecionado(s))
             </Label>
             <div className="border rounded-lg max-h-32 overflow-y-auto">
               {teamMembers
@@ -397,7 +397,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
                 })}
               {teamMembers.filter((member) => member._id !== formData.managerId).length === 0 && (
                 <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                  No team members available
+                  Nenhum membro disponível
                 </div>
               )}
             </div>
@@ -405,10 +405,10 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">Observações</Label>
             <Textarea
               id="notes"
-              placeholder="Add any additional notes..."
+              placeholder="Observações adicionais…"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               rows={2}
@@ -423,7 +423,7 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               disabled={isSubmitting}
               className="rounded-lg"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="submit"
@@ -433,10 +433,10 @@ export function EditProjectModal({ isOpen, onClose, project }: EditProjectModalP
               {isSubmitting ? (
                 <>
                   <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
-                  Updating...
+                  Salvando…
                 </>
               ) : (
-                "Update Project"
+                "Salvar alterações"
               )}
             </Button>
           </DialogFooter>

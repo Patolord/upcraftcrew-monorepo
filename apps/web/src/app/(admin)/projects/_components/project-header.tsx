@@ -29,7 +29,7 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
   const { theme, toggleTheme, mounted } = useTheme();
 
   const handleSignOut = () => {
-    toast.success("Logged out successfully");
+    toast.success("Sessão encerrada com sucesso");
     router.push("/");
   };
 
@@ -38,7 +38,7 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
     user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() ||
     "U";
 
-  const userName = user?.firstName || "User";
+  const userName = user?.firstName || "Usuário";
 
   return (
     <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-4 md:py-6">
@@ -46,13 +46,17 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
       <div className="flex items-center gap-3 shrink-0">
         <Link href="/profile" className="group"></Link>
         <h1 className="text-2xl md:text-3xl font-medium text-shadow-sm text-foreground">
-          Projects
+          Projetos
         </h1>
       </div>
 
       {/* Center - Search */}
       <div className="w-full md:max-w-md">
-        <GlobalSearchInput value={searchQuery} onChange={onSearchChange} placeholder="Search..." />
+        <GlobalSearchInput
+          value={searchQuery}
+          onChange={onSearchChange}
+          placeholder="Pesquisar..."
+        />
       </div>
 
       {/* Right side - User */}
@@ -72,19 +76,19 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
         <DropdownMenuContent className="w-56 rounded-xl" align="end" sideOffset={8}>
           <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
             <User className="size-4" />
-            Profile
+            Perfil
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
             {mounted && theme === "dark" ? (
               <>
                 <Sun className="size-4" />
-                Light mode
+                Modo claro
               </>
             ) : (
               <>
                 <Moon className="size-4" />
-                Dark mode
+                Modo escuro
               </>
             )}
           </DropdownMenuItem>
@@ -92,7 +96,7 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
           <SignOutButton>
             <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
               <LogOut className="size-4" />
-              Sign out
+              Sair
             </DropdownMenuItem>
           </SignOutButton>
         </DropdownMenuContent>

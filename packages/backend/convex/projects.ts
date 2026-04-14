@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { getCurrentUser, getCurrentUserOrThrow, requireMember } from "./users";
 import { throwNotFound } from "./errors";
 import { paginationOptsValidator } from "convex/server";
@@ -65,6 +65,40 @@ export const getProjects = query({
     );
 
     return projectsWithTeam;
+  },
+});
+
+/** Counts per status via `by_status` index (always matches DB; no aggregate backfill). */
+export const getProjectStats = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireMember(ctx);
+
+    const [planningRows, inProgressRows, completedRows] = await Promise.all([
+      ctx.db
+        .query("projects")
+        .withIndex("by_status", (q) => q.eq("status", "planning"))
+        .collect(),
+      ctx.db
+        .query("projects")
+        .withIndex("by_status", (q) => q.eq("status", "in-progress"))
+        .collect(),
+      ctx.db
+        .query("projects")
+        .withIndex("by_status", (q) => q.eq("status", "completed"))
+        .collect(),
+    ]);
+
+    const planning = planningRows.length;
+    const inProgress = inProgressRows.length;
+    const completed = completedRows.length;
+
+    return {
+      total: planning + inProgress + completed,
+      planning,
+      inProgress,
+      completed,
+    };
   },
 });
 

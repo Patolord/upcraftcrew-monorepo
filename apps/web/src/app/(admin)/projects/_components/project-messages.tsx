@@ -21,7 +21,11 @@ interface ProjectMessagesProps {
   };
 }
 
-export function ProjectMessages({ projectId, projectManagerId, currentUser }: ProjectMessagesProps) {
+export function ProjectMessages({
+  projectId,
+  projectManagerId,
+  currentUser,
+}: ProjectMessagesProps) {
   const [showNewModal, setShowNewModal] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState<Id<"messages"> | null>(null);
 

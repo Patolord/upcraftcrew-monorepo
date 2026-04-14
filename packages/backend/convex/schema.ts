@@ -96,7 +96,8 @@ export default defineSchema({
   })
     .searchIndex("search_name", { searchField: "name" })
     .index("by_manager", ["managerId"])
-    .index("by_clientId", ["clientId"]),
+    .index("by_clientId", ["clientId"])
+    .index("by_status", ["status"]),
 
   transactions: defineTable({
     description: v.string(),
