@@ -8,7 +8,6 @@ import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
 import { useParams, useRouter } from "next/navigation";
 import { ProjectDashboard } from "../_components/project-dashboard";
-import { ProjectInfo } from "../_components/project-info";
 import { ProjectKanban } from "../_components/project-kanban";
 import { ProjectMessages } from "../_components/project-messages";
 import { EditProjectModal } from "../_components/edit-project-modal";
@@ -45,7 +44,7 @@ export default function ProjectDetailPage() {
 
   useEnsureCurrentUser();
 
-  const [activeTab, setActiveTab] = useState<"info" | "kanban" | "dashboard" | "messages">("info");
+  const [activeTab, setActiveTab] = useState<"kanban" | "dashboard" | "messages">("dashboard");
   const currentUser = useQuery(api.users.current);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -53,10 +52,8 @@ export default function ProjectDetailPage() {
 
   const deleteProject = useMutation(api.projects.deleteProject);
 
-  // Validate that we have a valid project ID (not "all" or other invalid values)
   const isValidId = projectId && projectId !== "all" && !projectId.includes("/");
 
-  // Fetch project data - only if we have a valid ID
   const project = useQuery(
     api.projects.getProjectById,
     isValidId ? { id: projectId as Id<"projects"> } : "skip",
@@ -78,7 +75,6 @@ export default function ProjectDetailPage() {
     }
   };
 
-  // Handle invalid ID
   if (!isValidId) {
     return (
       <div className="p-6 pl-12 pr-12 space-y-6">
@@ -86,35 +82,33 @@ export default function ProjectDetailPage() {
           <div className="mx-auto w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-4">
             <InfoIcon className="h-6 w-6 text-orange-600" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">Invalid Project ID</h3>
+          <h3 className="text-lg font-semibold mb-2">ID de projeto inválido</h3>
           <p className="text-muted-foreground mb-4">
-            The project ID provided is not valid. Please check the URL and try again.
+            O ID informado na URL não é válido. Verifique o endereço e tente novamente.
           </p>
           <Button
             onClick={() => router.push("/projects")}
             className="bg-orange-500 hover:bg-orange-600"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Projects
+            Voltar aos projetos
           </Button>
         </Card>
       </div>
     );
   }
 
-  // Handle loading state
   if (project === undefined) {
     return (
       <div className="p-6 pl-12 pr-12 flex items-center justify-center min-h-[600px]">
         <div className="text-center">
           <Loader2Icon className="h-12 w-12 animate-spin text-orange-500 mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading project details...</p>
+          <p className="text-muted-foreground">Carregando projeto…</p>
         </div>
       </div>
     );
   }
 
-  // Handle not found state
   if (project === null) {
     return (
       <div className="p-6 pl-12 pr-12 space-y-6">
@@ -122,16 +116,16 @@ export default function ProjectDetailPage() {
           <div className="mx-auto w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-4">
             <InfoIcon className="h-6 w-6 text-orange-600" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">Project Not Found</h3>
+          <h3 className="text-lg font-semibold mb-2">Projeto não encontrado</h3>
           <p className="text-muted-foreground mb-4">
-            The project you&apos;re looking for doesn&apos;t exist or has been deleted.
+            Este projeto não existe ou foi removido.
           </p>
           <Button
             onClick={() => router.push("/projects")}
             className="bg-orange-500 hover:bg-orange-600"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Projects
+            Voltar aos projetos
           </Button>
         </Card>
       </div>
@@ -140,7 +134,6 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="p-6 pl-12 pr-12 space-y-6">
-      {/* Header with Back Button */}
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -149,44 +142,36 @@ export default function ProjectDetailPage() {
           className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeftIcon className="h-4 w-4 mr-2" />
-          Back
+          Voltar
         </Button>
       </div>
 
-      {/* Project Detail Header */}
       <header className="flex items-center justify-between py-6">
-        {/* Title */}
         <div>
           <h1 className="text-3xl font-medium text-shadow-sm text-foreground">{project.name}</h1>
           {project.client && <p className="text-muted-foreground text-sm mt-1">{project.client}</p>}
         </div>
       </header>
 
-      {/* Tabs and Action Buttons */}
       <div className="flex items-center border-orange-100 justify-between gap-4">
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
           <TabsList className="w-fit border border-orange-100 rounded-lg">
-            <TabsTrigger value="info" className="gap-2">
-              <InfoIcon className="h-4 w-4" />
-              <span>Information</span>
+            <TabsTrigger value="dashboard" className="gap-2">
+              <BarChart3Icon className="h-4 w-4" />
+              <span>Dashboard</span>
             </TabsTrigger>
             <TabsTrigger value="kanban" className="gap-2">
               <KanbanIcon className="h-4 w-4" />
               <span>Kanban</span>
             </TabsTrigger>
-            <TabsTrigger value="dashboard" className="gap-2">
-              <BarChart3Icon className="h-4 w-4" />
-              <span>Dashboard</span>
-            </TabsTrigger>
             <TabsTrigger value="messages" className="gap-2">
               <MessageSquareIcon className="h-4 w-4" />
-              <span>Messages</span>
+              <span>Mensagens</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
-        {/* Action Buttons - only show on info tab */}
-        {activeTab === "info" && (
+        {activeTab === "dashboard" && (
           <div className="flex gap-2 items-center">
             <Button
               variant="outline"
@@ -210,22 +195,7 @@ export default function ProjectDetailPage() {
         )}
       </div>
 
-      {/* Tab Content */}
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)}>
-        <TabsContent value="info">
-          <ProjectInfo
-            project={{
-              ...project,
-              manager: project.manager || undefined,
-              team: project.team.filter(
-                (member): member is NonNullable<typeof member> => member !== null,
-              ),
-            }}
-          />
-        </TabsContent>
-        <TabsContent value="kanban">
-          <ProjectKanban projectId={projectId as Id<"projects">} />
-        </TabsContent>
         <TabsContent value="dashboard">
           <ProjectDashboard
             project={
@@ -235,6 +205,9 @@ export default function ProjectDetailPage() {
               } as unknown as Project & { _id: Id<"projects"> }
             }
           />
+        </TabsContent>
+        <TabsContent value="kanban">
+          <ProjectKanban projectId={projectId as Id<"projects">} />
         </TabsContent>
         <TabsContent value="messages">
           {currentUser === undefined ? (
@@ -249,26 +222,24 @@ export default function ProjectDetailPage() {
             />
           ) : (
             <p className="text-sm text-muted-foreground text-center py-16">
-              Sign in to view the message board.
+              Entre para ver as mensagens do projeto.
             </p>
           )}
         </TabsContent>
       </Tabs>
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Excluir projeto?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the project &quot;
-              {project.name}&quot; and remove all associated data including tasks, transactions, and
-              events.
+              Esta ação não pode ser desfeita. O projeto &quot;{project.name}&quot; e os dados
+              associados (tarefas, transações e eventos ligados) serão removidos permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting} className="bg-white rounded-lg">
-              Cancel
+              Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
@@ -278,17 +249,16 @@ export default function ProjectDetailPage() {
               {isDeleting ? (
                 <>
                   <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
+                  Excluindo…
                 </>
               ) : (
-                "Delete Project"
+                "Excluir projeto"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit Project Modal */}
       {showEditModal && (
         <EditProjectModal
           isOpen={showEditModal}

@@ -1,7 +1,7 @@
 "use client";
 
-import type { Project } from "@/types/project";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   FolderKanbanIcon,
   PlayCircleIcon,
@@ -10,15 +10,19 @@ import {
 } from "lucide-react";
 import React from "react";
 
+export type ProjectStatsPayload = {
+  total: number;
+  planning: number;
+  inProgress: number;
+  completed: number;
+};
+
 interface ProjectsStatsProps {
-  projects: Project[];
+  stats: ProjectStatsPayload | undefined;
 }
 
-export function ProjectsStats({ projects }: ProjectsStatsProps) {
-  const totalProjects = projects.length;
-  const inProgress = projects.filter((p) => p.status === "in-progress").length;
-  const completed = projects.filter((p) => p.status === "completed").length;
-  const planning = projects.filter((p) => p.status === "planning").length;
+export function ProjectsStats({ stats }: ProjectsStatsProps) {
+  const loading = stats === undefined;
 
   const statCards = [
     {
@@ -26,7 +30,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
       label: "Total de Projetos",
       icon: FolderKanbanIcon,
       iconBg: "bg-teal-500",
-      value: totalProjects,
+      value: stats?.total ?? 0,
       change: 55,
     },
     {
@@ -34,7 +38,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
       label: "Em Progresso",
       icon: PlayCircleIcon,
       iconBg: "bg-blue-500",
-      value: inProgress,
+      value: stats?.inProgress ?? 0,
       change: 12,
     },
     {
@@ -42,7 +46,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
       label: "Concluído",
       icon: CheckCircle2Icon,
       iconBg: "bg-emerald-500",
-      value: completed,
+      value: stats?.completed ?? 0,
       change: 8,
     },
     {
@@ -50,7 +54,7 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
       label: "Planejamento",
       icon: ClipboardListIcon,
       iconBg: "bg-orange-400",
-      value: planning,
+      value: stats?.planning ?? 0,
       change: 15,
     },
   ];
@@ -63,16 +67,18 @@ export function ProjectsStats({ projects }: ProjectsStatsProps) {
         return (
           <Card key={card.key} className="rounded-xl bg-white shadow-sm ring-0 py-0">
             <CardContent className="flex items-center gap-4 p-4">
-              {/* Icon */}
               <div className={`${card.iconBg} p-3 rounded-xl`}>
                 <Icon className="size-6 text-white" />
               </div>
 
-              {/* Content */}
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground">{card.label}</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-foreground">{card.value}</span>
+                  {loading ? (
+                    <Skeleton className="h-8 w-12 rounded-md" />
+                  ) : (
+                    <span className="text-2xl font-bold text-foreground">{card.value}</span>
+                  )}
                   <span className="text-xs text-green-500 font-medium">+{card.change}%</span>
                 </div>
               </div>
