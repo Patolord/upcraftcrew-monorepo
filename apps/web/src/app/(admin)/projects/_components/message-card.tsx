@@ -48,13 +48,11 @@ export function MessageCard({
   onDelete,
 }: MessageCardProps) {
   const canDelete = message.authorId === currentUserId || currentUserRole === "admin";
-  const preview = message.content.length > 150 ? message.content.slice(0, 150) + "…" : message.content;
+  const preview =
+    message.content.length > 150 ? message.content.slice(0, 150) + "…" : message.content;
 
   return (
-    <Card
-      className="p-4 cursor-pointer hover:shadow-md transition-shadow group"
-      onClick={onClick}
-    >
+    <Card className="p-4 cursor-pointer hover:shadow-md transition-shadow group" onClick={onClick}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">

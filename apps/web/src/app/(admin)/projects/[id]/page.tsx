@@ -117,9 +117,7 @@ export default function ProjectDetailPage() {
             <InfoIcon className="h-6 w-6 text-orange-600" />
           </div>
           <h3 className="text-lg font-semibold mb-2">Projeto não encontrado</h3>
-          <p className="text-muted-foreground mb-4">
-            Este projeto não existe ou foi removido.
-          </p>
+          <p className="text-muted-foreground mb-4">Este projeto não existe ou foi removido.</p>
           <Button
             onClick={() => router.push("/projects")}
             className="bg-orange-500 hover:bg-orange-600"

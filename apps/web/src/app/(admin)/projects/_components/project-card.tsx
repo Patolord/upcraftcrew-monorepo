@@ -73,8 +73,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const updateProjectStatus = useMutation(api.projects.updateProjectStatus);
 
   const statusKey = (project.status ?? "planning") as keyof typeof statusConfig;
-  const status =
-    statusConfig[statusKey] ?? statusConfig.planning;
+  const status = statusConfig[statusKey] ?? statusConfig.planning;
 
   const projectId = project._id as Id<"projects"> | undefined;
 
@@ -100,9 +99,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const startLabel = formatScheduleDate(project.startDate);
   const endLabel = project.endDate ? formatScheduleDate(project.endDate) : "";
   const scheduleText =
-    startLabel && endLabel
-      ? `${startLabel} – ${endLabel}`
-      : startLabel || endLabel || "—";
+    startLabel && endLabel ? `${startLabel} – ${endLabel}` : startLabel || endLabel || "—";
 
   return (
     <Card className="border border-border rounded-md hover:shadow-lg transition-shadow flex flex-col h-full min-w-0 overflow-hidden gap-1">
@@ -113,7 +110,10 @@ export function ProjectCard({ project }: { project: Project }) {
               {project.name}
             </CardTitle>
             {project.client && (
-              <CardDescription className="mt-0.5 mb-0 text-sm truncate min-w-0 leading-tight" title={project.client}>
+              <CardDescription
+                className="mt-0.5 mb-0 text-sm truncate min-w-0 leading-tight"
+                title={project.client}
+              >
                 {project.clientId ? (
                   <Link
                     href={`/clients/${project.clientId}`}
@@ -189,12 +189,7 @@ export function ProjectCard({ project }: { project: Project }) {
               </p>
             </div>
           )}
-          <div
-            className={cn(
-              "min-w-0 overflow-hidden",
-              budgetFormatted === null && "col-span-2",
-            )}
-          >
+          <div className={cn("min-w-0 overflow-hidden", budgetFormatted === null && "col-span-2")}>
             <p className="text-[10px] md:text-xs text-muted-foreground mb-1">Cronograma</p>
             <p className="text-xs md:text-sm font-medium truncate" title={scheduleText}>
               {scheduleText}

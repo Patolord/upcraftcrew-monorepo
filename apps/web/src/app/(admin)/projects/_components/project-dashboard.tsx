@@ -199,7 +199,9 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
 
       {/* Descrição e equipe: altura útil + scroll. Cronograma: altura só do conteúdo (até após “dias”) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
-        <Card className={cn("lg:col-span-5 rounded-lg border border-orange-100 flex flex-col", ROW_H)}>
+        <Card
+          className={cn("lg:col-span-5 rounded-lg border border-orange-100 flex flex-col", ROW_H)}
+        >
           <CardHeader className="shrink-0 pb-2 pt-4 px-5">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <FileTextIcon className="h-[18px] w-[18px] text-orange-500 shrink-0" />
@@ -219,7 +221,9 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
           </CardContent>
         </Card>
 
-        <Card className={cn("lg:col-span-4 rounded-lg border border-orange-100 flex flex-col", ROW_H)}>
+        <Card
+          className={cn("lg:col-span-4 rounded-lg border border-orange-100 flex flex-col", ROW_H)}
+        >
           <CardHeader className="shrink-0 pb-2 pt-4 px-5">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <CalendarIcon className="h-[18px] w-[18px] text-orange-500 shrink-0" />
@@ -263,7 +267,9 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
           </CardContent>
         </Card>
 
-        <Card className={cn("lg:col-span-3 rounded-lg border border-orange-100 flex flex-col", ROW_H)}>
+        <Card
+          className={cn("lg:col-span-3 rounded-lg border border-orange-100 flex flex-col", ROW_H)}
+        >
           <CardHeader className="shrink-0 pb-2 pt-4 px-5">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <UsersIcon className="h-[18px] w-[18px] text-orange-500 shrink-0" />
@@ -310,8 +316,12 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate">{personDisplayName(member)}</p>
-                          <p className="text-xs text-muted-foreground truncate">{member.email ?? ""}</p>
+                          <p className="text-sm font-semibold truncate">
+                            {personDisplayName(member)}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {member.email ?? ""}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -371,10 +381,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
       {/* Progresso e eventos — mesma altura, scroll interno */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
         <Card
-          className={cn(
-            "border border-orange-100 rounded-lg flex flex-col",
-            LOWER_PANEL_MIN_H,
-          )}
+          className={cn("border border-orange-100 rounded-lg flex flex-col", LOWER_PANEL_MIN_H)}
         >
           <CardHeader className="shrink-0 pb-2">
             <CardTitle className="text-lg font-semibold">Progresso do projeto</CardTitle>
@@ -414,10 +421,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
         </Card>
 
         <Card
-          className={cn(
-            "border border-orange-100 rounded-lg flex flex-col",
-            LOWER_PANEL_MIN_H,
-          )}
+          className={cn("border border-orange-100 rounded-lg flex flex-col", LOWER_PANEL_MIN_H)}
         >
           <CardHeader className="shrink-0 pb-2">
             <CardTitle className="text-lg font-semibold">Eventos do projeto</CardTitle>

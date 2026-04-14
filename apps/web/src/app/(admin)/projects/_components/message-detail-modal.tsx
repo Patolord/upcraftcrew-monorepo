@@ -4,12 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@up-craft-crew-app/backend/convex/_generated/api";
 import { Id } from "@up-craft-crew-app/backend/convex/_generated/dataModel";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PinIcon, Loader2Icon, Trash2Icon, SendIcon } from "lucide-react";
@@ -109,7 +104,11 @@ export function MessageDetailModal({
             <p className="text-sm text-muted-foreground">
               This message may have been deleted or you no longer have access.
             </p>
-            <Button type="button" onClick={onClose} className="bg-orange-500 hover:bg-orange-600 rounded-lg">
+            <Button
+              type="button"
+              onClick={onClose}
+              className="bg-orange-500 hover:bg-orange-600 rounded-lg"
+            >
               Close
             </Button>
           </div>

@@ -52,7 +52,11 @@ export function ProjectHeader({ searchQuery = "", onSearchChange }: ProjectHeade
 
       {/* Center - Search */}
       <div className="w-full md:max-w-md">
-        <GlobalSearchInput value={searchQuery} onChange={onSearchChange} placeholder="Pesquisar..." />
+        <GlobalSearchInput
+          value={searchQuery}
+          onChange={onSearchChange}
+          placeholder="Pesquisar..."
+        />
       </div>
 
       {/* Right side - User */}
